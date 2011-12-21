@@ -1,0 +1,32 @@
+* {
+	font-family: Verdana, Helvetica, Arial, sans-serif;
+	font-size: 11px;
+}
+
+body,html {
+    background-color: #252525;
+	//	background: none repeat scroll 0 0 #FFFFFF;
+	color: #000000;
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	color: #004d6f;
+}
+
+a:hover {
+	color: #0191d0;
+}
+
+h1 {
+	font-size: 18px;
+	margin: 0 0 20px 0;
+	color: #0191d0;
+}
+
+h2 {
+	font-size: 14px;
+	margin: 20px 0 20px 0;
+	padding: 0;
+}

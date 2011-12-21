@@ -1,0 +1,302 @@
+@import url('grid.css');
+@import url('navigation.css');
+@import url('font.css');
+@import url('button.css');
+@import url('form.css');
+@import url('dialog.css');
+
+/*******************
+ logo etc. 
+********************/ 	
+#logo {
+	position: absolute;
+	top: 18px;
+	left: 17px;
+}
+#logo a {
+	background: -moz-linear-gradient(right top, #165075, #63C2FF) repeat scroll 0 0 transparent;
+	background: -webkit-gradient(linear, right top, left bottom, from(#165075), to(#63C2FF) );
+    /* For Internet Explorer 5.5 - 7 */
+	filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#0191d0,endColorstr=#00a0db);
+//	border: 1px solid #4bddf7;
+	/*border-radius: 2em 2em 2em 2em;*/
+	border-radius: 10em 10em 5em 5em; //
+	-webkit-box-shadow: 4px 6px 6px rgba(0, 0, 0, 0.4);
+	box-shadow: 4px 6px 6px rgba(0, 0, 0, 0.4);
+//	line-height: 100%;
+	padding: 13px 18px;
+	zoom: 1;
+	font-weight: bold;
+	font-size: 12px;
+	line-height: 33px;
+	text-decoration: none;
+}
+
+#logo span {
+	font-size: 18px;
+	color: white;
+}
+
+/****************
+ Paging
+****************/
+div.paging {
+	margin: 10px 0 40px 0;
+}
+
+div.paging div.inactive,div.paging div.active {
+	float: left;
+	padding: 2px;
+	margin: 2px;
+	min-width: 15px;
+	min-height: 15px;
+	text-align: center;
+}
+
+div.paging div.inactive {
+	border: 1px solid #DDD;
+}
+
+div.paging a {
+	text-decoration: none
+}
+
+div.paging div.active a {
+	color: #000;
+	font-weight: bold
+}
+
+/****************
+ Progressbar
+****************/
+div.progressbar {
+	width: 100px;
+	height: 15px;
+	background-color: #FFF;
+	border: 1px solid #666
+}
+
+div.progressbar img {
+	height: 15px;
+	width: 1px;
+}
+
+/****************
+ Big Icons Top
+****************/
+div.largeIcon a.text {
+	text-decoration: none;
+	font-size: 14px;
+	line-height: 40px;
+	padding-left: 10px
+}
+
+/***************
+ Expandable Details on Summary Pages
+****************/
+.details {
+	text-decoration: underline;
+	cursor: pointer;
+	color: #0191d0;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.minimized {
+	height: 0px;
+	overflow: hidden
+}
+
+.maximized {
+	overflow: hidden;
+}
+
+/***************
+ general tables
+****************/
+.pictureMarkup {
+	border-collapse: collapse;
+}
+
+.pictureMarkup th {
+	font-size: 1.1em;
+	text-align: left;
+	padding: 4px;
+	background-color: #00A0DB;
+	color: #ffffff;
+	border: 1px solid #00A0DB;
+}
+
+.pictureMarkup td {
+	padding: 2px 10px 2px 10px;
+	border: 1px solid #00A0DB;
+}
+
+.pictureMarkup tr.alt td {
+	color: #000000;
+	background-color: #EAF2D3;
+}
+
+/***************
+media gallery
+****************/
+#gallery {
+	float: left;
+	min-height: 12em;
+}
+
+* html #gallery {
+	height: 12em;
+}  /* IE6 */
+.gallery.custom-state-active {
+	background: #eee;
+}
+
+.gallery li {
+	float: left;
+	margin: 0 0.4em 0.4em 0;
+	text-align: center;
+	cursor: move;
+	max-width: 130px;
+}
+
+.gallery li h5 {
+	margin: 0 0 0.4em;
+	cursor: move;
+}
+
+.gallery li a {
+	float: left;
+}
+
+.gallery li img {
+	float: right;
+}
+
+.gallery li .image-action {
+	cursor: pointer;
+}
+
+.gallery p {
+	margin: 0;
+	clear: both;
+}
+
+/*.gallery li img { cursor: move; }*/
+#album {
+	min-height: 10em;
+	padding: 0.5%;
+}
+
+* html #album {
+	height: 10em;
+}  /* IE6 */
+#album h4 {
+	line-height: 16px;
+	margin: 0 0 0.4em;
+}
+
+#album h4 .ui-icon {
+	float: left;
+}
+
+#album h5 {
+	display: none;
+}
+
+.metadata {
+	font-size: 0.8em;
+}
+
+/***************
+ etc
+****************/
+.ui-autocomplete-loading {
+	background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat;
+}
+
+/***************
+ small navigation bar
+ TODO rwe: stuff, that might be moved into form.css or button.css
+****************/
+ul#button-bar,ul#nav-bar {
+	width: auto;
+}
+
+ul#nav-bar { /*float: right;*/
+	list-style: none outside none;
+	margin: 6px 0 10px, 0;
+	padding: 0;
+	/*	text-align: right;
+	width: 50%;*/
+}
+
+.button-list li {
+	display: inline-block;
+	list-style: none outside none;
+	position: relative;
+}
+
+#nav-bar-prev span,#nav-bar-next span {
+	display: inline-block;
+}
+
+.button-list li .Butt,.button-list li .DisabledButt {
+	border-style: solid;
+	color: #444444;
+	font-weight: normal;
+}
+
+.button-list li.first .Butt,.button-list li.first .DisabledButt {
+	border-bottom-left-radius: 6px;
+	border-left: 1px solid #F0F0F0;
+	border-top-left-radius: 6px;
+}
+
+.button-list li.last .Butt,.button-list li.last .DisabledButt {
+	border-bottom-right-radius: 6px;
+	border-right: 1px solid #E2E2E2;
+	border-top-right-radius: 6px;
+}
+
+#nav-bar.button-list .Butt span.ui-icon {
+	display: inline-block;
+	position: relative;
+	top: 4px;
+}
+
+#nav-bar.button-list .Butt span.text {
+	
+}
+
+.button-list li .Butt,.button-list li .DisabledButt { /*	-moz-border-bottom-colors: none;
+	-moz-border-image: none;
+	-moz-border-left-colors: none;
+	-moz-border-right-colors: none;
+	-moz-border-top-colors: none;*/
+	/*TODO rwe: background only works with firefox*/
+	background: -moz-linear-gradient(center top, #FBFBFB, #F4F4F4) repeat scroll 0 0 transparent;
+	border-color: #F0F0F0 #E2E2E2 #E4E4E4 #F0F0F0;
+	border-radius: 0 0 0 0;
+	border-style: solid;
+	border-width: 1px 0;
+	color: #444444;
+	font-weight: normal;
+	height: 5px;
+	overflow: hidden;
+	padding: 4px 7px;
+}
+
+#nav-bar.button-list a.Butt:hover {
+	/*TODO rwe: background only works with firefox, but take a look at: http://webdesignerwall.com/tutorials/css3-dropdown-menu*/
+	background: -moz-linear-gradient(center top, #F0F0F0, #F4F4F4) repeat scroll 0 0 transparent;
+}
+
+.Butt:link,.SmallButt:link,.Butt:visited,.SmallButt:visited {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+
+#nav-bar.button-list a:hover {
+	color: #0191D0;
+}

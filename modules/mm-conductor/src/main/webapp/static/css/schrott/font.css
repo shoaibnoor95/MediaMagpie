@@ -1,0 +1,25 @@
+* {
+	font-family: Verdana, Helvetica, Arial, sans-serif;
+	font-size: 11px;
+	/*color: #000*/
+}
+
+a {
+	color: #002c50;
+}
+
+a:hover {
+	color: #0191d0;
+}
+
+h1 {
+	font-size: 18px;
+	margin: 0 0 20px 0 ;
+	color: #0191d0;
+}
+
+h2 {
+	font-size: 14px;
+	margin: 20px 0 20px 0;
+	padding:0;
+}

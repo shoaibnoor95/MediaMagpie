@@ -1,0 +1,82 @@
+body,html {
+	margin: 0;
+	padding: 0;
+	color: #000;
+	background: #FFF;
+}
+
+#page {
+	width: 100%;
+	min-width:900px;
+	margin: 0 auto;
+	background: #dfdfdf;
+}
+
+#mainNavi {
+	padding: 0;
+	height:70px;
+	background-color: #e3e3e3;
+	background-image: url(../images/mainNavi/bgMainNavi.jpg);
+	background-repeat: repeat-x;
+}
+
+#logo {
+	position:absolute;
+	left:15px;
+	top:20px;
+}
+
+#subNavi {
+	float: left;
+	width: 210px;
+	background: #dfdfdf;
+	display: block;
+}
+
+#content {
+	background: #FFF;
+	padding:30px;
+	margin-left: 210px;
+	min-height:600px;
+	border-left:1px solid #CCC;
+}
+
+#footer {
+	clear: both;
+	padding: 5px 10px;
+	background: #FFF;
+	text-align:center;
+	font-size:10px; color:#999; 
+	border-top:1px solid #CDCDCD;
+}
+
+
+#footer a {
+	font-size:10px;
+}
+
+#footer span {
+	cursor:pointer; 
+	font-size:10px; 
+	color:#999;
+}
+
+* html #footer {
+	height: 1px;
+}
+
+.clear, .cl {
+	clear: both;
+}
+
+.clearfix:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+.clearfix {
+	zoom: 1;
+}
