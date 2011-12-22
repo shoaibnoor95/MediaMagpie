@@ -1,0 +1,12 @@
+modules/mm-common/.classpath
+modules/mm-common/.project
+modules/mm-common/.settings/
+modules/mm-common/target/
+modules/mm-conductor/.classpath
+modules/mm-conductor/.project
+modules/mm-conductor/.settings/
+modules/mm-conductor/target/
+mm-distribution/target/
+mm-distribution/.classpath
+mm-distribution/.project
+mm-distribution/.settings/

@@ -8,7 +8,7 @@
                            http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context
                            http://www.springframework.org/schema/context/spring-context.xsd">
-
+    <!-- TODO rwe: remove me -->
     <context:component-scan base-package="wehner.workshop.ws.embedded.service" />
 
     <bean id="person" class="org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition"
