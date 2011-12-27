@@ -25,6 +25,17 @@ import org.slf4j.LoggerFactory;
  *   &#064;Rule
  *   public TestEnvironment _testEnvironment = new TestEnvironment(getClass());
  *   ...
+ *   &#064;Before
+ *   public void setUp() {
+ *      // clean or create if necessary the working dir
+ *      _testEnvironment.cleanWorkingDir();
+ *   }
+ *   
+ *   &#064;Test
+ *   public void test() {
+ *      File myNewTestFile = new File(_testEnvironment.getWorkingDir(), "newFile.txt");
+ *      ...
+ *   }
  * </pre>
  * 
  * </p>

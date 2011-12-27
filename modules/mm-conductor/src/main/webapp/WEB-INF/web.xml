@@ -9,7 +9,7 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>classpath:/spring/web-application.xml</param-value>
-	</context-param>
+	</context-param> 
 	<context-param>
 		<param-name>org.mortbay.jetty.servlet.SessionCookie</param-name>
 		<param-value>WORKSHOPSESSIONID</param-value>

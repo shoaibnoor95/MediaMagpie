@@ -31,12 +31,9 @@ import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.UserDao;
 import de.wehner.mediamagpie.conductor.spring.deploy.DataInjector;
-import de.wehner.mediamagpie.conductor.spring.deploy.DeployMode;
-import de.wehner.mediamagpie.conductor.spring.deploy.DeployMode.DeployModeType;
 import de.wehner.mediamagpie.conductor.webapp.services.SetupVerificationService;
 
 @Component
-@DeployMode(DeployModeType.ANY)
 public class SetupPropertiesInjector implements DataInjector {
 
     private static final Logger LOG = LoggerFactory.getLogger(SetupPropertiesInjector.class);

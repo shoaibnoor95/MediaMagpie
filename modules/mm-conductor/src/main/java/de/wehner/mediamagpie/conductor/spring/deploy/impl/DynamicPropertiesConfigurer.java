@@ -5,10 +5,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
-import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -21,11 +22,12 @@ import org.springframework.beans.factory.support.RootBeanDefinition;
 import de.wehner.mediamagpie.common.util.SearchPathUtil;
 import de.wehner.mediamagpie.common.util.StringUtil;
 
-
-
 public class DynamicPropertiesConfigurer extends PropertyPlaceholderConfigurer {
 
     private static Logger LOG = LoggerFactory.getLogger(DynamicPropertiesConfigurer.class);
+
+    public static final String DEPLOY_MODE = "deploy.mode";
+    private static final String SPRINGS_PROFILE_ACTIVE = "spring.profiles.active";
 
     public static final String DEFAULT_PROPERTIES_FILE = "default.properties";
     private static final String SYSTEM_PROPERTY_PREFIX = "system.property.";
@@ -37,7 +39,18 @@ public class DynamicPropertiesConfigurer extends PropertyPlaceholderConfigurer {
 
     public DynamicPropertiesConfigurer(Properties systemProperties, String... propertyPaths) throws IOException {
         _systemProperties = systemProperties;
+        setupDeployMode();
         readProperties(propertyPaths);
+    }
+
+    private void setupDeployMode() {
+        String deployMode = _systemProperties.getProperty(DEPLOY_MODE);
+        if (StringUtils.isEmpty(deployMode)) {
+            LOG.warn("No system property '" + DEPLOY_MODE + "' is set. Set deploy.mode to 'local' as default development environment.");
+            deployMode = "local";
+        }
+        LOG.info("Add property '" + SPRINGS_PROFILE_ACTIVE + "' to '" + deployMode + "'.");
+        System.getProperties().put(SPRINGS_PROFILE_ACTIVE, deployMode);
     }
 
     private void readProperties(String... propertyPaths) throws IOException {
@@ -49,7 +62,7 @@ public class DynamicPropertiesConfigurer extends PropertyPlaceholderConfigurer {
             String modeName = propertiesPath.substring(propertiesPath.lastIndexOf("/") + 1);
             String modeSystemKey = modeName + ".mode";
             String setupMode = getSystemProperty(defaultProperties, modeSystemKey);
-            if (StringUtil.isEmpty(setupMode)) {
+            if (StringUtils.isEmpty(setupMode)) {
                 throw new IllegalStateException("System variable '" + modeSystemKey + "' not defined! Configure with -D" + modeSystemKey + "=<mode>");
             }
             String modePropertiesFile = setupMode + ".properties";
@@ -97,7 +110,8 @@ public class DynamicPropertiesConfigurer extends PropertyPlaceholderConfigurer {
     }
 
     private Properties loadProperties(String parentFolder, String fileName, Properties defaultProperties) throws IOException {
-        InputStream inputStream = SearchPathUtil.openStream("conf/" + fileName, parentFolder + "/" + fileName, "classpath:/" + fileName, "classpath:" + parentFolder + "/" + fileName);
+        InputStream inputStream = SearchPathUtil.openStream("conf/" + fileName, parentFolder + "/" + fileName, "classpath:/" + fileName, "classpath:"
+                + parentFolder + "/" + fileName);
         Properties properties = new Properties(defaultProperties);
         properties.load(inputStream);
         inputStream.close();

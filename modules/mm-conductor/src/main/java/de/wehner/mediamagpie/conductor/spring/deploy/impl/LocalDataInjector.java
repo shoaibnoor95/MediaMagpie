@@ -20,12 +20,11 @@ import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
 import de.wehner.mediamagpie.conductor.persistence.TransactionHandler;
 import de.wehner.mediamagpie.conductor.persistence.dao.UserDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.UserGroupDao;
-import de.wehner.mediamagpie.conductor.spring.deploy.DeployMode;
-import de.wehner.mediamagpie.conductor.spring.deploy.DeployMode.DeployModeType;
+import de.wehner.mediamagpie.conductor.spring.deploy.Local;
 import de.wehner.mediamagpie.conductor.webapp.services.UserSecurityService;
 
+@Local
 @Component
-@DeployMode(DeployModeType.LOCAL)
 public class LocalDataInjector extends AbstractDataInjector {
 
     private static final Logger LOG = LoggerFactory.getLogger(LocalDataInjector.class);
