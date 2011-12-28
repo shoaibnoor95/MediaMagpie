@@ -38,11 +38,11 @@ public class SetupPropertiesInjector implements DataInjector {
 
     private static final Logger LOG = LoggerFactory.getLogger(SetupPropertiesInjector.class);
 
+    private final DynamicPropertiesConfigurer _dynamicPropertiesConfigurer;
     private final UserDao _userDao;
     private final TransactionHandler _transactionHandler;
     private final ConfigurationDao _configurationDao;
     private final UserConfigurationDao _userConfigurationDao;
-    private final Properties _properties;
     private final Validator _validator;
     private final CipherService _cipherService;
     private final SetupVerificationService _setupVerificationService;
@@ -51,13 +51,13 @@ public class SetupPropertiesInjector implements DataInjector {
     public SetupPropertiesInjector(DynamicPropertiesConfigurer dynamicPropertiesConfigurer, UserDao userDao, ConfigurationDao configurationDao,
             UserConfigurationDao userConfigurationDao, TransactionHandler transactionHandler, Validator validator, CipherService cipherService,
             SetupVerificationService setupVerificationService) throws IOException {
+        _dynamicPropertiesConfigurer = dynamicPropertiesConfigurer;
         _userDao = userDao;
         _transactionHandler = transactionHandler;
         _configurationDao = configurationDao;
         _userConfigurationDao = userConfigurationDao;
         _validator = validator;
         _cipherService = cipherService;
-        _properties = dynamicPropertiesConfigurer.getProperties();
         _setupVerificationService = setupVerificationService;
     }
 
@@ -65,6 +65,7 @@ public class SetupPropertiesInjector implements DataInjector {
     @SuppressWarnings("unchecked")
     public void injectData() throws Exception {
 
+        final Properties properties = _dynamicPropertiesConfigurer.getProperties();
         _transactionHandler.executeInTransaction(new Runnable() {
 
             // Set non-user configurations if not initialized once before
@@ -86,9 +87,9 @@ public class SetupPropertiesInjector implements DataInjector {
                             // own Annotation class, because the <code>Validatabe</code> class comes from hibernate and isn't available in
                             // version 4.0.
                             Annotation validatable = clazz.getAnnotation(Validatable.class);
-                            Object setupEntity = PropertiesUtil.readFromProperties(_cipherService, clazz, _properties);
+                            Object setupEntity = PropertiesUtil.readFromProperties(_cipherService, clazz, properties);
                             if (validatable == null) {
-                                PropertiesUtil.checkPropertyCompleteness(clazz, _properties, true);
+                                PropertiesUtil.checkPropertyCompleteness(clazz, properties, true);
                             } else {
                                 BindingResult bindingResult = new BeanPropertyBindingResult(setupEntity, "");
                                 _validator.validate(setupEntity, bindingResult);
@@ -121,9 +122,9 @@ public class SetupPropertiesInjector implements DataInjector {
                             // own Annotation class, because the <code>Validatabe</code> class comes from hibernate and isn't available in
                             // version 4.0.
                             Annotation validatable = clazz.getAnnotation(Validatable.class);
-                            Object setupEntity = PropertiesUtil.readFromProperties(_cipherService, clazz, _properties);
+                            Object setupEntity = PropertiesUtil.readFromProperties(_cipherService, clazz, properties);
                             if (validatable == null) {
-                                PropertiesUtil.checkPropertyCompleteness(clazz, _properties, false);
+                                PropertiesUtil.checkPropertyCompleteness(clazz, properties, false);
                             } else {
                                 BindingResult bindingResult = new BeanPropertyBindingResult(setupEntity, "");
                                 _validator.validate(setupEntity, bindingResult);

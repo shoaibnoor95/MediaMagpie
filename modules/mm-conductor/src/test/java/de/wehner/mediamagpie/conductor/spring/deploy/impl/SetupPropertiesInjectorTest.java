@@ -28,7 +28,7 @@ import de.wehner.mediamagpie.conductor.webapp.services.SetupVerificationService;
 public class SetupPropertiesInjectorTest {
 
     @Mock
-    private DynamicPropertiesConfigurer _configurer;
+    private DynamicPropertiesConfigurer _dynamicPropertiesConfigurer;
     @Mock
     private ConfigurationDao _confDao;
     @Mock
@@ -57,7 +57,7 @@ public class SetupPropertiesInjectorTest {
 
     @Test
     public void testNoConfStoringWhenNoProperties() throws Exception {
-        when(_configurer.getProperties()).thenReturn(_props);
+        when(_dynamicPropertiesConfigurer.getProperties()).thenReturn(_props);
         doNothing().when(_transactionHandler).executeInTransaction(_captor.capture());
 
         execute(_setupPropertiesInjector);
@@ -72,7 +72,7 @@ public class SetupPropertiesInjectorTest {
         conf.setEmail("email");
         conf.setPassword("***");
         _props = PropertiesUtil.transformToProperties(_cipherService, conf);
-        when(_configurer.getProperties()).thenReturn(_props);
+        when(_dynamicPropertiesConfigurer.getProperties()).thenReturn(_props);
         doNothing().when(_transactionHandler).executeInTransaction(_captor.capture());
 
         execute(_setupPropertiesInjector);
@@ -84,7 +84,7 @@ public class SetupPropertiesInjectorTest {
     @Test
     public void testNoConfStoringWhenConfAlreadyStored() throws Exception {
         _props.load(SetupPropertiesInjector.class.getResourceAsStream("/properties/deploy/default.properties"));
-        when(_configurer.getProperties()).thenReturn(_props);
+        when(_dynamicPropertiesConfigurer.getProperties()).thenReturn(_props);
         when(_confDao.countAll()).thenReturn(23L);
         doNothing().when(_transactionHandler).executeInTransaction(_captor.capture());
 
@@ -97,9 +97,9 @@ public class SetupPropertiesInjectorTest {
     @Test
     public void testStoring() throws Exception {
         _props.load(SetupPropertiesInjector.class.getResourceAsStream("/properties/deploy/default.properties"));
-        when(_configurer.getProperties()).thenReturn(_props);
-        SetupPropertiesInjector injector = new SetupPropertiesInjector(_configurer, _userDao, _confDao, _userConfigurationDao, _transactionHandler,
-                _beanValidator, _cipherService, _setupVerificationService);
+        when(_dynamicPropertiesConfigurer.getProperties()).thenReturn(_props);
+        SetupPropertiesInjector injector = new SetupPropertiesInjector(_dynamicPropertiesConfigurer, _userDao, _confDao, _userConfigurationDao,
+                _transactionHandler, _beanValidator, _cipherService, _setupVerificationService);
         doNothing().when(_transactionHandler).executeInTransaction(_captor.capture());
 
         execute(injector);

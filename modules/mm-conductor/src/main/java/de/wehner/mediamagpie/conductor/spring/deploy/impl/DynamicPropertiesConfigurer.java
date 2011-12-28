@@ -99,7 +99,7 @@ public class DynamicPropertiesConfigurer extends PropertyPlaceholderConfigurer {
             if (propertyName.startsWith(SYSTEM_PROPERTY_PREFIX)) {
                 String value = properties.getProperty(propertyName);
                 String realKey = propertyName.substring(SYSTEM_PROPERTY_PREFIX.length());
-                if (StringUtil.isEmpty(getSystemProperty(realKey))) {
+                if (StringUtils.isEmpty(getSystemProperty(realKey))) {
                     LOG.info("setting configured system property '" + realKey + "' to '" + value + "'");
                     setSystemProperty(realKey, value);
                 } else {
