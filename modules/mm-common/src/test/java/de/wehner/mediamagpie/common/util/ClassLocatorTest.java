@@ -1,10 +1,9 @@
 package de.wehner.mediamagpie.common.util;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.fest.assertions.Assertions.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -31,16 +30,19 @@ public class ClassLocatorTest {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         String packageName = getClass().getPackage().getName();
         String packagePath = packageName.replace('.', '/');
-        Enumeration<URL> resourcesOfThisClass = classLoader.getResources(packagePath);
-        URL resourceToPackage = resourcesOfThisClass.nextElement();
         _testPackagePath = new File(_testEnvironment.getWorkingDir(), "my path with spaces");
 
         // build a new test directory like 'target/junit/ClassLocatorTest/my
         // path with spaces/de/wehner/mediamagpie/common/util' and copy all
         // class files into
         _testPackagePath = new File(_testPackagePath, packagePath);
-        File pathToTestPackage = new File(resourceToPackage.toURI());
-        FileUtils.copyDirectory(pathToTestPackage, _testPackagePath);
+        Enumeration<URL> resourcesOfThisClass = classLoader.getResources(packagePath);
+        while (resourcesOfThisClass.hasMoreElements()) {
+            URL resourceToPackage = resourcesOfThisClass.nextElement();
+            File pathToTestPackage = new File(resourceToPackage.toURI());
+            System.out.println("Copy classes from '" + pathToTestPackage.getPath() + "' to '" + _testPackagePath.getPath() + "'.");
+            FileUtils.copyDirectory(pathToTestPackage, _testPackagePath);
+        }
     }
 
     @Test
