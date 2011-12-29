@@ -9,7 +9,7 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 	<artifactId>mm-conductor</artifactId>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 	<name>MediaMagpie Web</name>
 	<dependencies>
 
@@ -20,7 +20,8 @@
 		</dependency>
 
 		<!-- Some useful stuff -->
-		<!-- <dependency> <groupId>commons-lang</groupId> <artifactId>commons-lang</artifactId> </dependency> -->
+		<!-- <dependency> <groupId>commons-lang</groupId> <artifactId>commons-lang</artifactId> 
+			</dependency> -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
@@ -129,7 +130,8 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<scope>runtime</scope>
-			<!-- rwe: runtime needed for Slf4JLoggerTest, that needs the Log4j Logger directly -->
+			<!-- rwe: runtime needed for Slf4JLoggerTest, that needs the Log4j Logger 
+				directly -->
 			<!-- <scope>provided</scope> -->
 		</dependency>
 		<dependency>
@@ -139,9 +141,10 @@
 		</dependency>
 
 		<!-- Servlet -->
-		<!-- <dependency> <groupId>javax.servlet</groupId> <artifactId>servlet-api</artifactId> <version>2.5</version> 
-			<scope>provided</scope> </dependency> <dependency> <groupId>javax.servlet.jsp</groupId> <artifactId>jsp-api</artifactId> 
-			<version>2.1</version> <scope>provided</scope> </dependency> -->
+		<!-- <dependency> <groupId>javax.servlet</groupId> <artifactId>servlet-api</artifactId> 
+			<version>2.5</version> <scope>provided</scope> </dependency> <dependency> 
+			<groupId>javax.servlet.jsp</groupId> <artifactId>jsp-api</artifactId> <version>2.1</version> 
+			<scope>provided</scope> </dependency> -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
@@ -169,7 +172,8 @@
 			<artifactId>mail</artifactId>
 			<version>1.4.4</version>
 		</dependency>
-		<!-- <dependency> <id>smtp</id> <groupId>javamail</groupId> <version>1.4.3</version> </dependency> -->
+		<!-- <dependency> <id>smtp</id> <groupId>javamail</groupId> <version>1.4.3</version> 
+			</dependency> -->
 
 		<!-- jetty -->
 		<dependency>
@@ -212,11 +216,24 @@
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
+
 	<build>
 		<plugins>
+			<plugin>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<configuration>
+					<wtpversion>2.0</wtpversion>
+					<wtpapplicationxml>true</wtpapplicationxml>
+					<wtpmanifest>true</wtpmanifest>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>true</downloadJavadocs>
+					<projectNameTemplate>[artifactId]-[version]</projectNameTemplate>
+					<manifest>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifest>
+				</configuration>
+			</plugin>
 
 			<!-- rwe: experimental for ManifestMetaData.java (see also http://maven.apache.org/plugins/maven-war-plugin/examples/war-manifest-guide.html) -->
-			<plugin>
+<!-- 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
@@ -227,13 +244,14 @@
 					</archive>
 				</configuration>
 			</plugin>
-
+-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.9</version>
 				<configuration>
-					<!-- once: multiple threads, always: fore each test class pertest: fore each test method -->
+					<!-- once: multiple threads, always: fore each test class pertest: fore 
+						each test method -->
 					<forkMode>always</forkMode>
 				</configuration>
 			</plugin>
@@ -287,8 +305,8 @@
 			</plugin>
 
 			<plugin>
-				<!-- NOTE: We don't need a groupId specification because the group is org.apache.maven.plugins ...which 
-					is assumed by default. -->
+				<!-- NOTE: We don't need a groupId specification because the group is 
+					org.apache.maven.plugins ...which is assumed by default. -->
 				<artifactId>maven-assembly-plugin</artifactId>
 				<!-- <version>2.2.1</version> -->
 				<configuration>
@@ -299,4 +317,6 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	
 </project>
