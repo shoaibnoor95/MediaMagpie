@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.net.JarURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -78,7 +80,8 @@ public class ClassLocator {
         Enumeration<JarEntry> entries = jarFile.entries();
         while (entries.hasMoreElements()) {
             JarEntry entry = entries.nextElement();
-            if ((entry.getName().startsWith(packagePath) || entry.getName().startsWith("WEB-INF/classes/" + packagePath)) && entry.getName().endsWith(".class")) {
+            if ((entry.getName().startsWith(packagePath) || entry.getName().startsWith("WEB-INF/classes/" + packagePath))
+                    && entry.getName().endsWith(".class")) {
                 String className = entry.getName();
                 if (className.startsWith("/"))
                     className = className.substring(1);
@@ -115,20 +118,37 @@ public class ClassLocator {
         return _annotations.isEmpty();
     }
 
-    private void loadDirectory(Set<Class<?>> classes, URL resource, String packageName) throws IOException {
-        loadDirectory(classes, packageName, resource.getFile());
-
+    /**
+     * Collects all classes for a specified package name within a directory on the local file system. If the directory contains sub
+     * directories, the classes within the sub directories will be collected as well.
+     * 
+     * @param classes
+     *            A reference to a set were the result will be added
+     * @param resource
+     *            The URL describing a directory on the local file system were classes within the <code>packageName</code> will be
+     *            collected.
+     * @param packageName
+     *            The package name used to load all classes that are enclosed within
+     * @throws IOException
+     */
+    void loadDirectory(Set<Class<?>> classes, URL resource, String packageName) throws IOException {
+        try {
+            URI uri = resource.toURI();
+            File pathToResource = new File(uri);
+            loadDirectory(classes, packageName, pathToResource);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Internal error. The argument 'resource' must be a valid directory on local file sytem.", e);
+        }
     }
 
-    private void loadDirectory(Set<Class<?>> classes, String packageName, String fullPath) throws IOException {
-        File directory = new File(fullPath);
-        if (!directory.isDirectory())
+    private void loadDirectory(Set<Class<?>> classes, String packageName, File directory) throws IOException {
+        if (!directory.isDirectory()) {
             throw new IOException("Invalid directory " + directory.getAbsolutePath());
-
+        }
         File[] files = directory.listFiles();
         for (File file : files) {
             if (file.isDirectory()) {
-                loadDirectory(classes, packageName + '.' + file.getName(), file.getAbsolutePath());
+                loadDirectory(classes, packageName + '.' + file.getName(), file);
             } else if (file.getName().endsWith(".class")) {
                 String simpleName = file.getName();
                 simpleName = simpleName.substring(0, simpleName.length() - ".class".length());
