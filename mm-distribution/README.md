@@ -44,3 +44,21 @@ When using jetty try to set the system properties
  
 When using a different context path copy the file domain.xml into your ROOT webapp directory of tomcat.
 
+Deploy to tomcat
+----------------
++ Setup tomcat/conf/tomcat-users.xml:
+  <tomcat-users>
+    <role rolename="manager"/>
+    <role rolename="admin"/>
+    <user password="admin" roles="admin,manager" username="admin"/> 
+  </tomcat-users>
++ Setup .m2/settings.xml:
+  <servers>
+    <server>
+        <id>myserver</id>
+        <username>admin</username>
+        <password>admin</password>
+    </server>
+  </servers>
++ run: mvn tomcat:deploy -DskipTests=true
+
