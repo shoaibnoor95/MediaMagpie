@@ -33,24 +33,40 @@ public class DynamicPropertiesConfigurer extends PropertyPlaceholderConfigurer {
     private static final String SYSTEM_PROPERTY_PREFIX = "system.property.";
     private Properties _systemProperties;
 
+    /**
+     * <b>Call this method before the spring context will be created. </b> The method does:
+     * <ul>
+     * <li>sets a default value 'local' for System.Property 'deploy.mode' if not specified before</b>
+     * <li>sets the spring profile name into the System.Property</li>
+     * </ul>
+     */
+    public static void setupDeployModeAndSpringProfile() {
+        Properties properties = System.getProperties();
+        String deployMode = properties.getProperty(DEPLOY_MODE);
+        if (StringUtils.isEmpty(deployMode)) {
+            deployMode = "local";
+            LOG.warn("No system property '" + DEPLOY_MODE + "' is set. Set to '" + deployMode + "' as default value.");
+            System.setProperty(DEPLOY_MODE, deployMode);
+        }
+        if (StringUtils.isEmpty(System.getProperty(SPRINGS_PROFILE_ACTIVE))) {
+            LOG.info("Set value '" + deployMode + "' to property '" + SPRINGS_PROFILE_ACTIVE + "' to impact the spring context.");
+            System.setProperty(SPRINGS_PROFILE_ACTIVE, deployMode);
+        }
+    }
+
     public DynamicPropertiesConfigurer(String... propertyPaths) throws IOException {
         this(System.getProperties(), propertyPaths);
     }
 
     public DynamicPropertiesConfigurer(Properties systemProperties, String... propertyPaths) throws IOException {
         _systemProperties = systemProperties;
-        setupDeployMode();
-        readProperties(propertyPaths);
-    }
-
-    private void setupDeployMode() {
-        String deployMode = _systemProperties.getProperty(DEPLOY_MODE);
-        if (StringUtils.isEmpty(deployMode)) {
-            LOG.warn("No system property '" + DEPLOY_MODE + "' is set. Set deploy.mode to 'local' as default development environment.");
-            deployMode = "local";
+        if (StringUtils.isEmpty(_systemProperties.getProperty(DEPLOY_MODE))) {
+            throw new RuntimeException(
+                    "No System.Property '"
+                            + DEPLOY_MODE
+                            + "' is set. Specify this property when starting the application or call method setupDeployModeAndSpringProfile() before you build the spring context.");
         }
-        LOG.info("Add property '" + SPRINGS_PROFILE_ACTIVE + "' to '" + deployMode + "'.");
-        System.getProperties().put(SPRINGS_PROFILE_ACTIVE, deployMode);
+        readProperties(propertyPaths);
     }
 
     private void readProperties(String... propertyPaths) throws IOException {

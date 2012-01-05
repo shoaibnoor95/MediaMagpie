@@ -11,8 +11,6 @@
 	</parent>
 
 	<artifactId>mm-distribution</artifactId>
-
-
 	<name>MediaMagpie Distribution</name>
 
 	<!-- NOTE: These dependency declarations are only required to sort this project to the end of the line 

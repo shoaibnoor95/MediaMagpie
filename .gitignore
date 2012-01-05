@@ -6,6 +6,7 @@ modules/mm-conductor/.classpath
 modules/mm-conductor/.project
 modules/mm-conductor/.settings/
 modules/mm-conductor/target/
+modules/mm-conductor/src/main/webapp/META-INF/MANIFEST.MF
 mm-distribution/target/
 mm-distribution/.classpath
 mm-distribution/.project

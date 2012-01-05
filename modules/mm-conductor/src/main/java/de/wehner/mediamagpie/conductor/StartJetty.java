@@ -23,6 +23,7 @@ public class StartJetty {
 
         // setup jetty specific properties
         LOG.info("Using DynamicPropertiesConfigurer to preload properties for jetty start.");
+        DynamicPropertiesConfigurer.setupDeployModeAndSpringProfile();
         DynamicPropertiesConfigurer propertiesConfigurer = new DynamicPropertiesConfigurer("/properties/deploy");
         Properties properties = propertiesConfigurer.getProperties();
         setJettySecificConfigurationIntoSystemProperties(properties);

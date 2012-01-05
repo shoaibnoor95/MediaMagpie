@@ -2,11 +2,14 @@ package de.wehner.mediamagpie.conductor;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.ContextLoaderListener;
+
+import de.wehner.mediamagpie.conductor.spring.deploy.impl.DynamicPropertiesConfigurer;
 
 public class ContextListener extends ContextLoaderListener {
 
@@ -23,6 +26,8 @@ public class ContextListener extends ContextLoaderListener {
     @Override
     public void contextInitialized(ServletContextEvent event) {
         LOG.info("initializing project...");
+        DynamicPropertiesConfigurer.setupDeployModeAndSpringProfile();
+
         super.contextInitialized(event);
 
         // access beans through

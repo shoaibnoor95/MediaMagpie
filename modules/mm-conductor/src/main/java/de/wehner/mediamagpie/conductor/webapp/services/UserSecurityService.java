@@ -2,6 +2,7 @@ package de.wehner.mediamagpie.conductor.webapp.services;
 
 import java.util.concurrent.Callable;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import de.wehner.mediamagpie.common.core.util.Crypt;
 import de.wehner.mediamagpie.common.persistence.entity.User;
-import de.wehner.mediamagpie.common.util.StringUtil;
 import de.wehner.mediamagpie.conductor.persistence.TransactionHandler;
 import de.wehner.mediamagpie.conductor.persistence.dao.UserDao;
 
@@ -33,7 +33,7 @@ public class UserSecurityService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException, DataAccessException {
 
-        if (StringUtil.isEmpty(username)) {
+        if (StringUtils.isEmpty(username)) {
             throw new BadCredentialsException("No login user provided.");
         }
 
