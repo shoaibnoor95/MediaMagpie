@@ -21,13 +21,12 @@ import de.wehner.mediamagpie.conductor.persistence.dao.Dao;
 public class PersistenceTestUtil {
 
     public static EntityManagerFactory createEntityManagerFactory() {
-        String dbMode = System.getProperty("db.mode", "hsql-memory");
         // LocalEntityManagerFactoryBean factoryBean = new org.springframework.orm.jpa.LocalEntityManagerFactoryBean();
         // factoryBean.setPersistenceUnitName(dbMode);
         // factoryBean.afterPropertiesSet();
         // EntityManagerFactory nativeEntityManagerFactory = factoryBean.getNativeEntityManagerFactory();
         // return nativeEntityManagerFactory;
-        return Persistence.createEntityManagerFactory(dbMode);
+        return Persistence.createEntityManagerFactory("hsql-memory-withoutDS");
     }
 
     public static PersistenceService createPersistenceService() {

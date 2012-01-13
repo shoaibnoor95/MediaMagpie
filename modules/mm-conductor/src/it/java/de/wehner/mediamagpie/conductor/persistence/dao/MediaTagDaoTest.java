@@ -1,7 +1,5 @@
 package de.wehner.mediamagpie.conductor.persistence.dao;
 
-import static org.fest.assertions.Assertions.*;
-
 import java.io.File;
 import java.util.Date;
 import java.util.List;

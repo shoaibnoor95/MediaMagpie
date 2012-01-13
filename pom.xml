@@ -82,7 +82,7 @@
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
-				<version>11.0</version>
+				<version>11.0.1</version>
 			</dependency>
 
 			<!-- Spring -->
@@ -303,6 +303,11 @@
 				<updatePolicy>never</updatePolicy>
 			</snapshots>
 		</repository>
+		<repository>
+        		<id>org.springframework.maven.milestone</id>
+        		<name>Spring Framework Maven Milestone Repository</name>
+        		<url>http://maven.springframework.org/milestone</url>
+    		</repository>
 	</repositories>
 
 	<!-- For maven-jaxb2-plugin -->

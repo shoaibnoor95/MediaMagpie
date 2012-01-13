@@ -27,7 +27,6 @@ public class DynamicPropertiesConfigurer extends PropertyPlaceholderConfigurer {
     private static Logger LOG = LoggerFactory.getLogger(DynamicPropertiesConfigurer.class);
 
     public static final String DEPLOY_MODE = "deploy.mode";
-    private static final String SPRINGS_PROFILE_ACTIVE = "spring.profiles.active";
 
     public static final String DEFAULT_PROPERTIES_FILE = "default.properties";
     private static final String SYSTEM_PROPERTY_PREFIX = "system.property.";
@@ -48,6 +47,7 @@ public class DynamicPropertiesConfigurer extends PropertyPlaceholderConfigurer {
             LOG.warn("No system property '" + DEPLOY_MODE + "' is set. Set to '" + deployMode + "' as default value.");
             System.setProperty(DEPLOY_MODE, deployMode);
         }
+        final String SPRINGS_PROFILE_ACTIVE = "spring.profiles.active";
         if (StringUtils.isEmpty(System.getProperty(SPRINGS_PROFILE_ACTIVE))) {
             LOG.info("Set value '" + deployMode + "' to property '" + SPRINGS_PROFILE_ACTIVE + "' to impact the spring context.");
             System.setProperty(SPRINGS_PROFILE_ACTIVE, deployMode);

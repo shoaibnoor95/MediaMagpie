@@ -8,11 +8,11 @@
 		<version>0.1-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
-	
+
 	<artifactId>mm-conductor</artifactId>
 	<packaging>war</packaging>
 	<name>MediaMagpie Web</name>
-	
+
 	<dependencies>
 
 		<dependency>
@@ -40,7 +40,11 @@
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
 		</dependency>
-		<!-- rwe: remove this dependency if not used -->
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>1.4</version>
+		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
@@ -143,10 +147,6 @@
 		</dependency>
 
 		<!-- Servlet -->
-		<!-- <dependency> <groupId>javax.servlet</groupId> <artifactId>servlet-api</artifactId> 
-			<version>2.5</version> <scope>provided</scope> </dependency> <dependency> 
-			<groupId>javax.servlet.jsp</groupId> <artifactId>jsp-api</artifactId> <version>2.1</version> 
-			<scope>provided</scope> </dependency> -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
@@ -174,8 +174,6 @@
 			<artifactId>mail</artifactId>
 			<version>1.4.4</version>
 		</dependency>
-		<!-- <dependency> <id>smtp</id> <groupId>javamail</groupId> <version>1.4.3</version> 
-			</dependency> -->
 
 		<!-- jetty -->
 		<dependency>
@@ -194,6 +192,13 @@
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>jetty-java5-threadpool</artifactId>
 			<scope>test</scope>
+		</dependency>
+
+		<!-- VMWare Cloud Foundry -->
+		<dependency>
+			<groupId>org.cloudfoundry</groupId>
+			<artifactId>cloudfoundry-runtime</artifactId>
+			<version>0.8.1</version>
 		</dependency>
 
 		<!-- Test -->
@@ -229,24 +234,15 @@
 					<wtpmanifest>true</wtpmanifest>
 					<downloadSources>true</downloadSources>
 					<downloadJavadocs>true</downloadJavadocs>
-					<!-- <projectNameTemplate>[artifactId]-[version]</projectNameTemplate>-->
+					<!-- <projectNameTemplate>[artifactId]-[version]</projectNameTemplate> -->
 					<manifest>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifest>
 				</configuration>
 			</plugin>
 
 			<!-- rwe: experimental for ManifestMetaData.java (see also http://maven.apache.org/plugins/maven-war-plugin/examples/war-manifest-guide.html) -->
-<!-- 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<configuration>
-					<archive>
-						<manifestEntries>
-							<manifest_entry>value</manifest_entry>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
--->
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-war-plugin</artifactId> 
+				<configuration> <archive> <manifestEntries> <manifest_entry>value</manifest_entry> 
+				</manifestEntries> </archive> </configuration> </plugin> -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -319,6 +315,6 @@
 			</plugin>
 		</plugins>
 	</build>
-	
-	
+
+
 </project>

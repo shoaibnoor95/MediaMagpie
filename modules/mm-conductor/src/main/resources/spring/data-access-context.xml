@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
                            http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -9,9 +8,39 @@
                            http://www.springframework.org/schema/tx
                            http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-	<bean id="entityManagerFactory"
-		class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
-		<property name="persistenceUnitName" value="${db.mode}" />
+	<!-- Definition of all datasources. The pattern of BeanId must be: 'DS-<PersistenceUnitName>' -->
+	<bean id="DS-mysql" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost/mediamagpie?autoReconnect=true" />
+		<property name="username" value="mmagpie" />
+		<property name="password" value="mmagpie" />
+	</bean>
+	<bean id="DS-mysql-mediabutler" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost/mediabutler?autoReconnect=true" />
+		<property name="username" value="mbutler" />
+		<property name="password" value="mbutler" />
+	</bean>
+	<bean id="DS-hsql-file" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="org.hsqldb.jdbcDriver" />
+		<property name="url" value="jdbc:hsqldb:file:target/database/hsqlDB" />
+		<property name="username" value="sa" />
+		<property name="password" value="" />
+	</bean>
+	<bean id="DS-hsql-memory" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="org.hsqldb.jdbcDriver" />
+		<property name="url" value="jdbc:hsqldb:mem:Test" />
+		<property name="username" value="sa" />
+		<property name="password" value="" />
 	</bean>
 
+	<!-- Definition of EntityManagerFactoryBeans -->
+	<!-- <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean"> <property name="persistenceUnitName" 
+		value="${db.mode}" /> </bean> -->
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="persistenceUnitName" value="${persistent.unit}" />
+		<property name="dataSource" ref="DS-${persistent.unit}" />
+	</bean>
+	<beans profile="dev">
+	</beans>
 </beans>

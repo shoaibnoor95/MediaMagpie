@@ -3,15 +3,15 @@ package de.wehner.mediamagpie.conductor.spring.deploy.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.Session;
-import org.hibernate.search.FullTextSession;
-import org.hibernate.search.Search;
+import org.hibernate.search.jpa.FullTextEntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import de.wehner.mediamagpie.common.persistence.entity.ImageResizeJobExecution;
+import de.wehner.mediamagpie.common.persistence.entity.Media;
+import de.wehner.mediamagpie.common.persistence.entity.MediaTag;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.User.Role;
 import de.wehner.mediamagpie.common.persistence.entity.UserGroup;
@@ -29,17 +29,14 @@ public class LocalDataInjector extends AbstractDataInjector {
 
     private static final Logger LOG = LoggerFactory.getLogger(LocalDataInjector.class);
 
-    private final PersistenceService _ps;
     private final TransactionHandler _transactionHandler;
     private final UserGroupDao _groupDao;
     private final UserDao _userDao;
     private final PersistenceService _persistenceService;
 
     @Autowired
-    public LocalDataInjector(PersistenceService ps, TransactionHandler transactionHandler, UserGroupDao groupDao, UserDao userDao,
-            PersistenceService persistenceService) {
+    public LocalDataInjector(TransactionHandler transactionHandler, UserGroupDao groupDao, UserDao userDao, PersistenceService persistenceService) {
         super(transactionHandler);
-        _ps = ps;
         _transactionHandler = transactionHandler;
         _groupDao = groupDao;
         _userDao = userDao;
@@ -48,15 +45,19 @@ public class LocalDataInjector extends AbstractDataInjector {
 
     @Override
     public void injectData() {
+
+        LOG.info("Start indexing lucene entities...");
         _persistenceService.beginTransaction();
-        FullTextSession fullTextSession = Search.getFullTextSession((Session) _ps.getEntityManagerWithActiveTransaction().getDelegate());
+        FullTextEntityManager fullTextEntityManager = _persistenceService.getFullTextEntityManager();
         try {
-            fullTextSession.createIndexer().startAndWait();
+            fullTextEntityManager.createIndexer(Media.class).startAndWait();
+            fullTextEntityManager.createIndexer(MediaTag.class).startAndWait();
         } catch (InterruptedException e) {
             throw ExceptionUtil.convertToRuntimeException(e);
         } finally {
             _persistenceService.commitTransaction();
         }
+        LOG.info("Start indexing lucene entities...DONE");
 
         super.injectData();
         _transactionHandler.executeInTransaction(new Runnable() {

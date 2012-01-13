@@ -1,10 +1,14 @@
 package de.wehner.mediamagpie.conductor.webapp.controller;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +67,16 @@ public class WelcomeController {
         return WELCOME_VIEW;
     }
 
+    @RequestMapping("/env")
+    public void env(HttpServletResponse response) throws IOException {
+        response.setContentType("text/plain");
+        PrintWriter out = response.getWriter();
+        out.println("System Environment:");
+        for (Map.Entry<String, String> envvar : System.getenv().entrySet()) {
+            out.println(envvar.getKey() + ": " + envvar.getValue());
+        }
+    }
+    
     private String needRequiredSetup(HttpServletRequest request) {
         Set<SetupTask> setupTasks = _configurationProvider.getRequiredSetupTasks().getSetupTasks();
         if (setupTasks.contains(SetupTask.CONFIGURE_SYSTEM_DIRS)) {
