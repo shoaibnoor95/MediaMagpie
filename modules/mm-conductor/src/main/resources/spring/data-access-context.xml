@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:cloud="http://schema.cloudfoundry.org/spring"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
                            http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context 
                            http://www.springframework.org/schema/context/spring-context.xsd
                            http://www.springframework.org/schema/tx
-                           http://www.springframework.org/schema/tx/spring-tx.xsd">
+                           http://www.springframework.org/schema/tx/spring-tx.xsd
+                           http://schema.cloudfoundry.org/spring
+                           http://schema.cloudfoundry.org/spring/cloudfoundry-spring-0.8.xsd">
 
 	<!-- Definition of all datasources. The pattern of BeanId must be: 'DS-<PersistenceUnitName>' -->
 	<bean id="DS-mysql" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
@@ -34,13 +36,25 @@
 		<property name="password" value="" />
 	</bean>
 
-	<!-- Definition of EntityManagerFactoryBeans -->
-	<!-- <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean"> <property name="persistenceUnitName" 
-		value="${db.mode}" /> </bean> -->
-	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-		<property name="persistenceUnitName" value="${persistent.unit}" />
-		<property name="dataSource" ref="DS-${persistent.unit}" />
-	</bean>
-	<beans profile="dev">
+	<!-- Definition of EntityManagerFactoryBeans which consumes one of the datasource beans -->
+	<beans profile="local,default">
+		<!-- <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean"> <property name="persistenceUnitName" 
+			value="${db.mode}" /> </bean> -->
+		<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+			<property name="persistenceUnitName" value="${persistent.unit}" />
+			<property name="dataSource" ref="DS-${persistent.unit}" />
+		</bean>
 	</beans>
+	<beans profile="cloud">
+		<!-- see: http://blog.springsource.org/2011/11/09/using-cloud-foundry-services-with-spring-applications-part-3-the-cloud-namespace/ -->
+		<cloud:data-source id="cloudDataSource">
+			<cloud:connection properties="charset=utf-8;" />
+			<cloud:pool pool-size="5-10" max-wait-time="2000" />
+		</cloud:data-source>
+		<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+			<property name="persistenceUnitName" value="DS-mysql" />
+			<property name="dataSource" ref="cloudDataSource" />
+		</bean>
+	</beans>
+
 </beans>
