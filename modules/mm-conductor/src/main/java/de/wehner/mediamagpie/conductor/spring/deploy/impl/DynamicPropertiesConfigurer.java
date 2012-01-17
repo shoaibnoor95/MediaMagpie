@@ -40,18 +40,30 @@ public class DynamicPropertiesConfigurer extends PropertyPlaceholderConfigurer {
      * </ul>
      */
     public static void setupDeployModeAndSpringProfile() {
+        final String SPRINGS_PROFILE_ACTIVE = "spring.profiles.active";
         Properties properties = System.getProperties();
         String deployMode = properties.getProperty(DEPLOY_MODE);
+        String springProfile = properties.getProperty(SPRINGS_PROFILE_ACTIVE);
         if (StringUtils.isEmpty(deployMode)) {
             deployMode = "local";
-            LOG.warn("No system property '" + DEPLOY_MODE + "' is set. Set to '" + deployMode + "' as default value.");
+            LOG.warn("No system property '" + DEPLOY_MODE + "' is set.");
+            LOG.warn("Set System.Property '" + DEPLOY_MODE + "=" + deployMode + "'  to impact loading propper configuration properties.");
             System.setProperty(DEPLOY_MODE, deployMode);
         }
-        final String SPRINGS_PROFILE_ACTIVE = "spring.profiles.active";
-        if (StringUtils.isEmpty(System.getProperty(SPRINGS_PROFILE_ACTIVE))) {
-            LOG.info("Set value '" + deployMode + "' to property '" + SPRINGS_PROFILE_ACTIVE + "' to impact the spring context.");
-            System.setProperty(SPRINGS_PROFILE_ACTIVE, deployMode);
+        if (springProfile == null) {
+            springProfile = findDefaultProfile();
+            LOG.info("Set System.Property '" + SPRINGS_PROFILE_ACTIVE + "=" + springProfile + "' to impact the spring context.");
+            System.setProperty(SPRINGS_PROFILE_ACTIVE, springProfile);
         }
+    }
+
+    private static String findDefaultProfile() {
+        String cloudFoundryServices = System.getenv().get("VCAP_SERVICES");
+        if (cloudFoundryServices != null) {
+            LOG.info("System seems to be running within cloud foundry environment. Environment: VCAP_SERVICES='" + cloudFoundryServices + "'");
+            return "cloud";
+        }
+        return "local";
     }
 
     public DynamicPropertiesConfigurer(String... propertyPaths) throws IOException {

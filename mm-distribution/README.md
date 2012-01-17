@@ -62,3 +62,4 @@ Deploy to tomcat
   </servers>
 + run: mvn tomcat:deploy -DskipTests=true
 
+Hint for md-formatting: See https://github.com/SpringSource/cloudfoundry-samples/blob/master/stocks/README.md 

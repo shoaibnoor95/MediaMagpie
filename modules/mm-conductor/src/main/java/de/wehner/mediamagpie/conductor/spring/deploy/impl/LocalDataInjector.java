@@ -20,10 +20,10 @@ import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
 import de.wehner.mediamagpie.conductor.persistence.TransactionHandler;
 import de.wehner.mediamagpie.conductor.persistence.dao.UserDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.UserGroupDao;
-import de.wehner.mediamagpie.conductor.spring.deploy.Local;
+import de.wehner.mediamagpie.conductor.spring.deploy.PopulateDb;
 import de.wehner.mediamagpie.conductor.webapp.services.UserSecurityService;
 
-@Local
+@PopulateDb
 @Component
 public class LocalDataInjector extends AbstractDataInjector {
 

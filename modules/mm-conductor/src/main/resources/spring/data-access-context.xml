@@ -52,7 +52,7 @@
 			<cloud:pool pool-size="5-10" max-wait-time="2000" />
 		</cloud:data-source>
 		<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-			<property name="persistenceUnitName" value="DS-mysql" />
+			<property name="persistenceUnitName" value="mysql" />
 			<property name="dataSource" ref="cloudDataSource" />
 		</bean>
 	</beans>
