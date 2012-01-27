@@ -22,8 +22,7 @@
 		</dependency>
 
 		<!-- Some useful stuff -->
-		<!-- <dependency> <groupId>commons-lang</groupId> <artifactId>commons-lang</artifactId> 
-			</dependency> -->
+		<!-- <dependency> <groupId>commons-lang</groupId> <artifactId>commons-lang</artifactId> </dependency> -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
@@ -117,6 +116,13 @@
 			<artifactId>hibernate-entitymanager</artifactId>
 		</dependency>
 
+		<!-- Mon -->
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>2.7.2</version>
+		</dependency>
+		
 		<!-- JSR 303 with Hibernate Validator, see http://www.roseindia.net/tutorial/spring/spring3/web/spring-3-mvc-validation-example.html -->
 		<dependency>
 			<groupId>javax.validation</groupId>
@@ -136,8 +142,7 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<scope>runtime</scope>
-			<!-- rwe: runtime needed for Slf4JLoggerTest, that needs the Log4j Logger 
-				directly -->
+			<!-- rwe: runtime needed for Slf4JLoggerTest, that needs the Log4j Logger directly -->
 			<!-- <scope>provided</scope> -->
 		</dependency>
 		<dependency>
@@ -240,16 +245,14 @@
 			</plugin>
 
 			<!-- rwe: experimental for ManifestMetaData.java (see also http://maven.apache.org/plugins/maven-war-plugin/examples/war-manifest-guide.html) -->
-			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-war-plugin</artifactId> 
-				<configuration> <archive> <manifestEntries> <manifest_entry>value</manifest_entry> 
-				</manifestEntries> </archive> </configuration> </plugin> -->
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-war-plugin</artifactId> <configuration> <archive> <manifestEntries> 
+				<manifest_entry>value</manifest_entry> </manifestEntries> </archive> </configuration> </plugin> -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.9</version>
 				<configuration>
-					<!-- once: multiple threads, always: fore each test class pertest: fore 
-						each test method -->
+					<!-- once: multiple threads, always: fore each test class pertest: fore each test method -->
 					<forkMode>always</forkMode>
 				</configuration>
 			</plugin>
@@ -303,8 +306,7 @@
 			</plugin>
 
 			<plugin>
-				<!-- NOTE: We don't need a groupId specification because the group is 
-					org.apache.maven.plugins ...which is assumed by default. -->
+				<!-- NOTE: We don't need a groupId specification because the group is org.apache.maven.plugins ...which is assumed by default. -->
 				<artifactId>maven-assembly-plugin</artifactId>
 				<!-- <version>2.2.1</version> -->
 				<configuration>

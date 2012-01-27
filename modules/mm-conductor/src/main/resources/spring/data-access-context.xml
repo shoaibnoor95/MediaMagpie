@@ -55,6 +55,12 @@
 			<property name="persistenceUnitName" value="mysql" />
 			<property name="dataSource" ref="cloudDataSource" />
 		</bean>
+		
+		<!-- testing integration of mongoDB -->
+		<cloud:mongo-db-factory id="mongoDbFactory" />
+		<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+			<constructor-arg ref="mongoDbFactory" />
+		</bean>
 	</beans>
 
 </beans>

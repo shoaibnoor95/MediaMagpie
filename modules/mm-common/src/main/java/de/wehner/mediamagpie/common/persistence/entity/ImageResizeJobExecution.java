@@ -8,8 +8,6 @@ import javax.persistence.ManyToOne;
 @javax.persistence.Entity
 public class ImageResizeJobExecution extends JobExecution {
 
-    private static final long serialVersionUID = 1L;
-
 //    @ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @ManyToOne(optional = false, fetch=FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "MEDIA_ID")

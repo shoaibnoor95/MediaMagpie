@@ -58,9 +58,11 @@ public class DynamicPropertiesConfigurer extends PropertyPlaceholderConfigurer {
     }
 
     private static String findDefaultProfile() {
-        String cloudFoundryServices = System.getenv().get("VCAP_SERVICES");
-        if (cloudFoundryServices != null) {
-            LOG.info("System seems to be running within cloud foundry environment. Environment: VCAP_SERVICES='" + cloudFoundryServices + "'");
+        // To detect Cloud Foundry, see also class CloudEnvironment (cloudfoundry-runtime.jar)
+        // See also: http://aestasit.com/taking-vmware-cloud-foundry-on-a-test-drive
+        String isCloudFoundry = System.getenv().get("VCAP_APPLICATION");
+        if (isCloudFoundry != null) {
+            LOG.info("System seems to be running within cloud foundry environment. Environment: VCAP_SERVICES='" + isCloudFoundry + "'");
             return "cloud";
         }
         return "local";
