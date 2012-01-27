@@ -65,15 +65,18 @@ Deploy to tomcat
 
 # MongoDB
 Download MongoDB to your computer
+
     $ $ curl http://downloads.mongodb.org/osx/mongodb-osx-x86_64-2.0.2 > ~/programs/mongo.tgz
     $ tar xzf ~/programs/mongo.tgz
 
 Run MongoDB
+
     $ sudo mkdir -p /data/db
 	$ sudo chown `id -u` /data/db
     $ ~/programs/mongodb/bin/mongod
     
 or with non-default data directory:
+
     $ mkdir -p ~/programs/data/mongodb/
 	$ chown `id -u` ~/programs/data/mongodb/
     $ ~/programs/mongodb/bin/mongod --dbpath ~/programs/data/mongodb/ &
