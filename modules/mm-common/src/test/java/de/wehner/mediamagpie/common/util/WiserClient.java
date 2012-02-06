@@ -11,16 +11,39 @@ import org.subethamail.wiser.WiserMessage;
 
 /**
  * Helper class for the {@link Wiser} smtp server which provides some convenient methods to start/stop and access sent emails.<br/>
- * The wiser server is set up to port 2501. To work with the wiser in junit tests, you have to set the property
- * <code>System.setProperty("deploy.mode", "test")</code> before the spring context is set up. This will force spring to inject the
- * {@link LocalhostMailer} into <code>MailserService</code> constructor. '
+ * The wiser server is set up to port 2501.<br/>
+ * General, to work with the wiser in junit tests, you have to set the property <code>System.setProperty("deploy.mode", "test")</code>
+ * before the spring context is set up. This will force spring to inject the {@link LocalhostMailer} into <code>MailserService</code>
+ * constructor. '
+ * <p>
+ * To integrate the <code>WiserClient</code> into your testcases, use this pattern:
+ * </p>
+ * 
+ * <pre>
+ * public class Test {
+ * 
+ *     private WiserClient _wiserClient = new WiserClient();
+ * 
+ *     &#64;Before
+ *     public void setUp() throws Exception {
+ *         _wiserClient.start();
+ *         // setup some properties for your test (at least the port number for wiser)
+ *         // ...
+ *     }
+ * 
+ *     &#64;After
+ *     public void onTearDown() throws Exception {
+ *         _wiserClient.stop();
+ *     }
+ * ...
+ * </pre>
  * 
  * @author rwe-extern
  */
 public class WiserClient {
 
     public static final int PORT = 2501;
-    
+
     private Wiser _wiser;
 
     public WiserClient() {

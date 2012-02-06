@@ -22,6 +22,8 @@ import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfigurat
 import de.wehner.mediamagpie.common.util.FileSystemUtil;
 import de.wehner.mediamagpie.common.util.Pair;
 import de.wehner.mediamagpie.common.util.TimeProvider;
+import de.wehner.mediamagpie.conductor.fslayer.IFSLayer;
+import de.wehner.mediamagpie.conductor.fslayer.IFile;
 import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
 import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
@@ -40,16 +42,18 @@ public class UploadService {
     private final ImageService _imageService;
     private final PersistenceService _persistenceService;
     private final ThumbImageDao _thumbImageDao;
+    private final IFSLayer _fsLayer;
 
     @Autowired
     public UploadService(ConfigurationDao configurationDao, MediaDao mediaDao, ImageService imageService, PersistenceService persistenceService,
-            ThumbImageDao thumbImageDao) {
+            ThumbImageDao thumbImageDao, IFSLayer fsLayer) {
         super();
         _configurationDao = configurationDao;
         _mediaDao = mediaDao;
         _imageService = imageService;
         _persistenceService = persistenceService;
         _thumbImageDao = thumbImageDao;
+        _fsLayer = fsLayer;
     }
 
     /**
@@ -61,7 +65,7 @@ public class UploadService {
      * @return The original file name and the complete file name used to store the medias data in fs.
      */
     public synchronized Pair<String, File> createUniqueUserStoreFile(User currentUser, String originalFilename) {
-        File testRelFileName = buildRelativeMediaFileName(currentUser, originalFilename);
+        IFile testRelFileName = buildRelativeMediaFileName(currentUser, originalFilename);
         String baseUploadPath = _configurationDao.getConfiguration(MainConfiguration.class).getBaseUploadPath();
         File tempFile = new File(baseUploadPath, testRelFileName.getPath());
         try {
@@ -83,8 +87,9 @@ public class UploadService {
         return new Pair<String, File>(originalFilename, tempFile);
     }
 
-    private File buildRelativeMediaFileName(User currentUser, String originalFilename) {
-        File testRelFileName = new File(String.format("user_%06d", currentUser.getId()), originalFilename);
+    private IFile buildRelativeMediaFileName(User currentUser, String originalFilename) {
+//        File testRelFileName = new File(String.format("user_%06d", currentUser.getId()), originalFilename);
+        IFile testRelFileName = _fsLayer.createFile(String.format("user_%06d", currentUser.getId()), originalFilename);
         return testRelFileName;
     }
 
@@ -146,7 +151,7 @@ public class UploadService {
 
     public void deleteFile(User user, String mediaFileName) {
         String baseUploadPath = _configurationDao.getConfiguration(MainConfiguration.class).getBaseUploadPath();
-        File relativeFileName = buildRelativeMediaFileName(user, mediaFileName);
+        IFile relativeFileName = buildRelativeMediaFileName(user, mediaFileName);
         final File mediaFile = new File(baseUploadPath, relativeFileName.getPath());
         Media media = _mediaDao.getByUri(user, mediaFile.toURI());
         if (media != null) {

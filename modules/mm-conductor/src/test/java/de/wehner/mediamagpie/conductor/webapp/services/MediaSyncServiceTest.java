@@ -1,12 +1,18 @@
 package de.wehner.mediamagpie.conductor.webapp.services;
 
-import static org.junit.Assert.*;
-
-import static org.fest.assertions.Assertions.*;
-
-import static org.mockito.Matchers.*;
-
-import static org.mockito.Mockito.*;
+import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,6 +43,9 @@ import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.User.Role;
 import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
 import de.wehner.mediamagpie.common.test.util.TestEnvironment;
+import de.wehner.mediamagpie.conductor.fslayer.IFile;
+import de.wehner.mediamagpie.conductor.fslayer.localfs.LocalFSFile;
+import de.wehner.mediamagpie.conductor.fslayer.localfs.LocalFSLayer;
 import de.wehner.mediamagpie.conductor.persistence.TransactionHandlerMock;
 import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.UserConfigurationDao;
@@ -64,26 +73,26 @@ public class MediaSyncServiceTest {
     /**
      * 2010/07/10/resized_img_4358.jpg
      */
-    private File _fileA;
+    private IFile _fileA;
     /**
      * 2010/07/12/resized_img_4556.jpg
      */
-    private File _fileB;
+    private IFile _fileB;
     /**
      * 2010/07/12/resized_img_4636.jpg
      */
     private File _fileC;
-    private File _fileNotOnFs;
+    private IFile _fileNotOnFs;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         _testdataMediaDir = new File(_testEnvironment.getWorkingDir(), "data/media");
-        _fileA = new File(_testdataMediaDir, "2010/07/10/resized_img_4358.jpg");
-        _fileB = new File(_testdataMediaDir, "2010/07/12/resized_img_4556.jpg");
+        _fileA = new LocalFSFile(_testdataMediaDir, "2010/07/10/resized_img_4358.jpg");
+        _fileB = new LocalFSFile(_testdataMediaDir, "2010/07/12/resized_img_4556.jpg");
         _fileC = new File(_testdataMediaDir, "2010/07/12/resized_img_4636.jpg");
-        _fileNotOnFs = new File(_testdataMediaDir, "2010/07/10/this_simulates_deleted_file_on_fs.jpg");
-        _mediaSyncService = new MediaSyncService(new TransactionHandlerMock(), _userDao, _mediaDao, _userConfigurationDao);
+        _fileNotOnFs = new LocalFSFile(_testdataMediaDir, "2010/07/10/this_simulates_deleted_file_on_fs.jpg");
+        _mediaSyncService = new MediaSyncService(new TransactionHandlerMock(), _userDao, _mediaDao, _userConfigurationDao, new LocalFSLayer());
         UserConfiguration userConfiguration = new UserConfiguration();
         userConfiguration.simpleSetSingleRootMediaPath(_testdataMediaDir.getPath());
         _userA = new User("rwe", "rwe@localhost", Role.ADMIN);
@@ -220,7 +229,7 @@ public class MediaSyncServiceTest {
         FileUtils.copyDirectory(SOURCE_TEST_DIR_MEDIA, new File(userConfiguration.getRootMediaPathes()[0]));
         userConfiguration.setRootMediaPathes(new String[] { new File(_testdataMediaDir, "2010/07/10").getPath() });
         final AtomicInteger processingCount = new AtomicInteger();
-        when(_mediaDao.getAllByPathAndUri(any(User.class), any(File.class), any(List.class), any(Integer.class))).thenAnswer(new Answer<List<Media>>() {
+        when(_mediaDao.getAllByPathAndUri(any(User.class), any(IFile.class), any(List.class), any(Integer.class))).thenAnswer(new Answer<List<Media>>() {
 
             @Override
             public List<Media> answer(InvocationOnMock invocation) throws Throwable {
@@ -242,7 +251,7 @@ public class MediaSyncServiceTest {
             };
             syncThread.run();
         }
-        verify(_mediaDao, times(2)).getAllByPathAndUri(any(User.class), any(File.class), any(List.class), any(Integer.class));
+        verify(_mediaDao, times(2)).getAllByPathAndUri(any(User.class), any(IFile.class), any(List.class), any(Integer.class));
     }
 
     @Test

@@ -25,6 +25,7 @@ import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfigurat
 import de.wehner.mediamagpie.common.test.util.TestEnvironment;
 import de.wehner.mediamagpie.common.util.FileSystemUtil;
 import de.wehner.mediamagpie.common.util.Pair;
+import de.wehner.mediamagpie.conductor.fslayer.localfs.LocalFSLayer;
 import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
 import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
@@ -56,7 +57,7 @@ public class UploadServiceTest {
     @Before
     public void setUp() throws IOException {
         MockitoAnnotations.initMocks(this);
-        _uploadService = new UploadService(_configurationDao, _mediaDao, _imageService, _persistenceService, _thumbImageDao);
+        _uploadService = new UploadService(_configurationDao, _mediaDao, _imageService, _persistenceService, _thumbImageDao, new LocalFSLayer());
         _user = new User("Ralf", "rwe@localhost", Role.ADMIN);
         _user.setId(123L);
         mc = new MainConfiguration();

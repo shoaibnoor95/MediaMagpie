@@ -2,7 +2,18 @@ package de.wehner.mediamagpie.conductor.fslayer;
 
 import java.util.List;
 
-public interface FSLayer {
+public interface IFSLayer {
+
+    /**
+     * Creates a new <code>IFile</code> for relevant IFSLayer implementation.
+     * 
+     * @param path
+     *            The Path
+     * @param fileName
+     *            the file name
+     * @return The proper <code>IFile</code> implementation of this file system implementation.
+     */
+    IFile createFile(String path, String fileName);
 
     /**
      * Provides the schema, this FSLayer implements. EG: 'file', 'mongoDB', etc.
@@ -10,6 +21,15 @@ public interface FSLayer {
      * @return
      */
     String getSchema();
+
+    /**
+     * Creates a new directory instance.
+     * 
+     * @param path
+     *            The path dir directory, like /home/rwe/medias/data/users/
+     * @return Dir concreate <code>IDir</code> implementation
+     */
+    IFile createDir(String path);
 
     /**
      * Creates a new IFile object.
@@ -29,6 +49,14 @@ public interface FSLayer {
      * @return
      */
     List<IFile> listFiles(String path);
+
+    /**
+     * Creates a directory with given path.
+     * 
+     * @param path
+     *            The directory
+     */
+    void mkDir(String path);
 
     /**
      * Deletes a file from system. // TODO rwe: Maybe it will be better to use a String or URI instead of IFile

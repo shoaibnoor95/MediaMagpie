@@ -18,6 +18,7 @@ import de.wehner.mediamagpie.common.test.util.TestEnvironment;
 import de.wehner.mediamagpie.common.testsupport.DbTestEnvironment;
 import de.wehner.mediamagpie.common.util.CipherService;
 import de.wehner.mediamagpie.common.util.Pair;
+import de.wehner.mediamagpie.conductor.fslayer.localfs.LocalFSLayer;
 import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
 import de.wehner.mediamagpie.conductor.persistence.TransactionHandlerMock;
 import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
@@ -58,7 +59,7 @@ public class UploadServiceIntegrationTest {
         _imageService = new ImageService(new TransactionHandlerMock(), thumbImageDao, new MediaDao(_persistenceService), _imageResizeJobExecutionDao,
                 _mediaDeleteJobExecutionDao);
 
-        _uploadService = new UploadService(configurationDao, new MediaDao(_persistenceService), _imageService, _persistenceService, thumbImageDao);
+        _uploadService = new UploadService(configurationDao, new MediaDao(_persistenceService), _imageService, _persistenceService, thumbImageDao, new LocalFSLayer());
         _persistenceService.beginTransaction();
         _mc = new MainConfiguration();
         _mc.setBaseUploadPath(_testEnvironment.getWorkingDir() + "/baseUploadPath");
