@@ -1,9 +1,10 @@
-package de.wehner.mediamagpie.conductor.fslayer.localfs;
+package de.wehner.mediamagpie.common.fslayer;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
@@ -13,9 +14,7 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import de.wehner.mediamagpie.conductor.fslayer.IFile;
-
-public class LocalFSFile implements IFile {
+public class LocalFSFile extends AbstractFile implements IFile {
 
     private final File _file;
 
@@ -35,7 +34,7 @@ public class LocalFSFile implements IFile {
     }
 
     public LocalFSFile(File file, boolean isDir) {
-        super();
+        super(new LocalFSLayer());
         _file = file;
     }
 
@@ -77,6 +76,11 @@ public class LocalFSFile implements IFile {
     }
 
     @Override
+    public void createNewFile() throws IOException {
+        _file.createNewFile();
+    }
+
+    @Override
     public IFile[] listFiles() {
         File[] listFiles = _file.listFiles();
         List<LocalFSFile> itemsInDir = new ArrayList<LocalFSFile>();
@@ -94,6 +98,10 @@ public class LocalFSFile implements IFile {
     @Override
     public URI toURI() {
         return _file.toURI();
+    }
+
+    public File getFile() {
+        return _file;
     }
 
     @Override
@@ -124,5 +132,20 @@ public class LocalFSFile implements IFile {
     @Override
     public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    }
+
+    @Override
+    public long length() {
+        return _file.length();
+    }
+
+    @Override
+    public void delete() {
+        _file.delete();
+    }
+
+    @Override
+    public File toFile() {
+        return _file;
     }
 }

@@ -1,15 +1,15 @@
-package de.wehner.mediamagpie.conductor.fslayer.localfs;
+package de.wehner.mediamagpie.common.fslayer;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Component;
 
-import de.wehner.mediamagpie.conductor.fslayer.IFSLayer;
-import de.wehner.mediamagpie.conductor.fslayer.IFile;
 
 @Component
-public class LocalFSLayer implements IFSLayer {
+public class LocalFSLayer extends AbstractFSLayer implements IFSLayer {
 
     @Override
     public IFile createFile(String path, String fileName) {
@@ -48,5 +48,12 @@ public class LocalFSLayer implements IFSLayer {
         // TODO Auto-generated method stub
 
     }
+
+    @Override
+    public void forceMkdir(IFile path) throws IOException {
+        LocalFSFile localFsFile = (LocalFSFile)path;
+        FileUtils.forceMkdir(localFsFile.getFile());
+    }
+
 
 }

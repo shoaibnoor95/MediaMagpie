@@ -1,10 +1,13 @@
-package de.wehner.mediamagpie.conductor.fslayer;
+package de.wehner.mediamagpie.common.fslayer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+
+import de.wehner.mediamagpie.common.persistence.entity.Media;
 
 /**
  * Abstraction to a file which can be served from normal file system or mongoDB or S3 etc. TODO rwe...
@@ -73,5 +76,23 @@ public interface IFile {
     boolean exists();
 
     URI toURI();
+
+    /**
+     * This is equals to 'touch'
+     * 
+     * @throws IOException
+     */
+    void createNewFile() throws IOException;
+
+    long length();
+
+    void delete();
+
+    /**
+     * For local file systems this will be a valid <code>File</code> object. But for a database file system, this is <code>null<null>.
+     * 
+     * @return
+     */
+    File toFile();
 
 }
