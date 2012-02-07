@@ -20,12 +20,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import de.wehner.mediamagpie.common.fslayer.IFile;
 import de.wehner.mediamagpie.common.persistence.entity.LifecyleStatus;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.Visibility;
 import de.wehner.mediamagpie.common.util.ArrayUtil;
-import de.wehner.mediamagpie.conductor.fslayer.IFile;
 import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.SearchCriteriaCommand;
 import de.wehner.mediamagpie.conductor.webapp.controller.media.common.UiMediaSortOrder;

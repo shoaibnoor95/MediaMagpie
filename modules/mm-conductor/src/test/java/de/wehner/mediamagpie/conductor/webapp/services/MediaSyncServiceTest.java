@@ -37,15 +37,15 @@ import org.mockito.stubbing.Answer;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.MetadataException;
 
+import de.wehner.mediamagpie.common.fslayer.IFile;
+import de.wehner.mediamagpie.common.fslayer.LocalFSFile;
+import de.wehner.mediamagpie.common.fslayer.LocalFSLayer;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.Orientation;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.User.Role;
 import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
 import de.wehner.mediamagpie.common.test.util.TestEnvironment;
-import de.wehner.mediamagpie.conductor.fslayer.IFile;
-import de.wehner.mediamagpie.conductor.fslayer.localfs.LocalFSFile;
-import de.wehner.mediamagpie.conductor.fslayer.localfs.LocalFSLayer;
 import de.wehner.mediamagpie.conductor.persistence.TransactionHandlerMock;
 import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.UserConfigurationDao;
@@ -81,6 +81,7 @@ public class MediaSyncServiceTest {
     /**
      * 2010/07/12/resized_img_4636.jpg
      */
+    @SuppressWarnings("unused")
     private File _fileC;
     private IFile _fileNotOnFs;
 

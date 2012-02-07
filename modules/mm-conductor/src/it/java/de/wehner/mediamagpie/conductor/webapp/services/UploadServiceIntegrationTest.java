@@ -1,6 +1,6 @@
 package de.wehner.mediamagpie.conductor.webapp.services;
 
-import static org.fest.assertions.Assertions.*;
+import static org.fest.assertions.Assertions.assertThat;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,13 +12,14 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import de.wehner.mediamagpie.common.fslayer.IFile;
+import de.wehner.mediamagpie.common.fslayer.LocalFSLayer;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
 import de.wehner.mediamagpie.common.test.util.TestEnvironment;
 import de.wehner.mediamagpie.common.testsupport.DbTestEnvironment;
 import de.wehner.mediamagpie.common.util.CipherService;
 import de.wehner.mediamagpie.common.util.Pair;
-import de.wehner.mediamagpie.conductor.fslayer.localfs.LocalFSLayer;
 import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
 import de.wehner.mediamagpie.conductor.persistence.TransactionHandlerMock;
 import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
@@ -71,11 +72,11 @@ public class UploadServiceIntegrationTest {
     @Test
     public void testHandleUploadStream() throws FileNotFoundException {
         FileInputStream inputStream = new FileInputStream(TEST_MEDIA);
-        Pair<String, File> nameAndStoreFile = _uploadService.createUniqueUserStoreFile(_user, "fileB");
+        Pair<String, IFile> nameAndStoreFile = _uploadService.createUniqueUserStoreFile(_user, "fileB");
         _uploadService.handleUploadStream(_user, nameAndStoreFile.getSecond(), inputStream, 0);
 
-        assertThat(nameAndStoreFile.getSecond()).exists();
-        assertThat(nameAndStoreFile.getSecond()).hasSameContentAs(TEST_MEDIA);
+        assertThat(nameAndStoreFile.getSecond().toFile()).exists();
+        assertThat(nameAndStoreFile.getSecond().toFile()).hasSameContentAs(TEST_MEDIA);
         _persistenceService.commitTransaction();
     }
 }

@@ -1,6 +1,5 @@
 package de.wehner.mediamagpie.conductor.webapp.controller.media;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
+import de.wehner.mediamagpie.common.fslayer.IFile;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.util.Pair;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.FileUploadCommand;
@@ -91,7 +91,7 @@ public class UploadController {
 
             // upload file, create Media, Thumb, thumbimage link etc..
             User currentUser = SecurityUtil.getCurrentUser();
-            Pair<String, File> uploadFileInfo = _uploadControllerService.createUniqueUserStoreFile(currentUser, multipartFile.getOriginalFilename());
+            Pair<String, IFile> uploadFileInfo = _uploadControllerService.createUniqueUserStoreFile(currentUser, multipartFile.getOriginalFilename());
             String contextPath = request.getContextPath();
             LOG.info("Try dump upload stream into file '" + uploadFileInfo.getSecond() + "'");
             String thumbUrl = contextPath

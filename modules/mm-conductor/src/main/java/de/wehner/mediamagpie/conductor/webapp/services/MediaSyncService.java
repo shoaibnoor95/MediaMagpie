@@ -46,14 +46,14 @@ import com.drew.metadata.Tag;
 import com.drew.metadata.exif.ExifDirectory;
 
 import de.wehner.mediamagpie.common.core.util.DigestUtil;
+import de.wehner.mediamagpie.common.fslayer.IFSLayer;
+import de.wehner.mediamagpie.common.fslayer.IFile;
 import de.wehner.mediamagpie.common.persistence.entity.LifecyleStatus;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.Orientation;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
 import de.wehner.mediamagpie.common.util.ExceptionUtil;
-import de.wehner.mediamagpie.conductor.fslayer.IFSLayer;
-import de.wehner.mediamagpie.conductor.fslayer.IFile;
 import de.wehner.mediamagpie.conductor.job.SingleThreadedController;
 import de.wehner.mediamagpie.conductor.persistence.TransactionHandler;
 import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;

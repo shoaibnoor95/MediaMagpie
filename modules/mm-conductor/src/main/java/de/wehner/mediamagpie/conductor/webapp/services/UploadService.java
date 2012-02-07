@@ -2,18 +2,19 @@ package de.wehner.mediamagpie.conductor.webapp.services;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.concurrent.Callable;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import de.wehner.mediamagpie.common.fslayer.IFSLayer;
+import de.wehner.mediamagpie.common.fslayer.IFile;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.Priority;
 import de.wehner.mediamagpie.common.persistence.entity.ThumbImage;
@@ -22,8 +23,6 @@ import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfigurat
 import de.wehner.mediamagpie.common.util.FileSystemUtil;
 import de.wehner.mediamagpie.common.util.Pair;
 import de.wehner.mediamagpie.common.util.TimeProvider;
-import de.wehner.mediamagpie.conductor.fslayer.IFSLayer;
-import de.wehner.mediamagpie.conductor.fslayer.IFile;
 import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
 import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
@@ -64,32 +63,31 @@ public class UploadService {
      * @param originalFilename
      * @return The original file name and the complete file name used to store the medias data in fs.
      */
-    public synchronized Pair<String, File> createUniqueUserStoreFile(User currentUser, String originalFilename) {
-        IFile testRelFileName = buildRelativeMediaFileName(currentUser, originalFilename);
+    public synchronized Pair<String, IFile> createUniqueUserStoreFile(User currentUser, String originalFilename) {
+        File testRelFileName = buildRelativeMediaFileName(currentUser, originalFilename);
         String baseUploadPath = _configurationDao.getConfiguration(MainConfiguration.class).getBaseUploadPath();
-        File tempFile = new File(baseUploadPath, testRelFileName.getPath());
+        IFile tempFile = _fsLayer.createFile(baseUploadPath, testRelFileName.getPath());
         try {
             if (!tempFile.getParentFile().exists()) {
                 // create the user's upload directory in case that the user hasn't uploaded a media yet
-                FileUtils.forceMkdir(tempFile.getParentFile());
+                _fsLayer.forceMkdir(tempFile.getParentFile());
             }
             if (tempFile.exists()) {
                 // file already exists. Maybe it is loaded again.
                 LOG.debug("Upload file '" + tempFile.getPath() + "' already exists.");
                 // build new unique temp file name
-                tempFile = FileSystemUtil.getNextUniqueFilename(tempFile);
+                tempFile = FileSystemUtil.getNextUniqueFilename(_fsLayer, tempFile);
                 LOG.debug("Generate the new file '" + tempFile.getPath() + "'.");
             }
             tempFile.createNewFile();
         } catch (IOException e) {
             LOG.warn("Can not write upload file to disk.", e);
         }
-        return new Pair<String, File>(originalFilename, tempFile);
+        return new Pair<String, IFile>(originalFilename, tempFile);
     }
 
-    private IFile buildRelativeMediaFileName(User currentUser, String originalFilename) {
-//        File testRelFileName = new File(String.format("user_%06d", currentUser.getId()), originalFilename);
-        IFile testRelFileName = _fsLayer.createFile(String.format("user_%06d", currentUser.getId()), originalFilename);
+    private File buildRelativeMediaFileName(User currentUser, String originalFilename) {
+        File testRelFileName = new File(String.format("user_%06d", currentUser.getId()), originalFilename);
         return testRelFileName;
     }
 
@@ -103,7 +101,7 @@ public class UploadService {
      * @param uniqueCounter
      * @return
      */
-    public String handleUploadStream(final User currentUser, File mediaFile, InputStream inputStream, int uniqueCounter) {
+    public String handleUploadStream(final User currentUser, IFile mediaFile, InputStream inputStream, int uniqueCounter) {
         if (mediaFile.exists()) {
             // we expect an empty existing file to write into
             if (mediaFile.length() > 0) {
@@ -113,9 +111,9 @@ public class UploadService {
         }
 
         // create a file for the new media
-        FileOutputStream outputStream = null;
+        OutputStream outputStream = null;
         try {
-            outputStream = new FileOutputStream(mediaFile);
+            outputStream = mediaFile.getOutputStream();
             IOUtils.copy(inputStream, outputStream);
         } catch (IOException e) {
             LOG.warn("Can not write upload file to disk.", e);
@@ -151,8 +149,8 @@ public class UploadService {
 
     public void deleteFile(User user, String mediaFileName) {
         String baseUploadPath = _configurationDao.getConfiguration(MainConfiguration.class).getBaseUploadPath();
-        IFile relativeFileName = buildRelativeMediaFileName(user, mediaFileName);
-        final File mediaFile = new File(baseUploadPath, relativeFileName.getPath());
+        File relativeFileName = buildRelativeMediaFileName(user, mediaFileName);
+        final IFile mediaFile = _fsLayer.createFile(baseUploadPath, relativeFileName.getPath());
         Media media = _mediaDao.getByUri(user, mediaFile.toURI());
         if (media != null) {
             _imageService.deleteMediaCompletely(media);

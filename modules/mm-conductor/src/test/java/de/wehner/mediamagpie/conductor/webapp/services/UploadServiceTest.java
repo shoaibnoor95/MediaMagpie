@@ -1,10 +1,9 @@
 package de.wehner.mediamagpie.conductor.webapp.services;
 
-import static org.fest.assertions.Assertions.*;
-
-import static org.mockito.Matchers.*;
-
-import static org.mockito.Mockito.*;
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,6 +17,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import de.wehner.mediamagpie.common.fslayer.IFile;
+import de.wehner.mediamagpie.common.fslayer.LocalFSFile;
+import de.wehner.mediamagpie.common.fslayer.LocalFSLayer;
 import de.wehner.mediamagpie.common.persistence.entity.ThumbImage;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.User.Role;
@@ -25,7 +27,6 @@ import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfigurat
 import de.wehner.mediamagpie.common.test.util.TestEnvironment;
 import de.wehner.mediamagpie.common.util.FileSystemUtil;
 import de.wehner.mediamagpie.common.util.Pair;
-import de.wehner.mediamagpie.conductor.fslayer.localfs.LocalFSLayer;
 import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
 import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
@@ -71,11 +72,12 @@ public class UploadServiceTest {
     @Test
     public void testCreateUserStoreFile() {
         assertThat(_uploadService.createUniqueUserStoreFile(_user, "fileA")).isEqualTo(
-                new Pair<String, File>("fileA", new File(mc.getBaseUploadPath(), "user_000123/fileA")));
+                new Pair<String, IFile>("fileA", new LocalFSFile(new File(mc.getBaseUploadPath()), "user_000123/fileA")));
         assertThat(_uploadService.createUniqueUserStoreFile(_user, "file A")).isEqualTo(
-                new Pair<String, File>("file A", new File(mc.getBaseUploadPath(), "user_000123/file A")));
+                new Pair<String, IFile>("file A", new LocalFSFile(new File(mc.getBaseUploadPath()), "user_000123/file A")));
         assertThat(_uploadService.createUniqueUserStoreFile(_user, "opera/file/with/path/fileA")).isEqualTo(
-                new Pair<String, File>("opera/file/with/path/fileA", new File(mc.getBaseUploadPath(), "user_000123/opera/file/with/path/fileA")));
+                new Pair<String, IFile>("opera/file/with/path/fileA", new LocalFSFile(new File(mc.getBaseUploadPath()),
+                        "user_000123/opera/file/with/path/fileA")));
     }
 
     @Test
@@ -84,13 +86,14 @@ public class UploadServiceTest {
         FileUtils.forceMkdir(existingFile.getParentFile());
         existingFile.createNewFile();
         assertThat(_uploadService.createUniqueUserStoreFile(_user, "fileA")).isEqualTo(
-                new Pair<String, File>("fileA", new File(mc.getBaseUploadPath(), "user_000123/fileA" + FileSystemUtil.FILE_COUNTER_SEPARATOR + "1")));
+                new Pair<String, IFile>("fileA", new LocalFSFile(new File(mc.getBaseUploadPath()), "user_000123/fileA"
+                        + FileSystemUtil.FILE_COUNTER_SEPARATOR + "1")));
     }
 
     @Test
     public void testHandleUploadStream() throws FileNotFoundException {
         FileInputStream inputStream = new FileInputStream(TEST_MEDIA);
-        Pair<String, File> origAndStoreFileName = _uploadService.createUniqueUserStoreFile(_user, "fileB");
+        Pair<String, IFile> origAndStoreFileName = _uploadService.createUniqueUserStoreFile(_user, "fileB");
         _uploadService.handleUploadStream(_user, origAndStoreFileName.getSecond(), inputStream, 0);
 
         assertThat(new File(mc.getBaseUploadPath(), "user_000123/fileB")).exists();

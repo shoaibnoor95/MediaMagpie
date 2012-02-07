@@ -2,6 +2,11 @@ package de.wehner.mediamagpie.common.fs;
 
 import java.io.File;
 
+/**
+ * TODO rwe: Rename this class because it is more a configuration than an File Sytem.
+ * @author ralfwehner
+ *
+ */
 public class ApplicationFS {
 
     private final File _tempMediaPath;
