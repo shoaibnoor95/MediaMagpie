@@ -37,17 +37,17 @@ public class LocalFSLayer extends AbstractFSLayer implements IFSLayer {
         return null;
     }
 
-    @Override
-    public void mkDir(String path) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void deleteFile(IFile fileToDelete) {
-        // TODO Auto-generated method stub
-
-    }
+//    @Override
+//    public void mkDir(String path) {
+//        // TODO Auto-generated method stub
+//
+//    }
+//
+//    @Override
+//    public void deleteFile(IFile fileToDelete) {
+//        // TODO Auto-generated method stub
+//
+//    }
 
     @Override
     public void forceMkdir(IFile path) throws IOException {

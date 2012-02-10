@@ -65,20 +65,29 @@ public interface IFSLayer {
      */
     List<IFile> listFiles(String path);
 
+    // /**
+    // * Creates a directory with given path.
+    // *
+    // * @param path
+    // * The directory
+    // */
+    // void mkDir(String path);
+
+    // /**
+    // * Deletes a file from system. // TODO rwe: Maybe it will be better to use a String or URI instead of IFile
+    // *
+    // * @param fileToDelete
+    // */
+    // void deleteFile(IFile fileToDelete);
+
     /**
-     * Creates a directory with given path.
+     * Create on ore more directories with specified path name. When the method will be leaved without an exception you can be sure the
+     * directories are created on the FS.
      * 
      * @param path
-     *            The directory
+     *            The directory name or the nested directory name.
+     * @throws IOException
+     *             when one directory can't be created.
      */
-    void mkDir(String path);
-
-    /**
-     * Deletes a file from system. // TODO rwe: Maybe it will be better to use a String or URI instead of IFile
-     * 
-     * @param fileToDelete
-     */
-    void deleteFile(IFile fileToDelete);
-
     void forceMkdir(IFile path) throws IOException;
 }
