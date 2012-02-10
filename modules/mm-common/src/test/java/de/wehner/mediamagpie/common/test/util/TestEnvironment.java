@@ -1,11 +1,17 @@
 package de.wehner.mediamagpie.common.test.util;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOCase;
+import org.apache.commons.io.filefilter.AbstractFileFilter;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.junit.Ignore;
@@ -120,30 +126,64 @@ public class TestEnvironment extends ExternalResource {
     }
 
     public File[] listFilesInWorkingDir(String wildcardMatcher) {
-        return listFiles(getWorkingDir(), wildcardMatcher);
+        return listFiles(getWorkingDir(), wildcardMatcher, IOCase.SENSITIVE);
     }
 
-    public static File[] listFiles(File folder, final String wildcardMatcher) {
-        File[] files = folder.listFiles(new FilenameFilter() {
+    /**
+     * Lists all files within a directory using a wildcard pattern.
+     * <p>
+     * If you need to search for files recursively, try this solution:
+     * 
+     * <pre>
+     * FileUtils.listFiles(directory, new WildcardFileFilter(&quot;*.txt&quot;), TrueFileFilter.INSTANCE)
+     * </pre>
+     * 
+     * </p>
+     * 
+     * @param folder
+     *            The folder to search within
+     * @param wildcardMatcher
+     *            The wildcard pattern
+     * @param ioCase
+     *            The search mode.
+     * @return A list of files within given directory
+     */
+    public static File[] listFiles(File folder, final String wildcardMatcher, final IOCase ioCase) {
+        List<File> files = listFiles(folder, wildcardMatcher, ioCase, false);
+        Collections.sort(files);
+        return files.toArray(new File[0]);
+    }
+
+    public static List<File> listFilesRecursive(File folder, final String wildcardMatcher) {
+        return listFiles(folder, wildcardMatcher, IOCase.INSENSITIVE, true);
+    }
+
+    public static List<File> listFiles(File folder, final String wildcardMatcher, final IOCase ioCase, boolean recursive) {
+        if (!folder.exists()) {
+            LOG.info("Directory '" + folder.getPath() + "' does not exists.");
+            return null;//Collections.emptyList();
+        }
+
+        IOFileFilter fileFilter = new AbstractFileFilter() {
 
             @Override
-            public boolean accept(File dir, String name) {
+            public boolean accept(File file) {
+                if (file.isDirectory()) {
+                    return false;
+                }
                 boolean matches = true;
-
                 if (wildcardMatcher != null) {
-                    matches = FilenameUtils.wildcardMatch(name, wildcardMatcher);
+                    matches = FilenameUtils.wildcardMatch(file.getName(), wildcardMatcher, ioCase);
                 }
                 if (matches) {
-                    return !TestEnvironment.isTempSystemFile(name);
+                    return !TestEnvironment.isTempSystemFile(file.getName());
                 }
                 return matches;
             }
-        });
-        if (files == null) {
-            LOG.info("Directory '" + folder.getPath() + "' does not exists.");
-            return new File[0];
-        }
-        return files;
+
+        };
+        List<File> allFiles = new ArrayList<File>(FileUtils.listFiles(folder, fileFilter, recursive ? TrueFileFilter.INSTANCE : null));
+        return allFiles;
     }
 
     @Override
