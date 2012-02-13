@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:cloud="http://schema.cloudfoundry.org/spring"
+	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
                            http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context 
@@ -8,7 +9,8 @@
                            http://www.springframework.org/schema/tx
                            http://www.springframework.org/schema/tx/spring-tx.xsd
                            http://schema.cloudfoundry.org/spring
-                           http://schema.cloudfoundry.org/spring/cloudfoundry-spring-0.8.xsd">
+                           http://schema.cloudfoundry.org/spring/cloudfoundry-spring-0.8.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
 	<!-- Definition of all datasources. The pattern of BeanId must be: 'DS-<PersistenceUnitName>' -->
 	<bean id="DS-mysql" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
@@ -45,6 +47,25 @@
 			<property name="dataSource" ref="DS-${persistent.unit}" />
 		</bean>
 	</beans>
+
+	<beans profile="local-mongo">
+		<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+			<property name="persistenceUnitName" value="${persistent.unit}" />
+			<property name="dataSource" ref="DS-${persistent.unit}" />
+		</bean>
+
+		<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+			<constructor-arg ref="mongo" />
+			<constructor-arg name="databaseName" value="yourDb" />
+			<constructor-arg ref="userCredentials" />
+		</bean>
+		<bean id="mongo" class="com.mongodb.Mongo" />
+		<bean id="userCredentials" class="org.springframework.data.authentication.UserCredentials">
+			<constructor-arg value="rwe" />
+			<constructor-arg value="secret" />
+		</bean>
+	</beans>
+	
 	<beans profile="cloud">
 		<!-- see: http://blog.springsource.org/2011/11/09/using-cloud-foundry-services-with-spring-applications-part-3-the-cloud-namespace/ -->
 		<cloud:data-source id="cloudDataSource">
@@ -55,7 +76,7 @@
 			<property name="persistenceUnitName" value="mysql" />
 			<property name="dataSource" ref="cloudDataSource" />
 		</bean>
-		
+
 		<!-- testing integration of mongoDB -->
 		<cloud:mongo-db-factory id="mongoDbFactory" />
 		<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">

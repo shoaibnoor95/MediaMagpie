@@ -77,8 +77,13 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-mongodb</artifactId>
+		</dependency>
+		
 		<!-- spring web service stuff -->
 		<dependency>
 			<groupId>org.springframework.ws</groupId>
@@ -122,7 +127,7 @@
 			<artifactId>mongo-java-driver</artifactId>
 			<version>2.7.3</version>
 		</dependency>
-		
+
 		<!-- JSR 303 with Hibernate Validator, see http://www.roseindia.net/tutorial/spring/spring3/web/spring-3-mvc-validation-example.html -->
 		<dependency>
 			<groupId>javax.validation</groupId>
@@ -177,7 +182,7 @@
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
-			<version>1.4.4</version>
+			<version>1.4.5-rc1</version>
 		</dependency>
 
 		<!-- jetty -->

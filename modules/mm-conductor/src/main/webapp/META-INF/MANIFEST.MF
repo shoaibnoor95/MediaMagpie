@@ -16,20 +16,21 @@ Class-Path: activation-1.1.jar ant-1.6.5.jar antlr-2.7.6.jar aopallian
  r lucene-core-3.1.0.jar lucene-highlighter-3.1.0.jar lucene-memory-3.
  1.0.jar lucene-misc-3.1.0.jar lucene-smartcn-3.1.0.jar lucene-spatial
  -3.1.0.jar lucene-spellchecker-3.1.0.jar lucene-stempel-3.1.0.jar mai
- l-1.4.4.jar metadata-extractor-2.4.0-beta-1.jar mm-common.jar mongo-j
- ava-driver-2.7.3.jar mysql-connector-java-5.1.18.jar servlet-api-2.5-
- 20081211.jar servlet-api-3.0-7.0.0pre2.jar slf4j-api-1.6.4.jar slf4j-
- log4j12-1.6.4.jar solr-analysis-extras-3.1.0.jar solr-commons-csv-3.1
- .0.jar solr-core-3.1.0.jar solr-solrj-3.1.0.jar spring-aop-3.1.0.RELE
- ASE.jar spring-asm-3.1.0.RELEASE.jar spring-beans-3.1.0.RELEASE.jar s
- pring-context-3.1.0.RELEASE.jar spring-context-support-3.1.0.RELEASE.
- jar spring-core-3.1.0.RELEASE.jar spring-expression-3.1.0.RELEASE.jar
-  spring-jdbc-3.1.0.RELEASE.jar spring-orm-3.1.0.RELEASE.jar spring-ox
- m-3.1.0.RELEASE.jar spring-security-acl-3.1.0.RELEASE.jar spring-secu
- rity-config-3.1.0.RELEASE.jar spring-security-core-3.1.0.RELEASE.jar 
- spring-security-crypto-3.1.0.RELEASE.jar spring-security-taglibs-3.1.
- 0.RELEASE.jar spring-security-web-3.1.0.RELEASE.jar spring-test-3.1.0
- .RELEASE.jar spring-tx-3.1.0.RELEASE.jar spring-web-3.1.0.RELEASE.jar
-  spring-webmvc-3.1.0.RELEASE.jar spring-ws-2.0.4.RELEASE-all.jar vali
- dation-api-1.0.0.GA.jar wsdl4j-1.6.2.jar
+ l-1.4.5-rc1.jar metadata-extractor-2.4.0-beta-1.jar mm-common.jar mon
+ go-java-driver-2.7.3.jar mysql-connector-java-5.1.18.jar servlet-api-
+ 2.5-20081211.jar servlet-api-3.0-7.0.0pre2.jar slf4j-api-1.6.4.jar sl
+ f4j-log4j12-1.6.4.jar solr-analysis-extras-3.1.0.jar solr-commons-csv
+ -3.1.0.jar solr-core-3.1.0.jar solr-solrj-3.1.0.jar spring-aop-3.1.0.
+ RELEASE.jar spring-asm-3.1.0.RELEASE.jar spring-beans-3.1.0.RELEASE.j
+ ar spring-context-3.1.0.RELEASE.jar spring-context-support-3.1.0.RELE
+ ASE.jar spring-core-3.1.0.RELEASE.jar spring-data-commons-core-1.2.0.
+ RC1.jar spring-data-mongodb-1.0.0.RC1.jar spring-expression-3.1.0.REL
+ EASE.jar spring-jdbc-3.1.0.RELEASE.jar spring-orm-3.1.0.RELEASE.jar s
+ pring-oxm-3.1.0.RELEASE.jar spring-security-acl-3.1.0.RELEASE.jar spr
+ ing-security-config-3.1.0.RELEASE.jar spring-security-core-3.1.0.RELE
+ ASE.jar spring-security-crypto-3.1.0.RELEASE.jar spring-security-tagl
+ ibs-3.1.0.RELEASE.jar spring-security-web-3.1.0.RELEASE.jar spring-tx
+ -3.1.0.RELEASE.jar spring-web-3.1.0.RELEASE.jar spring-webmvc-3.1.0.R
+ ELEASE.jar spring-ws-2.0.4.RELEASE-all.jar validation-api-1.0.0.GA.ja
+ r wsdl4j-1.6.2.jar
 

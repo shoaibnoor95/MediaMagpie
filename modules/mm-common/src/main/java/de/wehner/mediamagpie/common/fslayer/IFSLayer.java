@@ -2,7 +2,6 @@ package de.wehner.mediamagpie.common.fslayer;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 public interface IFSLayer {
 
@@ -56,14 +55,14 @@ public interface IFSLayer {
      */
     IFile createFile(String filePath);
 
-    /**
-     * Finds all files that are located within a given path.
-     * 
-     * @param path
-     *            The path to search files within. This will be used like the path in normal file sytems.
-     * @return
-     */
-    List<IFile> listFiles(String path);
+    // /**
+    // * Finds all files that are located within a given path.
+    // *
+    // * @param path
+    // * The path to search files within. This will be used like the path in normal file sytems.
+    // * @return
+    // */
+    // List<IFile> listFiles(String path);
 
     // /**
     // * Creates a directory with given path.
