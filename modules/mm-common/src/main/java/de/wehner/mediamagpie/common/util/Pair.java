@@ -47,6 +47,7 @@ public class Pair<M, N> implements Serializable {
         return result;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

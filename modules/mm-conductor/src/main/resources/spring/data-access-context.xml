@@ -59,6 +59,7 @@
 			<constructor-arg name="databaseName" value="yourDb" />
 			<constructor-arg ref="userCredentials" />
 		</bean>
+		<!-- TODO rwe: does we have to add the machine name to Mongo??? -->
 		<bean id="mongo" class="com.mongodb.Mongo" />
 		<bean id="userCredentials" class="org.springframework.data.authentication.UserCredentials">
 			<constructor-arg value="rwe" />

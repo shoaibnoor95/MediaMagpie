@@ -10,10 +10,13 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.AbstractFileFilter;
+import org.apache.commons.io.filefilter.FalseFileFilter;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Ignore;
 import org.junit.rules.ExternalResource;
 import org.slf4j.Logger;
@@ -161,7 +164,7 @@ public class TestEnvironment extends ExternalResource {
     public static List<File> listFiles(File folder, final String wildcardMatcher, final IOCase ioCase, boolean recursive) {
         if (!folder.exists()) {
             LOG.info("Directory '" + folder.getPath() + "' does not exists.");
-            return null;//Collections.emptyList();
+            return null;// Collections.emptyList();
         }
 
         IOFileFilter fileFilter = new AbstractFileFilter() {
@@ -184,6 +187,42 @@ public class TestEnvironment extends ExternalResource {
         };
         List<File> allFiles = new ArrayList<File>(FileUtils.listFiles(folder, fileFilter, recursive ? TrueFileFilter.INSTANCE : null));
         return allFiles;
+    }
+
+    /**
+     * Provides all files and subdirectories within a given folder. The result can be filtered by wildcard patterns for directories and
+     * files.
+     * 
+     * @param folder
+     *            The start folder.
+     * @param dirWildcardMatcher
+     *            An optional wildcard pattern for directories. If <code>null</code> no subdirectories will be visited and collected. Use
+     *            <code>"*"</code> if you not want to traverse all subdirectories recursively.
+     * @param fileWildcardMatcher
+     *            An optional wildcard pattern for files. If <code>null</code> no files will be collected. Use <code>"*"</code> if you not
+     *            want to collect all files in found directories.
+     * @param ioCase
+     *            Comparison mode (sensitive or insensitive) for files and directories.
+     * @param collectOnlyFiles
+     *            Flag that indicates if only files should be collected. If <code>true</code>, only files will be collected in return
+     *            result.
+     * @return A sorted list of directories and/or files.
+     * @throws IOException
+     */
+    public static List<File> listFilesAndFolders(File folder, String dirWildcardMatcher, String fileWildcardMatcher, IOCase ioCase,
+            boolean collectOnlyFiles) throws IOException {
+        if (!folder.exists()) {
+            LOG.info("Directory '" + folder.getPath() + "' does not exists.");
+            return null;
+        }
+
+        IOFileFilter dirFilter = StringUtils.isEmpty(dirWildcardMatcher) ? FalseFileFilter.INSTANCE : new WildcardFileFilter(dirWildcardMatcher, ioCase);
+        IOFileFilter fileFilter = StringUtils.isEmpty(fileWildcardMatcher) ? FalseFileFilter.INSTANCE
+                : new WildcardFileFilter(fileWildcardMatcher, ioCase);
+        FileUtilDirectoryWalker directoryWalker = new FileUtilDirectoryWalker(dirFilter, fileFilter, collectOnlyFiles);
+        List<File> files = directoryWalker.getFiles(folder);
+        Collections.sort(files);
+        return files;
     }
 
     @Override

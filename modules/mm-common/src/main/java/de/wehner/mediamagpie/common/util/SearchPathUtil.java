@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +22,25 @@ public class SearchPathUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(SearchPathUtil.class);
 
+    /**
+     * Searches for resources in
+     * <ul>
+     * <li>a) classpath or (prefix <code>classpath:</code>)</li>
+     * <li>b) the local file system (no prefix)</li>
+     * </ul>
+     * When the first resource is found, an InputStream will be returned.
+     * 
+     * <pre>
+     * EG:
+     *   byte[] bCP = SearchPathUtil.getBytes("classpath:/html/generic/Welcome.html")
+     *   byte[] bFS = SearchPathUtil.getBytes("src/main/resources/html/generic/Welcome.html")
+     * </pre>
+     * 
+     * @param paths
+     *            At least one resource location which can be a location within the classpath or a the local file system.
+     * @return A InputStream to the first found resource.
+     * @throws FileNotFoundException
+     */
     public static InputStream openStream(String... paths) throws FileNotFoundException {
         for (String path : paths) {
             if (path.startsWith("classpath:")) {
@@ -42,6 +62,36 @@ public class SearchPathUtil {
         throw new FileNotFoundException("Could not find resource at the following locations: " + Arrays.asList(paths));
     }
 
+    /**
+     * Reads bytes from resource. Analog to {@linkplain #openStream(String...)}.
+     * 
+     * @param paths
+     *            At least one or more locations of the resource.
+     * @return The content of resource as byte array.
+     * @throws IOException
+     */
+    public static byte[] getBytes(String... paths) throws IOException {
+        InputStream inputStream = openStream(paths);
+        try {
+            return IOUtils.toByteArray(inputStream);
+        } catch (IOException e) {
+            LOG.error("Can not read from resource '" + Arrays.asList(paths) + "'.", e);
+            throw e;
+        } finally {
+            IOUtils.closeQuietly(inputStream);
+        }
+
+    }
+
+    /**
+     * Convenient class to find the first existing resource.
+     * 
+     * @param paths
+     *            At least one or more locations of the resource.
+     * @return The first found resource location.
+     * @throws IllegalArgumentException
+     *             If no resource is available.
+     */
     public static String findPath(String... paths) {
         for (String path : paths) {
             if (path.startsWith("classpath:")) {

@@ -1,11 +1,16 @@
 package de.wehner.mediamagpie.common.util;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
+import javax.activation.DataHandler;
+import javax.mail.BodyPart;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
+import org.apache.commons.io.IOUtils;
 import org.subethamail.wiser.Wiser;
 import org.subethamail.wiser.WiserMessage;
 
@@ -45,6 +50,26 @@ public class WiserClient {
     public static final int PORT = 2501;
 
     private Wiser _wiser;
+
+    public static class FilenameAndData {
+        private final String name;
+
+        private final byte[] data;
+
+        public FilenameAndData(String name, byte[] data) {
+            super();
+            this.name = name;
+            this.data = data;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public byte[] getData() {
+            return data;
+        }
+    }
 
     public WiserClient() {
         super();
@@ -90,5 +115,31 @@ public class WiserClient {
         Object content = mimeMessage.getContent();
         System.out.println(content.toString());
 
+    }
+
+    /**
+     * Parses an Attachment of the mail and provide its data and file name.
+     * 
+     * @param wiserMessage
+     * @param attachmentIndex
+     * @return
+     * @throws MessagingException
+     * @throws IOException
+     */
+    public static FilenameAndData getAttachment(WiserMessage wiserMessage, int attachmentIndex) throws MessagingException, IOException {
+        MimeMessage mimeMessage = wiserMessage.getMimeMessage();
+        Object content = mimeMessage.getContent();
+        if (content instanceof MimeMultipart) {
+            MimeMultipart mm = (MimeMultipart) content;
+            BodyPart bodyPart = mm.getBodyPart(attachmentIndex);
+            String fileName = bodyPart.getFileName();
+            DataHandler dataHandler = bodyPart.getDataHandler();
+            InputStream inputStream = dataHandler.getInputStream();
+            byte[] byteArray = IOUtils.toByteArray(inputStream);
+            return new FilenameAndData(fileName, byteArray);
+        } else {
+            System.out.println("Content of MimeMessage is not the class 'MimeMultipart', it is '" + content.getClass().getSimpleName() + "'.");
+        }
+        return null;
     }
 }

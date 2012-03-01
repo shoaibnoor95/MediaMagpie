@@ -20,6 +20,7 @@ import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Simple immutable helper class to work with time duration. The class provides functionality as follows:
@@ -152,7 +153,7 @@ public class TimeUtil {
         }
         durationStr = durationStr.trim().toLowerCase();
 
-        if (StringUtil.isEmpty(durationStr)) {
+        if (StringUtils.isEmpty(durationStr)) {
             return 0;
         }
 

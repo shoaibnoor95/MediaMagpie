@@ -22,7 +22,6 @@ import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
 import de.wehner.mediamagpie.common.util.FileSystemUtil;
 import de.wehner.mediamagpie.common.util.Pair;
-import de.wehner.mediamagpie.common.util.TimeProvider;
 import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
 import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
@@ -134,9 +133,9 @@ public class UploadService {
         _persistenceService.flipTransaction();
 
         // wait a little time until the thumb is ready
-        TimeoutExecutor timeoutExecutor = new TimeoutExecutor(new TimeProvider());
+        TimeoutExecutor timeoutExecutor = new TimeoutExecutor(2000, 250);
         final Long newMediaId = newMedia.getId();
-        timeoutExecutor.checkUntilConditionIsTrue(2000, 250, new Callable<Boolean>() {
+        timeoutExecutor.checkUntilConditionIsTrue(new Callable<Boolean>() {
 
             @Override
             public Boolean call() throws Exception {
