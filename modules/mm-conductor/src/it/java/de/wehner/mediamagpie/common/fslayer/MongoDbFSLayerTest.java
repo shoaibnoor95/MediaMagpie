@@ -12,7 +12,6 @@ public class MongoDbFSLayerTest {
 
     @Test
     public void testMongoStartup() {
-        _mongoTestEnvironment.getConnection();
-        System.out.println();
+        System.out.println("connection to mongodb: " + (_mongoTestEnvironment.getConnection() != null));
     }
 }

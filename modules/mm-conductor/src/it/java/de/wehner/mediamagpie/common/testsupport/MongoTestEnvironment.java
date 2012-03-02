@@ -1,6 +1,8 @@
 package de.wehner.mediamagpie.common.testsupport;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -37,7 +39,7 @@ public class MongoTestEnvironment extends ExternalResource {
     private Mongo _mongo;
 
     public MongoTestEnvironment() {
-        this(28017);
+        this(findFreeSocket(28017, 28050));
     }
 
     public MongoTestEnvironment(int port) {
@@ -45,7 +47,7 @@ public class MongoTestEnvironment extends ExternalResource {
         String programName = SearchPathUtil.findPath(new File(System.getProperty("user.home"), "programs/mongodb/bin/mongod").getPath(),
                 "/usr/bin/mongod", "/bin/mongod");
         if (StringUtils.isEmpty(programName)) {
-            programName = "mongodb";
+            programName = "mongod";
         }
         _mongoDbProgram = new File(programName);
     }
@@ -63,19 +65,31 @@ public class MongoTestEnvironment extends ExternalResource {
         final CountDownLatch dbIsRunning = new CountDownLatch(1);
         ProcessBuilder pb = new ProcessBuilder(_mongoDbProgram.getPath(), "--dbpath", _mongoDataPath.getPath(), "--port", "" + _port);
         _mongoProcessWrapper = new ProcessWrapper(pb);
-        _mongoProcessWrapper.start(new StdXXXLineListener() {
+        try {
+            _mongoProcessWrapper.start(new StdXXXLineListener() {
 
-            @Override
-            public boolean fireNewLine(String line) {
-                System.out.println(line);
-                if (line.contains("waiting for connections on port " + _port)) {
-                    dbIsRunning.countDown();
+                @Override
+                public boolean fireNewLine(String line) {
+                    System.out.println(line);
+                    if (line.contains("waiting for connections on port " + _port)) {
+                        dbIsRunning.countDown();
+                    }
+                    return true;
                 }
-                return true;
-            }
-        });
+            });
+        } catch (IOException e) {
+            LOG.warn("MongoDB cound not be started. Probably it is not installed on this system or can not be found.");
+            return;
+        }
 
+        // wait at least 5 seconds until mongo is start up and has send an expected line to stdout (see lines above)
         dbIsRunning.await(5, TimeUnit.SECONDS);
+        long count = dbIsRunning.getCount();
+        if (count > 0) {
+            // TODO rwe: verify if it makes sense to leave here...
+            LOG.warn("MongoDB seems not to be started correctly.");
+//            return;
+        }
         _mongo = new Mongo("localhost", _port);
         List<String> databaseNames = _mongo.getDatabaseNames();
         LOG.info("Test Mongo DB is up and running on port " + _port + ".");
@@ -94,6 +108,42 @@ public class MongoTestEnvironment extends ExternalResource {
             _mongoProcessWrapper.destroy();
         }
         super.after();
+    }
+
+    private static int findFreeSocket(int startPort, int endPortRange) {
+        if (startPort <= 0) {
+            throw new IllegalArgumentException("The parameter 'startPort' must be greater than zero.");
+        }
+        if (endPortRange < startPort) {
+            throw new IllegalArgumentException("The argument 'endPortRange' must be greater or equal to parameter 'startPort'.");
+        }
+        for (int testPort = startPort; testPort <= endPortRange; testPort++) {
+            if (isSocketAvailable(startPort)) {
+                return startPort;
+            }
+        }
+        throw new RuntimeException("No port in range " + startPort + " - " + endPortRange + " is available.");
+    }
+
+    private static synchronized boolean isSocketAvailable(int port) {
+        LOG.debug("trying to open port " + port);
+        ServerSocket ss = null;
+        try {
+            ss = new ServerSocket(port);
+            ss.setReuseAddress(true);
+            return true;
+        } catch (IOException e) {
+            LOG.info("port " + port + " is unavailable");
+        } finally {
+            if (ss != null) {
+                try {
+                    ss.close();
+                } catch (IOException e) {
+                    LOG.error("Unable to close socket " + port);
+                }
+            }
+        }
+        return false;
     }
 
     @Override

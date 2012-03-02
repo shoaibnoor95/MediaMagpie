@@ -39,6 +39,14 @@ public class ProcessWrapper {
         _processBuilder = processBuilder;
     }
 
+    /**
+     * Start the wrapped process now.
+     * 
+     * @param newStdOutLineListener
+     *            optional a listener to stdout and stderr
+     * @throws IOException
+     *             if program can not be started. (Eg: the program does not exist on file system or location)
+     */
     public void start(final StdXXXLineListener newStdOutLineListener) throws IOException {
         _processBuilder.redirectErrorStream(true);
         _process = _processBuilder.start();
@@ -73,6 +81,9 @@ public class ProcessWrapper {
     }
 
     public boolean isRunning() {
+        if (_process == null) {
+            return false;
+        }
         try {
             _process.exitValue();
             return false;
