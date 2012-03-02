@@ -5,7 +5,16 @@ import java.io.IOException;
 
 public interface IFSLayer {
 
-    IFile createFile(IFile parentFile, String format);
+    /**
+     * Creates a new IFile.
+     * 
+     * @param parentFile
+     *            provides the path for the new file
+     * @param name
+     *            provides the name for the new file
+     * @return
+     */
+    IFile createFile(IFile parentFile, String name);
 
     /**
      * Creates a new <code>IFile</code> for relevant IFSLayer implementation.

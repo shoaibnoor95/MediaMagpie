@@ -18,17 +18,6 @@ public class LocalFSFile extends AbstractFile implements IFile {
 
     private final File _file;
 
-    /**
-     * Creates af file or directory.
-     * 
-     * @param path
-     * @param isDir
-     * @deprecated TODO rwe this method
-     */
-    public LocalFSFile(String path, boolean isDir) {
-        this(new File(path), isDir);
-    }
-
     public LocalFSFile(File parent, String fileOrPath) {
         this(new File(parent, fileOrPath), false);
     }

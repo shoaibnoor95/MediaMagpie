@@ -12,8 +12,9 @@
 		<project.reporting.outputEncoding>iso8859-15</project.reporting.outputEncoding>
 		<maven.version>3.0.3</maven.version>
 		<org.springframework.ws.version>2.0.4.RELEASE</org.springframework.ws.version>
-		<org.springframework.version>3.1.0.RELEASE</org.springframework.version>
+		<org.springframework.version>3.1.1.RELEASE</org.springframework.version>
 		<springframework-security.version>3.1.0.RELEASE</springframework-security.version>
+		<mongodb.version>1.0.0.RC1</mongodb.version>
 		<org.slf4j.version>1.6.4</org.slf4j.version>
 		<jetty.version>6.1.26</jetty.version>
 		<jetty.jsp.version>7.0.0pre2</jetty.jsp.version>
@@ -82,7 +83,7 @@
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
-				<version>11.0.1</version>
+				<version>11.0.2</version>
 			</dependency>
 
 			<!-- Spring -->
@@ -129,7 +130,7 @@
 			<dependency>
 				<groupId>org.springframework.data</groupId>
 				<artifactId>spring-data-mongodb</artifactId>
-				<version>1.0.0.RC1</version>
+				<version>${mongodb.version}</version>
 			</dependency>
 
 			<!-- spring web service stuff -->
@@ -154,7 +155,7 @@
 			<dependency>
 				<groupId>org.codehaus.jackson</groupId>
 				<artifactId>jackson-mapper-asl</artifactId>
-				<version>1.9.4</version>
+				<version>1.9.5</version>
 			</dependency>
 
 			<!-- Drewnoakes exif tool -->

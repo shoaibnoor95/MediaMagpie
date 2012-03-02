@@ -2,6 +2,7 @@ package de.wehner.mediamagpie.common.fslayer;
 
 import java.io.IOException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -39,8 +40,11 @@ public class MongoDbFSLayer extends AbstractFSLayer implements IFSLayer {
 
     @Override
     public IFile createFile(String filePath) {
-        // TODO Auto-generated method stub
-        return null;
+        if (StringUtils.isEmpty(filePath)) {
+            throw new IllegalArgumentException("The filePath must not be empty.");
+        }
+        MongoDbFile mongoDbFile = new MongoDbFile(filePath);
+        return mongoDbFile;
     }
 
     @Override

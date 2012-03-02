@@ -23,12 +23,12 @@ public class LocalFSLayer extends AbstractFSLayer implements IFSLayer {
 
     @Override
     public IFile createDir(String path) {
-        return new LocalFSFile(path, true);
+        return new LocalFSFile(new File(path), true);
     }
 
     @Override
     public IFile createFile(String filePath) {
-        return new LocalFSFile(filePath, false);
+        return new LocalFSFile(new File(filePath), false);
     }
 
     // @Override
