@@ -1,5 +1,6 @@
 package de.wehner.mediamagpie.common.fslayer;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -9,6 +10,11 @@ public class MongoDbFSLayerTest {
 
     @Rule
     public MongoTestEnvironment _mongoTestEnvironment = new MongoTestEnvironment();
+
+    @Before
+    public void beforeMethod() {
+        org.junit.Assume.assumeTrue(_mongoTestEnvironment.getConnection() != null);
+    }
 
     @Test
     public void testMongoStartup() {
