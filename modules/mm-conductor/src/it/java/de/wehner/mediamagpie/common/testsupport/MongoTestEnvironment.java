@@ -44,8 +44,13 @@ public class MongoTestEnvironment extends ExternalResource {
 
     public MongoTestEnvironment(int port) {
         _port = port;
-        String programName = SearchPathUtil.findPath(new File(System.getProperty("user.home"), "programs/mongodb/bin/mongod").getPath(),
-                "/usr/bin/mongod", "/bin/mongod");
+        String programName = null;
+        try {
+            programName = SearchPathUtil.findPath(new File(System.getProperty("user.home"), "programs/mongodb/bin/mongod").getPath(), "/usr/bin/mongod",
+                    "/bin/mongod");
+        } catch (IllegalArgumentException e) {
+            LOG.info("Can not find executable for mongodb in test pathes.");
+        }
         if (StringUtils.isEmpty(programName)) {
             programName = "mongod";
         }
@@ -78,7 +83,7 @@ public class MongoTestEnvironment extends ExternalResource {
                 }
             });
         } catch (IOException e) {
-            LOG.warn("MongoDB cound not be started. Probably it is not installed on this system or can not be found.");
+            LOG.warn("MongoDB cound not be started. Probably it is not installed on this system or it can not be found.");
             return;
         }
 
@@ -88,7 +93,7 @@ public class MongoTestEnvironment extends ExternalResource {
         if (count > 0) {
             // TODO rwe: verify if it makes sense to leave here...
             LOG.warn("MongoDB seems not to be started correctly.");
-//            return;
+            // return;
         }
         _mongo = new Mongo("localhost", _port);
         List<String> databaseNames = _mongo.getDatabaseNames();
