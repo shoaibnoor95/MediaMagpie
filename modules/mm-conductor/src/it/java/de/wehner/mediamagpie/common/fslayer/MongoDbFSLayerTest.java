@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 
 import com.mongodb.Mongo;
 
+import de.wehner.mediamagpie.common.fslayer.mongodb.MongoDbFSLayer;
 import de.wehner.mediamagpie.common.testsupport.MongoTestEnvironment;
 
 public class MongoDbFSLayerTest {

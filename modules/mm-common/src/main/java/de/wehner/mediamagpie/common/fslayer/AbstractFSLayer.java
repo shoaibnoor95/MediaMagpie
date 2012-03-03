@@ -3,7 +3,7 @@ package de.wehner.mediamagpie.common.fslayer;
 import java.io.File;
 
 
-abstract class AbstractFSLayer implements IFSLayer {
+public abstract class AbstractFSLayer implements IFSLayer {
 
     @Override
     public IFile createFile(IFile parentFile, String name) {

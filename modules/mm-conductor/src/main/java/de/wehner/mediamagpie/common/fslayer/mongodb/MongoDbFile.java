@@ -1,4 +1,4 @@
-package de.wehner.mediamagpie.common.fslayer;
+package de.wehner.mediamagpie.common.fslayer.mongodb;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -9,12 +9,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 
+import de.wehner.mediamagpie.common.fslayer.IFile;
+
 public class MongoDbFile implements IFile {
 
     private final String _path;
-    // TODO: move the content to db layer
-    private byte[] _content;
-    
+
     private final MongoDbFSLayer _mongoDbFSLayer;
 
     public MongoDbFile(MongoDbFSLayer mongoDbFSLayer, String filePath) {
@@ -58,8 +58,12 @@ public class MongoDbFile implements IFile {
 
     @Override
     public InputStream getInputStream() throws FileNotFoundException {
-        
-        return new ByteArrayInputStream(_content);
+        MongoDbFileData mongoDbFileData = _mongoDbFSLayer.findByPath(_path);
+        if (mongoDbFileData != null) {
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(mongoDbFileData.getContent());
+            return inputStream;
+        }
+        return null;
     }
 
     @Override
@@ -69,15 +73,16 @@ public class MongoDbFile implements IFile {
             @Override
             public void close() throws IOException {
                 super.close();
-                // TODO rwe: This works only for non-big files. If we want to handle big files, we have to splitt the content into multiple
+                // TODO rwe: This works only for non-big files. If we want to handle big files, we have to split the content into multiple
                 // mongo db file objects.
                 this.flush();
                 byte[] data = this.toByteArray();
-                _content = new byte[data.length];
-                System.arraycopy(data, 0, _content, 0, data.length);
-                
+                // _content = new byte[data.length];
+                // System.arraycopy(data, 0, _content, 0, data.length);
+
+                MongoDbFileData mongoDbFileData = new MongoDbFileData(null, _path, data);
                 // write to db
-                _mongoDbFSLayer.
+                _mongoDbFSLayer.save(mongoDbFileData);
             }
         };
         return os;
