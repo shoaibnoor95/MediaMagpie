@@ -1,16 +1,11 @@
 package de.wehner.mediamagpie.common.fslayer.mongodb;
 
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-
 import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
-import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import de.wehner.mediamagpie.common.fslayer.AbstractFSLayer;
@@ -21,12 +16,12 @@ import de.wehner.mediamagpie.common.fslayer.IFile;
 @Profile({ "local-mongo", "cloud" })
 public class MongoDbFSLayer extends AbstractFSLayer implements IFSLayer {
 
-    private final MongoOperations _mongoOperation;
+    private final MongoDbFileDescriptorDao _mongoDbFileDescriptorDao;
 
     @Autowired
-    public MongoDbFSLayer(MongoTemplate mongoTemplate) {
+    public MongoDbFSLayer(MongoDbFileDescriptorDao mongoTemplate) {
         super();
-        _mongoOperation = mongoTemplate;
+        _mongoDbFileDescriptorDao = mongoTemplate;
     }
 
     @Override
@@ -63,14 +58,13 @@ public class MongoDbFSLayer extends AbstractFSLayer implements IFSLayer {
 
     }
 
-    // Maybe we will store this into a separate service
-    void save(MongoDbFileData fileData) {
-        _mongoOperation.save(fileData);
+    // TODO rwe: move to MongoDbFile directly?
+    MongoDbFileDescriptor findByPath(String path) {
+        return _mongoDbFileDescriptorDao.findByPath(path);
     }
 
-    MongoDbFileData findByPath(String path){
-        Query query = new Query(where("_path").is(path));
-        MongoDbFileData findOne = _mongoOperation.findOne(query, MongoDbFileData.class);
-        return findOne;
+    // TODO rwe: move to MongoDbFile directly?
+    public void save(MongoDbFileDescriptor mongoDbFileDescriptor) {
+        _mongoDbFileDescriptorDao.saveOrUpdate(mongoDbFileDescriptor);
     }
 }

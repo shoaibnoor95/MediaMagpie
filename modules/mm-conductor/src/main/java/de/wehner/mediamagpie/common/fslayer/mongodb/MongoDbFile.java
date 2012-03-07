@@ -8,11 +8,27 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.util.Arrays;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.wehner.mediamagpie.common.fslayer.IFile;
+import de.wehner.mediamagpie.common.fslayer.mongodb.MongoDbFileDescriptor.Type;
 
+/**
+ * Implementation of <code>IFile</code> were the file will be stored within a mongoDB.
+ * 
+ * @author ralfwehner
+ * 
+ */
 public class MongoDbFile implements IFile {
 
+    private static final Logger LOG = LoggerFactory.getLogger(MongoDbFile.class);
+
+    /**
+     * Contains a unique id for this file. Compared to a file on local file system, this will be the path and the file name.
+     */
     private final String _path;
 
     private final MongoDbFSLayer _mongoDbFSLayer;
@@ -58,10 +74,14 @@ public class MongoDbFile implements IFile {
 
     @Override
     public InputStream getInputStream() throws FileNotFoundException {
-        MongoDbFileData mongoDbFileData = _mongoDbFSLayer.findByPath(_path);
-        if (mongoDbFileData != null) {
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(mongoDbFileData.getContent());
+        MongoDbFileDescriptor desc = _mongoDbFSLayer.findByPath(_path);
+        if (desc != null) {
+            // TODO rwe: simplification: First use only on file data object
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(desc.getData().get(0).getContent());
             return inputStream;
+        } else {
+            // internal error
+            LOG.error("internal error: MongoDbFileDescriptor for '" + _path + "' does not exist.");
         }
         return null;
     }
@@ -77,12 +97,11 @@ public class MongoDbFile implements IFile {
                 // mongo db file objects.
                 this.flush();
                 byte[] data = this.toByteArray();
-                // _content = new byte[data.length];
-                // System.arraycopy(data, 0, _content, 0, data.length);
-
                 MongoDbFileData mongoDbFileData = new MongoDbFileData(null, _path, data);
+                MongoDbFileDescriptor mongoDbFileDescriptor = new MongoDbFileDescriptor(_path, Type.FILE);
+                mongoDbFileDescriptor.setData(Arrays.asList(mongoDbFileData));
                 // write to db
-                _mongoDbFSLayer.save(mongoDbFileData);
+                _mongoDbFSLayer.save(mongoDbFileDescriptor);
             }
         };
         return os;
@@ -90,8 +109,7 @@ public class MongoDbFile implements IFile {
 
     @Override
     public boolean exists() {
-        // TODO Auto-generated method stub
-        return false;
+        return (_mongoDbFSLayer.findByPath(_path) != null);
     }
 
     @Override
@@ -102,8 +120,9 @@ public class MongoDbFile implements IFile {
 
     @Override
     public void createNewFile() throws IOException {
-        // TODO Auto-generated method stub
-
+        MongoDbFileDescriptor mongoDbFileDescriptor = new MongoDbFileDescriptor(_path, Type.FILE);
+        // write to db
+        _mongoDbFSLayer.save(mongoDbFileDescriptor);
     }
 
     @Override
