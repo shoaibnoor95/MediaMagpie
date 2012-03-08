@@ -89,7 +89,8 @@ public interface IFile {
     void delete();
 
     /**
-     * For local file systems this will be a valid <code>File</code> object. But for a database file system, this is <code>null<null>.
+     * For local file systems this will be a valid <code>File</code> object. But for a database file system, this is
+     * <code>null<null>. This method should only be used in junit tests.
      * 
      * @return
      */

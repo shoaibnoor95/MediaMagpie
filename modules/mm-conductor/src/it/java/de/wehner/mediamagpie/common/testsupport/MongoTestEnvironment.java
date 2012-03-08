@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import junit.framework.Assert;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
@@ -57,8 +59,16 @@ public class MongoTestEnvironment extends ExternalResource {
         _mongoDbProgram = new File(programName);
     }
 
-    public Mongo getConnection() {
-        return _mongo;
+    public void beforeClass() {
+        try {
+            before();
+        } catch (Throwable e) {
+            Assert.fail("Unable to init MongoDB. " + e.getMessage());
+        }
+    }
+
+    public void afterClass() {
+        after();
     }
 
     @Override
@@ -113,6 +123,10 @@ public class MongoTestEnvironment extends ExternalResource {
             _mongoProcessWrapper.destroy();
         }
         super.after();
+    }
+
+    public Mongo getConnection() {
+        return _mongo;
     }
 
     private static int findFreeSocket(int startPort, int endPortRange) {

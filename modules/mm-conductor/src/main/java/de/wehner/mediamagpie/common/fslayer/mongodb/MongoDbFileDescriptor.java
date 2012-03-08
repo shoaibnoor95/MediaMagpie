@@ -18,7 +18,7 @@ public class MongoDbFileDescriptor {
 
     @Id
     private String _id;
-    @Indexed
+    @Indexed(unique = true)
     private String _path;
     private final Type _type;
     @DBRef

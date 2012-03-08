@@ -6,8 +6,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.apache.commons.io.IOUtils;
+import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Rule;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
@@ -19,15 +20,30 @@ import de.wehner.mediamagpie.common.testsupport.MongoTestEnvironment;
 
 public class MongoDbFSLayerTest {
 
-    @Rule
-    public MongoTestEnvironment _mongoTestEnvironment = new MongoTestEnvironment();
+    // @Rule
+    // public MongoTestEnvironment _mongoTestEnvironment = new MongoTestEnvironment();
+    // Made this static to startup and shutdown only once per junit test class
+    private static MongoTestEnvironment _mongoTestEnvironment;
 
     private MongoDbFSLayer _mongoDbFsLayer;
+
+    @BeforeClass
+    public static void beforeClass() {
+        _mongoTestEnvironment = new MongoTestEnvironment();
+        _mongoTestEnvironment.beforeClass();
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        _mongoTestEnvironment.afterClass();
+    }
 
     @Before
     public void setUp() {
         Mongo mongo = _mongoTestEnvironment.getConnection();
+        // check condition, if mongo db is available on test system. Skip test if no present.
         org.junit.Assume.assumeTrue(mongo != null);
+
         if (mongo != null) {
             // The MongoTemplate comes normally from spring context
             MongoTemplate mongoTemplate = new MongoTemplate(mongo, "testdb");
@@ -85,4 +101,34 @@ public class MongoDbFSLayerTest {
 
         assertThat(iFile.exists()).isTrue();
     }
+
+    @Test
+    public void testDelete() throws IOException {
+        String expectedFile = "/path/to/delete/existingFile";
+        IFile iFile = _mongoDbFsLayer.createFile(expectedFile);
+        iFile.createNewFile();
+        assertThat(iFile.exists()).isTrue();
+
+        iFile.delete();
+        assertThat(iFile.exists()).isFalse();
+    }
+
+    @Test
+    public void testLength() throws IOException {
+        String expectedFile = "/test/length";
+        IFile iFile = _mongoDbFsLayer.createFile(expectedFile);
+
+        assertThat(iFile.length()).isZero();
+
+        iFile.createNewFile();
+
+        assertThat(iFile.length()).isZero();
+
+        OutputStream os = iFile.getOutputStream();
+        IOUtils.write("1234567890", os);
+        os.close();
+
+        assertThat(iFile.length()).isEqualTo(10L);
+    }
+
 }

@@ -58,13 +58,7 @@ public class MongoDbFSLayer extends AbstractFSLayer implements IFSLayer {
 
     }
 
-    // TODO rwe: move to MongoDbFile directly?
-    MongoDbFileDescriptor findByPath(String path) {
-        return _mongoDbFileDescriptorDao.findByPath(path);
-    }
-
-    // TODO rwe: move to MongoDbFile directly?
-    public void save(MongoDbFileDescriptor mongoDbFileDescriptor) {
-        _mongoDbFileDescriptorDao.saveOrUpdate(mongoDbFileDescriptor);
+    MongoDbFileDescriptorDao getMongoDbFileDescriptorDao() {
+        return _mongoDbFileDescriptorDao;
     }
 }

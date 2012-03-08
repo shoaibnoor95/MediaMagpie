@@ -9,7 +9,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.List;
 
+import org.mortbay.log.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,7 +76,7 @@ public class MongoDbFile implements IFile {
 
     @Override
     public InputStream getInputStream() throws FileNotFoundException {
-        MongoDbFileDescriptor desc = _mongoDbFSLayer.findByPath(_path);
+        MongoDbFileDescriptor desc = getMongoDbFileDescriptor(true);
         if (desc != null) {
             // TODO rwe: simplification: First use only on file data object
             ByteArrayInputStream inputStream = new ByteArrayInputStream(desc.getData().get(0).getContent());
@@ -95,13 +97,16 @@ public class MongoDbFile implements IFile {
                 super.close();
                 // TODO rwe: This works only for non-big files. If we want to handle big files, we have to split the content into multiple
                 // mongo db file objects.
+                
+                // FIXME rwe: This works only for new files not for "overwriting"
                 this.flush();
                 byte[] data = this.toByteArray();
                 MongoDbFileData mongoDbFileData = new MongoDbFileData(null, _path, data);
                 MongoDbFileDescriptor mongoDbFileDescriptor = new MongoDbFileDescriptor(_path, Type.FILE);
                 mongoDbFileDescriptor.setData(Arrays.asList(mongoDbFileData));
                 // write to db
-                _mongoDbFSLayer.save(mongoDbFileDescriptor);
+                getDao().saveOrUpdate(mongoDbFileDescriptor);
+                
             }
         };
         return os;
@@ -109,7 +114,7 @@ public class MongoDbFile implements IFile {
 
     @Override
     public boolean exists() {
-        return (_mongoDbFSLayer.findByPath(_path) != null);
+        return (getDao().findByPath(_path) != null);
     }
 
     @Override
@@ -122,24 +127,46 @@ public class MongoDbFile implements IFile {
     public void createNewFile() throws IOException {
         MongoDbFileDescriptor mongoDbFileDescriptor = new MongoDbFileDescriptor(_path, Type.FILE);
         // write to db
-        _mongoDbFSLayer.save(mongoDbFileDescriptor);
+        getDao().saveOrUpdate(mongoDbFileDescriptor);
+    }
+
+    private MongoDbFileDescriptorDao getDao() {
+        return _mongoDbFSLayer.getMongoDbFileDescriptorDao();
     }
 
     @Override
     public long length() {
-        // TODO Auto-generated method stub
+        MongoDbFileDescriptor fileDescriptor = getMongoDbFileDescriptor(true);
+        if (fileDescriptor != null) {
+            List<MongoDbFileData> data = fileDescriptor.getData();
+            if(data == null || data.size() == 0){
+                return 0;
+            }
+            // TODO rwe: assumption, we have only one!
+            return data.get(0).getContent().length;
+        }
         return 0;
     }
 
     @Override
     public void delete() {
-        // TODO Auto-generated method stub
+        MongoDbFileDescriptor fileDescriptor = getMongoDbFileDescriptor(true);
+        if (fileDescriptor != null) {
+            getDao().delete(fileDescriptor);
+        }
+    }
 
+    private MongoDbFileDescriptor getMongoDbFileDescriptor(boolean isExpected) {
+        MongoDbFileDescriptor fileDescriptor = getDao().findByPath(_path);
+        if (fileDescriptor == null && isExpected) {
+            Log.debug("Can not delete file '" + _path + "' because it does not exist.");
+        }
+        return fileDescriptor;
     }
 
     @Override
     public File toFile() {
-        // TODO Auto-generated method stub
+        // only relevant for local file system files
         return null;
     }
 

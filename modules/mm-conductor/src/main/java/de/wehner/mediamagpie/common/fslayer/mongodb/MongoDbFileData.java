@@ -10,6 +10,10 @@ public class MongoDbFileData {
 
     @Id
     private String _id;
+    
+    /**
+     * Maybe we want to delete this, because it is no more needed and only useful in testing phase
+     */
     private String _path;
     private byte[] _content;
 
