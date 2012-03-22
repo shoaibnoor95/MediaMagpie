@@ -27,7 +27,7 @@ public class MongoDbFSLayer extends AbstractFSLayer implements IFSLayer {
     @Override
     public IFile createFile(String path, String fileName) {
         File normalizer = new File(path, fileName);
-        return new MongoDbFile(this, normalizer.getPath());
+        return createFile(normalizer.getPath());
     }
 
     // @Override
@@ -51,27 +51,6 @@ public class MongoDbFSLayer extends AbstractFSLayer implements IFSLayer {
     // // TODO Auto-generated method stub
     // return null;
     // }
-
-    @Override
-    public IFile createDir(String path) {
-        if (StringUtils.isEmpty(path)) {
-            throw new IllegalArgumentException("The argument path must not be empty.");
-        }
-        File normalizer = new File(path);
-        // does the directory already exist?
-        MongoDbFileDescriptor dir = _mongoDbFileDescriptorDao.findByPath(normalizer.getPath());
-        if (dir != null) {
-            return dir;
-        }
-        MongoDbFile mongoDbFile = new MongoDbFile(this, normalizer.getPath());
-        return null;
-    }
-
-    @Override
-    public void forceMkdir(IFile path) throws IOException {
-        // TODO Auto-generated method stub
-
-    }
 
     MongoDbFileDescriptorDao getMongoDbFileDescriptorDao() {
         return _mongoDbFileDescriptorDao;

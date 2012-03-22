@@ -120,7 +120,8 @@ public class MediaSyncService extends SingleThreadedController {
         }
         boolean someOneWasBusy = false;
         for (String mediaPath : mediaPathes) {
-            IFile syncDir = _fsLayer.createDir(mediaPath);
+            IFile syncDir = _fsLayer.createFile(mediaPath);
+            syncDir.createDir();
 
             // wait if another process is scanning same directory and lock when ready to sync
             CountDownLatch syncEndSignal = new CountDownLatch(1);

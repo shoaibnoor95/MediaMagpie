@@ -69,7 +69,8 @@ public class UploadService {
         try {
             if (!tempFile.getParentFile().exists()) {
                 // create the user's upload directory in case that the user hasn't uploaded a media yet
-                _fsLayer.forceMkdir(tempFile.getParentFile());
+                IFile parentTempFile = tempFile.getParentFile();
+                parentTempFile.forceMkdir();
             }
             if (tempFile.exists()) {
                 // file already exists. Maybe it is loaded again.

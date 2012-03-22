@@ -77,12 +77,27 @@ public interface IFile {
 
     URI toURI();
 
-//    /**
-//     * This is equals to 'touch'
-//     * 
-//     * @throws IOException
-//     */
-//    void createNewFile() throws IOException;
+    /**
+     * This is equals to 'touch'
+     * 
+     * @throws IOException
+     */
+    void createNewFile() throws IOException;
+
+    /**
+     * Creates a new directory instance.
+     * 
+     */
+    void createDir();
+
+    /**
+     * Create on ore more directories with specified path name. When the method will be leaved without an exception you can be sure the
+     * directories are created on the FS.
+     * 
+     * @throws IOException
+     *             when one directory can't be created.
+     */
+    void forceMkdir() throws IOException;
 
     long length();
 

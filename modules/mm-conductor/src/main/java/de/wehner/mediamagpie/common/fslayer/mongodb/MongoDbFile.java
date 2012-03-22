@@ -11,6 +11,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.mortbay.log.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -133,8 +134,21 @@ public class MongoDbFile implements IFile {
         getDao().saveOrUpdate(mongoDbFileDescriptor);
     }
 
-    private MongoDbFileDescriptorDao getDao() {
-        return _mongoDbFSLayer.getMongoDbFileDescriptorDao();
+    @Override
+    public void createDir() {
+        // does the directory already exist?
+        MongoDbFileDescriptor dir = getMongoDbFileDescriptor();
+        if (dir != null) {
+            LOG.warn("Directory '" + dir + "' does already exists.");
+        }
+        MongoDbFileDescriptor mongoDbFileDescriptor = new MongoDbFileDescriptor(_path, Type.DIR);
+        // write to db
+        getDao().saveOrUpdate(mongoDbFileDescriptor);
+    }
+
+    @Override
+    public void forceMkdir() throws IOException {
+        // TODO Auto-generated method stub
     }
 
     @Override
@@ -159,6 +173,10 @@ public class MongoDbFile implements IFile {
         } else {
             Log.warn("Can not delete file '" + _path + "' because it does not exist.");
         }
+    }
+
+    private MongoDbFileDescriptorDao getDao() {
+        return _mongoDbFSLayer.getMongoDbFileDescriptorDao();
     }
 
     private MongoDbFileDescriptor getMongoDbFileDescriptor() {
