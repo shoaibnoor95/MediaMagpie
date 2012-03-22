@@ -16,10 +16,10 @@ public class LocalFSLayer extends AbstractFSLayer implements IFSLayer {
         return new LocalFSFile(new File(path), fileName);
     }
 
-    @Override
-    public String getSchema() {
-        return new File("").toURI().getScheme();
-    }
+//    @Override
+//    public String getSchema() {
+//        return new File("").toURI().getScheme();
+//    }
 
     @Override
     public IFile createDir(String path) {

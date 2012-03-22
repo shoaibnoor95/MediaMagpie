@@ -39,20 +39,19 @@ public interface IFSLayer {
     IFile createFile(String path, String fileName);
 
     /**
-     * Provides the schema, this FSLayer implements. EG: 'file', 'mongoDB', etc.
+     * Creates a new empty File on file system.
      * 
-     * @return
+     * @param tempFile
+     *            The file describing the new file name.
      */
-    String getSchema();
+    void createFile(IFile tempFile);
 
-    /**
-     * Creates a new directory instance.
-     * 
-     * @param path
-     *            The path dir directory, like /home/rwe/medias/data/users/
-     * @return Dir concreate <code>IDir</code> implementation
-     */
-    IFile createDir(String path);
+    // /**
+    // * Provides the schema, this FSLayer implements. EG: 'file', 'mongoDB', etc.
+    // *
+    // * @return
+    // */
+    // String getSchema();
 
     /**
      * Creates a new IFile object.
@@ -63,6 +62,17 @@ public interface IFSLayer {
      * @return
      */
     IFile createFile(String filePath);
+
+    /**
+     * Creates a new directory instance.
+     * 
+     * @param path
+     *            The path dir directory, like /home/rwe/medias/data/users/
+     * @return Dir concreate <code>IDir</code> implementation
+     */
+    IFile createDir(String path);
+
+    
 
     // /**
     // * Finds all files that are located within a given path.

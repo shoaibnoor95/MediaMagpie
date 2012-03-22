@@ -78,7 +78,7 @@ public class UploadService {
                 tempFile = FileSystemUtil.getNextUniqueFilename(_fsLayer, tempFile);
                 LOG.debug("Generate the new file '" + tempFile.getPath() + "'.");
             }
-            tempFile.createNewFile();
+            _fsLayer.createFile(tempFile);
         } catch (IOException e) {
             LOG.warn("Can not write upload file to disk.", e);
         }

@@ -16,14 +16,20 @@ public class MongoDbFileDescriptorDao {
 
     public final String COLLECTION = "mongoDbFileDescriptor";
 
-    private final MongoOperations _mongoOperation;
     /**
-     * TODO rwe: checkout if that makes sense to use
+     * The MongoTemplate
+     */
+    private final MongoOperations _mongoOperation;
+    
+    /**
+     * The spring's Repository support
      */
     private final SimpleMongoRepository<MongoDbFileDescriptor, String> _fileDescriptorRepository;
 
+    private final MongoDbFileDataDao _mongoDbFileDataDao;
+
     @Autowired
-    public MongoDbFileDescriptorDao(MongoTemplate mongoTemplate) {
+    public MongoDbFileDescriptorDao(MongoTemplate mongoTemplate, MongoDbFileDataDao mongoDbFileDataDao) {
         super();
         _mongoOperation = mongoTemplate;
         _fileDescriptorRepository = new SimpleMongoRepository<MongoDbFileDescriptor, String>(
@@ -60,14 +66,18 @@ public class MongoDbFileDescriptorDao {
                         return "_id";
                     }
                 }, _mongoOperation);
+        _mongoDbFileDataDao = mongoDbFileDataDao;
     }
 
     public void saveOrUpdate(MongoDbFileDescriptor descriptor) {
-        MongoDbFileDescriptor byPath = findByPath(descriptor.getPath());
-        if (byPath != null) {
+        MongoDbFileDescriptor existingDescriptor = findByPath(descriptor.getPath());
+        if (existingDescriptor != null && existingDescriptor.getData() != null) {
             // update
+            _mongoDbFileDataDao.update(existingDescriptor.getData(), descriptor.getData());
+            _fileDescriptorRepository.save(existingDescriptor);
             // see 'Upserting' in
             // http://static.springsource.org/spring-data/data-mongodb/docs/current/reference/html/#mongo-template.save-update-remove
+            // _mongoOperation.upsert(query, update, entityClass)
         } else {
             // insert new
             if (descriptor.getData() != null) {

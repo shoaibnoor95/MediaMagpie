@@ -77,12 +77,12 @@ public interface IFile {
 
     URI toURI();
 
-    /**
-     * This is equals to 'touch'
-     * 
-     * @throws IOException
-     */
-    void createNewFile() throws IOException;
+//    /**
+//     * This is equals to 'touch'
+//     * 
+//     * @throws IOException
+//     */
+//    void createNewFile() throws IOException;
 
     long length();
 

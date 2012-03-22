@@ -19,7 +19,7 @@ import de.wehner.mediamagpie.common.fslayer.mongodb.MongoDbFileDataDao;
 import de.wehner.mediamagpie.common.fslayer.mongodb.MongoDbFileDescriptorDao;
 import de.wehner.mediamagpie.common.testsupport.MongoTestEnvironment;
 
-public class MongoDbFSLayerTest {
+public class MongoDbFileTest {
 
     // @Rule
     // public MongoTestEnvironment _mongoTestEnvironment = new MongoTestEnvironment();
@@ -60,77 +60,28 @@ public class MongoDbFSLayerTest {
     }
 
     @Test
-    public void testCreateFile_1() {
-        String expectedFile = "/path/to/my/foo.txt";
-
-        IFile createFile = _mongoDbFsLayer.createFile(expectedFile);
-
-        assertThat(createFile.getPath()).isEqualTo(expectedFile);
-    }
-
-    @Test
-    public void testGetOutputStream_GetInputStream() throws IOException {
-        String expectedFile = "/path/to/my/foo.txt";
+    public void testGetOutputStream_And_ReplaceData() throws IOException {
+        String expectedFile = "/path/to/existingFile";
         IFile iFile = _mongoDbFsLayer.createFile(expectedFile);
 
+        // write 'blah' to file
+        assertThat(iFile.exists()).isFalse();
         OutputStream os = iFile.getOutputStream();
         IOUtils.write("blah", os);
         os.close();
 
         IFile fileFromFs = _mongoDbFsLayer.createFile(iFile.getPath());
         assertThat(IOUtils.toString(fileFromFs.getInputStream())).isEqualTo("blah");
-    }
-
-    @Test
-    public void testExists() throws IOException {
-        String expectedFile = "/path/to/existingFile";
-        IFile iFile = _mongoDbFsLayer.createFile(expectedFile);
-
-        assertThat(iFile.exists()).isFalse();
-        OutputStream os = iFile.getOutputStream();
-        IOUtils.write("blah", os);
+        
+        // update content of file to 'blubber'
+        os = iFile.getOutputStream();
+        IOUtils.write("blubber", os);
         os.close();
-
-        assertThat(iFile.exists()).isTrue();
+        
+        fileFromFs = _mongoDbFsLayer.createFile(iFile.getPath());
+        assertThat(IOUtils.toString(fileFromFs.getInputStream())).isEqualTo("blubber");
     }
 
-    @Test
-    public void testCreateNewFile() throws IOException {
-        String expectedFile = "/path/to/existingFile2";
-        IFile iFile = _mongoDbFsLayer.createFile(expectedFile);
-
-        iFile.createNewFile();
-
-        assertThat(iFile.exists()).isTrue();
-    }
-
-    @Test
-    public void testDelete() throws IOException {
-        String expectedFile = "/path/to/delete/existingFile";
-        IFile iFile = _mongoDbFsLayer.createFile(expectedFile);
-        iFile.createNewFile();
-        assertThat(iFile.exists()).isTrue();
-
-        iFile.delete();
-        assertThat(iFile.exists()).isFalse();
-    }
-
-    @Test
-    public void testLength() throws IOException {
-        String expectedFile = "/test/length";
-        IFile iFile = _mongoDbFsLayer.createFile(expectedFile);
-
-        assertThat(iFile.length()).isZero();
-
-        iFile.createNewFile();
-
-        assertThat(iFile.length()).isZero();
-
-        OutputStream os = iFile.getOutputStream();
-        IOUtils.write("1234567890", os);
-        os.close();
-
-        assertThat(iFile.length()).isEqualTo(10L);
-    }
-
+    // TODO rwe: add test for delete content
+    // TODO rwe: add test for append content
 }

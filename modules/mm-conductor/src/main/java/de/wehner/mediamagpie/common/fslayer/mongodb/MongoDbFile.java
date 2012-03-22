@@ -76,7 +76,7 @@ public class MongoDbFile implements IFile {
 
     @Override
     public InputStream getInputStream() throws FileNotFoundException {
-        MongoDbFileDescriptor desc = getMongoDbFileDescriptor(true);
+        MongoDbFileDescriptor desc = getMongoDbFileDescriptor();
         if (desc != null) {
             // TODO rwe: simplification: First use only on file data object
             ByteArrayInputStream inputStream = new ByteArrayInputStream(desc.getData().get(0).getContent());
@@ -97,16 +97,19 @@ public class MongoDbFile implements IFile {
                 super.close();
                 // TODO rwe: This works only for non-big files. If we want to handle big files, we have to split the content into multiple
                 // mongo db file objects.
-                
-                // FIXME rwe: This works only for new files not for "overwriting"
                 this.flush();
                 byte[] data = this.toByteArray();
+
+                MongoDbFileDescriptor mongoDbFileDescriptor = getMongoDbFileDescriptor();
                 MongoDbFileData mongoDbFileData = new MongoDbFileData(null, _path, data);
-                MongoDbFileDescriptor mongoDbFileDescriptor = new MongoDbFileDescriptor(_path, Type.FILE);
-                mongoDbFileDescriptor.setData(Arrays.asList(mongoDbFileData));
+                if (mongoDbFileDescriptor == null) {
+                    mongoDbFileDescriptor = new MongoDbFileDescriptor(_path, Type.FILE);
+                    mongoDbFileDescriptor.setData(Arrays.asList(mongoDbFileData));
+                } else {
+                    mongoDbFileDescriptor.setData(Arrays.asList(mongoDbFileData));
+                }
                 // write to db
                 getDao().saveOrUpdate(mongoDbFileDescriptor);
-                
             }
         };
         return os;
@@ -136,10 +139,10 @@ public class MongoDbFile implements IFile {
 
     @Override
     public long length() {
-        MongoDbFileDescriptor fileDescriptor = getMongoDbFileDescriptor(true);
+        MongoDbFileDescriptor fileDescriptor = getMongoDbFileDescriptor();
         if (fileDescriptor != null) {
             List<MongoDbFileData> data = fileDescriptor.getData();
-            if(data == null || data.size() == 0){
+            if (data == null || data.size() == 0) {
                 return 0;
             }
             // TODO rwe: assumption, we have only one!
@@ -150,17 +153,16 @@ public class MongoDbFile implements IFile {
 
     @Override
     public void delete() {
-        MongoDbFileDescriptor fileDescriptor = getMongoDbFileDescriptor(true);
+        MongoDbFileDescriptor fileDescriptor = getMongoDbFileDescriptor();
         if (fileDescriptor != null) {
             getDao().delete(fileDescriptor);
+        } else {
+            Log.warn("Can not delete file '" + _path + "' because it does not exist.");
         }
     }
 
-    private MongoDbFileDescriptor getMongoDbFileDescriptor(boolean isExpected) {
+    private MongoDbFileDescriptor getMongoDbFileDescriptor() {
         MongoDbFileDescriptor fileDescriptor = getDao().findByPath(_path);
-        if (fileDescriptor == null && isExpected) {
-            Log.debug("Can not delete file '" + _path + "' because it does not exist.");
-        }
         return fileDescriptor;
     }
 
