@@ -2,17 +2,23 @@ package de.wehner.mediamagpie.common.simplenio.fs;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.nio.ByteBuffer;
+import java.nio.channels.SeekableByteChannel;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 
 import de.wehner.mediamagpie.common.simplenio.file.MMDirectoryNotEmptyException;
 import de.wehner.mediamagpie.common.simplenio.file.MMFileSystem;
+import de.wehner.mediamagpie.common.simplenio.file.MMOpenOption;
 import de.wehner.mediamagpie.common.simplenio.file.MMPath;
+import de.wehner.mediamagpie.common.simplenio.file.MMStandardOpenOption;
 import de.wehner.mediamagpie.common.simplenio.file.attribute.MMBasicFileAttributes;
 import de.wehner.mediamagpie.common.simplenio.file.attribute.MMBasicFileAttributesImpl;
 
@@ -22,7 +28,7 @@ public class MMUnixFileSystemProvider extends MMAbstractFileSystemProvider {
     boolean implDelete(MMPath paramPath, boolean paramBoolean) throws IOException {
         MMUnixPath localUnixPath = MMUnixPath.toUnixPath(paramPath);
         localUnixPath.checkDelete();
-        File file = new File(paramPath.toString());
+        File file = localUnixPath.getPath();
         if (file.isDirectory()) {
             File[] filesInDir = file.listFiles();
             if (filesInDir != null && filesInDir.length > 0) {
@@ -38,18 +44,6 @@ public class MMUnixFileSystemProvider extends MMAbstractFileSystemProvider {
     public MMFileSystem getFileSystem(URI uri) {
         checkUri(uri);
         return this.theFileSystem;
-    }
-
-    @Override
-    public InputStream newInputStream(MMPath path) throws IOException {
-        File file = new File(path.toString());
-        return new FileInputStream(file);
-    }
-
-    @Override
-    public OutputStream newOutputStream(MMPath path) throws IOException {
-        File file = new File(path.toString());
-        return new FileOutputStream(file);
     }
 
     @Override
@@ -156,13 +150,17 @@ public class MMUnixFileSystemProvider extends MMAbstractFileSystemProvider {
     // }
     // throw new UnsupportedOperationException();
     // }
-    // return (TA) ((BasicFileAttributeView) getFileAttributeView(paramPath, (Class) localObject, paramArrayOfLinkOption)).readAttributes();
+    // return (TA) ((BasicFileAttributeView) getFileAttributeView(paramPath, (Class) localObject,
+    // paramArrayOfLinkOption)).readAttributes();
     // }
 
     public <A extends MMBasicFileAttributes> A readAttributes(MMPath paramPath, Class<A> paramClass) throws IOException {
-        Object localObject;
         if (paramClass == MMBasicFileAttributes.class) {
-            File file = new File(paramPath.toString());
+            MMUnixPath localUnixPath = MMUnixPath.toUnixPath(paramPath);
+            File file = localUnixPath.getPath();
+            if (!file.exists()) {
+                throw new FileNotFoundException("File '" + file.getPath() + "' does not exist");
+            }
             return (A) new MMBasicFileAttributesImpl(file.lastModified(), file.isDirectory(), file.length());
         } else {
             if (paramClass == null) {
@@ -172,7 +170,14 @@ public class MMUnixFileSystemProvider extends MMAbstractFileSystemProvider {
         }
     }
 
-    // // protected DynamicFileAttributeView getFileAttributeView(Path paramPath, String paramString, LinkOption[] paramArrayOfLinkOption)
+    @Override
+    public SeekableByteChannel newByteChannel(MMPath path, Set<? extends MMOpenOption> options) throws IOException {
+        MMUnixPath unixPath = MMUnixPath.toUnixPath(path);
+        return MMUnixFileChannelFactory.newFileChannel(unixPath, options);
+    }
+
+    // // protected DynamicFileAttributeView getFileAttributeView(Path paramPath, String paramString, LinkOption[]
+    // paramArrayOfLinkOption)
     // // {
     // // UnixPath localUnixPath = UnixPath.toUnixPath(paramPath);
     // // boolean bool = Util.followLinks(paramArrayOfLinkOption);

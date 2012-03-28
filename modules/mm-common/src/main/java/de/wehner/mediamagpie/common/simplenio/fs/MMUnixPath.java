@@ -712,7 +712,8 @@ public class MMUnixPath extends MMAbstractPath {
     // if ((localUnixPath3.asByteArray().length == 1) && (localUnixPath3.asByteArray()[0] == 46)) {
     // continue;
     // }
-    // if ((localUnixPath3.asByteArray().length == 2) && (localUnixPath3.asByteArray()[0] == 46) && (localUnixPath3.asByteArray()[1] == 46))
+    // if ((localUnixPath3.asByteArray().length == 2) && (localUnixPath3.asByteArray()[0] == 46) && (localUnixPath3.asByteArray()[1] ==
+    // 46))
     // {
     // UnixFileAttributes localUnixFileAttributes = null;
     // try {
@@ -794,6 +795,10 @@ public class MMUnixPath extends MMAbstractPath {
             return path.compareTo(((MMUnixPath) o).path);
         }
         throw new RuntimeException("internal error");
+    }
+
+    public File getPath() {
+        return path;
     }
 
     @Override

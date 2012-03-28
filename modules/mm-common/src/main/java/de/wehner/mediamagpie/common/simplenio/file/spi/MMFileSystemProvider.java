@@ -4,11 +4,24 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.nio.channels.Channels;
+import java.nio.channels.SeekableByteChannel;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.OpenOption;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.FileAttribute;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import de.wehner.mediamagpie.common.simplenio.file.MMFileSystem;
+import de.wehner.mediamagpie.common.simplenio.file.MMFiles;
 import de.wehner.mediamagpie.common.simplenio.file.MMNoSuchFileException;
+import de.wehner.mediamagpie.common.simplenio.file.MMOpenOption;
 import de.wehner.mediamagpie.common.simplenio.file.MMPath;
+import de.wehner.mediamagpie.common.simplenio.file.MMStandardOpenOption;
 import de.wehner.mediamagpie.common.simplenio.file.attribute.MMBasicFileAttributes;
 
 public abstract class MMFileSystemProvider {
@@ -19,19 +32,21 @@ public abstract class MMFileSystemProvider {
      * <p>
      * This method returns a reference to a {@code FileSystem} that was created by invoking the {@link #newFileSystem(URI,Map)
      * newFileSystem(URI,Map)} method. File systems created the {@link #newFileSystem(Path,Map) newFileSystem(Path,Map)} method are not
-     * returned by this method. The file system is identified by its {@code URI}. Its exact form is highly provider dependent. In the case
-     * of the default provider the URI's path component is {@code "/"} and the authority, query and fragment components are undefined
-     * (Undefined components are represented by {@code null}).
+     * returned by this method. The file system is identified by its {@code URI}. Its exact form is highly provider dependent. In the
+     * case of the default provider the URI's path component is {@code "/"} and the authority, query and fragment components are
+     * undefined (Undefined components are represented by {@code null}).
      * 
      * <p>
-     * Once a file system created by this provider is {@link java.nio.file.FileSystem#close closed} it is provider-dependent if this method
-     * returns a reference to the closed file system or throws {@link FileSystemNotFoundException}. If the provider allows a new file system
-     * to be created with the same URI as a file system it previously created then this method throws the exception if invoked after the
-     * file system is closed (and before a new instance is created by the {@link #newFileSystem newFileSystem} method).
+     * Once a file system created by this provider is {@link java.nio.file.FileSystem#close closed} it is provider-dependent if this
+     * method returns a reference to the closed file system or throws {@link FileSystemNotFoundException}. If the provider allows a new
+     * file system to be created with the same URI as a file system it previously created then this method throws the exception if
+     * invoked after the file system is closed (and before a new instance is created by the {@link #newFileSystem newFileSystem}
+     * method).
      * 
      * <p>
-     * If a security manager is installed then a provider implementation may require to check a permission before returning a reference to
-     * an existing file system. In the case of the {@link FileSystems#getDefault default} file system, no permission check is required.
+     * If a security manager is installed then a provider implementation may require to check a permission before returning a reference
+     * to an existing file system. In the case of the {@link FileSystems#getDefault default} file system, no permission check is
+     * required.
      * 
      * @param uri
      *            URI reference
@@ -48,13 +63,13 @@ public abstract class MMFileSystemProvider {
     public abstract MMFileSystem getFileSystem(URI uri);
 
     /**
-     * Return a {@code Path} object by converting the given {@link URI}. The resulting {@code Path} is associated with a {@link FileSystem}
-     * that already exists or is constructed automatically.
+     * Return a {@code Path} object by converting the given {@link URI}. The resulting {@code Path} is associated with a
+     * {@link FileSystem} that already exists or is constructed automatically.
      * 
      * <p>
-     * The exact form of the URI is file system provider dependent. In the case of the default provider, the URI scheme is {@code "file"}
-     * and the given URI has a non-empty path component, and undefined query, and fragment components. The resulting {@code Path} is
-     * associated with the default {@link FileSystems#getDefault default} {@code FileSystem}.
+     * The exact form of the URI is file system provider dependent. In the case of the default provider, the URI scheme is
+     * {@code "file"} and the given URI has a non-empty path component, and undefined query, and fragment components. The resulting
+     * {@code Path} is associated with the default {@link FileSystems#getDefault default} {@code FileSystem}.
      * 
      * <p>
      * If a security manager is installed then a provider implementation may require to check a permission. In the case of the
@@ -71,6 +86,38 @@ public abstract class MMFileSystemProvider {
      *             If a security manager is installed and it denies an unspecified permission.
      */
     public abstract MMPath getPath(URI uri);
+
+    /**
+     * Opens or creates a file, returning a seekable byte channel to access the file. This method works in exactly the manner specified
+     * by the {@link Files#newByteChannel(Path,Set,FileAttribute[])} method.
+     * 
+     * @param path
+     *            the path to the file to open or create
+     * @param options
+     *            options specifying how the file is opened
+     * @param attrs
+     *            an optional list of file attributes to set atomically when creating the file
+     * 
+     * @return a new seekable byte channel
+     * 
+     * @throws IllegalArgumentException
+     *             if the set contains an invalid combination of options
+     * @throws UnsupportedOperationException
+     *             if an unsupported open option is specified or the array contains attributes that cannot be set atomically when
+     *             creating the file
+     * @throws FileAlreadyExistsException
+     *             if a file of that name already exists and the {@link StandardOpenOption#CREATE_NEW CREATE_NEW} option is specified
+     *             <i>(optional specific exception)</i>
+     * @throws IOException
+     *             if an I/O error occurs
+     * @throws SecurityException
+     *             In the case of the default provider, and a security manager is installed, the
+     *             {@link SecurityManager#checkRead(String) checkRead} method is invoked to check read access to the path if the file
+     *             is opened for reading. The {@link SecurityManager#checkWrite(String) checkWrite} method is invoked to check write
+     *             access to the path if the file is opened for writing. The {@link SecurityManager#checkDelete(String) checkDelete}
+     *             method is invoked to check delete access if the file is opened with the {@code DELETE_ON_CLOSE} option.
+     */
+    public abstract SeekableByteChannel newByteChannel(MMPath path, Set<? extends MMOpenOption> options) throws IOException;
 
     /**
      * Opens a file, returning an input stream to read from the file. This method works in exactly the manner specified by the
@@ -94,14 +141,24 @@ public abstract class MMFileSystemProvider {
      * @throws IOException
      *             if an I/O error occurs
      * @throws SecurityException
-     *             In the case of the default provider, and a security manager is installed, the {@link SecurityManager#checkRead(String)
-     *             checkRead} method is invoked to check read access to the file.
+     *             In the case of the default provider, and a security manager is installed, the
+     *             {@link SecurityManager#checkRead(String) checkRead} method is invoked to check read access to the file.
      */
-    public abstract InputStream newInputStream(MMPath path) throws IOException;
+    public InputStream newInputStream(MMPath path, MMOpenOption... options)
+            throws IOException
+        {
+            if (options.length > 0) {
+                for (MMOpenOption opt: options) {
+                    if (opt != MMStandardOpenOption.READ)
+                        throw new UnsupportedOperationException("'" + opt + "' not allowed");
+                }
+            }
+            return Channels.newInputStream(MMFiles.newByteChannel(path));
+        }
 
     /**
-     * Opens or creates a file, returning an output stream that may be used to write bytes to the file. This method works in exactly the
-     * manner specified by the {@link Files#newOutputStream} method.
+     * Opens or creates a file, returning an output stream that may be used to write bytes to the file. This method works in exactly
+     * the manner specified by the {@link Files#newOutputStream} method.
      * 
      * <p>
      * The default implementation of this method opens a channel to the file as if by invoking the {@link #newByteChannel} method and
@@ -121,11 +178,29 @@ public abstract class MMFileSystemProvider {
      * @throws IOException
      *             if an I/O error occurs
      * @throws SecurityException
-     *             In the case of the default provider, and a security manager is installed, the {@link SecurityManager#checkWrite(String)
-     *             checkWrite} method is invoked to check write access to the file. The {@link SecurityManager#checkDelete(String)
-     *             checkDelete} method is invoked to check delete access if the file is opened with the {@code DELETE_ON_CLOSE} option.
+     *             In the case of the default provider, and a security manager is installed, the
+     *             {@link SecurityManager#checkWrite(String) checkWrite} method is invoked to check write access to the file. The
+     *             {@link SecurityManager#checkDelete(String) checkDelete} method is invoked to check delete access if the file is
+     *             opened with the {@code DELETE_ON_CLOSE} option.
      */
-    public abstract OutputStream newOutputStream(MMPath path) throws IOException;
+    public OutputStream newOutputStream(MMPath path, MMOpenOption... options)
+            throws IOException
+        {
+            int len = options.length;
+            Set<MMOpenOption> opts = new HashSet<MMOpenOption>(len + 3);
+            if (len == 0) {
+                opts.add(MMStandardOpenOption.CREATE);
+                opts.add(MMStandardOpenOption.TRUNCATE_EXISTING);
+            } else {
+                for (MMOpenOption opt: options) {
+                    if (opt == MMStandardOpenOption.READ)
+                        throw new IllegalArgumentException("READ not allowed");
+                    opts.add(opt);
+                }
+            }
+            opts.add(MMStandardOpenOption.WRITE);
+            return Channels.newOutputStream(newByteChannel(path, opts));
+        }
 
     /**
      * Creates a new directory. This method works in exactly the manner specified by the {@link Files#createDirectory} method.
@@ -143,8 +218,8 @@ public abstract class MMFileSystemProvider {
      * @throws IOException
      *             if an I/O error occurs or the parent directory does not exist
      * @throws SecurityException
-     *             In the case of the default provider, and a security manager is installed, the {@link SecurityManager#checkWrite(String)
-     *             checkWrite} method is invoked to check write access to the new directory.
+     *             In the case of the default provider, and a security manager is installed, the
+     *             {@link SecurityManager#checkWrite(String) checkWrite} method is invoked to check write access to the new directory.
      */
     public abstract void createDirectory(MMPath dir) throws IOException;
 
@@ -154,7 +229,8 @@ public abstract class MMFileSystemProvider {
     // * that already exists or is constructed automatically.
     // *
     // * <p>
-    // * The exact form of the URI is file system provider dependent. In the case of the default provider, the URI scheme is {@code "file"}
+    // * The exact form of the URI is file system provider dependent. In the case of the default provider, the URI scheme is {@code
+    // "file"}
     // * and the given URI has a non-empty path component, and undefined query, and fragment components. The resulting {@code Path} is
     // * associated with the default {@link FileSystems#getDefault default} {@code FileSystem}.
     // *
@@ -206,13 +282,13 @@ public abstract class MMFileSystemProvider {
      * @throws MMNoSuchFileException
      *             if the file does not exist <i>(optional specific exception)</i>
      * @throws DirectoryNotEmptyException
-     *             if the file is a directory and could not otherwise be deleted because the directory is not empty <i>(optional specific
-     *             exception)</i>
+     *             if the file is a directory and could not otherwise be deleted because the directory is not empty <i>(optional
+     *             specific exception)</i>
      * @throws IOException
      *             if an I/O error occurs
      * @throws SecurityException
-     *             In the case of the default provider, and a security manager is installed, the {@link SecurityManager#checkDelete(String)}
-     *             method is invoked to check delete access to the file
+     *             In the case of the default provider, and a security manager is installed, the
+     *             {@link SecurityManager#checkDelete(String)} method is invoked to check delete access to the file
      */
     public abstract void delete(MMPath path) throws IOException;
 
@@ -220,22 +296,23 @@ public abstract class MMFileSystemProvider {
      * Deletes a file if it exists. This method works in exactly the manner specified by the {@link Files#deleteIfExists} method.
      * 
      * <p>
-     * The default implementation of this method simply invokes {@link #delete} ignoring the {@code NoSuchFileException} when the file does
-     * not exist. It may be overridden where appropriate.
+     * The default implementation of this method simply invokes {@link #delete} ignoring the {@code NoSuchFileException} when the file
+     * does not exist. It may be overridden where appropriate.
      * 
      * @param path
      *            the path to the file to delete
      * 
-     * @return {@code true} if the file was deleted by this method; {@code false} if the file could not be deleted because it did not exist
+     * @return {@code true} if the file was deleted by this method; {@code false} if the file could not be deleted because it did not
+     *         exist
      * 
      * @throws DirectoryNotEmptyException
-     *             if the file is a directory and could not otherwise be deleted because the directory is not empty <i>(optional specific
-     *             exception)</i>
+     *             if the file is a directory and could not otherwise be deleted because the directory is not empty <i>(optional
+     *             specific exception)</i>
      * @throws IOException
      *             if an I/O error occurs
      * @throws SecurityException
-     *             In the case of the default provider, and a security manager is installed, the {@link SecurityManager#checkDelete(String)}
-     *             method is invoked to check delete access to the file
+     *             In the case of the default provider, and a security manager is installed, the
+     *             {@link SecurityManager#checkDelete(String)} method is invoked to check delete access to the file
      */
     public boolean deleteIfExists(MMPath path) throws IOException {
         try {
@@ -247,8 +324,9 @@ public abstract class MMFileSystemProvider {
     }
 
     /**
-     * Copy a file to a target file. This method works in exactly the manner specified by the {@link Files#copy(Path,Path,CopyOption[])}
-     * method except that both the source and target paths must be associated with this provider.
+     * Copy a file to a target file. This method works in exactly the manner specified by the
+     * {@link Files#copy(Path,Path,CopyOption[])} method except that both the source and target paths must be associated with this
+     * provider.
      * 
      * @param source
      *            the path to the file to copy
@@ -268,16 +346,16 @@ public abstract class MMFileSystemProvider {
      * @throws IOException
      *             if an I/O error occurs
      * @throws SecurityException
-     *             In the case of the default provider, and a security manager is installed, the {@link SecurityManager#checkRead(String)
-     *             checkRead} method is invoked to check read access to the source file, the {@link SecurityManager#checkWrite(String)
-     *             checkWrite} is invoked to check write access to the target file. If a symbolic link is copied the security manager is
-     *             invoked to check {@link LinkPermission}{@code ("symbolic")}.
+     *             In the case of the default provider, and a security manager is installed, the
+     *             {@link SecurityManager#checkRead(String) checkRead} method is invoked to check read access to the source file, the
+     *             {@link SecurityManager#checkWrite(String) checkWrite} is invoked to check write access to the target file. If a
+     *             symbolic link is copied the security manager is invoked to check {@link LinkPermission}{@code ("symbolic")}.
      */
     public abstract void copy(MMPath source, MMPath target) throws IOException;
 
     /**
-     * Move or rename a file to a target file. This method works in exactly the manner specified by the {@link Files#move} method except
-     * that both the source and target paths must be associated with this provider.
+     * Move or rename a file to a target file. This method works in exactly the manner specified by the {@link Files#move} method
+     * except that both the source and target paths must be associated with this provider.
      * 
      * @param source
      *            the path to the file to move
@@ -300,8 +378,9 @@ public abstract class MMFileSystemProvider {
      * @throws IOException
      *             if an I/O error occurs
      * @throws SecurityException
-     *             In the case of the default provider, and a security manager is installed, the {@link SecurityManager#checkWrite(String)
-     *             checkWrite} method is invoked to check write access to both the source and target file.
+     *             In the case of the default provider, and a security manager is installed, the
+     *             {@link SecurityManager#checkWrite(String) checkWrite} method is invoked to check write access to both the source and
+     *             target file.
      */
     public abstract void move(MMPath source, MMPath target) throws IOException;
 }
