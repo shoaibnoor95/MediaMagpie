@@ -2,8 +2,10 @@ package de.wehner.mediamagpie.common.simplenio.file;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.apache.commons.io.FileUtils;
@@ -54,8 +56,22 @@ public class MMFileSystemsTest {
         IOUtils.write("blah", os);
 
         assertThat(FileUtils.readFileToString(new File(_testEnvironment.getWorkingDir(), "foo.txt"))).isEqualTo("blah");
-
     }
+    
+    @Test
+    public void testReadFromInputStream() throws IOException{
+        File testFile = new File(_testEnvironment.getWorkingDir().getPath(), "read.test");
+        String TEST_STRING = "This is my special file content with some extra characters like '§šŠŸ'.";
+        FileUtils.writeStringToFile(testFile, TEST_STRING);
+        MMPath path = MMPaths.get(testFile.getParentFile().getPath(), testFile.getName());
+
+        InputStream is = MMFiles.newInputStream(path);
+        ByteArrayOutputStream contentFromFile = new ByteArrayOutputStream();
+        IOUtils.copy(is,  contentFromFile);
+
+        assertThat(contentFromFile.toByteArray()).isEqualTo(FileUtils.readFileToByteArray(testFile));
+    }
+
     @Test
     public void testCopyFile() {
     }

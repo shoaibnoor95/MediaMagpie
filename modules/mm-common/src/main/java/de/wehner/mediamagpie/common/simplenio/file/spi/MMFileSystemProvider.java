@@ -144,17 +144,17 @@ public abstract class MMFileSystemProvider {
      *             In the case of the default provider, and a security manager is installed, the
      *             {@link SecurityManager#checkRead(String) checkRead} method is invoked to check read access to the file.
      */
-    public InputStream newInputStream(MMPath path, MMOpenOption... options)
-            throws IOException
-        {
-            if (options.length > 0) {
-                for (MMOpenOption opt: options) {
-                    if (opt != MMStandardOpenOption.READ)
-                        throw new UnsupportedOperationException("'" + opt + "' not allowed");
-                }
+    public InputStream newInputStream(MMPath path, MMOpenOption... options) throws IOException {
+        if (options.length > 0) {
+            for (MMOpenOption opt : options) {
+                if (opt != MMStandardOpenOption.READ)
+                    throw new UnsupportedOperationException("'" + opt + "' not allowed");
             }
-            return Channels.newInputStream(MMFiles.newByteChannel(path));
+            return Channels.newInputStream(MMFiles.newByteChannel(path, options));
+        } else {
+            return Channels.newInputStream(MMFiles.newByteChannel(path, MMStandardOpenOption.READ));
         }
+    }
 
     /**
      * Opens or creates a file, returning an output stream that may be used to write bytes to the file. This method works in exactly
@@ -183,24 +183,22 @@ public abstract class MMFileSystemProvider {
      *             {@link SecurityManager#checkDelete(String) checkDelete} method is invoked to check delete access if the file is
      *             opened with the {@code DELETE_ON_CLOSE} option.
      */
-    public OutputStream newOutputStream(MMPath path, MMOpenOption... options)
-            throws IOException
-        {
-            int len = options.length;
-            Set<MMOpenOption> opts = new HashSet<MMOpenOption>(len + 3);
-            if (len == 0) {
-                opts.add(MMStandardOpenOption.CREATE);
-                opts.add(MMStandardOpenOption.TRUNCATE_EXISTING);
-            } else {
-                for (MMOpenOption opt: options) {
-                    if (opt == MMStandardOpenOption.READ)
-                        throw new IllegalArgumentException("READ not allowed");
-                    opts.add(opt);
-                }
+    public OutputStream newOutputStream(MMPath path, MMOpenOption... options) throws IOException {
+        int len = options.length;
+        Set<MMOpenOption> opts = new HashSet<MMOpenOption>(len + 3);
+        if (len == 0) {
+            opts.add(MMStandardOpenOption.CREATE);
+            opts.add(MMStandardOpenOption.TRUNCATE_EXISTING);
+        } else {
+            for (MMOpenOption opt : options) {
+                if (opt == MMStandardOpenOption.READ)
+                    throw new IllegalArgumentException("READ not allowed");
+                opts.add(opt);
             }
-            opts.add(MMStandardOpenOption.WRITE);
-            return Channels.newOutputStream(newByteChannel(path, opts));
         }
+        opts.add(MMStandardOpenOption.WRITE);
+        return Channels.newOutputStream(newByteChannel(path, opts));
+    }
 
     /**
      * Creates a new directory. This method works in exactly the manner specified by the {@link Files#createDirectory} method.
