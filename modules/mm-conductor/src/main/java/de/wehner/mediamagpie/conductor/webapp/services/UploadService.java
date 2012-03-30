@@ -69,7 +69,8 @@ public class UploadService {
         try {
             if (!tempFile.getParentFile().exists()) {
                 // create the user's upload directory in case that the user hasn't uploaded a media yet
-                _fsLayer.forceMkdir(tempFile.getParentFile());
+                IFile parentTempFile = tempFile.getParentFile();
+                parentTempFile.forceMkdir();
             }
             if (tempFile.exists()) {
                 // file already exists. Maybe it is loaded again.
@@ -78,7 +79,7 @@ public class UploadService {
                 tempFile = FileSystemUtil.getNextUniqueFilename(_fsLayer, tempFile);
                 LOG.debug("Generate the new file '" + tempFile.getPath() + "'.");
             }
-            tempFile.createNewFile();
+            _fsLayer.createFile(tempFile);
         } catch (IOException e) {
             LOG.warn("Can not write upload file to disk.", e);
         }

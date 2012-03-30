@@ -84,12 +84,28 @@ public interface IFile {
      */
     void createNewFile() throws IOException;
 
+    /**
+     * Creates a new directory instance.
+     * 
+     */
+    void createDir();
+
+    /**
+     * Create on ore more directories with specified path name. When the method will be leaved without an exception you can be sure the
+     * directories are created on the FS.
+     * 
+     * @throws IOException
+     *             when one directory can't be created.
+     */
+    void forceMkdir() throws IOException;
+
     long length();
 
     void delete();
 
     /**
-     * For local file systems this will be a valid <code>File</code> object. But for a database file system, this is <code>null<null>.
+     * For local file systems this will be a valid <code>File</code> object. But for a database file system, this is
+     * <code>null<null>. This method should only be used in junit tests.
      * 
      * @return
      */

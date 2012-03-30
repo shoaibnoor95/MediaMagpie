@@ -1,27 +1,33 @@
 package de.wehner.mediamagpie.common.fslayer.mongodb;
 
+import java.util.List;
+
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class MongoDbFileData {
+public class MongoDbFileDescriptor {
+
+    public static enum Type {
+        FILE, DIR
+    };
 
     @Id
     private String _id;
-    
-    /**
-     * Maybe we want to delete this, because it is no more needed and only useful in testing phase
-     */
+    @Indexed(unique = true)
     private String _path;
-    private byte[] _content;
+    private final Type _type;
+    @DBRef
+    private List<MongoDbFileData> _data;
 
-    public MongoDbFileData(String id, String path, byte[] content) {
+    public MongoDbFileDescriptor(String path, Type type) {
         super();
-        _id = id;
         _path = path;
-        _content = content;
+        _type = type;
     }
 
     public String getId() {
@@ -40,12 +46,16 @@ public class MongoDbFileData {
         _path = path;
     }
 
-    public byte[] getContent() {
-        return _content;
+    public Type getType() {
+        return _type;
     }
 
-    public void setContent(byte[] content) {
-        _content = content;
+    public List<MongoDbFileData> getData() {
+        return _data;
+    }
+
+    public void setData(List<MongoDbFileData> data) {
+        _data = data;
     }
 
     @Override

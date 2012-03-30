@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import junit.framework.Assert;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
@@ -57,8 +59,16 @@ public class MongoTestEnvironment extends ExternalResource {
         _mongoDbProgram = new File(programName);
     }
 
-    public Mongo getConnection() {
-        return _mongo;
+    public void beforeClass() {
+        try {
+            before();
+        } catch (Throwable e) {
+            Assert.fail("Unable to init MongoDB. " + e.getMessage());
+        }
+    }
+
+    public void afterClass() {
+        after();
     }
 
     @Override
@@ -87,7 +97,8 @@ public class MongoTestEnvironment extends ExternalResource {
             return;
         }
 
-        // wait at least 5 seconds until mongo is start up and has send an expected line to stdout (see lines above)
+        // wait at least 5 seconds until mongo is start up and has send an
+        // expected line to stdout (see lines above)
         dbIsRunning.await(5, TimeUnit.SECONDS);
         long count = dbIsRunning.getCount();
         if (count > 0) {
@@ -115,6 +126,10 @@ public class MongoTestEnvironment extends ExternalResource {
         super.after();
     }
 
+    public Mongo getConnection() {
+        return _mongo;
+    }
+
     private static int findFreeSocket(int startPort, int endPortRange) {
         if (startPort <= 0) {
             throw new IllegalArgumentException("The parameter 'startPort' must be greater than zero.");
@@ -124,7 +139,7 @@ public class MongoTestEnvironment extends ExternalResource {
         }
         for (int testPort = startPort; testPort <= endPortRange; testPort++) {
             if (isSocketAvailable(testPort)) {
-                return startPort;
+                return testPort;
             }
         }
         throw new RuntimeException("No port in range " + startPort + " - " + endPortRange + " is available.");

@@ -16,15 +16,10 @@ public class LocalFSLayer extends AbstractFSLayer implements IFSLayer {
         return new LocalFSFile(new File(path), fileName);
     }
 
-    @Override
-    public String getSchema() {
-        return new File("").toURI().getScheme();
-    }
-
-    @Override
-    public IFile createDir(String path) {
-        return new LocalFSFile(new File(path), true);
-    }
+//    @Override
+//    public String getSchema() {
+//        return new File("").toURI().getScheme();
+//    }
 
     @Override
     public IFile createFile(String filePath) {
@@ -48,11 +43,5 @@ public class LocalFSLayer extends AbstractFSLayer implements IFSLayer {
     // // TODO Auto-generated method stub
     //
     // }
-
-    @Override
-    public void forceMkdir(IFile path) throws IOException {
-        LocalFSFile localFsFile = (LocalFSFile) path;
-        FileUtils.forceMkdir(localFsFile.getFile());
-    }
 
 }

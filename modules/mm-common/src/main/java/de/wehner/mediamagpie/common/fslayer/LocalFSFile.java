@@ -70,6 +70,16 @@ public class LocalFSFile extends AbstractFile implements IFile {
     }
 
     @Override
+    public void createDir() {
+        _file.mkdir();
+    }
+
+    @Override
+    public void forceMkdir() throws IOException {
+        _file.mkdirs();
+    }
+
+    @Override
     public IFile[] listFiles() {
         File[] listFiles = _file.listFiles();
         List<LocalFSFile> itemsInDir = new ArrayList<LocalFSFile>();

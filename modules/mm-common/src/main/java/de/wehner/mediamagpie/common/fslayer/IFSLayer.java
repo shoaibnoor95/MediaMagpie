@@ -39,20 +39,19 @@ public interface IFSLayer {
     IFile createFile(String path, String fileName);
 
     /**
-     * Provides the schema, this FSLayer implements. EG: 'file', 'mongoDB', etc.
+     * Creates a new empty File on file system.
      * 
-     * @return
+     * @param tempFile
+     *            The file describing the new file name.
      */
-    String getSchema();
+    void createFile(IFile tempFile);
 
-    /**
-     * Creates a new directory instance.
-     * 
-     * @param path
-     *            The path dir directory, like /home/rwe/medias/data/users/
-     * @return Dir concreate <code>IDir</code> implementation
-     */
-    IFile createDir(String path);
+    // /**
+    // * Provides the schema, this FSLayer implements. EG: 'file', 'mongoDB', etc.
+    // *
+    // * @return
+    // */
+    // String getSchema();
 
     /**
      * Creates a new IFile object.
@@ -63,6 +62,7 @@ public interface IFSLayer {
      * @return
      */
     IFile createFile(String filePath);
+
 
     // /**
     // * Finds all files that are located within a given path.
@@ -88,14 +88,4 @@ public interface IFSLayer {
     // */
     // void deleteFile(IFile fileToDelete);
 
-    /**
-     * Create on ore more directories with specified path name. When the method will be leaved without an exception you can be sure the
-     * directories are created on the FS.
-     * 
-     * @param path
-     *            The directory name or the nested directory name.
-     * @throws IOException
-     *             when one directory can't be created.
-     */
-    void forceMkdir(IFile path) throws IOException;
 }
