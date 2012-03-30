@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Random;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -43,23 +44,38 @@ public class MMFileSystemsTest {
         MMPath path = MMPaths.get(_testEnvironment.getWorkingDir().getPath(), "fileB.txt");
         MMFiles.createFile(path);
         assertThat(MMFiles.exists(path)).isTrue();
-        
+
         MMFiles.delete(path);
         assertThat(MMFiles.exists(path)).isFalse();
     }
 
     @Test
-    public void testWriteIntoOutputStream() throws IOException{
+    public void testWriteIntoOutputStream() throws IOException {
         MMPath path = MMPaths.get(_testEnvironment.getWorkingDir().getPath(), "foo.txt");
 
         OutputStream os = MMFiles.newOutputStream(path);
         IOUtils.write("blah", os);
+        IOUtils.closeQuietly(os);
 
         assertThat(FileUtils.readFileToString(new File(_testEnvironment.getWorkingDir(), "foo.txt"))).isEqualTo("blah");
     }
-    
+
     @Test
-    public void testReadFromInputStream() throws IOException{
+    public void testWriteIntoOutputStream_BigData() throws IOException {
+        File testFile = new File(_testEnvironment.getWorkingDir().getPath(), "read.test");
+        MMPath path = MMPaths.get(testFile.getParentFile().getPath(), testFile.getName());
+
+        OutputStream os = MMFiles.newOutputStream(path);
+        byte[] data = createRandomBytes(12 * 1024 * 1024);
+        IOUtils.write(data, os);
+        IOUtils.closeQuietly(os);
+
+        // verify, file contains exactly the same bytes as data
+        assertThat(FileUtils.readFileToByteArray(testFile)).isEqualTo(data);
+    }
+
+    @Test
+    public void testReadFromInputStream() throws IOException {
         File testFile = new File(_testEnvironment.getWorkingDir().getPath(), "read.test");
         String TEST_STRING = "This is my special file content with some extra characters like '§šŠŸ'.";
         FileUtils.writeStringToFile(testFile, TEST_STRING);
@@ -67,9 +83,25 @@ public class MMFileSystemsTest {
 
         InputStream is = MMFiles.newInputStream(path);
         ByteArrayOutputStream contentFromFile = new ByteArrayOutputStream();
-        IOUtils.copy(is,  contentFromFile);
+        IOUtils.copy(is, contentFromFile);
 
         assertThat(contentFromFile.toByteArray()).isEqualTo(FileUtils.readFileToByteArray(testFile));
+    }
+
+    @Test
+    public void testReadFromInputStream_BigData() throws IOException {
+        File testFile = new File(_testEnvironment.getWorkingDir().getPath(), "read.test");
+        byte[] data = createRandomBytes(12 * 1024 * 1024);
+        FileUtils.writeByteArrayToFile(testFile, data);
+        assertThat(data).isEqualTo(FileUtils.readFileToByteArray(testFile));
+
+        // copy content form input stream to ByteArrayOutputStream
+        MMPath path = MMPaths.get(testFile.getParentFile().getPath(), testFile.getName());
+        InputStream is = MMFiles.newInputStream(path);
+        ByteArrayOutputStream contentFromFile = new ByteArrayOutputStream();
+        IOUtils.copy(is, contentFromFile);
+
+        assertThat(contentFromFile.toByteArray()).isEqualTo(data);
     }
 
     @Test
@@ -94,6 +126,13 @@ public class MMFileSystemsTest {
 
     @Test
     public void testMkDir() {
+    }
+
+    private byte[] createRandomBytes(int length) {
+        Random random = new Random();
+        byte[] testBytes = new byte[length];
+        random.nextBytes(testBytes);
+        return testBytes;
     }
 
 }

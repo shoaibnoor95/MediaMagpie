@@ -9,11 +9,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.nio.ByteBuffer;
-import java.nio.channels.SeekableByteChannel;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 
+import de.wehner.mediamagpie.common.simplenio.channels.MMSeekableByteChannel;
 import de.wehner.mediamagpie.common.simplenio.file.MMDirectoryNotEmptyException;
 import de.wehner.mediamagpie.common.simplenio.file.MMFileSystem;
 import de.wehner.mediamagpie.common.simplenio.file.MMOpenOption;
@@ -171,7 +171,7 @@ public class MMUnixFileSystemProvider extends MMAbstractFileSystemProvider {
     }
 
     @Override
-    public SeekableByteChannel newByteChannel(MMPath path, Set<? extends MMOpenOption> options) throws IOException {
+    public MMSeekableByteChannel newByteChannel(MMPath path, Set<? extends MMOpenOption> options) throws IOException {
         MMUnixPath unixPath = MMUnixPath.toUnixPath(path);
         return MMUnixFileChannelFactory.newFileChannel(unixPath, options);
     }

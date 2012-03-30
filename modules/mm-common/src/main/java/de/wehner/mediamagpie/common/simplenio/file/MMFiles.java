@@ -3,15 +3,6 @@ package de.wehner.mediamagpie.common.simplenio.file;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.channels.SeekableByteChannel;
-import java.nio.file.DirectoryNotEmptyException;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.LinkOption;
-import java.nio.file.OpenOption;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.attribute.FileAttribute;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -20,6 +11,7 @@ import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 
+import de.wehner.mediamagpie.common.simplenio.channels.MMSeekableByteChannel;
 import de.wehner.mediamagpie.common.simplenio.file.attribute.MMBasicFileAttributes;
 import de.wehner.mediamagpie.common.simplenio.file.spi.MMFileSystemProvider;
 
@@ -309,7 +301,7 @@ public class MMFiles {
      *
      * @see java.nio.channels.FileChannel#open(Path,Set,FileAttribute[])
      */
-    public static SeekableByteChannel newByteChannel(MMPath path,
+    public static MMSeekableByteChannel newByteChannel(MMPath path,
                                                      Set<? extends MMOpenOption> options)
         throws IOException
     {
@@ -354,7 +346,7 @@ public class MMFiles {
      *
      * @see java.nio.channels.FileChannel#open(Path,OpenOption[])
      */
-    public static SeekableByteChannel newByteChannel(MMPath path, MMOpenOption... options)
+    public static MMSeekableByteChannel newByteChannel(MMPath path, MMOpenOption... options)
         throws IOException
     {
         Set<MMOpenOption> set = new HashSet<MMOpenOption>(options.length);

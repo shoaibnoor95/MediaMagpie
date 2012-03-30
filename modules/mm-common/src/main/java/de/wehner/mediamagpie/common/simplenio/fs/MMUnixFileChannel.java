@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.ClosedChannelException;
-import java.nio.channels.SeekableByteChannel;
 import java.nio.channels.spi.AbstractInterruptibleChannel;
 import java.util.Set;
 
@@ -19,10 +18,11 @@ import org.apache.commons.lang.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.wehner.mediamagpie.common.simplenio.channels.MMSeekableByteChannel;
 import de.wehner.mediamagpie.common.simplenio.file.MMOpenOption;
 import de.wehner.mediamagpie.common.simplenio.file.MMStandardOpenOption;
 
-public class MMUnixFileChannel extends AbstractInterruptibleChannel implements SeekableByteChannel {
+public class MMUnixFileChannel extends AbstractInterruptibleChannel implements MMSeekableByteChannel {
 
     private static final Logger LOG = LoggerFactory.getLogger(MMUnixFileChannel.class);
 
@@ -95,7 +95,7 @@ public class MMUnixFileChannel extends AbstractInterruptibleChannel implements S
     }
 
     @Override
-    public SeekableByteChannel position(long newPosition) throws IOException {
+    public MMSeekableByteChannel position(long newPosition) throws IOException {
         // TODO Auto-generated method stub
         return null;
     }
@@ -107,7 +107,7 @@ public class MMUnixFileChannel extends AbstractInterruptibleChannel implements S
     }
 
     @Override
-    public SeekableByteChannel truncate(long size) throws IOException {
+    public MMSeekableByteChannel truncate(long size) throws IOException {
         // TODO Auto-generated method stub
         return null;
     }

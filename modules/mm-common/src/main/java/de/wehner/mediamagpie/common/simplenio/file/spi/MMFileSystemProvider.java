@@ -5,17 +5,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.nio.channels.Channels;
-import java.nio.channels.SeekableByteChannel;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.OpenOption;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-import java.nio.file.attribute.FileAttribute;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import de.wehner.mediamagpie.common.simplenio.channels.MMSeekableByteChannel;
 import de.wehner.mediamagpie.common.simplenio.file.MMFileSystem;
 import de.wehner.mediamagpie.common.simplenio.file.MMFiles;
 import de.wehner.mediamagpie.common.simplenio.file.MMNoSuchFileException;
@@ -117,7 +111,7 @@ public abstract class MMFileSystemProvider {
      *             access to the path if the file is opened for writing. The {@link SecurityManager#checkDelete(String) checkDelete}
      *             method is invoked to check delete access if the file is opened with the {@code DELETE_ON_CLOSE} option.
      */
-    public abstract SeekableByteChannel newByteChannel(MMPath path, Set<? extends MMOpenOption> options) throws IOException;
+    public abstract MMSeekableByteChannel newByteChannel(MMPath path, Set<? extends MMOpenOption> options) throws IOException;
 
     /**
      * Opens a file, returning an input stream to read from the file. This method works in exactly the manner specified by the

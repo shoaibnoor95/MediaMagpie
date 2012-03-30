@@ -2,18 +2,18 @@ package de.wehner.mediamagpie.common.simplenio.fs;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.channels.SeekableByteChannel;
 import java.util.Set;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
+import de.wehner.mediamagpie.common.simplenio.channels.MMSeekableByteChannel;
 import de.wehner.mediamagpie.common.simplenio.file.MMOpenOption;
 import de.wehner.mediamagpie.common.simplenio.file.MMStandardOpenOption;
 
 public class MMUnixFileChannelFactory {
 
-    public static SeekableByteChannel newFileChannel(MMUnixPath unixPath, Set<? extends MMOpenOption> options) throws IOException {
+    public static MMSeekableByteChannel newFileChannel(MMUnixPath unixPath, Set<? extends MMOpenOption> options) throws IOException {
         File localFile = open(unixPath, options);
         return new MMUnixFileChannel(localFile, options);
     }
