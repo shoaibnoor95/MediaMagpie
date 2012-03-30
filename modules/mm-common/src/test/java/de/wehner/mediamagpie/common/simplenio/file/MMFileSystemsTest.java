@@ -77,7 +77,7 @@ public class MMFileSystemsTest {
     @Test
     public void testReadFromInputStream() throws IOException {
         File testFile = new File(_testEnvironment.getWorkingDir().getPath(), "read.test");
-        String TEST_STRING = "This is my special file content with some extra characters like '§šŠŸ'.";
+        String TEST_STRING = "This is my special file content with some extra characters like 'Ã¤Ã¶Ã¼ÃŸ'.";
         FileUtils.writeStringToFile(testFile, TEST_STRING);
         MMPath path = MMPaths.get(testFile.getParentFile().getPath(), testFile.getName());
 
