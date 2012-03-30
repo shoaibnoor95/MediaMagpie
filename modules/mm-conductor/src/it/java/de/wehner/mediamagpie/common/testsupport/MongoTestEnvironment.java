@@ -123,7 +123,7 @@ public class MongoTestEnvironment extends ExternalResource {
             throw new IllegalArgumentException("The argument 'endPortRange' must be greater or equal to parameter 'startPort'.");
         }
         for (int testPort = startPort; testPort <= endPortRange; testPort++) {
-            if (isSocketAvailable(startPort)) {
+            if (isSocketAvailable(testPort)) {
                 return startPort;
             }
         }
