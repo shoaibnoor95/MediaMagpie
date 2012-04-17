@@ -1,5 +1,8 @@
 package de.wehner.mediamagpie.common.simplenio.file.attribute;
 
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+
 public class MMBasicFileAttributesImpl implements MMBasicFileAttributes {
 
     private final long _lastModifiedTime;
@@ -28,4 +31,8 @@ public class MMBasicFileAttributesImpl implements MMBasicFileAttributes {
         return _size;
     }
 
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    }
 }

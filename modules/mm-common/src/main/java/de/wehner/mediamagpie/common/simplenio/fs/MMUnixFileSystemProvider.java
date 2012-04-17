@@ -18,6 +18,7 @@ import de.wehner.mediamagpie.common.simplenio.file.MMDirectoryNotEmptyException;
 import de.wehner.mediamagpie.common.simplenio.file.MMFileSystem;
 import de.wehner.mediamagpie.common.simplenio.file.MMOpenOption;
 import de.wehner.mediamagpie.common.simplenio.file.MMPath;
+import de.wehner.mediamagpie.common.simplenio.file.MMProviderMismatchException;
 import de.wehner.mediamagpie.common.simplenio.file.MMStandardOpenOption;
 import de.wehner.mediamagpie.common.simplenio.file.attribute.MMBasicFileAttributes;
 import de.wehner.mediamagpie.common.simplenio.file.attribute.MMBasicFileAttributesImpl;
@@ -48,7 +49,7 @@ public class MMUnixFileSystemProvider extends MMAbstractFileSystemProvider {
 
     @Override
     public void createDirectory(MMPath dir) throws IOException {
-        File file = new File(dir.toString());
+        File file = toUnixPath(dir).getPath();
         file.mkdir();
     }
 
@@ -61,8 +62,8 @@ public class MMUnixFileSystemProvider extends MMAbstractFileSystemProvider {
 
     @Override
     public void move(MMPath source, MMPath target) throws IOException {
-        File fileSrc = new File(source.toString());
-        File fileTarget = new File(target.toString());
+        File fileSrc = toUnixPath(source).getPath();
+        File fileTarget = toUnixPath(target).getPath();
         fileSrc.renameTo(fileTarget);
     }
 
@@ -80,21 +81,6 @@ public class MMUnixFileSystemProvider extends MMAbstractFileSystemProvider {
 
     public final String getScheme() {
         return "file";
-    }
-
-    private void checkUri(URI paramURI) {
-        if (!paramURI.getScheme().equalsIgnoreCase(getScheme()))
-            throw new IllegalArgumentException("URI does not match this provider");
-        if (paramURI.getAuthority() != null)
-            throw new IllegalArgumentException("Authority component present");
-        if (paramURI.getPath() == null)
-            throw new IllegalArgumentException("Path component is undefined");
-        if (!paramURI.getPath().equals("/"))
-            throw new IllegalArgumentException("Path component should be '/'");
-        if (paramURI.getQuery() != null)
-            throw new IllegalArgumentException("Query component present");
-        if (paramURI.getFragment() != null)
-            throw new IllegalArgumentException("Fragment component present");
     }
 
     //
@@ -175,6 +161,28 @@ public class MMUnixFileSystemProvider extends MMAbstractFileSystemProvider {
         MMUnixPath unixPath = MMUnixPath.toUnixPath(path);
         return MMUnixFileChannelFactory.newFileChannel(unixPath, options);
     }
+
+    private void checkUri(URI paramURI) {
+        if (!paramURI.getScheme().equalsIgnoreCase(getScheme()))
+            throw new IllegalArgumentException("URI does not match this provider");
+        if (paramURI.getAuthority() != null)
+            throw new IllegalArgumentException("Authority component present");
+        if (paramURI.getPath() == null)
+            throw new IllegalArgumentException("Path component is undefined");
+        if (!paramURI.getPath().equals("/"))
+            throw new IllegalArgumentException("Path component should be '/'");
+        if (paramURI.getQuery() != null)
+            throw new IllegalArgumentException("Query component present");
+        if (paramURI.getFragment() != null)
+            throw new IllegalArgumentException("Fragment component present");
+    }
+
+    private MMUnixPath toUnixPath(MMPath paramPath) {
+    if (paramPath == null)
+        throw new NullPointerException();
+      if (!(paramPath instanceof MMUnixPath))
+        throw new MMProviderMismatchException();
+      return (MMUnixPath)paramPath;    }
 
     // // protected DynamicFileAttributeView getFileAttributeView(Path paramPath, String paramString, LinkOption[]
     // paramArrayOfLinkOption)

@@ -19,6 +19,9 @@ import de.wehner.mediamagpie.common.simplenio.file.MMProviderMismatchException;
 
 public class MMUnixPath extends MMAbstractPath {
 
+    /** 
+     * TODO rwe: delete encoder because we don't need this
+     */
     private static ThreadLocal<SoftReference<CharsetEncoder>> encoder;
     private final MMUnixFileSystem fs;
     // private final byte[] path;

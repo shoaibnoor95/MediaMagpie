@@ -105,27 +105,39 @@ public class MMFileSystemsTest {
     }
 
     @Test
-    public void testCopyFile() {
+    public void testMoveFile() throws IOException {
+        File srcFile = new File(_testEnvironment.getWorkingDir().getPath(), "src.test");
+        File targetFile = new File(_testEnvironment.getWorkingDir().getPath(), "target.test");
+        String TEST_STRING = "Some content of file";
+        FileUtils.writeStringToFile(srcFile, TEST_STRING);
+        // rwe: equals to: MMUnixFileSystem.getPath();
+        MMPath path = MMPaths.get(srcFile.getParentFile().getPath(), srcFile.getName());
+        MMPath pathTarget = MMPaths.get(targetFile.getParentFile().getPath(), targetFile.getName());
+
+        MMFiles.move(path, pathTarget);
+
+        assertThat(srcFile).doesNotExist();
+        assertThat(targetFile).exists();
+        assertThat(FileUtils.readFileToString(targetFile)).isEqualTo(TEST_STRING);
     }
 
     @Test
-    public void testMoveFile() {
+    public void testSize() throws IOException {
+        File testFile = new File(_testEnvironment.getWorkingDir().getPath(), "read.test");
+        String TEST_STRING = "Some content of file";
+        FileUtils.writeStringToFile(testFile, TEST_STRING);
+        MMPath path = MMPaths.get(testFile.getParentFile().getPath(), testFile.getName());
+
+        assertThat(MMFiles.size(path)).isEqualTo(20);
     }
 
     @Test
-    public void testWriteFile() {
-    }
-
-    @Test
-    public void testReadFile() {
-    }
-
-    @Test
-    public void testgetLength() {
-    }
-
-    @Test
-    public void testMkDir() {
+    public void testMkDir() throws IOException {
+        File dirFile = new File(_testEnvironment.getWorkingDir().getPath(), "newSubDir");
+        MMPath dir = MMPaths.get(dirFile.getPath());
+        MMFiles.createDirectory(dir);
+        
+        assertThat(dirFile).isDirectory();
     }
 
     private byte[] createRandomBytes(int length) {

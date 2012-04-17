@@ -3,6 +3,12 @@ package de.wehner.mediamagpie.common.simplenio.file;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.FileStore;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -426,6 +432,32 @@ public class MMFiles {
     }
 
     /**
+     * Returns the size of a file (in bytes). The size may differ from the
+     * actual size on the file system due to compression, support for sparse
+     * files, or other reasons. The size of files that are not {@link
+     * #isRegularFile regular} files is implementation specific and
+     * therefore unspecified.
+     *
+     * @param   path
+     *          the path to the file
+     *
+     * @return  the file size, in bytes
+     *
+     * @throws  IOException
+     *          if an I/O error occurs
+     * @throws  SecurityException
+     *          In the case of the default provider, and a security manager is
+     *          installed, its {@link SecurityManager#checkRead(String) checkRead}
+     *          method denies read access to the file.
+     *
+     * @see BasicFileAttributes#size
+     */
+    public static long size(MMPath path) throws IOException {
+        MMBasicFileAttributes attributes = readAttributes(path, MMBasicFileAttributes.class);
+        return attributes.size();
+    }
+
+    /**
      * Tests whether a file exists.
      * 
      * <p>
@@ -492,6 +524,126 @@ public class MMFiles {
         } catch (IOException ioe) {
             return false;
         }
+    }
+
+    /**
+     * Move or rename a file to a target file.
+     *
+     * <p> By default, this method attempts to move the file to the target
+     * file, failing if the target file exists except if the source and
+     * target are the {@link #isSameFile same} file, in which case this method
+     * has no effect. If the file is a symbolic link then the symbolic link
+     * itself, not the target of the link, is moved. This method may be
+     * invoked to move an empty directory. In some implementations a directory
+     * has entries for special files or links that are created when the
+     * directory is created. In such implementations a directory is considered
+     * empty when only the special entries exist. When invoked to move a
+     * directory that is not empty then the directory is moved if it does not
+     * require moving the entries in the directory.  For example, renaming a
+     * directory on the same {@link FileStore} will usually not require moving
+     * the entries in the directory. When moving a directory requires that its
+     * entries be moved then this method fails (by throwing an {@code
+     * IOException}). To move a <i>file tree</i> may involve copying rather
+     * than moving directories and this can be done using the {@link
+     * #copy copy} method in conjunction with the {@link
+     * #walkFileTree Files.walkFileTree} utility method.
+     *
+     * <p> The {@code options} parameter may include any of the following:
+     *
+     * <table border=1 cellpadding=5 summary="">
+     * <tr> <th>Option</th> <th>Description</th> </tr>
+     * <tr>
+     *   <td> {@link StandardCopyOption#REPLACE_EXISTING REPLACE_EXISTING} </td>
+     *   <td> If the target file exists, then the target file is replaced if it
+     *     is not a non-empty directory. If the target file exists and is a
+     *     symbolic link, then the symbolic link itself, not the target of
+     *     the link, is replaced. </td>
+     * </tr>
+     * <tr>
+     *   <td> {@link StandardCopyOption#ATOMIC_MOVE ATOMIC_MOVE} </td>
+     *   <td> The move is performed as an atomic file system operation and all
+     *     other options are ignored. If the target file exists then it is
+     *     implementation specific if the existing file is replaced or this method
+     *     fails by throwing an {@link IOException}. If the move cannot be
+     *     performed as an atomic file system operation then {@link
+     *     AtomicMoveNotSupportedException} is thrown. This can arise, for
+     *     example, when the target location is on a different {@code FileStore}
+     *     and would require that the file be copied, or target location is
+     *     associated with a different provider to this object. </td>
+     * </table>
+     *
+     * <p> An implementation of this interface may support additional
+     * implementation specific options.
+     *
+     * <p> Where the move requires that the file be copied then the {@link
+     * BasicFileAttributes#lastModifiedTime last-modified-time} is copied to the
+     * new file. An implementation may also attempt to copy other file
+     * attributes but is not required to fail if the file attributes cannot be
+     * copied. When the move is performed as a non-atomic operation, and a {@code
+     * IOException} is thrown, then the state of the files is not defined. The
+     * original file and the target file may both exist, the target file may be
+     * incomplete or some of its file attributes may not been copied from the
+     * original file.
+     *
+     * <p> <b>Usage Examples:</b>
+     * Suppose we want to rename a file to "newname", keeping the file in the
+     * same directory:
+     * <pre>
+     *     Path source = ...
+     *     Files.move(source, source.resolveSibling("newname"));
+     * </pre>
+     * Alternatively, suppose we want to move a file to new directory, keeping
+     * the same file name, and replacing any existing file of that name in the
+     * directory:
+     * <pre>
+     *     Path source = ...
+     *     Path newdir = ...
+     *     Files.move(source, newdir.resolve(source.getFileName()), REPLACE_EXISTING);
+     * </pre>
+     *
+     * @param   source
+     *          the path to the file to move
+     * @param   target
+     *          the path to the target file (may be associated with a different
+     *          provider to the source path)
+     * @param   options
+     *          options specifying how the move should be done
+     *
+     * @return  the path to the target file
+     *
+     * @throws  UnsupportedOperationException
+     *          if the array contains a copy option that is not supported
+     * @throws  FileAlreadyExistsException
+     *          if the target file exists but cannot be replaced because the
+     *          {@code REPLACE_EXISTING} option is not specified <i>(optional
+     *          specific exception)</i>
+     * @throws  DirectoryNotEmptyException
+     *          the {@code REPLACE_EXISTING} option is specified but the file
+     *          cannot be replaced because it is a non-empty directory
+     *          <i>(optional specific exception)</i>
+     * @throws  AtomicMoveNotSupportedException
+     *          if the options array contains the {@code ATOMIC_MOVE} option but
+     *          the file cannot be moved as an atomic file system operation.
+     * @throws  IOException
+     *          if an I/O error occurs
+     * @throws  SecurityException
+     *          In the case of the default provider, and a security manager is
+     *          installed, the {@link SecurityManager#checkWrite(String) checkWrite}
+     *          method is invoked to check write access to both the source and
+     *          target file.
+     */
+    public static MMPath move(MMPath source, MMPath target)        throws IOException
+    {
+        MMFileSystemProvider provider = provider(source);
+        if (provider(target) == provider) {
+            // same provider
+            provider.move(source, target);
+        } else {
+            // different providers
+//            CopyMoveHelper.moveToForeignTarget(source, target, options);
+            throw new IllegalArgumentException("source and target must be of same type!");
+        }
+        return target;
     }
 
     /**
@@ -586,7 +738,7 @@ public class MMFiles {
      * Deletes a file if it exists.
      * 
      * <p>
-     * As with the {@link #delete(Path) delete(Path)} method, an implementation may need to examine the file to determine if the file is a
+     * As with the {@link #delete(MMPath) delete(MMPath)} method, an implementation may need to examine the file to determine if the file is a
      * directory. Consequently this method may not be atomic with respect to other file system operations. If the file is a symbolic link,
      * then the symbolic link itself, not the final target of the link, is deleted.
      * 
