@@ -1,5 +1,7 @@
 package de.wehner.mediamagpie.conductor.webapp.controller.configuration;
 
+import java.io.IOException;
+
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -66,7 +68,7 @@ public class AdministrationController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = URL_MAINCONFIG_EDIT)
-    public String submitConfiguration(@Valid @ModelAttribute("conf") MainconfigurationCommand conf, BindingResult result, Model model) {
+    public String submitConfiguration(@Valid @ModelAttribute("conf") MainconfigurationCommand conf, BindingResult result, Model model) throws IOException {
         if (conf.isCreateDirectories()) {
             conf.prepareDirectories(result);
         }

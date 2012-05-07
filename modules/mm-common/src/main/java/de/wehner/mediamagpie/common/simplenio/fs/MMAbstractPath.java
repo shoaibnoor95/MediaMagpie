@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 import de.wehner.mediamagpie.common.simplenio.file.MMPath;
 
 public abstract class MMAbstractPath implements MMPath {
+    
     public final boolean startsWith(String paramString) {
         return startsWith(getFileSystem().getPath(paramString, new String[0]).toString());
     }

@@ -1,20 +1,14 @@
 package de.wehner.mediamagpie.common.simplenio.file;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.Constructor;
 import java.net.URI;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.Collections;
-import java.util.Map;
-import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
-import de.wehner.mediamagpie.common.simplenio.file.attribute.MMBasicFileAttributes;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import de.wehner.mediamagpie.common.simplenio.file.spi.MMFileSystemProvider;
-import de.wehner.mediamagpie.common.simplenio.fs.MMUnixFileSystem;
 import de.wehner.mediamagpie.common.simplenio.fs.MMUnixFileSystemProvider;
 
 /**
@@ -52,16 +46,22 @@ import de.wehner.mediamagpie.common.simplenio.fs.MMUnixFileSystemProvider;
  * 
  * @since 1.7
  */
-@Deprecated
+@Service
 public final class MMFileSystems {
 
-    private MMFileSystems() {
+    @Autowired
+    public MMFileSystems(MMFileSystemProvider provider){
+        DefaultFileSystemHolder.defaultFileSystem = provider.getFileSystem(URI.create("file:///"));
     }
+    
+//    private MMFileSystems() {
+//    }
 
     // lazy initialization of default file system
     private static class DefaultFileSystemHolder {
         
-        static final MMFileSystem defaultFileSystem = defaultFileSystem();
+//        static final MMFileSystem defaultFileSystem = defaultFileSystem();
+        static MMFileSystem defaultFileSystem = defaultFileSystem();
 
         // returns default file system
         private static MMFileSystem defaultFileSystem() {

@@ -7,6 +7,7 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+@Deprecated
 @Component
 @Profile({ "local", "default" })
 public class LocalFSLayer extends AbstractFSLayer implements IFSLayer {

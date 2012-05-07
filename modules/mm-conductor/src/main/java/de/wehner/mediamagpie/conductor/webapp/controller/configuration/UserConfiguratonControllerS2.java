@@ -1,5 +1,7 @@
 package de.wehner.mediamagpie.conductor.webapp.controller.configuration;
 
+import java.io.IOException;
+
 import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
@@ -90,7 +92,7 @@ public class UserConfiguratonControllerS2 {
     @RequestMapping(method = RequestMethod.POST, value = URL_USERCONFIG_EDIT_S2)
     public String submitConfiguration(@Valid UserConfigurationCommand command, BindingResult result, Model model,
             @RequestParam(value = "userId", required = false) Long userId, @RequestParam(value = "_back", required = false) String backFlag,
-            final SessionStatus status) {
+            final SessionStatus status) throws IOException {
         new UserConfigurationValidator().validate(command.getUserConfiguration(), result);
         if (result.hasErrors()) {
             LOG.info(result.toString());

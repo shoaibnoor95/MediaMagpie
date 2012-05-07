@@ -46,6 +46,7 @@
 			<property name="persistenceUnitName" value="${persistent.unit}" />
 			<property name="dataSource" ref="DS-${persistent.unit}" />
 		</bean>
+		<bean class="de.wehner.mediamagpie.common.simplenio.fs.MMUnixFileSystemProvider"/>
 	</beans>
 
 	<beans profile="local-mongo">

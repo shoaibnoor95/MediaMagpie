@@ -46,13 +46,15 @@ import com.drew.metadata.Tag;
 import com.drew.metadata.exif.ExifDirectory;
 
 import de.wehner.mediamagpie.common.core.util.DigestUtil;
-import de.wehner.mediamagpie.common.fslayer.IFSLayer;
-import de.wehner.mediamagpie.common.fslayer.IFile;
 import de.wehner.mediamagpie.common.persistence.entity.LifecyleStatus;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.Orientation;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
+import de.wehner.mediamagpie.common.simplenio.file.MMFileSystem;
+import de.wehner.mediamagpie.common.simplenio.file.MMFiles;
+import de.wehner.mediamagpie.common.simplenio.file.MMPath;
+import de.wehner.mediamagpie.common.simplenio.file.MMPaths;
 import de.wehner.mediamagpie.common.util.ExceptionUtil;
 import de.wehner.mediamagpie.conductor.job.SingleThreadedController;
 import de.wehner.mediamagpie.conductor.persistence.TransactionHandler;
@@ -72,18 +74,19 @@ public class MediaSyncService extends SingleThreadedController {
     private final UserConfigurationDao _configurationDao;
     private final MediaDao _mediaDao;
     private final UserDao _userDao;
-    private final IFSLayer _fsLayer;
-    private final Map<IFile, CountDownLatch> _processingPathes = new ConcurrentHashMap<IFile, CountDownLatch>();
+    private final Map<MMPath, CountDownLatch> _processingPathes = new ConcurrentHashMap<MMPath, CountDownLatch>();
+    /**
+     * TODO rwe: Maybe it makes sense to greate Path objects via mmFileSystem.getPath() in opposite to MMPaths.getPath()
+     */
+    private MMFileSystem mmFileSystem;
 
     @Autowired
-    public MediaSyncService(TransactionHandler transactionHandler, UserDao userDao, MediaDao mediaDao, UserConfigurationDao userConfigurationDao,
-            IFSLayer fsLayer) {
+    public MediaSyncService(TransactionHandler transactionHandler, UserDao userDao, MediaDao mediaDao, UserConfigurationDao userConfigurationDao) {
         super(TimeUnit.MINUTES, 5);
         _userDao = userDao;
         _mediaDao = mediaDao;
         _transactionHandler = transactionHandler;
         _configurationDao = userConfigurationDao;
-        _fsLayer = fsLayer;
     }
 
     @Override
@@ -106,57 +109,63 @@ public class MediaSyncService extends SingleThreadedController {
                     return _configurationDao.getConfiguration(user, UserConfiguration.class);
                 }
             });
-            if (syncMediaPahtes(user, userConfiguration.getRootMediaPathes())) {
-                someOneWasBusy = true;
+            try {
+                if (syncMediaPahtes(user, userConfiguration.getRootMediaPathes())) {
+                    someOneWasBusy = true;
+                }
+            } catch (IOException e) {
+                LOG.warn("Can not sync / create media path.", e);
             }
         }
 
         return someOneWasBusy;
     }
 
-    public boolean syncMediaPahtes(final User user, String... mediaPathes) {
+    public boolean syncMediaPahtes(final User user, String... mediaPathes) throws IOException {
         if (mediaPathes == null) {
             return false;
         }
         boolean someOneWasBusy = false;
         for (String mediaPath : mediaPathes) {
-            IFile syncDir = _fsLayer.createFile(mediaPath);
-            syncDir.createDir();
-
+            MMPath syncDirPath = MMPaths.get(mediaPath);
+            if (!MMFiles.exists(syncDirPath)) {
+                MMFiles.createDirectory(syncDirPath);
+            }
             // wait if another process is scanning same directory and lock when ready to sync
             CountDownLatch syncEndSignal = new CountDownLatch(1);
             synchronized (_processingPathes) {
-                CountDownLatch countDownLatch = _processingPathes.get(syncDir);
+                CountDownLatch countDownLatch = _processingPathes.get(syncDirPath);
                 if (countDownLatch != null) {
                     try {
                         countDownLatch.await();
                     } catch (InterruptedException e) {
                     }
                 }
-                _processingPathes.put(syncDir, syncEndSignal);
+                _processingPathes.put(syncDirPath, syncEndSignal);
             }
 
             try {
                 LOG.info("start sync user's '" + user.getName() + "' directory '" + mediaPath + "'.");
-                int filesSynchronized = syncDir(user, syncDir);
+                int filesSynchronized = syncDir(user, syncDirPath);
                 boolean wasBusy = filesSynchronized > 0;
 
                 if (!wasBusy) {
-                    wasBusy = purgeObsoleteMedias(syncDir);
+                    wasBusy = purgeObsoleteMedias(syncDirPath);
                 }
                 if (!someOneWasBusy) {
                     someOneWasBusy = wasBusy;
                 }
             } finally {
                 // remove syncEndSignal from map and trigger signal for waiting threads to start scanning on same directory as well
-                _processingPathes.remove(syncDir);
+                _processingPathes.remove(syncDirPath);
                 syncEndSignal.countDown();
             }
         }
         return someOneWasBusy;
     }
 
-    private synchronized boolean purgeObsoleteMedias(IFile file) {
+    // TODO rwe: check, if syncDirPath is needed
+    private synchronized boolean purgeObsoleteMedias(MMPath syncDirPath) {
         Integer purgedMediasCount = _transactionHandler.executeInTransaction(new Callable<Integer>() {
 
             @Override
@@ -185,18 +194,18 @@ public class MediaSyncService extends SingleThreadedController {
         return (purgedMediasCount > 0);
     }
 
-    private int syncDir(User user, IFile dirToSync) {
-        if (!dirToSync.exists()) {
-            LOG.warn("Directory '" + dirToSync.getPath() + "' does not exist. Does anybody has deleted this directory during scanning phase?");
+    private int syncDir(User user, MMPath dirToSync) throws IOException {
+        if (!MMFiles.exists(dirToSync)) {
+            LOG.warn("Directory '" + dirToSync + "' does not exist. Does anybody has deleted this directory during scanning phase?");
             return 0;
         }
-        IFile[] listFiles = dirToSync.listFiles();
+        MMPath[] listFiles = MMFiles.newDirectoryStream(dirToSync).list();
         int sumFilesSynchronized = 0;
-        List<IFile> mediaFiles = new ArrayList<IFile>();
-        for (IFile file : listFiles) {
-            if (file.isDirectory()) {
+        List<MMPath> mediaFiles = new ArrayList<MMPath>();
+        for (MMPath file : listFiles) {
+            if (MMFiles.isDirectory(file)) {
                 sumFilesSynchronized += syncDir(user, file);
-            } else if (isMedia(file.getName().toLowerCase())) {
+            } else if (isMedia(file)) {
                 mediaFiles.add(file);
             }
         }
@@ -205,7 +214,8 @@ public class MediaSyncService extends SingleThreadedController {
         return sumFilesSynchronized;
     }
 
-    private boolean isMedia(String name) {
+    private boolean isMedia(MMPath file) {
+        String name = file.getFileName().toString().toLowerCase();
         for (String validExtension : _validMediaExtensions) {
             if (name.endsWith(validExtension)) {
                 return true;
@@ -214,11 +224,11 @@ public class MediaSyncService extends SingleThreadedController {
         return false;
     }
 
-    private synchronized int syncFiles(User user, List<IFile> filesOnFs) {
+    private synchronized int syncFiles(User user, List<MMPath> filesOnFs) {
         if (filesOnFs.size() == 0) {
             return 0;
         }
-        IFile path = filesOnFs.get(0).getParentFile();
+        MMPath path = filesOnFs.get(0).getParent();
 
         int addedOrRemovedMediaCount = removeObsoleteMediasFromDb(user, path, filesOnFs);
 
@@ -227,7 +237,7 @@ public class MediaSyncService extends SingleThreadedController {
         return addedOrRemovedMediaCount;
     }
 
-    private int removeObsoleteMediasFromDb(final User owner, final IFile path, final List<IFile> filesInFs) {
+    private int removeObsoleteMediasFromDb(final User owner, final MMPath path, final List<MMPath> filesInFs) {
         return _transactionHandler.executeInTransaction(new Callable<Integer>() {
 
             @Override
@@ -236,9 +246,9 @@ public class MediaSyncService extends SingleThreadedController {
                 List<Media> knownFilesInDb = _mediaDao.getAllByPath(owner, path, Integer.MAX_VALUE);
                 final Set<URI> filesNotInFs = new HashSet<URI>(mediaToUris(knownFilesInDb));
                 // substract files from FS from files from DB (-> we get files which have to be removed from db)
-                for (IFile fileInFs : filesInFs) {
-                    if (filesNotInFs.contains(fileInFs.toURI())) {
-                        filesNotInFs.remove(fileInFs.toURI());
+                for (MMPath fileInFs : filesInFs) {
+                    if (filesNotInFs.contains(fileInFs.toUri())) {
+                        filesNotInFs.remove(fileInFs.toUri());
                     }
                 }
                 // for each remaining URI, remove corresponding Media from DB
@@ -254,7 +264,7 @@ public class MediaSyncService extends SingleThreadedController {
         });
     }
 
-    private int addNewMediasToDb(final User user, final IFile path, final List<URI> filesInFs) {
+    private int addNewMediasToDb(final User user, final MMPath path, final List<URI> filesInFs) {
 
         return _transactionHandler.executeInTransaction(new Callable<Integer>() {
 
@@ -386,10 +396,10 @@ public class MediaSyncService extends SingleThreadedController {
         return null;
     }
 
-    static List<URI> files2URIList(List<IFile> inList) {
+    static List<URI> files2URIList(List<MMPath> inList) {
         List<URI> outList = new ArrayList<URI>(inList.size());
-        for (IFile input : inList) {
-            outList.add(input.toURI());
+        for (MMPath input : inList) {
+            outList.add(input.toUri());
         }
         return outList;
     }

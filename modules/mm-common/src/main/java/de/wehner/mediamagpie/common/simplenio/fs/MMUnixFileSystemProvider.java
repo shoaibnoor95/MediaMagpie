@@ -15,6 +15,7 @@ import org.apache.commons.io.FileUtils;
 
 import de.wehner.mediamagpie.common.simplenio.channels.MMSeekableByteChannel;
 import de.wehner.mediamagpie.common.simplenio.file.MMDirectoryNotEmptyException;
+import de.wehner.mediamagpie.common.simplenio.file.MMDirectoryStream;
 import de.wehner.mediamagpie.common.simplenio.file.MMFileSystem;
 import de.wehner.mediamagpie.common.simplenio.file.MMOpenOption;
 import de.wehner.mediamagpie.common.simplenio.file.MMPath;
@@ -162,6 +163,18 @@ public class MMUnixFileSystemProvider extends MMAbstractFileSystemProvider {
         return MMUnixFileChannelFactory.newFileChannel(unixPath, options);
     }
 
+    @Override
+    public MMDirectoryStream<MMPath> newDirectoryStream(MMPath paramPath, MMDirectoryStream.Filter<? super MMPath> paramFilter)
+            throws IOException {
+        MMUnixPath localUnixPath = MMUnixPath.toUnixPath(paramPath);
+        // localUnixPath.checkRead();
+        if (paramFilter == null) {
+            throw new NullPointerException();
+        }
+
+        return new MMUnixDirectoryStream(localUnixPath, paramFilter);
+    }
+
     private void checkUri(URI paramURI) {
         if (!paramURI.getScheme().equalsIgnoreCase(getScheme()))
             throw new IllegalArgumentException("URI does not match this provider");
@@ -178,11 +191,12 @@ public class MMUnixFileSystemProvider extends MMAbstractFileSystemProvider {
     }
 
     private MMUnixPath toUnixPath(MMPath paramPath) {
-    if (paramPath == null)
-        throw new NullPointerException();
-      if (!(paramPath instanceof MMUnixPath))
-        throw new MMProviderMismatchException();
-      return (MMUnixPath)paramPath;    }
+        if (paramPath == null)
+            throw new NullPointerException();
+        if (!(paramPath instanceof MMUnixPath))
+            throw new MMProviderMismatchException();
+        return (MMUnixPath) paramPath;
+    }
 
     // // protected DynamicFileAttributeView getFileAttributeView(Path paramPath, String paramString, LinkOption[]
     // paramArrayOfLinkOption)

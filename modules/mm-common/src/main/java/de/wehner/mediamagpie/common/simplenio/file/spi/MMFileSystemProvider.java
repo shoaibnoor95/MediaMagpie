@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import de.wehner.mediamagpie.common.simplenio.channels.MMSeekableByteChannel;
+import de.wehner.mediamagpie.common.simplenio.file.MMDirectoryStream;
 import de.wehner.mediamagpie.common.simplenio.file.MMFileSystem;
 import de.wehner.mediamagpie.common.simplenio.file.MMFiles;
 import de.wehner.mediamagpie.common.simplenio.file.MMNoSuchFileException;
@@ -214,6 +215,29 @@ public abstract class MMFileSystemProvider {
      *             {@link SecurityManager#checkWrite(String) checkWrite} method is invoked to check write access to the new directory.
      */
     public abstract void createDirectory(MMPath dir) throws IOException;
+
+    /**
+     * Opens a directory, returning a {@code DirectoryStream} to iterate over the entries in the directory. This method works in
+     * exactly the manner specified by the {@link Files#newDirectoryStream(java.nio.file.Path, java.nio.file.DirectoryStream.Filter)}
+     * method.
+     * 
+     * @param dir
+     *            the path to the directory
+     * @param filter
+     *            the directory stream filter
+     * 
+     * @return a new and open {@code DirectoryStream} object
+     * 
+     * @throws NotDirectoryException
+     *             if the file could not otherwise be opened because it is not a directory <i>(optional specific exception)</i>
+     * @throws IOException
+     *             if an I/O error occurs
+     * @throws SecurityException
+     *             In the case of the default provider, and a security manager is installed, the
+     *             {@link SecurityManager#checkRead(String) checkRead} method is invoked to check read access to the directory.
+     */
+    public abstract MMDirectoryStream<MMPath> newDirectoryStream(MMPath dir, MMDirectoryStream.Filter<? super MMPath> filter)
+            throws IOException;
 
     // /**
     // * Return a {@code Path} object by converting the given {@link URI}. The resulting {@code Path} is associated with a {@link

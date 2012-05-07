@@ -3,6 +3,7 @@ package de.wehner.mediamagpie.common.fslayer;
 import java.io.File;
 import java.io.IOException;
 
+@Deprecated
 public interface IFSLayer {
 
     /**

@@ -40,6 +40,27 @@ public class MMFileSystemsTest {
     }
 
     @Test
+    public void testExists_File() throws IOException {
+        File testFile = new File(_testEnvironment.getWorkingDir().getPath(), "rwe.txt");
+        String TEST_STRING = "some content";
+        FileUtils.writeStringToFile(testFile, TEST_STRING);
+        MMPath path = MMPaths.get(testFile.getParentFile().getPath(), testFile.getName());
+
+        assertThat(MMFiles.exists(path)).isTrue();
+    }
+
+    @Test
+    public void testExists_Directory() throws IOException {
+        File testSubDir = new File(_testEnvironment.getWorkingDir().getPath(), "mySubDir");
+        testSubDir.mkdir();
+        assertThat(testSubDir).exists();
+        assertThat(testSubDir).isDirectory();
+        MMPath path = MMPaths.get(testSubDir.getParentFile().getPath(), testSubDir.getName());
+
+        assertThat(MMFiles.exists(path)).isTrue();
+    }
+
+    @Test
     public void testDeleteFile() throws IOException {
         MMPath path = MMPaths.get(_testEnvironment.getWorkingDir().getPath(), "fileB.txt");
         MMFiles.createFile(path);

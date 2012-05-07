@@ -14,14 +14,17 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+@Deprecated
 public class LocalFSFile extends AbstractFile implements IFile {
 
     private final File _file;
 
+    @Deprecated
     public LocalFSFile(File parent, String fileOrPath) {
         this(new File(parent, fileOrPath), false);
     }
 
+    @Deprecated
     public LocalFSFile(File file, boolean isDir) {
         super(new LocalFSLayer());
         _file = file;
