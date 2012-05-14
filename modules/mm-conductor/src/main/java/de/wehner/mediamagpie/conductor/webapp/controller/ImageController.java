@@ -1,10 +1,12 @@
 package de.wehner.mediamagpie.conductor.webapp.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.Callable;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -23,7 +25,7 @@ import de.wehner.mediamagpie.common.persistence.entity.ThumbImage;
 import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.ThumbImageDao;
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
-
+import de.wehner.mediamagpie.conductor.webapp.util.TimeoutExecutor;
 
 @Controller
 @RequestMapping({ "/content/images/{mediaId}" })
@@ -42,7 +44,8 @@ public class ImageController {
 
     @RequestMapping({ "/{label}.*" })
     public void streamImageContent(@PathVariable final Long mediaId, @PathVariable final String label,
-            @RequestParam(required = false, value = "priority") String priority, OutputStream outputStream, HttpServletResponse response) throws IOException {
+            @RequestParam(required = false, value = "priority") String priority, OutputStream outputStream, HttpServletResponse response)
+            throws IOException {
         LOG.debug("streaming image id: " + mediaId + " with label '" + label + "'...");
         if (label.equals("original")) {
             Media media = _mediaDao.getById(mediaId);
@@ -57,33 +60,6 @@ public class ImageController {
             }
         } else {
             ThumbImage thumbImage = _thumbImageDao.getByMediaIdAndLabel(mediaId, label);
-            // add an resize job if thumb is not present now
-            // if (thumbImage == null) {
-            // if (_imageService.addImageResizeJobExecutionIfNecessary(label, _mediaDao.getById(mediaId), Priority.valueOf(priority))) {
-            // _mediaDao.getPersistenceService().flipTransaction();
-            // new TimeoutExecutor().checkUntilConditionIsTrue(TimeUnit.SECONDS.toMillis(3), 200, new Callable<Boolean>() {
-            //
-            // @Override
-            // public Boolean call() throws Exception {
-            // return (_thumbImageDao.getByMediaIdAndLabel(mediaId, label) != null);
-            // }
-            // });
-            // }
-            // thumbImage = _thumbImageDao.getByMediaIdAndLabel(mediaId, label);
-            // }
-            // if (thumbImage != null) {
-            // try {
-            // readImageIntoOutputStream(thumbImage.getPathToImage(), outputStream);
-            // } catch (FileNotFoundException e) {
-            // LOG.info("Remove ThumbImage '" + thumbImage.getId() + "' from db.", e);
-            // _thumbImageDao.makeTransient(thumbImage);
-            // _thumbImageDao.getPersistenceService().flipTransaction();
-            // }
-            // } else {
-            // response.sendError(HttpServletResponse.SC_NOT_FOUND, "Resized image with mediaId " + mediaId + " and label '" + label +
-            // "' does not exist.");
-            // }
-
             if (thumbImage != null) {
                 try {
                     readImageIntoOutputStream(thumbImage.getPathToImage(), outputStream);
@@ -94,10 +70,34 @@ public class ImageController {
                 }
             }
             if (thumbImage == null) {
+                // first create a resize job with high priority
                 _imageService.addImageResizeJobExecutionIfNecessary(label, _mediaDao.getById(mediaId), Priority.valueOf(priority));
 
-                if (!readImageIntoOutputStream(SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF, outputStream)) {
-                    throw new RuntimeException("Internal error: Can not find picture in path '" + SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF + "'.");
+                // try to pull the result
+                TimeoutExecutor jobFinishTester = new TimeoutExecutor(1000, 250);
+                byte[] result = jobFinishTester.callUntilReturnIsNotNull(new Callable<byte[]>() {
+
+                    @Override
+                    public byte[] call() throws Exception {
+                        ThumbImage thumbImage = _thumbImageDao.getByMediaIdAndLabel(mediaId, label);
+                        if (thumbImage != null) {
+                            ByteArrayOutputStream os = new ByteArrayOutputStream();
+                            if (readImageIntoOutputStream(thumbImage.getPathToImage(), os)) {
+                                return os.toByteArray();
+                            }
+                        }
+                        return null;
+                    }
+                });
+
+                if (result != null) {
+                    IOUtils.write(result, outputStream);
+                } else {
+                    // image is not available, maybe we have to wait a little bit longer until the resize job is finished
+                    if (!readImageIntoOutputStream(SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF, outputStream)) {
+                        throw new RuntimeException("Internal error: Can not find picture in path '"
+                                + SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF + "'.");
+                    }
                 }
             }
         }

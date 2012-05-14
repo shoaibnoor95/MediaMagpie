@@ -17,7 +17,6 @@ import de.wehner.mediamagpie.common.util.ExceptionUtil;
 import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
 import de.wehner.mediamagpie.conductor.persistence.dao.UserDao;
 
-
 public class DbTestEnvironment extends ExternalResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(DbTestEnvironment.class);
@@ -32,7 +31,8 @@ public class DbTestEnvironment extends ExternalResource {
      *            The persistence unit used to setup the db-connection. (<code>mysql-it, hsql-memory</code> etc.)
      */
     public DbTestEnvironment(String persistenceUnit) {
-        System.setProperty("db.mode", persistenceUnit);
+        // TODO rwe: no more used any more
+        // System.setProperty("db.mode", persistenceUnit);
     }
 
     @Override

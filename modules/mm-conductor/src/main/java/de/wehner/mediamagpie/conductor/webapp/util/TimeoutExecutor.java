@@ -20,12 +20,12 @@ public class TimeoutExecutor {
         this.sleeping = sleeping;
     }
 
-    public void checkUntilConditionIsTrue(Callable<Boolean> callable) {
+    public boolean checkUntilConditionIsTrue(Callable<Boolean> callable) {
         long end = System.currentTimeMillis() + timeout;
         try {
             while (System.currentTimeMillis() < end) {
                 if (callable.call() == true) {
-                    break;
+                    return true;
                 }
                 Thread.sleep(sleeping);
             }
@@ -35,6 +35,7 @@ public class TimeoutExecutor {
         } catch (Exception e) {
             LOG.warn("Got exception during checking the condition.", e);
         }
+        return false;
     }
 
     public <T> T callUntilReturnIsNotNull(Callable<T> callable) {
@@ -55,36 +56,3 @@ public class TimeoutExecutor {
         return null;
     }
 }
-// public class TimeoutExecutor {
-//
-// public static final Logger LOG = LoggerFactory.getLogger(ImageController.class);
-// private final TimeProvider _timeProvider;
-//
-// public TimeoutExecutor() {
-// this(null);
-// }
-//
-// public TimeoutExecutor(TimeProvider timeProvider) {
-// if (timeProvider == null) {
-// _timeProvider = new TimeProvider();
-// } else {
-// _timeProvider = timeProvider;
-// }
-// }
-//
-// public void checkUntilConditionIsTrue(long timeout, long sleeping, Callable<Boolean> callable) {
-// long end = _timeProvider.getTime() + timeout;
-// try {
-// while (_timeProvider.getTime() < end) {
-// if (callable.call() == true) {
-// break;
-// }
-// Thread.sleep(sleeping);
-// }
-// } catch (InterruptedException e) {
-// LOG.warn("stop checking conditions", e);
-// } catch (Exception e) {
-// LOG.warn("Got exception during checking the condition.", e);
-// }
-// }
-// }
