@@ -1,6 +1,6 @@
 package de.wehner.mediamagpie.common.simplenio.file;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.fest.assertions.Assertions.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -37,6 +37,16 @@ public class MMFileSystemsTest {
         MMFiles.createFile(path);
 
         assertThat(MMFiles.exists(path)).isTrue();
+    }
+
+    @Test
+    public void testCreateFile_WithSpecialCharsInFileName() throws IOException {
+        File testFile = new File(_testEnvironment.getWorkingDir().getPath(), "Datei mit Sonderzeichen š Š Ÿ §.txt");
+        MMPath path = MMPaths.get(testFile.getParentFile().getPath(), testFile.getName());
+        MMFiles.createFile(path);
+
+        assertThat(MMFiles.exists(path)).isTrue();
+        assertThat(testFile).exists();
     }
 
     @Test
@@ -157,7 +167,7 @@ public class MMFileSystemsTest {
         File dirFile = new File(_testEnvironment.getWorkingDir().getPath(), "newSubDir");
         MMPath dir = MMPaths.get(dirFile.getPath());
         MMFiles.createDirectory(dir);
-        
+
         assertThat(dirFile).isDirectory();
     }
 

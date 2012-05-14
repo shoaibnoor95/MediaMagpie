@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import com.mongodb.Mongo;
 
 import de.wehner.mediamagpie.common.fslayer.mongodb.MongoDbFSLayer;
-import de.wehner.mediamagpie.common.fslayer.mongodb.MongoDbFileDataDao;
+//import de.wehner.mediamagpie.common.fslayer.mongodb.MongoDbFileDataDao;
 import de.wehner.mediamagpie.common.fslayer.mongodb.MongoDbFileDescriptorDao;
 import de.wehner.mediamagpie.common.testsupport.MongoTestEnvironment;
 
@@ -48,9 +48,9 @@ public class MongoDbFSLayerTest {
         if (mongo != null) {
             // The MongoTemplate comes normally from spring context
             MongoTemplate mongoTemplate = new MongoTemplate(mongo, "testdb");
-            MongoDbFileDataDao mongoDbFileDataDao = new MongoDbFileDataDao(mongoTemplate);
-            MongoDbFileDescriptorDao mongoDbFileDescriptorDao = new MongoDbFileDescriptorDao(mongoTemplate, mongoDbFileDataDao);
-            _mongoDbFsLayer = new MongoDbFSLayer(mongoDbFileDescriptorDao);
+//            MongoDbFileDataDao mongoDbFileDataDao = new MongoDbFileDataDao(mongoTemplate);
+//            MongoDbFileDescriptorDao mongoDbFileDescriptorDao = new MongoDbFileDescriptorDao(mongoTemplate, mongoDbFileDataDao);
+//            _mongoDbFsLayer = new MongoDbFSLayer(mongoDbFileDescriptorDao);
         }
     }
 
