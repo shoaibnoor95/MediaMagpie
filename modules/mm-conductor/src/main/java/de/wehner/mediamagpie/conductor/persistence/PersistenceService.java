@@ -20,6 +20,7 @@ import de.wehner.mediamagpie.common.persistence.entity.User;
 
 @Service
 public class PersistenceService {
+    
     private final EntityManagerFactory _entityManagerFactory;
     private final ThreadLocal<EntityManager> _threadLocal = new ThreadLocal<EntityManager>();
 

@@ -41,7 +41,7 @@ public class MMFileSystemsTest {
 
     @Test
     public void testCreateFile_WithSpecialCharsInFileName() throws IOException {
-        File testFile = new File(_testEnvironment.getWorkingDir().getPath(), "Datei mit Sonderzeichen š Š Ÿ §.txt");
+        File testFile = new File(_testEnvironment.getWorkingDir().getPath(), "Datei mit Sonderzeichen Ã¤ Ã¶ Ã¼ ÃŸ.txt");
         MMPath path = MMPaths.get(testFile.getParentFile().getPath(), testFile.getName());
         MMFiles.createFile(path);
 
