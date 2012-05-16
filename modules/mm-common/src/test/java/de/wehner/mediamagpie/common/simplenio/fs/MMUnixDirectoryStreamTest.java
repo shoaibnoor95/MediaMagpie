@@ -49,7 +49,7 @@ public class MMUnixDirectoryStreamTest {
     public void testNewDirectoryStream_ListFilesWithSpecialChars() throws IOException {
         File testSubDir = new File(_testEnvironment.getWorkingDir().getPath(), "mySubDir");
         testSubDir.mkdir();
-        File testFile = new File(testSubDir, "Datei mit Sonderzeichen š Š Ÿ §.txt");
+        File testFile = new File(testSubDir, "Datei mit Sonderzeichen Ã¤ Ã¶ Ã¼ ÃŸ.txt");
         FileUtils.writeStringToFile(testFile, "foo content");
         MMPath path = MMPaths.get(testSubDir.getPath());
 
