@@ -11,38 +11,31 @@ import java.nio.charset.CoderResult;
 import java.nio.charset.CodingErrorAction;
 import java.util.Arrays;
 
+import org.apache.commons.io.FilenameUtils;
+
 import de.wehner.mediamagpie.common.simplenio.file.MMInvalidPathException;
 import de.wehner.mediamagpie.common.simplenio.file.MMPath;
 import de.wehner.mediamagpie.common.simplenio.file.MMProviderMismatchException;
 
-public class MMUnixPath extends MMAbstractPath {
+public class MMMongoPath extends MMAbstractPath {
 
-    /**
-     * TODO rwe: delete encoder because we don't need this
-     */
-    private static ThreadLocal<SoftReference<CharsetEncoder>> encoder;
-    private final MMUnixFileSystem fs;
-    // private final byte[] path;
-    // private volatile String stringValue;
-    // private int hash;
-    // private volatile int[] offsets;
-    private final File path;
+    private final MMMongoFileSystem _fs;
+    private final String _path;
 
-    @Deprecated
-    MMUnixPath(MMUnixFileSystem paramUnixFileSystem, byte[] paramArrayOfByte) {
-        // this.fs = paramUnixFileSystem;
-        // this.path = new File(new String(paramArrayOfByte));
-        this(paramUnixFileSystem, new String(paramArrayOfByte));
-    }
+    // @Deprecated
+    // MMMongoPath(MMUnixFileSystem paramUnixFileSystem, byte[] paramArrayOfByte) {
+    // // this.fs = paramUnixFileSystem;
+    // // this.path = new File(new String(paramArrayOfByte));
+    // this(paramUnixFileSystem, new String(paramArrayOfByte));
+    // }
 
-    MMUnixPath(MMUnixFileSystem paramUnixFileSystem, String paramString) {
+    MMMongoPath(MMMongoFileSystem fs, String paramString) {
         // this(paramUnixFileSystem, encode(normalizeAndCheck(paramString)));
-        this.fs = paramUnixFileSystem;
-        this.path = new File(paramString);
+        this._fs = fs;
+        this._path = normalizeAndCheck(paramString);
 
     }
 
-    @Deprecated
     static String normalizeAndCheck(String paramString) {
         int i = paramString.length();
         int j = 0;
@@ -86,42 +79,42 @@ public class MMUnixPath extends MMAbstractPath {
         return localStringBuilder.toString();
     }
 
-//    @Deprecated
-//    private static byte[] encode(String paramString) {
-//        SoftReference localSoftReference = (SoftReference) encoder.get();
-//        CharsetEncoder localCharsetEncoder = localSoftReference != null ? (CharsetEncoder) localSoftReference.get() : null;
-//        if (localCharsetEncoder == null) {
-//            localCharsetEncoder = Charset.defaultCharset().newEncoder().onMalformedInput(CodingErrorAction.REPORT)
-//                    .onUnmappableCharacter(CodingErrorAction.REPORT);
-//
-//            encoder.set(new SoftReference(localCharsetEncoder));
-//        }
-//
-//        char[] arrayOfChar = paramString.toCharArray();
-//
-//        byte[] arrayOfByte = new byte[(int) (arrayOfChar.length * localCharsetEncoder.maxBytesPerChar())];
-//
-//        ByteBuffer localByteBuffer = ByteBuffer.wrap(arrayOfByte);
-//        CharBuffer localCharBuffer = CharBuffer.wrap(arrayOfChar);
-//        localCharsetEncoder.reset();
-//        CoderResult localCoderResult = localCharsetEncoder.encode(localCharBuffer, localByteBuffer, true);
-//        int i;
-//        if (!localCoderResult.isUnderflow()) {
-//            i = 1;
-//        } else {
-//            localCoderResult = localCharsetEncoder.flush(localByteBuffer);
-//            i = !localCoderResult.isUnderflow() ? 1 : 0;
-//        }
-//        if (i != 0) {
-//            throw new MMInvalidPathException(paramString, "Malformed input or input contains unmappable chacraters");
-//        }
-//
-//        int j = localByteBuffer.position();
-//        if (j != arrayOfByte.length) {
-//            arrayOfByte = Arrays.copyOf(arrayOfByte, j);
-//        }
-//        return arrayOfByte;
-//    }
+    // @Deprecated
+    // private static byte[] encode(String paramString) {
+    // SoftReference localSoftReference = (SoftReference) encoder.get();
+    // CharsetEncoder localCharsetEncoder = localSoftReference != null ? (CharsetEncoder) localSoftReference.get() : null;
+    // if (localCharsetEncoder == null) {
+    // localCharsetEncoder = Charset.defaultCharset().newEncoder().onMalformedInput(CodingErrorAction.REPORT)
+    // .onUnmappableCharacter(CodingErrorAction.REPORT);
+    //
+    // encoder.set(new SoftReference(localCharsetEncoder));
+    // }
+    //
+    // char[] arrayOfChar = paramString.toCharArray();
+    //
+    // byte[] arrayOfByte = new byte[(int) (arrayOfChar.length * localCharsetEncoder.maxBytesPerChar())];
+    //
+    // ByteBuffer localByteBuffer = ByteBuffer.wrap(arrayOfByte);
+    // CharBuffer localCharBuffer = CharBuffer.wrap(arrayOfChar);
+    // localCharsetEncoder.reset();
+    // CoderResult localCoderResult = localCharsetEncoder.encode(localCharBuffer, localByteBuffer, true);
+    // int i;
+    // if (!localCoderResult.isUnderflow()) {
+    // i = 1;
+    // } else {
+    // localCoderResult = localCharsetEncoder.flush(localByteBuffer);
+    // i = !localCoderResult.isUnderflow() ? 1 : 0;
+    // }
+    // if (i != 0) {
+    // throw new MMInvalidPathException(paramString, "Malformed input or input contains unmappable chacraters");
+    // }
+    //
+    // int j = localByteBuffer.position();
+    // if (j != arrayOfByte.length) {
+    // arrayOfByte = Arrays.copyOf(arrayOfByte, j);
+    // }
+    // return arrayOfByte;
+    // }
 
     // byte[] asByteArray() {
     // return this.path;
@@ -151,12 +144,12 @@ public class MMUnixPath extends MMAbstractPath {
     // return toString();
     // }
     //
-    static MMUnixPath toUnixPath(MMPath paramPath) {
+    static MMMongoPath toUnixPath(MMPath paramPath) {
         if (paramPath == null)
             throw new NullPointerException();
-        if (!(paramPath instanceof MMUnixPath))
+        if (!(paramPath instanceof MMMongoPath))
             throw new MMProviderMismatchException();
-        return (MMUnixPath) paramPath;
+        return (MMMongoPath) paramPath;
     }
 
     //
@@ -213,22 +206,21 @@ public class MMUnixPath extends MMAbstractPath {
     // }
     //
     @Override
-    public MMUnixPath getFileName() {
-        String name = path.getName();
-        return new MMUnixPath(fs, name);
+    public MMMongoPath getFileName() {
+        return new MMMongoPath(_fs, _path);
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((fs == null) ? 0 : fs.hashCode());
-        result = prime * result + ((path == null) ? 0 : path.hashCode());
+        result = prime * result + ((_fs == null) ? 0 : _fs.hashCode());
+        result = prime * result + ((_path == null) ? 0 : _path.hashCode());
         return result;
     }
 
     public boolean equals(Object paramObject) {
-        if ((paramObject != null) && ((paramObject instanceof MMUnixPath))) {
+        if ((paramObject != null) && ((paramObject instanceof MMMongoPath))) {
             return compareTo((MMPath) paramObject) == 0;
         }
         return false;
@@ -277,7 +269,7 @@ public class MMUnixPath extends MMAbstractPath {
         SecurityManager localSecurityManager = System.getSecurityManager();
         if (localSecurityManager != null) {
             // localSecurityManager.checkDelete(getPathForPermissionCheck());
-            localSecurityManager.checkDelete(path.getAbsolutePath());
+            localSecurityManager.checkDelete(_path);
         }
     }
 
@@ -361,18 +353,23 @@ public class MMUnixPath extends MMAbstractPath {
     // return ((AbstractWatchService) paramWatchService).register(this, paramArrayOfKind, paramArrayOfModifier);
     // }
 
-    static {
-        encoder = new ThreadLocal();
-    }
+    // static {
+    // encoder = new ThreadLocal();
+    // }
 
     @Override
-    public MMUnixFileSystem getFileSystem() {
-        return this.fs;
+    public MMMongoFileSystem getFileSystem() {
+        return this._fs;
     }
 
     @Override
     public MMPath getParent() {
-        return new MMUnixPath(getFileSystem(), path.getParentFile().getPath());
+        String path = FilenameUtils.normalizeNoEndSeparator(_path, true);
+        String[] split = path.split("/");
+        if (split.length > 1) {
+            return new MMMongoPath(getFileSystem(), FilenameUtils.getPath(path));
+        }
+        return new MMMongoPath(getFileSystem(), path);
     }
 
     @Override
@@ -395,24 +392,24 @@ public class MMUnixPath extends MMAbstractPath {
 
     @Override
     public int compareTo(MMPath o) {
-        if (o instanceof MMUnixPath) {
-            return path.compareTo(((MMUnixPath) o).path);
+        if (o instanceof MMMongoPath) {
+            return _path.compareTo(((MMMongoPath) o)._path);
         }
         throw new RuntimeException("internal error");
     }
 
-    public File getPath() {
-        return path;
-    }
+    // public File getPath() {
+    // return _path;
+    // }
 
     @Override
     public URI toUri() {
-        return path.toURI();
+        return URI.create("mongo://" + _path);
     }
 
     @Override
     public String toString() {
-        return path.getPath();
+        return _path;
     }
 
 }

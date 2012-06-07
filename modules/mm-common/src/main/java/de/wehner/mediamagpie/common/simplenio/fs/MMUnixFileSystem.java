@@ -3,7 +3,6 @@ package de.wehner.mediamagpie.common.simplenio.fs;
 import java.io.IOException;
 import java.security.AccessController;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import sun.security.action.GetPropertyAction;
@@ -40,9 +39,9 @@ public class MMUnixFileSystem extends MMFileSystem {
     private static final String GLOB_SYNTAX = "glob";
     private static final String REGEX_SYNTAX = "regex";
 
-    MMUnixFileSystem(MMUnixFileSystemProvider paramUnixFileSystemProvider, String paramString) {
+    MMUnixFileSystem(MMUnixFileSystemProvider paramUnixFileSystemProvider, String defaultDir) {
         this.provider = paramUnixFileSystemProvider;
-        this.defaultDirectory = MMUnixPath.normalizeAndCheck(paramString).getBytes();
+        this.defaultDirectory = MMUnixPath.normalizeAndCheck(defaultDir).getBytes();
         if (this.defaultDirectory[0] != 47) {
             throw new RuntimeException("default directory must be absolute");
         }

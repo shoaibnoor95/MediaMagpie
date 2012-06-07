@@ -57,9 +57,9 @@ public final class MMPaths {
      * Converts the given URI to a {@link Path} object.
      * 
      * <p>
-     * This method iterates over the {@link FileSystemProvider#installedProviders() installed} providers to locate the provider that is
+     * This method iterates over the {@link MMFileSystemProviderFactory#installedProviders() installed} providers to locate the provider that is
      * identified by the URI {@link URI#getScheme scheme} of the given URI. URI schemes are compared without regard to case. If the provider
-     * is found then its {@link FileSystemProvider#getPath getPath} method is invoked to convert the URI.
+     * is found then its {@link MMFileSystemProviderFactory#getPath getPath} method is invoked to convert the URI.
      * 
      * <p>
      * In the case of the default provider, identified by the URI scheme "file", the given URI has a non-empty path component, and undefined

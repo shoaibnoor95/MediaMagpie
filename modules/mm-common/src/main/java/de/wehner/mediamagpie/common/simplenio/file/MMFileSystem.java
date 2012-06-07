@@ -58,7 +58,7 @@ import de.wehner.mediamagpie.common.simplenio.file.spi.MMFileSystemProvider;
  * <p>
  * A file system is open upon creation and can be closed by invoking its {@link #close() close} method. Once closed, any further attempt to
  * access objects in the file system cause {@link ClosedFileSystemException} to be thrown. File systems created by the default
- * {@link FileSystemProvider provider} cannot be closed.
+ * {@link MMFileSystemProviderFactory provider} cannot be closed.
  * 
  * <p>
  * A {@code FileSystem} can provide read-only or read-write access to the file system. Whether or not a file system provides read-only

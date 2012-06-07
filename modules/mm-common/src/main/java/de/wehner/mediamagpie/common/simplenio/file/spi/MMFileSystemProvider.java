@@ -5,7 +5,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.nio.channels.Channels;
+import java.nio.file.spi.FileSystemProvider;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,6 +22,13 @@ import de.wehner.mediamagpie.common.simplenio.file.MMStandardOpenOption;
 import de.wehner.mediamagpie.common.simplenio.file.attribute.MMBasicFileAttributes;
 
 public abstract class MMFileSystemProvider {
+
+    /**
+     * Returns the URI scheme that identifies this provider.
+     *
+     * @return  The URI scheme
+     */
+    public abstract String getScheme();
 
     /**
      * Returns an existing {@code FileSystem} created by this provider.

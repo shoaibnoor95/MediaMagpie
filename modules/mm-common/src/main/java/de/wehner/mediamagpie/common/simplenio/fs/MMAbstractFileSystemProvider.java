@@ -1,6 +1,7 @@
 package de.wehner.mediamagpie.common.simplenio.fs;
 
 import java.io.IOException;
+import java.net.URI;
 
 import de.wehner.mediamagpie.common.simplenio.file.MMPath;
 import de.wehner.mediamagpie.common.simplenio.file.spi.MMFileSystemProvider;

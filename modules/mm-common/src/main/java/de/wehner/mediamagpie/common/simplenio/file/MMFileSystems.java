@@ -1,14 +1,16 @@
 package de.wehner.mediamagpie.common.simplenio.file;
 
 import java.net.URI;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
+import java.nio.file.spi.FileSystemProvider;
+import java.util.Collections;
+import java.util.List;
 import java.util.ServiceLoader;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import de.wehner.mediamagpie.common.simplenio.file.spi.MMFileSystemProvider;
+import de.wehner.mediamagpie.common.simplenio.fs.MMUnixFileSystem;
 import de.wehner.mediamagpie.common.simplenio.fs.MMUnixFileSystemProvider;
 
 /**
@@ -16,24 +18,25 @@ import de.wehner.mediamagpie.common.simplenio.fs.MMUnixFileSystemProvider;
  * methods to construct other types of file systems.
  * 
  * <p>
- * The first invocation of any of the methods defined by this class causes the default {@link FileSystemProvider provider} to be loaded. The
- * default provider, identified by the URI scheme "file", creates the {@link FileSystem} that provides access to the file systems accessible
- * to the Java virtual machine. If the process of loading or initializing the default provider fails then an unspecified error is thrown.
+ * The first invocation of any of the methods defined by this class causes the default {@link MMFileSystemProviderFactory provider} to be
+ * loaded. The default provider, identified by the URI scheme "file", creates the {@link FileSystem} that provides access to the file
+ * systems accessible to the Java virtual machine. If the process of loading or initializing the default provider fails then an unspecified
+ * error is thrown.
  * 
  * <p>
- * The first invocation of the {@link FileSystemProvider#installedProviders installedProviders} method, by way of invoking any of the
- * {@code newFileSystem} methods defined by this class, locates and loads all installed file system providers. Installed providers are
+ * The first invocation of the {@link MMFileSystemProviderFactory#installedProviders installedProviders} method, by way of invoking any of
+ * the {@code newFileSystem} methods defined by this class, locates and loads all installed file system providers. Installed providers are
  * loaded using the service-provider loading facility defined by the {@link ServiceLoader} class. Installed providers are loaded using the
  * system class loader. If the system class loader cannot be found then the extension class loader is used; if there is no extension class
  * loader then the bootstrap class loader is used. Providers are typically installed by placing them in a JAR file on the application class
  * path or in the extension directory, the JAR file contains a provider-configuration file named
  * {@code java.nio.file.spi.FileSystemProvider} in the resource directory {@code META-INF/services}, and the file lists one or more
- * fully-qualified names of concrete subclass of {@link FileSystemProvider} that have a zero argument constructor. The ordering that
- * installed providers are located is implementation specific. If a provider is instantiated and its {@link FileSystemProvider#getScheme()
- * getScheme} returns the same URI scheme of a provider that was previously instantiated then the most recently instantiated duplicate is
- * discarded. URI schemes are compared without regard to case. During construction a provider may safely access files associated with the
- * default provider but care needs to be taken to avoid circular loading of other installed providers. If circular loading of installed
- * providers is detected then an unspecified error is thrown.
+ * fully-qualified names of concrete subclass of {@link MMFileSystemProviderFactory} that have a zero argument constructor. The ordering
+ * that installed providers are located is implementation specific. If a provider is instantiated and its
+ * {@link MMFileSystemProviderFactory#getScheme() getScheme} returns the same URI scheme of a provider that was previously instantiated then
+ * the most recently instantiated duplicate is discarded. URI schemes are compared without regard to case. During construction a provider
+ * may safely access files associated with the default provider but care needs to be taken to avoid circular loading of other installed
+ * providers. If circular loading of installed providers is detected then an unspecified error is thrown.
  * 
  * <p>
  * This class also defines factory methods that allow a {@link ClassLoader} to be specified when locating a provider. As with installed
@@ -49,61 +52,78 @@ import de.wehner.mediamagpie.common.simplenio.fs.MMUnixFileSystemProvider;
 @Service
 public final class MMFileSystems {
 
+    // lock using when loading providers
+    private static final Object lock = new Object();
+
+    // installed providers
+    private static volatile List<MMFileSystemProvider> installedProviders;
+
+    // private final MMFileSystemProviderFactory _fileSystemProviderFactory;
+    private static MMFileSystem _defaultFileSystem;
+
     @Autowired
-    public MMFileSystems(MMFileSystemProvider provider){
-        DefaultFileSystemHolder.defaultFileSystem = provider.getFileSystem(URI.create("file:///"));
-    }
-    
-//    private MMFileSystems() {
-//    }
-
-    // lazy initialization of default file system
-    private static class DefaultFileSystemHolder {
-        
-//        static final MMFileSystem defaultFileSystem = defaultFileSystem();
-        static MMFileSystem defaultFileSystem = defaultFileSystem();
-
-        // returns default file system
-        private static MMFileSystem defaultFileSystem() {
-            // load default provider
-            MMFileSystemProvider provider = AccessController.doPrivileged(new PrivilegedAction<MMFileSystemProvider>() {
-                public MMFileSystemProvider run() {
-                    return getDefaultProvider();
+    public MMFileSystems(MMFileSystemProviderFactory fileSystemProviderFactory) {
+        // _fileSystemProviderFactory = fileSystemProviderFactory;
+        // MMFileSystemProvider fileSystemProvider = _fileSystemProviderFactory.getProviders().get(0);
+        // DefaultFileSystemHolder.defaultFileSystem = fileSystemProvider.getFileSystem(URI.create("file:///"));
+        synchronized (lock) {
+            installedProviders = Collections.unmodifiableList(fileSystemProviderFactory.getProviders());
+            for (MMFileSystemProvider mmFileSystemProvider : installedProviders) {
+                if (mmFileSystemProvider.getScheme().equals("file")) {
+                    _defaultFileSystem = mmFileSystemProvider.getFileSystem(URI.create("file:///"));
+                    break;
                 }
-            });
-
-            // return file system
-            return provider.getFileSystem(URI.create("file:///"));
-        }
-
-        // returns default provider
-        private static MMFileSystemProvider getDefaultProvider() {
-//            FileSystemProvider provider = sun.nio.fs.DefaultFileSystemProvider.create();
-//
-//            // if the property java.nio.file.spi.DefaultFileSystemProvider is
-//            // set then its value is the name of the default provider (or a list)
-//            String propValue = System.getProperty("java.nio.file.spi.DefaultFileSystemProvider");
-//            if (propValue != null) {
-//                for (String cn : propValue.split(",")) {
-//                    try {
-//                        Class<?> c = Class.forName(cn, true, ClassLoader.getSystemClassLoader());
-//                        Constructor<?> ctor = c.getDeclaredConstructor(FileSystemProvider.class);
-//                        provider = (FileSystemProvider) ctor.newInstance(provider);
-//
-//                        // must be "file"
-//                        if (!provider.getScheme().equals("file"))
-//                            throw new Error("Default provider must use scheme 'file'");
-//
-//                    } catch (Exception x) {
-//                        throw new Error(x);
-//                    }
-//                }
-//            }
-//            return provider;
-            // TODO rwe: workaround
-            return new MMUnixFileSystemProvider();
+            }
         }
     }
+
+    // private MMFileSystems() {
+    // }
+
+    // // lazy initialization of default file system
+    // private static class DefaultFileSystemHolder {
+    //
+    // static final MMFileSystem defaultFileSystem = defaultFileSystem();
+    //
+    // // returns default file system
+    // private static MMFileSystem defaultFileSystem() {
+    // // load default provider
+    // MMFileSystemProvider provider = AccessController.doPrivileged(new PrivilegedAction<MMFileSystemProvider>() {
+    // public MMFileSystemProvider run() {
+    // return getDefaultProvider();
+    // }
+    // });
+    //
+    // // return file system
+    // return provider.getFileSystem(URI.create("file:///"));
+    // }
+    //
+    // // returns default provider
+    // private static MMFileSystemProvider getDefaultProvider() {
+    // FileSystemProvider provider = sun.nio.fs.DefaultFileSystemProvider.create();
+    //
+    // // if the property java.nio.file.spi.DefaultFileSystemProvider is
+    // // set then its value is the name of the default provider (or a list)
+    // String propValue = System.getProperty("java.nio.file.spi.DefaultFileSystemProvider");
+    // if (propValue != null) {
+    // for (String cn : propValue.split(",")) {
+    // try {
+    // Class<?> c = Class.forName(cn, true, ClassLoader.getSystemClassLoader());
+    // Constructor<?> ctor = c.getDeclaredConstructor(MMFileSystemProvider.class);
+    // provider = (MMFileSystemProvider) ctor.newInstance(provider);
+    //
+    // // must be "file"
+    // if (!provider.getScheme().equals("file"))
+    // throw new Error("Default provider must use scheme 'file'");
+    //
+    // } catch (Exception x) {
+    // throw new Error(x);
+    // }
+    // }
+    // }
+    // return provider;
+    // }
+    // }
 
     /**
      * Returns the default {@code FileSystem}. The default file system creates objects that provide access to the file systems accessible to
@@ -111,8 +131,8 @@ public final class MMFileSystems {
      * property {@code user.dir}. This allows for interoperability with the {@link java.io.File java.io.File} class.
      * 
      * <p>
-     * The first invocation of any of the methods defined by this class locates the default {@link FileSystemProvider provider} object.
-     * Where the system property {@code java.nio.file.spi.DefaultFileSystemProvider} is not defined then the default provider is a
+     * The first invocation of any of the methods defined by this class locates the default {@link MMFileSystemProviderFactory provider}
+     * object. Where the system property {@code java.nio.file.spi.DefaultFileSystemProvider} is not defined then the default provider is a
      * system-default provider that is invoked to create the default file system.
      * 
      * <p>
@@ -134,7 +154,22 @@ public final class MMFileSystems {
      * @return the default file system
      */
     public static MMFileSystem getDefault() {
-        return DefaultFileSystemHolder.defaultFileSystem;
+        synchronized (lock) {
+            if (_defaultFileSystem == null) {
+                MMFileSystem defaultFileSystem = null;
+                for (MMFileSystemProvider mmFileSystemProvider : installedProviders) {
+                    if (mmFileSystemProvider.getScheme().equals("file")) {
+                        defaultFileSystem = mmFileSystemProvider.getFileSystem(URI.create("file:///"));
+                        break;
+                    }
+                }
+                if (defaultFileSystem == null) {
+                    throw new Error("Default provider must use scheme 'file'");
+                }
+                _defaultFileSystem = defaultFileSystem;
+            }
+            return _defaultFileSystem;
+        }
     }
 
     /**
@@ -165,15 +200,15 @@ public final class MMFileSystems {
      * @throws SecurityException
      *             if a security manager is installed and it denies an unspecified permission
      */
-//    public static MMFileSystem getFileSystem(URI uri) {
-//        String scheme = uri.getScheme();
-//        for (MMFileSystemProvider provider : MMFileSystemProvider.installedProviders()) {
-//            if (scheme.equalsIgnoreCase(provider.getScheme())) {
-//                return provider.getFileSystem(uri);
-//            }
-//        }
-//        throw new MMProviderNotFoundException("Provider \"" + scheme + "\" not found");
-//    }
+    public static MMFileSystem getFileSystem(URI uri) {
+        String scheme = uri.getScheme();
+        for (MMFileSystemProvider provider : installedProviders) {
+            if (scheme.equalsIgnoreCase(provider.getScheme())) {
+                return provider.getFileSystem(uri);
+            }
+        }
+        throw new MMProviderNotFoundException("Provider \"" + scheme + "\" not found");
+    }
 
     /**
      * Constructs a new file system that is identified by a {@link URI}
@@ -218,9 +253,9 @@ public final class MMFileSystems {
      *             if a security manager is installed and it denies an unspecified permission required by the file system provider
      *             implementation
      */
-//    public static MMFileSystem newFileSystem(URI uri, Map<String, ?> env) throws IOException {
-//        return newFileSystem(uri, env, null);
-//    }
+    // public static MMFileSystem newFileSystem(URI uri, Map<String, ?> env) throws IOException {
+    // return newFileSystem(uri, env, null);
+    // }
 
     /**
      * Constructs a new file system that is identified by a {@link URI}
@@ -255,28 +290,28 @@ public final class MMFileSystems {
      *             if a security manager is installed and it denies an unspecified permission required by the file system provider
      *             implementation
      */
-//    public static MMFileSystem newFileSystem(URI uri, Map<String, ?> env, ClassLoader loader) throws IOException {
-//        String scheme = uri.getScheme();
-//
-//        // check installed providers
-//        for (MMFileSystemProvider provider : MMFileSystemProvider.installedProviders()) {
-//            if (scheme.equalsIgnoreCase(provider.getScheme())) {
-//                return provider.newFileSystem(uri, env);
-//            }
-//        }
-//
-//        // if not found, use service-provider loading facility
-//        if (loader != null) {
-//            ServiceLoader<MMFileSystemProvider> sl = ServiceLoader.load(MMFileSystemProvider.class, loader);
-//            for (MMFileSystemProvider provider : sl) {
-//                if (scheme.equalsIgnoreCase(provider.getScheme())) {
-//                    return provider.newFileSystem(uri, env);
-//                }
-//            }
-//        }
-//
-//        throw new MMProviderNotFoundException("Provider \"" + scheme + "\" not found");
-//    }
+    // public static MMFileSystem newFileSystem(URI uri, Map<String, ?> env, ClassLoader loader) throws IOException {
+    // String scheme = uri.getScheme();
+    //
+    // // check installed providers
+    // for (MMFileSystemProvider provider : MMFileSystemProvider.installedProviders()) {
+    // if (scheme.equalsIgnoreCase(provider.getScheme())) {
+    // return provider.newFileSystem(uri, env);
+    // }
+    // }
+    //
+    // // if not found, use service-provider loading facility
+    // if (loader != null) {
+    // ServiceLoader<MMFileSystemProvider> sl = ServiceLoader.load(MMFileSystemProvider.class, loader);
+    // for (MMFileSystemProvider provider : sl) {
+    // if (scheme.equalsIgnoreCase(provider.getScheme())) {
+    // return provider.newFileSystem(uri, env);
+    // }
+    // }
+    // }
+    //
+    // throw new MMProviderNotFoundException("Provider \"" + scheme + "\" not found");
+    // }
 
     /**
      * Constructs a new {@code FileSystem} to access the contents of a file as a file system.
@@ -308,30 +343,30 @@ public final class MMFileSystems {
      * @throws SecurityException
      *             if a security manager is installed and it denies an unspecified permission
      */
-//    public static MMFileSystem newFileSystem(MMPath path, ClassLoader loader) throws IOException {
-//        if (path == null)
-//            throw new NullPointerException();
-//        Map<String, ?> env = Collections.emptyMap();
-//
-//        // check installed providers
-//        for (MMFileSystemProvider provider : MMFileSystemProvider.installedProviders()) {
-//            try {
-//                return provider.newFileSystem(path, env);
-//            } catch (UnsupportedOperationException uoe) {
-//            }
-//        }
-//
-//        // if not found, use service-provider loading facility
-//        if (loader != null) {
-//            ServiceLoader<MMFileSystemProvider> sl = ServiceLoader.load(MMFileSystemProvider.class, loader);
-//            for (MMFileSystemProvider provider : sl) {
-//                try {
-//                    return provider.newFileSystem(path, env);
-//                } catch (UnsupportedOperationException uoe) {
-//                }
-//            }
-//        }
-//
-//        throw new MMProviderNotFoundException("Provider not found");
-//    }
+    // public static MMFileSystem newFileSystem(MMPath path, ClassLoader loader) throws IOException {
+    // if (path == null)
+    // throw new NullPointerException();
+    // Map<String, ?> env = Collections.emptyMap();
+    //
+    // // check installed providers
+    // for (MMFileSystemProvider provider : MMFileSystemProvider.installedProviders()) {
+    // try {
+    // return provider.newFileSystem(path, env);
+    // } catch (UnsupportedOperationException uoe) {
+    // }
+    // }
+    //
+    // // if not found, use service-provider loading facility
+    // if (loader != null) {
+    // ServiceLoader<MMFileSystemProvider> sl = ServiceLoader.load(MMFileSystemProvider.class, loader);
+    // for (MMFileSystemProvider provider : sl) {
+    // try {
+    // return provider.newFileSystem(path, env);
+    // } catch (UnsupportedOperationException uoe) {
+    // }
+    // }
+    // }
+    //
+    // throw new MMProviderNotFoundException("Provider not found");
+    // }
 }
