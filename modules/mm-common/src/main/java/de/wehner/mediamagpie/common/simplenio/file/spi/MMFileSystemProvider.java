@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.nio.channels.Channels;
-import java.nio.file.spi.FileSystemProvider;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;

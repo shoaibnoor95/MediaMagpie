@@ -1,7 +1,6 @@
 package de.wehner.mediamagpie.common.simplenio.file;
 
 import java.net.URI;
-import java.nio.file.spi.FileSystemProvider;
 import java.util.Collections;
 import java.util.List;
 import java.util.ServiceLoader;

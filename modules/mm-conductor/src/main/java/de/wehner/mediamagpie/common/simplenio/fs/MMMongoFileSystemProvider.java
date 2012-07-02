@@ -76,8 +76,8 @@ public class MMMongoFileSystemProvider extends MMAbstractFileSystemProvider  {
 
     @Override
     public MMSeekableByteChannel newByteChannel(MMPath path, Set<? extends MMOpenOption> options) throws IOException {
-        // TODO Auto-generated method stub
-        return null;
+        MMMongoPath mongoPath = MMMongoPath.toMongoPath(path);
+        return MMMongoDbFileChannelFactory.newFileChannel(mongoPath, options);
     }
 
     @Override

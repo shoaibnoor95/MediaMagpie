@@ -47,7 +47,7 @@ public class MongoMMFileSystemsTest {
         if (mongo != null) {
             // The MongoTemplate comes normally from spring context
             MongoTemplate mongoTemplate = new MongoTemplate(mongo, "testdb");
-            MongoDbFileDataDao mongoDbFileDataDao = new MongoDbFileDataDao(mongoTemplate);
+            //MongoDbFileDataDao mongoDbFileDataDao = new MongoDbFileDataDao(mongoTemplate);
             // MongoDbFileDescriptorDao mongoDbFileDescriptorDao = new MongoDbFileDescriptorDao(mongoTemplate, mongoDbFileDataDao);
             // _mongoDbFsLayer = new MongoDbFSLayer(mongoDbFileDescriptorDao);
             MMMongoFileSystemProvider mmMongoFileSystemProvider = new MMMongoFileSystemProvider(mongoTemplate);
@@ -62,11 +62,11 @@ public class MongoMMFileSystemsTest {
         System.out.printf("Created path (%s) of type %s%n", path, path.getClass().getName());
     }
 
-    // @Test
-    // public void testCreateFile() throws IOException {
-    // MMPath path = MMPaths.get(_testEnvironment.getWorkingDir().getPath(), "fileA.txt");
-    // MMFiles.createFile(path);
-    //
-    // assertThat(MMFiles.exists(path)).isTrue();
-    // }
+    @Test
+    public void testCreateFile() throws IOException {
+        MMPath path = MMFileSystems.getFileSystem(MONGO_SCHEMA).getPath("myPath", "subPathA", "subPathB");
+        MMFiles.createFile(path);
+
+        assertThat(MMFiles.exists(path)).isTrue();
+    }
 }

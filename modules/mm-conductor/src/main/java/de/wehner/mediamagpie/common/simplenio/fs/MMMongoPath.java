@@ -144,7 +144,7 @@ public class MMMongoPath extends MMAbstractPath {
     // return toString();
     // }
     //
-    static MMMongoPath toUnixPath(MMPath paramPath) {
+    static MMMongoPath toMongoPath(MMPath paramPath) {
         if (paramPath == null)
             throw new NullPointerException();
         if (!(paramPath instanceof MMMongoPath))

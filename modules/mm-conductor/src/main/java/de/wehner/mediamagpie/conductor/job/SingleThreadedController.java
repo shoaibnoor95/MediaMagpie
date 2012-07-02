@@ -10,12 +10,15 @@ import javax.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.wehner.mediamagpie.common.util.Holder;
+
 public abstract class SingleThreadedController {
 
     private static final Logger LOG = LoggerFactory.getLogger(SingleThreadedController.class);
 
     private ExecutorService _executorService;
     private long _waitTimeMs;
+    private final Holder<Boolean> _terminateFlag = new Holder<Boolean>(Boolean.FALSE);
 
     public SingleThreadedController() {
         this(TimeUnit.MILLISECONDS, 250);
@@ -43,6 +46,10 @@ public abstract class SingleThreadedController {
         try {
             while (!Thread.currentThread().isInterrupted()) {
                 if (_shouldSleep) {
+                    if (_terminateFlag.get()) {
+                        LOG.info("received terminate flag and shutdown loop() method in " + getClass().getSimpleName() + ".");
+                        break;
+                    }
                     Thread.sleep(_waitTimeMs);
                     _shouldSleep = false;
                 }
@@ -71,6 +78,7 @@ public abstract class SingleThreadedController {
 
     @PreDestroy
     public void stop() throws InterruptedException {
+        _terminateFlag.set(Boolean.TRUE);
         if (_executorService != null && !_executorService.isTerminated()) {
             LOG.info("Stopping controller " + getClass().getName());
             _executorService.shutdownNow();
