@@ -8,10 +8,17 @@
 		<version>0.1-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
-	<artifactId>mm-common</artifactId>
+	<artifactId>mm-hadoop-core</artifactId>
 	<packaging>jar</packaging>
-	<name>MediaMagpie Common</name>
+	<name>MediaMagpie Hadoop Core</name>
 	<dependencies>
+
+    	<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>mm-common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
 		<!-- Some useful stuff -->
 		<!-- <dependency> <groupId>commons-lang</groupId> <artifactId>commons-lang</artifactId> </dependency> -->
 		<dependency>
@@ -97,6 +104,13 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
 			<scope>runtime</scope>
+		</dependency>
+
+		<!-- hadoop -->
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-core</artifactId>
+			<version>1.0.3</version>
 		</dependency>
 
 		<!-- Test -->

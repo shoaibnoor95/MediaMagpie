@@ -11,3 +11,7 @@ mm-distribution/target/
 mm-distribution/.classpath
 mm-distribution/.project
 mm-distribution/.settings/
+modules/mm-hadoop-core/target
+modules/mm-hadoop-core/.classpath
+modules/mm-hadoop-core/.project
+modules/mm-hadoop-core/.settings

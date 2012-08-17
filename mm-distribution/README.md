@@ -83,4 +83,9 @@ or with non-default data directory:
     
 
 
-Hint for md-formatting: See https://github.com/SpringSource/cloudfoundry-samples/blob/master/stocks/README.md 
+Hint for md-formatting: See https://github.com/SpringSource/cloudfoundry-samples/blob/master/stocks/README.md
+
+# Maven
+Some useful command lines:
+   $ mvn versions:display-dependency-updates
+ 
