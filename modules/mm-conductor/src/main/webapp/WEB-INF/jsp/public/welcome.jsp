@@ -1,13 +1,9 @@
-<%@page contentType="text/html;charset=UTF-8"%>
-<%@page pageEncoding="UTF-8"%>
 <%@ page session="false" %>
 <%@ include file="/WEB-INF/jsp/general/taglibs.jsp" %>
-<%@page import="de.wehner.mediamagpie.conductor.webapp.controller.DashboardController" %>
+<%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.DashboardController" %>
 
 <c:set var="title" value="Welcome to MediaMagpie" scope="request"/>
 <c:set var="activeMenu" value="welcome" scope="request"/>
-<c:import url="/header"/>
-
 <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/galleriffic.css"/>" />
 <script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery.galleriffic.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery.opacityrollover.js"></script>
@@ -77,14 +73,9 @@
         </div>	
         <div id="caption" class="caption-container embox" style="opacity: 1;"></div>
 	</div>
-
-		<div style="clear: both;"/>
-	
-<%
-java.security.Principal  principal = request.getUserPrincipal();
-if(principal != null) {%>
-	<h2>Your last added pictures</h2>
-	
-<%}%>
-</div>
-<c:import url="/footer"/>
+    <div style="clear: both;"/>
+		<%java.security.Principal  principal = request.getUserPrincipal();
+		if(principal != null) {%>
+			<h2>Your last added pictures</h2>
+		<%}%>
+    </div>

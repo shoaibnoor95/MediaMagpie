@@ -7,7 +7,6 @@
 <c:set var="activeMenu" value="config" scope="request"/>
 <c:set var="activeSubMenu" value="config" scope="request"/>
 <c:set var="urlSubMenu" value="/subNaviConfiguration" scope="request"/>
-<c:import url="/header"/>
 			
 			<div id="content">
 				<h1>
@@ -52,5 +51,3 @@
 					<dd><button type="button" onclick="document.location.href='<%=request.getContextPath()+AdministrationController.getBaseRequestMappingUrl()+AdministrationController.URL_MAINCONFIG_EDIT%>'" class="active"><span>Edit</span></button></dd>	
 				</dl>
 			</div>
-				                
-			<c:import url="/footer"/>

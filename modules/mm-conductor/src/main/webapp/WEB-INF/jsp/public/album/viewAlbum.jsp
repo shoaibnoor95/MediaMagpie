@@ -8,7 +8,6 @@
 <c:set var="activeMenu" value="media" scope="request"/>
 <c:set var="activeSubMenu" value="listAlbums" scope="request"/>
 <c:set var="urlSubMenu" value="/subNaviMedia" scope="request"/>
-<c:import url="/header"/>
 			
 <div id="content">
 
@@ -64,4 +63,3 @@
 		</li>
 		</c:otherwise>
 	</c:choose>				                
-<c:import url="/footer"/>

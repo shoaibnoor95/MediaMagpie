@@ -3,7 +3,6 @@
 <%@page session="false" %>
 <%@include file="/WEB-INF/jsp/general/taglibs.jsp" %>
 <c:set var="title" value="Create New Account" scope="request"/>
-<c:import url="/header"/>
 	        <div id="content">
 				<h1>
 					${title}
@@ -85,5 +84,3 @@
 					</form:form>
 				</div>
 			</div>
-				                
-			<c:import url="/footer"/>

@@ -10,7 +10,6 @@
 <c:set var="activeMenu" value="media" scope="request" />
 <c:set var="activeSubMenu" value="listAlbums" scope="request" />
 <c:set var="urlSubMenu" value="/subNaviMedia" scope="request" />
-<c:import url="/header" />
 <script type="text/javascript" src="<%=request.getContextPath()%>/static/js/pages/album_listAlbums.js"></script>
 
 <div id="content">
@@ -78,4 +77,3 @@
 	</div>
 	
 </div>
-<c:import url="/footer" />

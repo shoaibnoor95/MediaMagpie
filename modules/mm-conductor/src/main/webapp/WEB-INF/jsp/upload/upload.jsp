@@ -8,7 +8,6 @@
 <c:set var="activeMenu" value="media" scope="request"/>
 <c:set var="activeSubMenu" value="upload" scope="request"/>
 <c:set var="urlSubMenu" value="/subNaviMedia" scope="request"/>
-<c:import url="/header"/>
 
 <script src="<%=request.getContextPath()%>/static/js/jquery.tmpl.min.js"></script>
 <script src="<%=request.getContextPath()%>/static/js/jquery.fileupload.js"></script>
@@ -102,4 +101,3 @@
     </tr>
 </script>
 			</div>
-			<c:import url="/footer"/>

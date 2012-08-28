@@ -8,7 +8,6 @@
 <c:set var="activeMenu" value="media" scope="request"/>
 <c:set var="activeSubMenu" value="trash" scope="request"/>
 <c:set var="urlSubMenu" value="/subNaviMedia" scope="request"/>
-<c:import url="/header"/>
 			<div id="content">
                 <h1>Trash</h1>
                 
@@ -66,4 +65,3 @@
 				<core:pagination current="${start}" pageSize="${pageSize}" total="${totalHits}" query="<%=request.getContextPath()%>" />
 				<input type="submit"/>
 			</div>
-			<c:import url="/footer"/>

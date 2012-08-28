@@ -8,7 +8,6 @@
 <c:set var="activeMenu" value="dashboard" scope="request"/>
 <c:set var="activeSubMenu" value="cooliris" scope="request"/>
 <c:set var="urlSubMenu" value="/subNaviDashboard" scope="request"/>
-<c:import url="/header"/>
 		<div id="content">
 			<h1>
 				cooliris - <fmt:message key="dashboard.title"/>
@@ -30,4 +29,3 @@
 		    </object>
                
 		</div>
-		<c:import url="/footer"/>

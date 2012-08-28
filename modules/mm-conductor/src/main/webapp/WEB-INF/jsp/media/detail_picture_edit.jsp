@@ -6,7 +6,6 @@
 <c:set var="activeMenu" value="media" scope="request"/>
 <c:set var="activeSubMenu" value="" scope="request"/>
 <c:set var="urlSubMenu" value="/subNaviMedia" scope="request"/>
-<c:import url="/header"/>
 
 <script type="text/javascript">
 	$(function() {
@@ -91,4 +90,3 @@
 	                <input type="hidden" name="submitSelect"/>
                 </form:form>
 		</div>
-<c:import url="/footer"/>

@@ -10,7 +10,6 @@
 		<c:set var="title" value="Reset your Password" scope="request"/>
 	</c:otherwise>
 </c:choose>
-<c:import url="/header"/>
 			<div id="content">
 				<h1>
 					${title}
@@ -47,5 +46,3 @@
 					</c:otherwise>
 				</c:choose>
 			</div>
-				                
-			<c:import url="/footer"/>

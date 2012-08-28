@@ -7,7 +7,6 @@
 <c:set var="activeMenu" value="config" scope="request"/>
 <c:set var="activeSubMenu" value="user_config" scope="request"/>
 <c:set var="urlSubMenu" value="/subNaviConfiguration" scope="request"/>
-<c:import url="/header"/>
 			
 			<div id="content">
 				<h1>
@@ -82,5 +81,3 @@
 					</form:form>
 				</div>
 			</div>
-				                
-			<c:import url="/footer"/>

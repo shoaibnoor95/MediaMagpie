@@ -10,7 +10,6 @@
 <c:set var="activeMenu" value="media" scope="request"/>
 <c:set var="activeSubMenu" value="listAlbums" scope="request"/>
 <c:set var="urlSubMenu" value="/subNaviMedia" scope="request"/>
-<c:import url="/header"/>
 <script type="text/javascript" src="<%=request.getContextPath()%>/static/js/pages/album_edit.js"></script>
 			
 			<div id="content">
@@ -60,5 +59,3 @@
 					<dd><button type="button" onclick="document.location.href='<%=AlbumController.getBaseRequestMappingUrl()%>/${albumCommand.id}/edit'" class="active"><span>Edit</span></button></dd>	
 				</dl>
 			</div>
-				                
-			<c:import url="/footer"/>

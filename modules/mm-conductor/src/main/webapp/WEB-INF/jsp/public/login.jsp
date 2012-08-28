@@ -5,7 +5,6 @@
 <%@ page import="org.springframework.security.core.AuthenticationException" %>
 
 <c:set var="title" value="Login" scope="request"/>
-<c:import url="/header"/>
 	        <div id="content">
 		        <h1>Login</h1>
 	            
@@ -57,4 +56,3 @@
   					<br>
 				 </div>
 	        </div>
-            <c:import url="/footer"/>

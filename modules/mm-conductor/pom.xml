@@ -120,7 +120,7 @@
 			<artifactId>hibernate-entitymanager</artifactId>
 		</dependency>
 
-		<!-- Mon -->
+		<!-- MongoDB -->
 		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
@@ -161,6 +161,11 @@
 			<artifactId>jstl</artifactId>
 			<scope>provided</scope>
 		</dependency>
+        <dependency>
+            <groupId>opensymphony</groupId>
+            <artifactId>sitemesh</artifactId>
+            <version>2.4.2</version>
+        </dependency>
 
 		<!-- JDBC -->
 		<dependency>
