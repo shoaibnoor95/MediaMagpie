@@ -1,7 +1,16 @@
+<!-- See also: http://wiki.sitemesh.org/display/sitemesh/SiteMesh+Adept+in+10+Minutes -->
 <decorators defaultdir="/WEB-INF/jsp/decorators">
     <!-- <decorator name="frontpage" page="frontpage.jsp">
           <pattern>/</pattern>
     </decorator>-->
+    <excludes>
+        <!-- exclude some templates like request /media/ajaxCurrentAlbumTemplate -->
+        <pattern>*ajax*</pattern>
+        <!-- for cooliris support -->
+        <pattern>*crossdomain.xml</pattern>
+        <pattern>*rss</pattern>
+        <pattern>/footer</pattern>
+    </excludes>
     <decorator name="main" page="main.jsp">
           <pattern>/*</pattern>
     </decorator>

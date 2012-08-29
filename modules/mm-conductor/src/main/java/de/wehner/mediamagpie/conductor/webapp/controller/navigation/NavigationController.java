@@ -8,19 +8,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import de.wehner.mediamagpie.common.core.util.ManifestMetaData;
 import de.wehner.mediamagpie.conductor.webapp.util.Env;
 
-
 @Controller
 public class NavigationController {
 
-    private final String HEADER_URL = "/header";
-    private final String HEADER_URL5 = "/header5";
-    private final String HEADER_VIEW = "/general/header";
-    private final String HEADER_VIEW5 = "/general/header5";
     private final String FOOTER_URL = "/footer";
     private final String FOOTER_VIEW = "/general/footer";
 
-    private final String MAIN_NAVIGATION_URL = "/mainNavi";
-    private final String MAIN_NAVIGATION_VIEW = "/navigation/mainNavi";
     private final String SUB_NAVIGATION_DASHBOARD_URL = "/subNaviDashboard";
     private final String SUB_NAVIGATION_DASHBOARD_VIEW = "/navigation/subNaviDashboard";
     private final String SUB_NAVIGATION_MEDIA_URL = "/subNaviMedia";
@@ -34,21 +27,6 @@ public class NavigationController {
     @RequestMapping(method = { RequestMethod.HEAD, RequestMethod.GET, RequestMethod.POST }, value = CROSSDOMAIN_URL)
     public String getCrossdomainXml() {
         return CROSSDOMAIN_VIEW;
-    }
-
-    @RequestMapping(method = { RequestMethod.HEAD, RequestMethod.GET, RequestMethod.POST }, value = HEADER_URL)
-    public String showHeader() {
-        return HEADER_VIEW;
-    }
-
-    @RequestMapping(method = { RequestMethod.HEAD, RequestMethod.GET, RequestMethod.POST }, value = HEADER_URL5)
-    public String showHeader5() {
-        return HEADER_VIEW5;
-    }
-
-    @RequestMapping(method = { RequestMethod.HEAD, RequestMethod.GET, RequestMethod.POST }, value = MAIN_NAVIGATION_URL)
-    public String showMainNavigation() {
-        return MAIN_NAVIGATION_VIEW;
     }
 
     @RequestMapping(method = { RequestMethod.HEAD, RequestMethod.GET, RequestMethod.POST }, value = SUB_NAVIGATION_DASHBOARD_URL)

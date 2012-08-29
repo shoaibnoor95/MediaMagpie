@@ -53,12 +53,13 @@ public class MediaController extends AbstractConfigurationSupportController {
 
     public static final String URL_MEDIA_SEARCH = "/search_pictures";
     public static final String VIEW_MEDIA_SEARCH = "media/searchPictures";
+    
     public static final String URL_SELECT_ALBUM = "/select_album";
-    public static final String URL_ADD_MEDIA_TO_ALBUM = "/searchPictures/add";
-    public static final String URL_REMOVE_MEDIA_TO_ALBUM = "/searchPictures/remove";
-    public static final String URL_UPDATE_SORT_ORDER_ALBUM = "/searchPictures/updateSortOrderOfAlbum";
+    public static final String URL_ADD_MEDIA_TO_ALBUM = "/searchPictures/ajaxAddMedia";
+    public static final String URL_REMOVE_MEDIA_TO_ALBUM = "/searchPictures/ajaxRemoveMedia";
+    public static final String URL_UPDATE_SORT_ORDER_ALBUM = "/searchPictures/ajaxUpdateSortOrderOfAlbum";
 
-    public static final String AJAX_CURRENT_ALBUM = "/currentAlbumTemplate";
+    public static final String AJAX_CURRENT_ALBUM = "/ajaxCurrentAlbumTemplate";
     public static final String VIEW_CURRENT_ALBUM = "media/album-media-template";
 
     final int hitsPerPageAlbum = 5;

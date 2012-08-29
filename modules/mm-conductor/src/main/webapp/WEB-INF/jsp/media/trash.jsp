@@ -29,9 +29,9 @@
                 <table id="pictureMarkup" >
                     <thead>
                         <tr>
-                            <th>Bild</th>
+                            <th>Thumb</th>
                             <th>Name</th>
-                            <th>Erstellt</th>
+                            <th>Created</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -63,5 +63,4 @@
                     </tbody>
                 </table>
 				<core:pagination current="${start}" pageSize="${pageSize}" total="${totalHits}" query="<%=request.getContextPath()%>" />
-				<input type="submit"/>
 			</div>

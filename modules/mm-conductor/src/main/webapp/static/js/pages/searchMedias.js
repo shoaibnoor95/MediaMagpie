@@ -50,7 +50,7 @@ function loadTemplateAlbum() {
 function addToAlbum($item){
 	var mediaId = $item.attr("id");
 	submitMediaToAlbum(mediaId);
-	// TODO rwe: remove java script animation maybe
+	// TODO rwe: maybe remove java script animation
 	$item.find( "a.ui-icon-trash" ).remove();
 	$item.find( "img.image-action" ).remove();
 	$item.find( "p.metadata" ).remove();

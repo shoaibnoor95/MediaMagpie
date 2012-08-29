@@ -1,5 +1,4 @@
-<%@ taglib uri="http://www.opensymphony.com/sitemesh/decorator"
-           prefix="decorator" %>
+<%@ taglib uri="http://www.opensymphony.com/sitemesh/decorator" prefix="decorator" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ include file="/WEB-INF/jsp/general/taglibs.jsp" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -45,16 +44,7 @@
                 <decorator:body />
             </div>
 	        <div id="page_bottom">
-	            <div id="footer">
-	                &copy; 2010-2011 Ralf Wehner | 
-	                <a href="<c:url value="mailto:info@ralfwehner.org"><c:param name="subject" value="[Media-Butler]"></c:param></c:url> Feedback">Feedback</a> | 
-	                <a href="http://ralfwehner.dyndns.org:8082/" >Bug Report</a>
-	                <br/>
-	                Version: ${version}, 
-	                Revision: <span title="${revision}" onclick="this.innerHTML='${revision}'">${fn:substring(revision,0,6)}</span>,  
-	                Built on: ${time} 
-	                <c:if test="${deployMode != 'live'}">, Mode: ${deployMode}</c:if>
-	            </div>
+	           <c:import url="/footer"/>
 	        </div>
 	    </div>
 	</body> 

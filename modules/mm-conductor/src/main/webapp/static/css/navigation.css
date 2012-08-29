@@ -32,14 +32,17 @@
     }    
 #mainNavi ul li a {
 	padding-top: 4px;
-    }
+}
 #mainNavi li.current {
 	margin: -4px 0 0 0;
 	padding-top: 2px;
 	height: 39px;
-	background: white;
+	background: #fff;
     box-shadow: inset 0px 0px 0px #ffffff;
     border-bottom: 0px;
+}
+#mainNavi li.current:hover {
+    background: #eee;
 }
 #mainNavi ul li.current a {
 	padding-top: 4px;

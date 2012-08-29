@@ -3,6 +3,7 @@
 <%@ include file="/WEB-INF/jsp/general/taglibs.jsp" %>
 <%@ taglib uri="/WEB-INF/tlds/core.tld" prefix="core"%>
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.media.MediaDetailController" %>
+<meta name="decorator" content="album-media-template"/>
 
 <c:if test="${not empty albumCommand}">
 		<div id="album" class="ui-widget-content ui-state-default">

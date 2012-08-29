@@ -11,7 +11,9 @@
 <c:set var="urlSubMenu" value="/subNaviMedia" scope="request"/>
 
 <!-- <script type="text/javascript" src="<%=request.getContextPath()%>/static/js/pages/searchMedias.js"></script>*/%>-->
-<script type="text/javascript"><%@ include file="../../../static/js/pages/searchMedias.js" %></script>
+<script type="text/javascript">
+    <%@ include file="../../../static/js/pages/searchMedias.js" %>
+</script>
 
 			<div id="content">
                 <h1>${title}</h1>
@@ -81,6 +83,8 @@
 				</form:form>
 				
 				<div id="albumArea">
+				    rwe: include album-media-template.jsp START
 					<%@ include file="album-media-template.jsp" %>
+                    rwe: include album-media-template.jsp END
 				</div>
 			</div>
