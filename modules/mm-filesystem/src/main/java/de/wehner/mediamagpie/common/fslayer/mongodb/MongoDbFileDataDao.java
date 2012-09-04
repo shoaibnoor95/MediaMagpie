@@ -2,14 +2,13 @@ package de.wehner.mediamagpie.common.fslayer.mongodb;
 
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.repository.support.SimpleMongoRepository;
 import org.springframework.stereotype.Component;
-
-import de.wehner.mediamagpie.common.util.CollectionUtil;
 
 @Component
 @Profile({ "local-mongo", "cloud" })
@@ -68,14 +67,14 @@ public class MongoDbFileDataDao {
     }
 
     public void update(List<MongoDbFileData> existingData, List<MongoDbFileData> newData) {
-        if (CollectionUtil.isEmpty(newData)) {
-            if (!CollectionUtil.isEmpty(existingData)) {
+        if (CollectionUtils.isEmpty(newData)) {
+            if (!CollectionUtils.isEmpty(existingData)) {
                 // delete all existing data
                 _fileDataRepository.delete(existingData);
             }
         } else {
             // we have new data to update
-            if (CollectionUtil.isEmpty(existingData)) {
+            if (CollectionUtils.isEmpty(existingData)) {
                 throw new RuntimeException("Internal error: No existing list is present to add new data");
             }
             // update existing data or add new one

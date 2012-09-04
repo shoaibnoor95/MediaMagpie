@@ -11,7 +11,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.wehner.mediamagpie.conductor.webapp.util.TimeoutExecutor;
+import de.wehner.mediamagpie.common.util.TimeoutExecutor;
 
 public class ProcessWrapper {
 

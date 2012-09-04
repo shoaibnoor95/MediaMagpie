@@ -1,15 +1,13 @@
-package de.wehner.mediamagpie.conductor.webapp.util;
+package de.wehner.mediamagpie.common.util;
 
 import java.util.concurrent.Callable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.wehner.mediamagpie.conductor.webapp.controller.ImageController;
-
 public class TimeoutExecutor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ImageController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TimeoutExecutor.class);
 
     private final long timeout;
 

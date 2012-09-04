@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.Priority;
 import de.wehner.mediamagpie.common.persistence.entity.ThumbImage;
+import de.wehner.mediamagpie.common.util.TimeoutExecutor;
 import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.ThumbImageDao;
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
-import de.wehner.mediamagpie.conductor.webapp.util.TimeoutExecutor;
 
 @Controller
 @RequestMapping({ "/content/images/{mediaId}" })

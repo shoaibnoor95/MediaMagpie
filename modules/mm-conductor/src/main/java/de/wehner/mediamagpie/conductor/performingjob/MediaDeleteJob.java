@@ -1,12 +1,11 @@
 package de.wehner.mediamagpie.conductor.performingjob;
 
+import java.io.File;
 import java.net.URI;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.wehner.mediamagpie.common.fslayer.IFSLayer;
-import de.wehner.mediamagpie.common.fslayer.IFile;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
 
@@ -18,14 +17,12 @@ public class MediaDeleteJob extends AbstractJob {
     private final MediaDao _mediaDao;
     private final long _mediaId;
     private final URI _uriMedia;
-    private final IFSLayer _fsLayer;
 
-    public MediaDeleteJob(MediaDao mediaDao, long mediaId, URI uriMedia, IFSLayer fsLayer) {
+    public MediaDeleteJob(MediaDao mediaDao, long mediaId, URI uriMedia) {
         super();
         _mediaDao = mediaDao;
         _mediaId = mediaId;
         _uriMedia = uriMedia;
-        _fsLayer = fsLayer;
     }
 
     @Override
@@ -37,7 +34,7 @@ public class MediaDeleteJob extends AbstractJob {
                 LOG.info("Delete media file with URI '" + _uriMedia + "'...");
                 String pathToFile = _uriMedia.getRawPath();
                 if (pathToFile != null) {
-                    IFile file = _fsLayer.createFile(pathToFile);
+                    File file = new File(pathToFile);
                     if (file.exists()) {
                         file.delete();
                     }

@@ -15,3 +15,7 @@ modules/mm-hadoop-core/target
 modules/mm-hadoop-core/.classpath
 modules/mm-hadoop-core/.project
 modules/mm-hadoop-core/.settings
+modules/mm-filesystem/.classpath
+modules/mm-filesystem/.project
+modules/mm-filesystem/.settings/
+modules/mm-filesystem/target/

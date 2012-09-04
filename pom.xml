@@ -36,6 +36,7 @@
 		<module>modules/mm-conductor</module>
 		<module>modules/mm-common</module>
 		<module>modules/mm-hadoop-core</module>
+		<!--<module>modules/mm-filesystem</module>-->
 		<module>mm-distribution</module>
 	</modules>
 	<!--<scm> <connection>scm:svn:http://jamwiki.svn.sourceforge.net/svnroot/jamwiki/wiki/trunk</connection> 
@@ -56,6 +57,13 @@
 	<prerequisites>
 		<maven>${maven.version}</maven>
 	</prerequisites>
+    <dependencies>
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+            <version>3.2.1</version>
+		</dependency>
+    </dependencies>
 	<dependencyManagement>
 		<dependencies>
 			<!-- Some useful stuff -->

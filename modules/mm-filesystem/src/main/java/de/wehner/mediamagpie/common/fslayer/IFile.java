@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 
-import de.wehner.mediamagpie.common.persistence.entity.Media;
 
 /**
  * Abstraction to a file which can be served from normal file system or mongoDB or S3 etc. TODO rwe...

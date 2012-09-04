@@ -3,7 +3,7 @@ package de.wehner.mediamagpie.common.fs;
 import java.io.File;
 
 /**
- * TODO rwe: Rename this class because it is more a configuration than an File Sytem.
+ * TODO rwe: Rename this class because it is more a configuration than an File System.
  * @author ralfwehner
  *
  */

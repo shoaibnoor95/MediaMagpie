@@ -23,7 +23,6 @@ import de.wehner.mediamagpie.common.persistence.entity.LifecyleStatus;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.Visibility;
-import de.wehner.mediamagpie.common.simplenio.file.MMPath;
 import de.wehner.mediamagpie.common.util.ArrayUtil;
 import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.SearchCriteriaCommand;
@@ -73,9 +72,9 @@ public class MediaDao extends CreationDateBaseDao<Media> {
     }
 
     @SuppressWarnings("unchecked")
-    public List<Media> getAllByPathAndUri(User owner, MMPath path, List<String> uris, Integer maxResults) {
+    public List<Media> getAllByPathAndUri(User owner, String path, List<String> uris, Integer maxResults) {
         Query query = _persistenceService.createNamedQuery("getAllInPathAndUri");
-        query.setParameter("path", path.toString());
+        query.setParameter("path", path);
         query.setParameter("uris", uris);
         query.setParameter("owner", owner);
         query.setFirstResult(0);
@@ -92,9 +91,9 @@ public class MediaDao extends CreationDateBaseDao<Media> {
     }
 
     @SuppressWarnings("unchecked")
-    public List<Media> getAllByPath(User owner, MMPath path, Integer maxResults) {
+    public List<Media> getAllByPath(User owner, String path, Integer maxResults) {
         Criteria criteria = createCriteria();
-        criteria.add(Restrictions.eq("_path", path.toString()));
+        criteria.add(Restrictions.eq("_path", path));
         if (owner != null) {
             criteria.add(Restrictions.eq("_owner", owner));
         }

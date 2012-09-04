@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.mortbay.log.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -171,7 +170,7 @@ public class MongoDbFile implements IFile {
         if (fileDescriptor != null) {
             getDao().delete(fileDescriptor);
         } else {
-            Log.warn("Can not delete file '" + _path + "' because it does not exist.");
+            LOG.warn("Can not delete file '" + _path + "' because it does not exist.");
         }
     }
 
