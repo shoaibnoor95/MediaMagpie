@@ -15,7 +15,7 @@ How to build?
     mvn clean
     mvn compile
     mvn test
-    mvn package
+    mvn package [-P warFile]
 
 
 How to import project files into Eclipse?
@@ -60,7 +60,9 @@ Deploy to tomcat
         <password>admin</password>
     </server>
   </servers>
-+ run: mvn tomcat:deploy -DskipTests=true
++ run: 
+    $ cd module/mm-conductor
+    $ mvn tomcat:deploy -DskipTests=true -P warFile
 
 
 # MongoDB

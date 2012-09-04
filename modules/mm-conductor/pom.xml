@@ -10,9 +10,26 @@
 	</parent>
 
 	<artifactId>mm-conductor</artifactId>
-	<packaging>war</packaging>
 	<name>MediaMagpie Web</name>
+	<packaging>${packaging.type}</packaging>
 
+	<profiles>
+		<profile>
+			<id>jettyIntegrated</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<packaging.type>jar</packaging.type>
+			</properties>
+		</profile>
+		<profile>
+			<id>warFile</id>
+			<properties>
+				<packaging.type>war</packaging.type>
+			</properties>
+		</profile>
+	</profiles>
 	<dependencies>
 
 		<dependency>
@@ -82,7 +99,7 @@
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-mongodb</artifactId>
 		</dependency>
-		
+
 		<!-- spring web service stuff -->
 		<dependency>
 			<groupId>org.springframework.ws</groupId>
@@ -161,11 +178,11 @@
 			<artifactId>jstl</artifactId>
 			<scope>provided</scope>
 		</dependency>
-        <dependency>
-            <groupId>opensymphony</groupId>
-            <artifactId>sitemesh</artifactId>
-            <version>2.4.2</version>
-        </dependency>
+		<dependency>
+			<groupId>opensymphony</groupId>
+			<artifactId>sitemesh</artifactId>
+			<version>2.4.2</version>
+		</dependency>
 
 		<!-- JDBC -->
 		<dependency>
@@ -254,8 +271,9 @@
 			</plugin>
 
 			<!-- rwe: experimental for ManifestMetaData.java (see also http://maven.apache.org/plugins/maven-war-plugin/examples/war-manifest-guide.html) -->
-			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-war-plugin</artifactId> <configuration> <archive> <manifestEntries> 
-				<manifest_entry>value</manifest_entry> </manifestEntries> </archive> </configuration> </plugin> -->
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-war-plugin</artifactId> 
+				<configuration> <archive> <manifestEntries> <manifest_entry>value</manifest_entry> </manifestEntries> 
+				</archive> </configuration> </plugin> -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -315,7 +333,8 @@
 			</plugin>
 
 			<plugin>
-				<!-- NOTE: We don't need a groupId specification because the group is org.apache.maven.plugins ...which is assumed by default. -->
+				<!-- NOTE: We don't need a groupId specification because the group is org.apache.maven.plugins ...which 
+					is assumed by default. -->
 				<artifactId>maven-assembly-plugin</artifactId>
 				<!-- <version>2.2.1</version> -->
 				<configuration>

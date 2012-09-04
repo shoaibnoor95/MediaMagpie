@@ -3,7 +3,7 @@ package de.wehner.mediamagpie.common.util;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO rwe: just a testclass
+// TODO rwe: just a testclass and remove this later
 public class KillTheGarbageCollector {
     private List<String> outerStore = new ArrayList<String>(1000000);
     private List<String> oldStore = new ArrayList<String>(1000000);
