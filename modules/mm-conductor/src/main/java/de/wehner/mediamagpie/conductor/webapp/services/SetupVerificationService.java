@@ -3,6 +3,8 @@ package de.wehner.mediamagpie.conductor.webapp.services;
 import java.io.File;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,8 @@ import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
 
 @Service
 public class SetupVerificationService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SetupVerificationService.class);
 
     private final ConfigurationProvider _configurationProvider;
     private final ConfigurationDao _configurationDao;
@@ -34,7 +38,9 @@ public class SetupVerificationService {
         String baseUploadPath = mainConfiguration.getBaseUploadPath();
         if (StringUtils.isEmpty(tempMediaPath) || !new File(tempMediaPath).exists() || StringUtils.isEmpty(baseUploadPath)
                 || !new File(baseUploadPath).exists()) {
-            setupTasks.add(SetupTask.CONFIGURE_SYSTEM_DIRS);
+            SetupTask newTaskToAdd = SetupTask.CONFIGURE_SYSTEM_DIRS;
+            LOG.warn("Adding new SetupTask '" + newTaskToAdd + "' because some local pathes are missing on system.");
+            setupTasks.add(newTaskToAdd);
             _configurationDao.saveOrUpdateConfiguration(setupTasks);
         }
     }

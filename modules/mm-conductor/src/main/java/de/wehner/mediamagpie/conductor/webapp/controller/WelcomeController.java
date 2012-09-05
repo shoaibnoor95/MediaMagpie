@@ -14,12 +14,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.Visibility;
+import de.wehner.mediamagpie.common.persistence.entity.properties.RequiredSetupTasks;
 import de.wehner.mediamagpie.common.persistence.entity.properties.SetupTask;
 import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
 import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
@@ -51,7 +54,7 @@ public class WelcomeController {
     @RequestMapping(method = { RequestMethod.GET, RequestMethod.HEAD }, value = WELCOME_URL)
     public String welcome(ModelMap model, @RequestParam(value = "start", required = false) Integer start, HttpServletRequest request) {
 
-        String redirectUrl = needRequiredSetup(request);
+        String redirectUrl = nextRequiredSetupLink(request);
         if (!StringUtils.isEmpty(redirectUrl)) {
             return "redirect:" + redirectUrl;
         }
@@ -77,7 +80,7 @@ public class WelcomeController {
         }
     }
     
-    private String needRequiredSetup(HttpServletRequest request) {
+    private String nextRequiredSetupLink(HttpServletRequest request) {
         Set<SetupTask> setupTasks = _configurationProvider.getRequiredSetupTasks().getSetupTasks();
         if (setupTasks.contains(SetupTask.CONFIGURE_SYSTEM_DIRS)) {
             return AdministrationController.getBaseRequestMappingUrl() + AdministrationController.URL_MAINCONFIG_EDIT;

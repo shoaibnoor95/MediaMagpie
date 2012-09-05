@@ -12,8 +12,6 @@ import org.slf4j.LoggerFactory;
 
 public class PaginationTag extends SimpleTagSupport {
 
-    private static final long serialVersionUID = 2541733921057845210L;
-
     private static final Logger LOG = LoggerFactory.getLogger(PaginationTag.class);
 
     private int _current;

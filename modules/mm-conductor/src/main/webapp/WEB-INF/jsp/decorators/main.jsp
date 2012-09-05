@@ -18,7 +18,7 @@
 	            <div id="logo">
 	                <a href="<%=request.getContextPath()%>/"><span><fmt:message key="main.name"/></span></a>
 	            </div>
-                <%@ include file="/WEB-INF/jsp/navigation/mainNavi.jsp" %>
+                <c:import url="/mainNavigation"/>
 	            <div id="loginNavi">
 					<%java.security.Principal p = request.getUserPrincipal();
 					if(p == null) {%>

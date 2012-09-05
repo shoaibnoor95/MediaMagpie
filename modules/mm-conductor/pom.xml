@@ -215,11 +215,11 @@
 		</dependency>
 
 		<!-- VMWare Cloud Foundry -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.cloudfoundry</groupId>
 			<artifactId>cloudfoundry-runtime</artifactId>
 			<version>0.8.1</version>
-		</dependency>
+		</dependency>-->
 
 		<!-- Test -->
 		<dependency>

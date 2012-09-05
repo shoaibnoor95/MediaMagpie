@@ -15,6 +15,7 @@ public class ConfigurationProvider {
     private final ConfigurationDao _configurationDao;
 
     private final Holder<MainconfigurationCommand> _mainConfigurationHolder = new Holder<MainconfigurationCommand>();
+    // TODO rwe: cache this attribute
     private final Holder<RequiredSetupTasks> _requiredSetupTasksHolder = new Holder<RequiredSetupTasks>();
 
     @Autowired

@@ -43,4 +43,26 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
+    
+    <tag>
+        <name>ErrorHint</name>
+        <tagclass>de.wehner.mediamagpie.conductor.webapp.tags.ErrorHintTag</tagclass>
+        <description>Renders the bullet_error.png icon if relevant setup task is provided</description>
+        <bodycontent>empty</bodycontent>
+        <attribute>
+            <name>requiredSetupTasks</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>de.wehner.mediamagpie.common.persistence.entity.properties.RequiredSetupTasks</type>
+        </attribute>
+        <attribute>
+            <name>mainItemName</name>
+            <required>false</required>
+        </attribute>
+        <attribute>
+            <name>subItemName</name>
+            <required>false</required>
+        </attribute>
+    </tag>
+
 </taglib>
