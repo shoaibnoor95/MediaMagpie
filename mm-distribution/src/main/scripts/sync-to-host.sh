@@ -7,12 +7,6 @@
 #
 #############################################################################
 
-
-if [ -z "$1" ]; then
-	echo "Please specify the public EC2 instance name (eg: ec2-54-247-158-88.eu-west-1.compute.amazonaws.com)"
-	exit 1
-fi
-
 #
 ## setup variables
 #
@@ -24,17 +18,35 @@ DIR_HOME=$(cd $DIR_SCRIPTS/../../../target/mm-distribution-$VERSION-SNAPSHOT-dis
 RSYC_OPT=(-mvrcC --delete -e "ssh -l ec2-user -i $PRIVATE_KEY")
 
 # switch on debug-output to stdout
-#set -x
+set -x
 # turn off debug output
 #set -x
+
+#
+## check necessary parameters
+#
+showHelp () 
+{
+    echo "use: $0 <ec2-instance> [full | with-config]"
+}
+
+if [ -z "$1" ]; then
+    showHelp
+    echo "Please specify the public EC2 instance name (eg: ec2-54-247-158-88.eu-west-1.compute.amazonaws.com)"
+    exit 1
+fi
+if [ "${1}" == "-h" -o "${1}" == "--help" ]; then
+    showHelp
+    exit 0
+fi
 
 #
 ## --> mediamagpie
 #
 echo "** sync mediamagpie distribution..."
-if [ "$2" != "full" ]
+if [ "$2" != "with-config" ]
     then
-	RSYC_OPT=("${RSYC_OPT[@]}" --exclude "mediamagpie.sh" --exclude "*.properties" --exclude "*/target/*")
+	RSYC_OPT=("${RSYC_OPT[@]}" --exclude "mediamagpie.sh" --exclude "*.properties" --exclude "target*")
 fi
 rsync "${RSYC_OPT[@]}" $DIR_HOME/ ec2-user@$1:mediamagpie
 echo ""
