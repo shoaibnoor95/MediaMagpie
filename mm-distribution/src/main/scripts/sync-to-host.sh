@@ -22,8 +22,6 @@ VERSION="0.1"
 DIR_SCRIPTS=$(cd `dirname $0` && pwd)
 DIR_HOME=$(cd $DIR_SCRIPTS/../../../target/mm-distribution-$VERSION-SNAPSHOT-distribution/mm-distribution-$VERSION-SNAPSHOT && pwd)
 RSYC_OPT=(-mvrcC --delete -e "ssh -l ec2-user -i $PRIVATE_KEY")
-#RSYC_OPT="-mvrcC --delete -e \"ssh -l root\""
-#RSYC_OPT="-mvrcC --delete"
 
 # switch on debug-output to stdout
 #set -x
@@ -31,9 +29,13 @@ RSYC_OPT=(-mvrcC --delete -e "ssh -l ec2-user -i $PRIVATE_KEY")
 #set -x
 
 #
-## --> inc/application
+## --> mediamagpie
 #
 echo "** sync mediamagpie distribution..."
+if [ "$2" != "full" ]
+    then
+	RSYC_OPT=("${RSYC_OPT[@]}" --exclude "mediamagpie.sh" --exclude "*.properties" --exclude "*/target/*")
+fi
 rsync "${RSYC_OPT[@]}" $DIR_HOME/ ec2-user@$1:mediamagpie
 echo ""
 
