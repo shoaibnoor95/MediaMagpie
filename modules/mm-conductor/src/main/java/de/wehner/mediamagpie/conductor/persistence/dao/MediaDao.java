@@ -186,7 +186,8 @@ public class MediaDao extends CreationDateBaseDao<Media> {
         Criteria criteria = createCriteria();
         criteria.add(Restrictions.eq("_owner", owner));
         if (searchCriteria != null) {
-            criteria.add(Restrictions.between("_creationDate", searchCriteria.getRangeT0(), searchCriteria.getRangeT1()));
+            criteria.add(Restrictions.between("_creationDate", searchCriteria.getYearStartFromInputFieldAsDate(),
+                    searchCriteria.getYearEndFromInputFieldAsDate()));
         }
         if (!ArrayUtil.isEmpty(lifecyleStatus)) {
             criteria.add(Restrictions.in("_lifeCycleStatus", lifecyleStatus));
@@ -198,15 +199,17 @@ public class MediaDao extends CreationDateBaseDao<Media> {
         FullTextEntityManager fullTextEntityManager = _persistenceService.getFullTextEntityManager();
         QueryBuilder qb = fullTextEntityManager.getSearchFactory().buildQueryBuilder().forEntity(Media.class).get();
         Long ownerId = owner.getId();
-        org.apache.lucene.search.Query queryBuzzword = qb.keyword().wildcard().onField("_name").matching(searchCriteria.getBuzzword().toLowerCase())
-                .createQuery();
+        org.apache.lucene.search.Query queryBuzzword = qb.keyword().wildcard().onField("_name").boostedTo((float) 2.0).andField("_description")
+                .matching(searchCriteria.getBuzzword().toLowerCase()).createQuery();
         org.apache.lucene.search.Query queryOwner = qb.keyword().onField("_owner._id").matching(ownerId).createQuery();
-        org.apache.lucene.search.Query queryDate = qb.range().onField("_creationDate").from(searchCriteria.getRangeT0()).to(searchCriteria.getRangeT1())
-                .excludeLimit().createQuery();
+        org.apache.lucene.search.Query queryDate = qb.range().onField("_creationDate").from(searchCriteria.getYearStartFromInputFieldAsDate())
+                .to(searchCriteria.getYearEndFromInputFieldAsDate()).excludeLimit().createQuery();
         org.apache.lucene.search.Query queryLifecycle = qb.keyword().onField("_lifeCycleStatus").matching(lifecycleStatus).createQuery();
         org.apache.lucene.search.Query combinedLuceneQuery = qb.bool().must(queryBuzzword).must(queryOwner).must(queryDate).must(queryLifecycle)
                 .createQuery();
         LOG.info("using lucene query '" + combinedLuceneQuery + "'.");
+
+        // TODO rwe: add tag and description too
 
         // wrap Lucene query in a javax.persistence.Query
         FullTextQuery persistenceQuery = fullTextEntityManager.createFullTextQuery(combinedLuceneQuery, Media.class);
