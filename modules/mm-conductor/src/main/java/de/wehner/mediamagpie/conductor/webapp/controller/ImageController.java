@@ -75,28 +75,35 @@ public class ImageController {
 
                 // try to pull the result
                 TimeoutExecutor jobFinishTester = new TimeoutExecutor(1000, 250);
-                byte[] result = jobFinishTester.callUntilReturnIsNotNull(new Callable<byte[]>() {
+                ByteArrayOutputStream osWithThumbImpage = jobFinishTester.callUntilReturnIsNotNull(new Callable<ByteArrayOutputStream>() {
 
                     @Override
-                    public byte[] call() throws Exception {
+                    public ByteArrayOutputStream call() throws Exception {
                         ThumbImage thumbImage = _thumbImageDao.getByMediaIdAndLabel(mediaId, label);
                         if (thumbImage != null) {
                             ByteArrayOutputStream os = new ByteArrayOutputStream();
-                            if (readImageIntoOutputStream(thumbImage.getPathToImage(), os)) {
-                                return os.toByteArray();
+                            try {
+                                readImageIntoOutputStream(thumbImage.getPathToImage(), os);
+                            } catch (IOException e) {
+                                IOUtils.closeQuietly(os);
+                                return null;
                             }
+                            return os;
                         }
                         return null;
                     }
                 });
 
-                if (result != null) {
-                    IOUtils.write(result, outputStream);
+                if (osWithThumbImpage != null) {
+                    osWithThumbImpage.writeTo(outputStream);
+                    IOUtils.closeQuietly(osWithThumbImpage);
                 } else {
                     // image is not available, maybe we have to wait a little bit longer until the resize job is finished
-                    if (!readImageIntoOutputStream(SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF, outputStream)) {
+                    try {
+                        readImageIntoOutputStream(SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF, outputStream);
+                    } catch (IOException ex) {
                         throw new RuntimeException("Internal error: Can not find picture in path '"
-                                + SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF + "'.");
+                                + SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF + "'.", ex);
                     }
                 }
             }
@@ -104,18 +111,21 @@ public class ImageController {
         LOG.debug("streaming image id: " + mediaId + " with label '" + label + "'...DONE");
     }
 
-    private boolean readImageIntoOutputStream(String pathToContent, OutputStream outputStream) throws IOException {
+    /**
+     * Simply reads a file into a given OutputStream.
+     * 
+     * @param pathToContent
+     * @param outputStream
+     * @throws IOException
+     */
+    private void readImageIntoOutputStream(String pathToContent, OutputStream outputStream) throws IOException {
         InputStream inputStream = null;
-        boolean wasSuccessful = false;
         try {
             LOG.debug("Try reading file '" + pathToContent + "'.");
             inputStream = new FileInputStream(pathToContent);
-            byte[] rawBytes = IOUtils.toByteArray(inputStream);
-            outputStream.write(rawBytes);
-            wasSuccessful = true;
+            IOUtils.copy(inputStream, outputStream);
         } finally {
             IOUtils.closeQuietly(inputStream);
         }
-        return wasSuccessful;
     }
 }
