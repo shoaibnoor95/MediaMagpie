@@ -248,7 +248,7 @@ public class MediaSyncServiceTest {
     }
 
     @Test
-    public void testResolveCreationDateOfMedia() {
+    public void testResolveCreationDateOfMedia() throws IOException {
         File mediaFile = new File("src/test/resources/images/IMG_0013.JPG");
         Metadata metadataFromMedia = MediaSyncService.getMetadataFromMedia(mediaFile.toURI());
         Date dateOfMedia = MediaSyncService.resolveCreationDateOfMedia(metadataFromMedia, mediaFile.toURI());

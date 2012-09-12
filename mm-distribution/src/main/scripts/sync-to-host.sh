@@ -21,7 +21,7 @@ DIR_HOME=$(cd $DIR_SCRIPTS/../../../target/mm-distribution-$VERSION-SNAPSHOT-dis
 RSYC_OPT=(-mvrcC --delete -e "ssh -l ec2-user -i $PRIVATE_KEY")
 
 # switch on debug-output to stdout
-set -x
+#set -x
 # turn off debug output
 #set -x
 

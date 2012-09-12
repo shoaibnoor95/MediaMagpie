@@ -209,11 +209,9 @@ public class MediaDao extends CreationDateBaseDao<Media> {
         org.apache.lucene.search.Query queryLifecycle = qb.keyword().onField("_lifeCycleStatus").matching(lifecycleStatus).createQuery();
         org.apache.lucene.search.Query combinedLuceneQuery = qb.bool().must(orQueryBuzzword).must(queryOwner).must(queryDate).must(queryLifecycle)
                 .createQuery();
-        LOG.info("using lucene query '" + combinedLuceneQuery + "'.");
-
-        // TODO rwe: add tag and description too
 
         // wrap Lucene query in a javax.persistence.Query
+        LOG.debug("using lucene query '" + combinedLuceneQuery + "'.");
         FullTextQuery persistenceQuery = fullTextEntityManager.createFullTextQuery(combinedLuceneQuery, Media.class);
         return persistenceQuery;
     }

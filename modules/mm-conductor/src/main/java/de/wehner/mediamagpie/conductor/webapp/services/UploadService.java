@@ -1,7 +1,6 @@
 package de.wehner.mediamagpie.conductor.webapp.services;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -123,7 +122,7 @@ public class UploadService {
         Media newMedia;
         try {
             newMedia = MediaSyncService.createMediaFromMediaFile(currentUser, mediaFile.toURI());
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             throw new RuntimeException("Can not create new Media entity.", e);
         }
         _mediaDao.makePersistent(newMedia);

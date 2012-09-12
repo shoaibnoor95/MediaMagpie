@@ -43,7 +43,9 @@ import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.MetadataException;
 import com.drew.metadata.Tag;
-import com.drew.metadata.exif.ExifDirectory;
+import com.drew.metadata.exif.ExifIFD0Descriptor;
+import com.drew.metadata.exif.ExifIFD0Directory;
+import com.drew.metadata.exif.ExifSubIFDDirectory;
 
 import de.wehner.mediamagpie.common.core.util.DigestUtil;
 import de.wehner.mediamagpie.common.persistence.entity.LifecyleStatus;
@@ -287,12 +289,9 @@ public class MediaSyncService extends SingleThreadedController {
         });
     }
 
-    public static Media createMediaFromMediaFile(final User user, URI mediaFileUri) throws FileNotFoundException {
+    public static Media createMediaFromMediaFile(final User user, URI mediaFileUri) throws IOException {
         Metadata metadataFromMedia = getMetadataFromMedia(mediaFileUri);
         Date creationDate = resolveCreationDateOfMedia(metadataFromMedia, mediaFileUri);
-        // TODO rwe: add metadata to media, plugin-stuff?
-        org.dom4j.Element elementMetadata = convertMetadataToElement(metadataFromMedia);
-
         Orientation orientation = resolveOrientation(metadataFromMedia, mediaFileUri);
         Media newMedia = new Media(user, null, mediaFileUri, creationDate);
         newMedia.setOrientation(orientation);
@@ -306,42 +305,47 @@ public class MediaSyncService extends SingleThreadedController {
         return newMedia;
     }
 
-    private static Element convertMetadataToElement(Metadata metadataFromMedia) {
-        // TODO rwe: plugin-in stuff, implement when its time to implement...
-        return null;
-    }
-
     @SuppressWarnings("rawtypes")
     static Date resolveCreationDateOfMedia(Metadata metadata, URI mediaUri) {
         if (metadata != null) {
-            // iterate through metadata directories
-            Iterator directories = metadata.getDirectoryIterator();
-            while (directories.hasNext()) {
-                Directory directory = (Directory) directories.next();
-                // iterate through tags and print to System.out
-                Iterator tags = directory.getTagIterator();
-                while (tags.hasNext()) {
-                    Tag tag = (Tag) tags.next(); // use Tag.toString()
-                    if (tag.getTagName().equals("Date/Time Original")) {
-                        LOG.debug("In Media '" + metadata + "' found date information within picture's meta data:" + tag);
-                        // try to parse
-                        DateFormat df = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
-                        String description = null;
-                        try {
-                            description = tag.getDescription();
-                        } catch (MetadataException e) {
-                            LOG.warn("can not get tag description.", e);
-                        }
-                        if (!StringUtils.isEmpty(description)) {
-                            try {
-                                return df.parse(description);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
+            // obtain the Exif directory
+            ExifSubIFDDirectory directory = metadata.getDirectory(ExifSubIFDDirectory.class);
+
+            if (directory != null) {
+                // query the tag's value
+                Date date = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
+                if (date != null) {
+                    return date;
                 }
             }
+            // // iterate through metadata directories
+            // ExifSubIFDDirectory exifSubIFDDirectory = metadata.getDirectory(ExifSubIFDDirectory.class);
+            // while (directories.hasNext()) {
+            // Directory directory = (Directory) directories.next();
+            // // iterate through tags and print to System.out
+            // Iterator tags = directory.getTagIterator();
+            // while (tags.hasNext()) {
+            // Tag tag = (Tag) tags.next(); // use Tag.toString()
+            // if (tag.getTagName().equals("Date/Time Original")) {
+            // LOG.debug("In Media '" + metadata + "' found date information within picture's meta data:" + tag);
+            // // try to parse
+            // DateFormat df = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+            // String description = null;
+            // try {
+            // description = tag.getDescription();
+            // } catch (MetadataException e) {
+            // LOG.warn("can not get tag description.", e);
+            // }
+            // if (!StringUtils.isEmpty(description)) {
+            // try {
+            // return df.parse(description);
+            // } catch (ParseException e) {
+            // e.printStackTrace();
+            // }
+            // }
+            // }
+            // }
+            // }
         }
         if (mediaUri.getScheme().equals("file") && new File(mediaUri.getPath()).exists()) {
             return new Date(new File(mediaUri.getPath()).lastModified());
@@ -356,8 +360,9 @@ public class MediaSyncService extends SingleThreadedController {
      * 
      * @param mediaUri
      * @return
+     * @throws IOException
      */
-    static Metadata getMetadataFromMedia(URI mediaUri) {
+    static Metadata getMetadataFromMedia(URI mediaUri) throws IOException {
         String scheme = mediaUri.getScheme();
         if (scheme.equals("file") && new File(mediaUri.getPath()).exists()) {
             File mediaFile = new File(mediaUri.getPath());
@@ -418,22 +423,24 @@ public class MediaSyncService extends SingleThreadedController {
 
     public static Orientation resolveOrientation(Metadata metadataFromMedia, URI sourceUri) {
         if (metadataFromMedia != null) {
-            Directory directory = metadataFromMedia.getDirectory(ExifDirectory.class);
-            try {
-                String description = directory.getDescription(ExifDirectory.TAG_ORIENTATION);
-                if (description != null) {
-                    String cameraOrientation = description.toLowerCase();
-                    // first, i will just handle the 'normal' expected orientations of a picture
-                    if (cameraOrientation.startsWith("top, left side")) {
-                        return Orientation.TOP_LEFT_SIDE;
-                    } else if (cameraOrientation.startsWith("right side, top")) {
-                        return Orientation.RIGHT_SIDE_TOP;
-                    } else if (cameraOrientation.startsWith("left side, bottom")) {
-                        return Orientation.LEFT_SIDE_BOTTOM;
-                    }
+            ExifIFD0Directory directory = metadataFromMedia.getDirectory(ExifIFD0Directory.class);
+            Integer orientationAsInt = directory.getInteger(ExifIFD0Directory.TAG_ORIENTATION);
+            // String description = directory.getDescription(ExifIFD0Directory.TAG_ORIENTATION);
+            if (orientationAsInt != null) {
+                // for mapping see: com.drew.metadata.exif.ExifIFD0Descriptor.getOrientationDescription()
+                switch (orientationAsInt) {
+                case 1:
+                    // 1: return "Top, left side (Horizontal / normal)";
+                    return Orientation.TOP_LEFT_SIDE;
+                case 6:
+                    // 6: return "Right side, top (Rotate 90 CW)";
+                    return Orientation.RIGHT_SIDE_TOP;
+                case 8:
+                    // 8: return "Left side, bottom (Rotate 270 CW)";
+                    return Orientation.LEFT_SIDE_BOTTOM;
+                default:
+                    return Orientation.UNKNOWN;
                 }
-            } catch (MetadataException e) {
-                LOG.warn("Unexpected error while examine the orientation of picture '" + sourceUri + "'.", e);
             }
         }
         return Orientation.UNKNOWN;
