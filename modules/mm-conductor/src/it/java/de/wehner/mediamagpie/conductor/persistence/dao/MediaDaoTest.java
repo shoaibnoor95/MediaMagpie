@@ -89,8 +89,8 @@ public class MediaDaoTest {
         _dbTestEnvironment.flipTransaction();
 
         SearchCriteriaCommand criteriaCommand = mock(SearchCriteriaCommand.class);
-        when(criteriaCommand.getRangeT0()).thenReturn(t1);
-        when(criteriaCommand.getRangeT1()).thenReturn(t2);
+        when(criteriaCommand.getYearStartFromInputFieldAsDate()).thenReturn(t1);
+        when(criteriaCommand.getYearEndFromInputFieldAsDate()).thenReturn(t2);
         when(criteriaCommand.getSortOrder()).thenReturn(UiMediaSortOrder.DATE);
         List<Media> allByCriterias = mediaDao.getAllByCriterias(_user, 0, Integer.MAX_VALUE, true, criteriaCommand);
 

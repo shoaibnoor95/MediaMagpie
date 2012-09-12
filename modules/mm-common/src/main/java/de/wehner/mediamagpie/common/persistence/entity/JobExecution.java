@@ -23,8 +23,6 @@ import de.wehner.mediamagpie.common.util.ExceptionUtil;
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class JobExecution extends Base implements Cloneable {
 
-    private static final long serialVersionUID = 1L;
-
     private String _description;
     @Column(nullable = false)
     private JobStatus _jobStatus;

@@ -18,8 +18,17 @@ public class SearchCriteriaCommand {
 
     private Action _action;
     private Long _id;
+    /**
+     * The slider's range scala
+     */
     private MinMaxValue<Integer> _sliderYearMinMax;
+    /**
+     * The selected range
+     */
     private MinMaxValue<Integer> _sliderYearValues;
+    /**
+     * The input field next to the slider containing something like '2010-2012'
+     */
     private String _yearCriteria;
     private String _buzzword;
     private UiMediaSortOrder _sortOrder;
@@ -85,24 +94,24 @@ public class SearchCriteriaCommand {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
 
-    public Date getRangeT0() {
+    public Date getYearStartFromInputFieldAsDate() {
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.set(1900, 0, 1, 0, 0, 0);
-        if (getRangeT0Year() != null) {
-            calendar.set(getRangeT0Year(), 0, 1);
+        if (getYearStartFromInputField() != null) {
+            calendar.set(getYearStartFromInputField(), 0, 1);
         }
         return calendar.getTime();
     }
 
-    public Date getRangeT1() {
+    public Date getYearEndFromInputFieldAsDate() {
         GregorianCalendar calendar = new GregorianCalendar();
-        if (getRangeT1Year() != null) {
-            calendar.set(getRangeT1Year(), 11, 31, 23, 59, 59);
+        if (getYearEndFromInputField() != null) {
+            calendar.set(getYearEndFromInputField(), 11, 31, 23, 59, 59);
         }
         return calendar.getTime();
     }
 
-    public Integer getRangeT0Year() {
+    public Integer getYearStartFromInputField() {
         if (StringUtils.isEmpty(_yearCriteria)) {
             return null;
         }
@@ -110,7 +119,7 @@ public class SearchCriteriaCommand {
         return Integer.parseInt(years[0].trim());
     }
 
-    public Integer getRangeT1Year() {
+    public Integer getYearEndFromInputField() {
         if (StringUtils.isEmpty(_yearCriteria)) {
             return null;
         }

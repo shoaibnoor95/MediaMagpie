@@ -5,7 +5,6 @@ import java.beans.PropertyEditorSupport;
 import org.apache.commons.lang.StringUtils;
 
 import de.wehner.mediamagpie.common.util.MinMaxValue;
-import de.wehner.mediamagpie.common.util.StringUtil;
 
 
 public class MinMaxIntegerBinder extends PropertyEditorSupport {
@@ -19,7 +18,7 @@ public class MinMaxIntegerBinder extends PropertyEditorSupport {
 
     @Override
     public void setAsText(String text) throws IllegalArgumentException {
-        if (StringUtil.isEmpty(text)) {
+        if (StringUtils.isEmpty(text)) {
             setValue(null);
         } else {
             String[] strings = StringUtils.split(text, ',');

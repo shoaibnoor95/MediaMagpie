@@ -10,9 +10,11 @@
 
 ## set distribution specific settings
 #MGR_USER=magpie
-MGR_DEPLOY_MODE=live
+#MGR_DEPLOY_MODE=live
+MGR_DEPLOY_MODE=local
 #JAVA_HOME=
 #ADDITIONAL_PARAMETERS="-Dwebapp.port=8087 -Dwebapp.context.path=/mediamagpie"
+ADDITIONAL_PARAMETERS="-XX:+HeapDumpOnOutOfMemoryError"
 #########################
 
 CLASS=de.wehner.mediamagpie.conductor.StartJetty
@@ -108,7 +110,7 @@ fi
 # This is how the server will be started
 #####################################################
 
-VM_ARGS="-Xmx400m $VM_ARGS"
+VM_ARGS="-Xmx350m $VM_ARGS"
 RUN_ARGS="$VM_ARGS -Ddeploy.mode=$MGR_DEPLOY_MODE -Dlog4j.configuration=conf/log4j.xml $ADDITIONAL_PARAMETERS -classpath $CLASSPATH $CLASS"
 RUN_CMD="$JAVA $RUN_ARGS"
 #debug
@@ -176,11 +178,11 @@ case "$ACTION" in
   restart)
         MGR_SH=$0
         if [ ! -f $MGR_SH ]; then
-          if [ ! -f $MGR_HOME/bin/startup.sh ]; then
-            echo "$MGR_HOME/bin/startup.sh does not exist."
+          if [ ! -f $MGR_HOME/bin/mediamagpie.sh ]; then
+            echo "$MGR_HOME/bin/mediamagpie.sh does not exist."
             exit 1
           fi
-          MGR_SH=$MGR_HOME/bin/startup.sh
+          MGR_SH=$MGR_HOME/bin/mediamagpie.sh
         fi
         $MGR_SH stop $MGR_DEPLOY_MODE
         sleep 5

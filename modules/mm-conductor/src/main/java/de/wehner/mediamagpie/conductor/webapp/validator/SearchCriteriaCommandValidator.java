@@ -16,8 +16,8 @@ public class SearchCriteriaCommandValidator implements Validator {
     public void validate(Object obj, Errors error) {
         SearchCriteriaCommand command = (SearchCriteriaCommand) obj;
         try {
-            command.getRangeT0Year();
-            command.getRangeT1Year();
+            command.getYearStartFromInputField();
+            command.getYearEndFromInputField();
         } catch (NumberFormatException e) {
             error.rejectValue("yearCriteria", "only.whole.years.expected", new String[] {}, "Only one or two nummeric year values are valid.");
         }

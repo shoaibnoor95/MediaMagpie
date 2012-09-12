@@ -1,10 +1,13 @@
 #!/bin/bash
 # 
-# Das Skript sychrnonisiert die lokale Entwicklungsverzeichnisse gegen ein 
-# bestimmtes Enwickler-Template.
+# This script syncs the mediamagpie folder against a ec2 instance via rsync and ssh.
 #
-# Aufruf sync-to-host.sh <public ec2 instance name> [full]
+# Call: sync-to-host.sh <public ec2 instance name> [full]
 #
+# Slight hint to setup public key to your ec2 instance:
+# $ ssh-copy-id -i ~/.ssh/id_rsa.pub root@e2-rwehner
+#    or
+# $ cat ~/.ssh/*.pub | ssh root@e2-rwehner 'umask 077; cat >>.ssh/authorized_keys'
 #############################################################################
 
 #

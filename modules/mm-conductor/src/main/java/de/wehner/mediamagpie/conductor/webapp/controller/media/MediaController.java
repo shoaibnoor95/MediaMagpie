@@ -2,6 +2,7 @@ package de.wehner.mediamagpie.conductor.webapp.controller.media;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,7 +54,7 @@ public class MediaController extends AbstractConfigurationSupportController {
 
     public static final String URL_MEDIA_SEARCH = "/search_pictures";
     public static final String VIEW_MEDIA_SEARCH = "media/searchPictures";
-    
+
     public static final String URL_SELECT_ALBUM = "/select_album";
     public static final String URL_ADD_MEDIA_TO_ALBUM = "/searchPictures/ajaxAddMedia";
     public static final String URL_REMOVE_MEDIA_TO_ALBUM = "/searchPictures/ajaxRemoveMedia";
@@ -200,8 +201,8 @@ public class MediaController extends AbstractConfigurationSupportController {
         model.addAttribute("start", start);
         model.addAttribute("pageSize", hitsPerPage);
         model.addAttribute("totalHits", hits);
-        if (searchCriteria.getRangeT0Year() != null) {
-            searchCriteria.getSliderYearValues().setMin(searchCriteria.getRangeT0Year());
+        if (searchCriteria.getYearStartFromInputField() != null) {
+            searchCriteria.getSliderYearValues().setMin(searchCriteria.getYearStartFromInputField());
         } else {
             if (!CollectionUtils.isEmpty(allPictures)) {
                 Media oldestMedia = allPictures.get(0);
@@ -210,8 +211,15 @@ public class MediaController extends AbstractConfigurationSupportController {
                 }
             }
         }
-        if (searchCriteria.getRangeT1Year() != null) {
-            searchCriteria.getSliderYearValues().setMax(searchCriteria.getRangeT1Year());
+        if (searchCriteria.getYearEndFromInputField() != null) {
+            searchCriteria.getSliderYearValues().setMax(searchCriteria.getYearEndFromInputField());
+        }
+        // extend the range of slide if necessary
+        if (searchCriteria.getSliderYearValues().getMin() < searchCriteria.getSliderYearMinMax().getMin()) {
+            searchCriteria.getSliderYearMinMax().setMin(searchCriteria.getSliderYearValues().getMin());
+        }
+        if (searchCriteria.getSliderYearValues().getMax() > searchCriteria.getSliderYearMinMax().getMax()) {
+            searchCriteria.getSliderYearMinMax().setMax(searchCriteria.getSliderYearValues().getMax());
         }
         model.addAttribute("searchCriteria", searchCriteria);
         return VIEW_MEDIA_SEARCH;
@@ -219,9 +227,9 @@ public class MediaController extends AbstractConfigurationSupportController {
 
     private SearchCriteriaCommand createDefaultSearchCriteriaCommand() {
         SearchCriteriaCommand searchCriteria = new SearchCriteriaCommand();
-
-        searchCriteria.setSliderYearMinMax(new MinMaxValue<Integer>(1999, 2011));
-        searchCriteria.setSliderYearValues(new MinMaxValue<Integer>(2010, 2011));
+        int year = TimeUtil.getYearFromDate(new Date());
+        searchCriteria.setSliderYearMinMax(new MinMaxValue<Integer>(1999, year));
+        searchCriteria.setSliderYearValues(new MinMaxValue<Integer>(year - 5, year));
         searchCriteria.setSortOrder(UiMediaSortOrder.DATE);
         return searchCriteria;
     }
