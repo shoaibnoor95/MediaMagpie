@@ -1,0 +1,1 @@
+/usr/java/jdk1.6.0_34/bin/jstatd -J-Djava.security.policy=../conf/tools.policy
