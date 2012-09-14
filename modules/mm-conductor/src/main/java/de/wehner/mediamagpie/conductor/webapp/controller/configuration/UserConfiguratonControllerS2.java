@@ -120,7 +120,7 @@ public class UserConfiguratonControllerS2 {
         _userConfigurationDao.saveOrUpdateConfiguration(user, command.getUserConfiguration());
         if (command.isSyncMediaPahtes()) {
             // Build here a separate thread that runs the configuration?
-            _mediaSyncService.syncMediaPahtes(user, command.getUserConfiguration().getRootMediaPathes());
+            _mediaSyncService.syncMediaPathes(user, command.getUserConfiguration().getRootMediaPathes());
         }
         
         status.setComplete();

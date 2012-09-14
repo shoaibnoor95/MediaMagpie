@@ -1,23 +1,16 @@
 package de.wehner.mediamagpie.conductor.webapp.services;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLConnection;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,26 +19,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.dom4j.Element;
 import org.hibernate.criterion.Order;
 import org.mortbay.log.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.drew.imaging.jpeg.JpegMetadataReader;
-import com.drew.imaging.jpeg.JpegProcessingException;
-import com.drew.metadata.Directory;
-import com.drew.metadata.Metadata;
-import com.drew.metadata.MetadataException;
-import com.drew.metadata.Tag;
-import com.drew.metadata.exif.ExifIFD0Descriptor;
-import com.drew.metadata.exif.ExifIFD0Directory;
-import com.drew.metadata.exif.ExifSubIFDDirectory;
 
 import de.wehner.mediamagpie.common.core.util.DigestUtil;
 import de.wehner.mediamagpie.common.persistence.entity.LifecyleStatus;
@@ -59,6 +39,7 @@ import de.wehner.mediamagpie.conductor.persistence.TransactionHandler;
 import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.UserDao;
+import de.wehner.mediamagpie.conductor.webapp.media.PhotoMetadataExtractor;
 
 @Service
 public class MediaSyncService extends SingleThreadedController {
@@ -104,7 +85,7 @@ public class MediaSyncService extends SingleThreadedController {
                 }
             });
             try {
-                if (syncMediaPahtes(user, userConfiguration.getRootMediaPathes())) {
+                if (syncMediaPathes(user, userConfiguration.getRootMediaPathes())) {
                     someOneWasBusy = true;
                 }
             } catch (IOException e) {
@@ -115,7 +96,7 @@ public class MediaSyncService extends SingleThreadedController {
         return someOneWasBusy;
     }
 
-    public boolean syncMediaPahtes(final User user, String... mediaPathes) throws IOException {
+    public boolean syncMediaPathes(final User user, String... mediaPathes) throws IOException {
         if (mediaPathes == null) {
             return false;
         }
@@ -290,9 +271,9 @@ public class MediaSyncService extends SingleThreadedController {
     }
 
     public static Media createMediaFromMediaFile(final User user, URI mediaFileUri) throws IOException {
-        Metadata metadataFromMedia = getMetadataFromMedia(mediaFileUri);
-        Date creationDate = resolveCreationDateOfMedia(metadataFromMedia, mediaFileUri);
-        Orientation orientation = resolveOrientation(metadataFromMedia, mediaFileUri);
+        PhotoMetadataExtractor metadataExtractor = new PhotoMetadataExtractor(mediaFileUri);
+        Date creationDate = resolveCreationDateOfMedia(metadataExtractor, mediaFileUri);
+        Orientation orientation = metadataExtractor.resolveOrientation();
         Media newMedia = new Media(user, null, mediaFileUri, creationDate);
         newMedia.setOrientation(orientation);
         InputStream is = null;
@@ -305,92 +286,16 @@ public class MediaSyncService extends SingleThreadedController {
         return newMedia;
     }
 
-    @SuppressWarnings("rawtypes")
-    static Date resolveCreationDateOfMedia(Metadata metadata, URI mediaUri) {
-        if (metadata != null) {
-            // obtain the Exif directory
-            ExifSubIFDDirectory directory = metadata.getDirectory(ExifSubIFDDirectory.class);
-
-            if (directory != null) {
-                // query the tag's value
-                Date date = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
-                if (date != null) {
-                    return date;
-                }
-            }
-            // // iterate through metadata directories
-            // ExifSubIFDDirectory exifSubIFDDirectory = metadata.getDirectory(ExifSubIFDDirectory.class);
-            // while (directories.hasNext()) {
-            // Directory directory = (Directory) directories.next();
-            // // iterate through tags and print to System.out
-            // Iterator tags = directory.getTagIterator();
-            // while (tags.hasNext()) {
-            // Tag tag = (Tag) tags.next(); // use Tag.toString()
-            // if (tag.getTagName().equals("Date/Time Original")) {
-            // LOG.debug("In Media '" + metadata + "' found date information within picture's meta data:" + tag);
-            // // try to parse
-            // DateFormat df = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
-            // String description = null;
-            // try {
-            // description = tag.getDescription();
-            // } catch (MetadataException e) {
-            // LOG.warn("can not get tag description.", e);
-            // }
-            // if (!StringUtils.isEmpty(description)) {
-            // try {
-            // return df.parse(description);
-            // } catch (ParseException e) {
-            // e.printStackTrace();
-            // }
-            // }
-            // }
-            // }
-            // }
+    private static Date resolveCreationDateOfMedia(PhotoMetadataExtractor metadataExtractor, URI mediaUri) {
+        Date date = metadataExtractor.resolveDateTimeOriginal();
+        if (date != null) {
+            return date;
         }
+        // use the file's time stamp instead
         if (mediaUri.getScheme().equals("file") && new File(mediaUri.getPath()).exists()) {
             return new Date(new File(mediaUri.getPath()).lastModified());
         }
         return new Date();
-    }
-
-    /**
-     * This method uses the <code>JpegMetadataReader</code> to read meta informations from only JPEG files.<br/>
-     * TODO rwe: plugin-stuff? Better use a separate class like 'MetadataextractorUtil' to get meta informations from media files which is
-     * more flexible and can provide meta informations from videos as well.
-     * 
-     * @param mediaUri
-     * @return
-     * @throws IOException
-     */
-    static Metadata getMetadataFromMedia(URI mediaUri) throws IOException {
-        String scheme = mediaUri.getScheme();
-        if (scheme.equals("file") && new File(mediaUri.getPath()).exists()) {
-            File mediaFile = new File(mediaUri.getPath());
-            final Set<String> PARSABLE_FILE_EXTENSIONS = new HashSet<String>(Arrays.asList("jpg"));
-            if (!PARSABLE_FILE_EXTENSIONS.contains(FilenameUtils.getExtension(mediaFile.getName()).toLowerCase())) {
-                // Can not determine file type by file extension, so try to analyze its content
-                FileInputStream fileInputStream = null;
-                try {
-                    fileInputStream = new FileInputStream(mediaFile);
-                    String mimeType = URLConnection.guessContentTypeFromStream(new BufferedInputStream(fileInputStream));
-                    LOG.info("Found mime type '" + mimeType + "' for file with name '" + mediaUri + "'.");
-                    if (!"image/jpeg".equals(mimeType)) {
-                        return null;
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    IOUtils.closeQuietly(fileInputStream);
-                }
-            }
-            try {
-                return JpegMetadataReader.readMetadata(mediaFile);
-
-            } catch (JpegProcessingException e) {
-                LOG.warn("Can not read metadata from media file '" + mediaFile.getPath() + "'.", e);
-            }
-        }
-        return null;
     }
 
     static List<URI> files2URIList(List<File> inList) {
@@ -421,28 +326,4 @@ public class MediaSyncService extends SingleThreadedController {
         return outList;
     }
 
-    public static Orientation resolveOrientation(Metadata metadataFromMedia, URI sourceUri) {
-        if (metadataFromMedia != null) {
-            ExifIFD0Directory directory = metadataFromMedia.getDirectory(ExifIFD0Directory.class);
-            Integer orientationAsInt = directory.getInteger(ExifIFD0Directory.TAG_ORIENTATION);
-            // String description = directory.getDescription(ExifIFD0Directory.TAG_ORIENTATION);
-            if (orientationAsInt != null) {
-                // for mapping see: com.drew.metadata.exif.ExifIFD0Descriptor.getOrientationDescription()
-                switch (orientationAsInt) {
-                case 1:
-                    // 1: return "Top, left side (Horizontal / normal)";
-                    return Orientation.TOP_LEFT_SIDE;
-                case 6:
-                    // 6: return "Right side, top (Rotate 90 CW)";
-                    return Orientation.RIGHT_SIDE_TOP;
-                case 8:
-                    // 8: return "Left side, bottom (Rotate 270 CW)";
-                    return Orientation.LEFT_SIDE_BOTTOM;
-                default:
-                    return Orientation.UNKNOWN;
-                }
-            }
-        }
-        return Orientation.UNKNOWN;
-    }
 }

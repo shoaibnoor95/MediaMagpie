@@ -1,5 +1,6 @@
 package de.wehner.mediamagpie.conductor.webapp.controller.commands;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -32,7 +33,7 @@ public class SearchCriteriaCommand {
     private String _yearCriteria;
     private String _buzzword;
     private UiMediaSortOrder _sortOrder;
-    
+
     public void setAction(Action action) {
         _action = action;
     }
@@ -94,20 +95,35 @@ public class SearchCriteriaCommand {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
 
-    public Date getYearStartFromInputFieldAsDate() {
+    /**
+     * Provides search start search period based on the value of input field which can be described as: 01.01.&lt;
+     * {@linkplain #getYearStartFromInputField()}&gt;<br/>
+     * If no start year is given within the {@linkplain #getSliderYearValues().getMin()} year will be used.
+     * 
+     * @return The start date for searching as a Date object. This will always start with 01.01.
+     */
+    public Date getSearchBeginAsDate() {
         GregorianCalendar calendar = new GregorianCalendar();
-        calendar.set(1900, 0, 1, 0, 0, 0);
+        calendar.set(getSliderYearValues().getMin(), 0, 1, 0, 0, 0);
         if (getYearStartFromInputField() != null) {
             calendar.set(getYearStartFromInputField(), 0, 1);
         }
         return calendar.getTime();
     }
 
-    public Date getYearEndFromInputFieldAsDate() {
+    /**
+     * When an ending year is given by the input field ({@linkplain #getYearEndFromInputField()}) this method provides the end of this year.
+     * When the input field has not year for ending this method provides the 31.12. of current year.
+     * 
+     * @return The 31.12. of search end as a Date object.
+     */
+    public Date getSearchEndAsDate() {
         GregorianCalendar calendar = new GregorianCalendar();
-        if (getYearEndFromInputField() != null) {
-            calendar.set(getYearEndFromInputField(), 11, 31, 23, 59, 59);
+        Integer endYear = getYearEndFromInputField();
+        if (endYear == null) {
+            endYear = calendar.get(Calendar.YEAR);
         }
+        calendar.set(endYear, 11, 31, 23, 59, 59);
         return calendar.getTime();
     }
 

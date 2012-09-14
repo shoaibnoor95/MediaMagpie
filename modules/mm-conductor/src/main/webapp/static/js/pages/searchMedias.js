@@ -18,7 +18,7 @@ function postDeleteCommand(action, id, arg1) {
 function submitMediaToAlbum(mediaId) {
 	$.ajax({
 		  type: 'POST',
-		  url: "<%=request.getContextPath()%><%=MediaController.getAjaxUrlAddMediaToCurrentAlbum()%>",
+		  url: "<%=request.getContextPath()%><%=SearchController.getAjaxUrlAddMediaToCurrentAlbum()%>",
 		  data: { id: mediaId },
 	      complete: function(request, message) {
 	    	   initDragAndDropAndButtonListeners();
@@ -36,7 +36,7 @@ function initVars(){
 }
 function loadTemplateAlbum() {
    $.ajax({
-       url: "<%=request.getContextPath()%><%=MediaController.getAjaxUrlCurrentAlbum()%>",
+       url: "<%=request.getContextPath()%><%=SearchController.getAjaxUrlCurrentAlbum()%>",
        cache: false,
        data: { },
        complete: function(request, message) {
@@ -65,7 +65,7 @@ function addToAlbum($item){
 function removeFromAlbum(mediaId){
 	$.ajax({
 		  type: 'POST',
-		  url: "<%=request.getContextPath()%><%=MediaController.getAjaxUrlRemoveMediaToCurrentAlbum()%>",
+		  url: "<%=request.getContextPath()%><%=SearchController.getAjaxUrlRemoveMediaToCurrentAlbum()%>",
 		  data: { id: mediaId },
 	      complete: function(request, message) {
 	    	   initDragAndDropAndButtonListeners();
@@ -78,7 +78,7 @@ function removeFromAlbum(mediaId){
 function updateSortOrderOfAlbum(mediaIds){
 	$.ajax({
 		  type: 'get',
-		  url: "<%=request.getContextPath()%><%=MediaController.getAjaxUrlUpdateSortOrderOfAlbum()%>",
+		  url: "<%=request.getContextPath()%><%=SearchController.getAjaxUrlUpdateSortOrderOfAlbum()%>",
 		  data: { mediaIds: mediaIds }  
 		});
 }

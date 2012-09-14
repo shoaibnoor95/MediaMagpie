@@ -186,8 +186,8 @@ public class MediaDao extends CreationDateBaseDao<Media> {
         Criteria criteria = createCriteria();
         criteria.add(Restrictions.eq("_owner", owner));
         if (searchCriteria != null) {
-            criteria.add(Restrictions.between("_creationDate", searchCriteria.getYearStartFromInputFieldAsDate(),
-                    searchCriteria.getYearEndFromInputFieldAsDate()));
+            criteria.add(Restrictions.between("_creationDate", searchCriteria.getSearchBeginAsDate(),
+                    searchCriteria.getSearchEndAsDate()));
         }
         if (!ArrayUtil.isEmpty(lifecyleStatus)) {
             criteria.add(Restrictions.in("_lifeCycleStatus", lifecyleStatus));
@@ -204,8 +204,8 @@ public class MediaDao extends CreationDateBaseDao<Media> {
         org.apache.lucene.search.Query queryTags = qb.keyword().onField("_tags._name").matching(searchCriteria.getBuzzword()).createQuery();
         org.apache.lucene.search.Query orQueryBuzzword = qb.bool().should(queryBuzzword).should(queryTags).createQuery();
         org.apache.lucene.search.Query queryOwner = qb.keyword().onField("_owner._id").matching(ownerId).createQuery();
-        org.apache.lucene.search.Query queryDate = qb.range().onField("_creationDate").from(searchCriteria.getYearStartFromInputFieldAsDate())
-                .to(searchCriteria.getYearEndFromInputFieldAsDate()).excludeLimit().createQuery();
+        org.apache.lucene.search.Query queryDate = qb.range().onField("_creationDate").from(searchCriteria.getSearchBeginAsDate())
+                .to(searchCriteria.getSearchEndAsDate()).excludeLimit().createQuery();
         org.apache.lucene.search.Query queryLifecycle = qb.keyword().onField("_lifeCycleStatus").matching(lifecycleStatus).createQuery();
         org.apache.lucene.search.Query combinedLuceneQuery = qb.bool().must(orQueryBuzzword).must(queryOwner).must(queryDate).must(queryLifecycle)
                 .createQuery();

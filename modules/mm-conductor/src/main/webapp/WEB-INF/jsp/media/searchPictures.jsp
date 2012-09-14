@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/jsp/general/taglibs.jsp" %>
 <%@ taglib uri="/WEB-INF/tlds/core.tld" prefix="core"%>
 
-<%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.media.MediaController"%>
+<%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.media.SearchController"%>
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.media.MediaDetailController" %>
 
 <c:set var="title" value="Media Pool"  scope="request"/>

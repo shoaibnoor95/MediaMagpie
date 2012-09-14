@@ -103,6 +103,7 @@
 			<property name="hibernate.delegateProperties" value="name=sa" />
 			<property name="hibernate.max_fetch_depth" value="3" />
 			<property name="hibernate.hbm2ddl.auto" value="update" />
+            <!-- <property name="hibernate.show_sql" value="true" />-->
 			<property name="hibernate.jdbc.batch_size" value="1" />
 			<property name="hibernate.search.default.directory_provider" value="filesystem" />
 			<property name="hibernate.search.default.indexBase" value="target/runtime/lucene" />

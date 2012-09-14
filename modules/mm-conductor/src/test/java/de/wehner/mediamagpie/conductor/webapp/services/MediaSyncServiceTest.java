@@ -28,11 +28,7 @@ import org.mockito.internal.matchers.CapturingMatcher;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import com.drew.metadata.Metadata;
-import com.drew.metadata.MetadataException;
-
 import de.wehner.mediamagpie.common.persistence.entity.Media;
-import de.wehner.mediamagpie.common.persistence.entity.Orientation;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.User.Role;
 import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
@@ -214,7 +210,7 @@ public class MediaSyncServiceTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testSyncMediaPahtes() throws IOException {
+    public void testSyncMediaPathes() throws IOException {
         final UserConfiguration userConfiguration = _userConfigurationDao.getConfiguration(_userA, UserConfiguration.class);
         FileUtils.copyDirectory(SOURCE_TEST_DIR_MEDIA, new File(userConfiguration.getRootMediaPathes()[0]));
         userConfiguration.setRootMediaPathes(new String[] { new File(_testdataMediaDir, "2010/07/10").getPath() });
@@ -237,7 +233,7 @@ public class MediaSyncServiceTest {
                 @Override
                 public void run() {
                     try {
-                        _mediaSyncService.syncMediaPahtes(_userA, userConfiguration.getRootMediaPathes()[0]);
+                        _mediaSyncService.syncMediaPathes(_userA, userConfiguration.getRootMediaPathes()[0]);
                     } catch (IOException e) {
                     }
                 }
@@ -248,37 +244,7 @@ public class MediaSyncServiceTest {
     }
 
     @Test
-    public void testResolveCreationDateOfMedia() throws IOException {
-        File mediaFile = new File("src/test/resources/images/IMG_0013.JPG");
-        Metadata metadataFromMedia = MediaSyncService.getMetadataFromMedia(mediaFile.toURI());
-        Date dateOfMedia = MediaSyncService.resolveCreationDateOfMedia(metadataFromMedia, mediaFile.toURI());
-        assertEquals(1250280049000L, dateOfMedia.getTime());
-    }
-
-    @Test
-    public void testGetMetadataFromMedia_Normal() throws IOException, MetadataException {
-        File mediaFileNormal = new File("src/test/resources/images/IMG_0013.JPG");
-        FileUtils.copyFileToDirectory(mediaFileNormal, _testEnvironment.getWorkingDir());
-        Orientation orientation = MediaSyncService.resolveOrientation(MediaSyncService.getMetadataFromMedia(mediaFileNormal.toURI()),
-                mediaFileNormal.toURI());
-        assertThat(orientation).isEqualTo(Orientation.TOP_LEFT_SIDE);
-    }
-
-    @Test
-    public void testGetMetadataFromMediaRIGHT_SIDE() throws IOException, MetadataException {
-        File mediaFileRightSide = new File("src/test/resources/images/IMG_1414.JPG");
-        FileUtils.copyFileToDirectory(mediaFileRightSide, _testEnvironment.getWorkingDir());
-        Orientation orientation = MediaSyncService.resolveOrientation(MediaSyncService.getMetadataFromMedia(mediaFileRightSide.toURI()),
-                mediaFileRightSide.toURI());
-        assertThat(orientation).isEqualTo(Orientation.RIGHT_SIDE_TOP);
-    }
-
-    @Test
-    public void testGetMetadataFromExifDatalessMedia() throws IOException, MetadataException {
-        File mediaFileRightSide = new File("src/test/resources/images/1600x4.jpg");
-        FileUtils.copyFileToDirectory(mediaFileRightSide, _testEnvironment.getWorkingDir());
-        Orientation orientation = MediaSyncService.resolveOrientation(MediaSyncService.getMetadataFromMedia(mediaFileRightSide.toURI()),
-                mediaFileRightSide.toURI());
-        assertThat(orientation).isEqualTo(Orientation.UNKNOWN);
+    public void test_resolveCreationDate(){
+        
     }
 }

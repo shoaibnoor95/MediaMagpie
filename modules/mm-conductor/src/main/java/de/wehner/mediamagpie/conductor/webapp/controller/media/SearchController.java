@@ -48,9 +48,9 @@ import de.wehner.mediamagpie.conductor.webapp.validator.SearchCriteriaCommandVal
 @Controller
 @RequestMapping("/media")
 @SessionAttributes({ "searchCriteria", "albumSelectionCommand", "albumCommand" })
-public class MediaController extends AbstractConfigurationSupportController {
+public class SearchController extends AbstractConfigurationSupportController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MediaController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SearchController.class);
 
     public static final String URL_MEDIA_SEARCH = "/search_pictures";
     public static final String VIEW_MEDIA_SEARCH = "media/searchPictures";
@@ -70,7 +70,7 @@ public class MediaController extends AbstractConfigurationSupportController {
     private final ImageService _imageSerivce;
 
     @Autowired
-    public MediaController(MediaDao mediaDao, AlbumDao albumDao, ImageService imageService, ConfigurationProvider configurationProvider,
+    public SearchController(MediaDao mediaDao, AlbumDao albumDao, ImageService imageService, ConfigurationProvider configurationProvider,
             UserConfigurationDao userConfigurationDao) {
         super(configurationProvider, userConfigurationDao, null);
         _mediaDao = mediaDao;
@@ -235,7 +235,7 @@ public class MediaController extends AbstractConfigurationSupportController {
     }
 
     public static String getBaseRequestMappingUrl() {
-        return MediaController.class.getAnnotation(RequestMapping.class).value()[0];
+        return SearchController.class.getAnnotation(RequestMapping.class).value()[0];
     }
 
     public static String getAjaxUrlCurrentAlbum() {

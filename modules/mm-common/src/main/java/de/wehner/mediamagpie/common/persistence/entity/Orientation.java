@@ -36,14 +36,14 @@ public enum Orientation {
 
     /**
      * 5, need rotation of 90 degree and mirroring horizontally
-     * <p>
-     * <b>The normal case</b>
-     * </p>
      */
     LEFT_SIDE_TOP(90),
 
     /**
-     * 6, need rotation of90 degree
+     * 6, need rotation of 90 degree - "Right side, top (Rotate 90 CW)" (um 90 Grad gegen den Uhrzeigersinn gedreht)
+     * <p>
+     * <b>The normal case</b>
+     * </p>
      */
     RIGHT_SIDE_TOP(90),
 
@@ -53,7 +53,7 @@ public enum Orientation {
     RIGHT_SIDE_BOTTOM(-90),
 
     /**
-     * 8, need rotation of -90
+     * 8, need rotation of -90 -  "Left side, bottom (Rotate 270 CW)"; (um 90 Grad gegen im Uhrzeigersinn gedreht)
      * <p>
      * <b>The normal case</b>
      * </p>
