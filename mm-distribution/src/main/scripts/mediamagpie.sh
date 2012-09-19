@@ -10,8 +10,8 @@
 
 ## set distribution specific settings
 #MGR_USER=magpie
-#MGR_DEPLOY_MODE=live
-MGR_DEPLOY_MODE=local
+MGR_DEPLOY_MODE=live
+#MGR_DEPLOY_MODE=local
 #JAVA_HOME=
 #ADDITIONAL_PARAMETERS="-Dwebapp.port=8087 -Dwebapp.context.path=/mediamagpie"
 #ADDITIONAL_PARAMETERS="-XX:+HeapDumpOnOutOfMemoryError -XX:ErrorFile=./hs_err_pid<pid>.log"

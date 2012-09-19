@@ -2,7 +2,6 @@ package de.wehner.mediamagpie.conductor;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
 import org.slf4j.Logger;

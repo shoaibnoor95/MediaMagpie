@@ -5,9 +5,9 @@
 # Call: sync-to-host.sh <public ec2 instance name> [full]
 #
 # Slight hint to setup public key to your ec2 instance:
-# $ ssh-copy-id -i ~/.ssh/id_rsa.pub root@e2-rwehner
+# $ ssh-copy-id -i ~/.ssh/id_rsa.pub ec2-user@ec2-user@ec2-54-247-157-231.eu-west-1.compute.amazonaws.com
 #    or
-# $ cat ~/.ssh/*.pub | ssh root@e2-rwehner 'umask 077; cat >>.ssh/authorized_keys'
+# $ cat ~/.ssh/*.pub | ssh ec2-user@ec2-user@ec2-54-247-157-231.eu-west-1.compute.amazonaws.com 'umask 077; cat >>.ssh/authorized_keys'
 #############################################################################
 
 #
@@ -49,7 +49,8 @@ fi
 echo "** sync mediamagpie distribution..."
 if [ "$2" != "with-config" ]
     then
-	RSYC_OPT=("${RSYC_OPT[@]}" --exclude "mediamagpie.sh" --exclude "*.properties" --exclude "target*")
+#	RSYC_OPT=("${RSYC_OPT[@]}" --exclude "mediamagpie.sh" --exclude "*.properties" --exclude "target*")
+    RSYC_OPT=("${RSYC_OPT[@]}" --exclude "target*")
 fi
 rsync "${RSYC_OPT[@]}" $DIR_HOME/ ec2-user@$1:mediamagpie
 echo ""

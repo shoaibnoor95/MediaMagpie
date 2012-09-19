@@ -90,18 +90,21 @@ Hint for md-formatting: See https://github.com/SpringSource/cloudfoundry-samples
 # Maven
 Some useful command lines:
    $ mvn versions:display-dependency-updates
+
  
 # EC2 Instances
+---------------
 
 ## Update the standard open-jdk version with oracles java 1.6:
 The open-jdk installation on the ec2 instances seems to have many issues, so i've got the effect that mediamagpie crashes after a while (e.g. less than one minute of usage). By this experience i decided to install the oracle java implementation.
 I've found a very good installation guide here: http://livingtao.blogspot.de/2012/01/few-easy-steps-to-install-sunoracle-jdk.html
 
- wget --no-cookies --header "Cookie: gpw_e24=xxx;" http://download.oracle.com/otn-pub/java/jdk/6u34-b04/jdk-6u34-linux-i586-rpm.bin
- sudo bash
- chmod +x jdk-6u34-linux-i586-rpm.bin
- ./jdk-6u34-linux-i586-rpm.bin
- alternatives --install /usr/bin/java java /usr/java/default/bin/java 20000
- update-alternatives --config java
- ln -s /usr/java/default/jre /usr/lib/jvm/jre
- ln -s /usr/share/java /usr/lib/jvm-exports/jre
+  $ wget --no-cookies --header "Cookie: gpw_e24=xxx;" http://download.oracle.com/otn-pub/java/jdk/6u34-b04/jdk-6u34-linux-i586-rpm.bin
+  $ sudo bash
+  $ chmod +x jdk-6u34-linux-i586-rpm.bin
+  $ ./jdk-6u34-linux-i586-rpm.bin
+  $ alternatives --install /usr/bin/java java /usr/java/default/bin/java 20000
+  $ update-alternatives --config java
+  $ ln -s /usr/java/default/jre /usr/lib/jvm/jre
+  $ ln -s /usr/share/java /usr/lib/jvm-exports/jre
+  
