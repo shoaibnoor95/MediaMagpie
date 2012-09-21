@@ -66,7 +66,7 @@ Deploy to tomcat
 
 # Maven
 Some useful command lines:
-   $ mvn 
+   $ mvn versions:display-dependency-updates
    $ mvn build-helper:remove-project-artifact -> see http://mojo.codehaus.org/build-helper-maven-plugin/remove-project-artifact-mojo.html
 
 
