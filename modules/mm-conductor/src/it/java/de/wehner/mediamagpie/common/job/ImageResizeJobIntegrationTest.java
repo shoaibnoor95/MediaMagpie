@@ -20,7 +20,6 @@ import de.wehner.mediamagpie.conductor.performingjob.ImageResizeJob;
 import de.wehner.mediamagpie.conductor.performingjob.JobCallable;
 import de.wehner.mediamagpie.conductor.performingjob.JobExecutor;
 
-// see ImportJobTest in dap project
 public class ImageResizeJobIntegrationTest {
 
     @Rule
@@ -43,9 +42,9 @@ public class ImageResizeJobIntegrationTest {
     protected JobCallable prepareImageResizeJob() {
         // _itEnvironment.getTmpFile("imageResizeTest")
         ImageResizeJob imageResizeJob = new ImageResizeJob(null, null, new File("src/test/resources/images/1600x4.jpg"), 1L, "200", Orientation.UNKNOWN);
-        JobExecution dapJobExecution = _itEnvironment.createJobExecutionMock(imageResizeJob);
+        JobExecution jobExecution = _itEnvironment.createJobExecutionMock(imageResizeJob);
         JobCallable jobCallable = _jobExecutor.prepare(
-                _itEnvironment.getConfigurationDaoWithMainConfiguration().getConfiguration(MainConfiguration.class), dapJobExecution);
+                _itEnvironment.getConfigurationDaoWithMainConfiguration().getConfiguration(MainConfiguration.class), jobExecution);
         return jobCallable;
     }
 

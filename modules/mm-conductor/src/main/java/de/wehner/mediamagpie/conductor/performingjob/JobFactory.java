@@ -23,12 +23,12 @@ public class JobFactory {
         }
     }
 
-    public PerformingJob createDapJob(/*DapJobConfiguration dapJobConfiguration, */JobExecution execution) {
+    public PerformingJob createPerformingJob(JobExecution execution) {
         for (Entry<Class<?>, JobCreator> entry : _creators.entrySet()) {
             if (entry.getKey().isAssignableFrom(execution.getClass())) {
-                return entry.getValue().create(/*dapJobConfiguration,*/ execution);
+                return entry.getValue().create(execution);
             }
         }
-        throw new IllegalArgumentException("No DapJobCreator for " + execution.getClass().getName());
+        throw new IllegalArgumentException("No JobCreator for " + execution.getClass().getName());
     }
 }

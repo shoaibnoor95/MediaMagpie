@@ -19,15 +19,14 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import de.wehner.mediamagpie.common.test.util.TestEnvironment2;
-
+import de.wehner.mediamagpie.common.test.util.TestEnvironment;
 
 public class RestControllerTest {
 
     private ObjectMapper mapper;
 
     @Rule
-    public final TestEnvironment2 _itTestEnvironment = new TestEnvironment2(new File("target/testfolder"));
+    public final TestEnvironment _itTestEnvironment = new TestEnvironment(getClass());
 
     @Before
     public void setUp() {
@@ -45,21 +44,22 @@ public class RestControllerTest {
         userData.put("gender", "MALE");
         userData.put("verified", Boolean.FALSE);
         userData.put("userImage", "Rm9vYmFyIQ==");
-        mapper.writeValue(new File(_itTestEnvironment.getTargetTestDir(), "user.json"), userData);
+        mapper.writeValue(new File(_itTestEnvironment.getWorkingDir(), "user.json"), userData);
 
         // load json into a tree model and modify an object within a node (last name here)
         ObjectMapper m = new ObjectMapper();
         // can either use mapper.readTree(JsonParser), or bind to JsonNode
-        JsonNode rootNode = m.readValue(new File(_itTestEnvironment.getTargetTestDir(), "user.json"), JsonNode.class);
+        JsonNode rootNode = m.readValue(new File(_itTestEnvironment.getWorkingDir(), "user.json"), JsonNode.class);
         // ensure that "last name" isn't "Xmler"; if is, change to "Jsoner"
         JsonNode nameNode = rootNode.path("name");
         String lastName = nameNode.path("last").getTextValue();
         if ("sixpack".equalsIgnoreCase(lastName)) {
             ((ObjectNode) nameNode).put("last", "Jsoner");
         }
-        m.writeValue(new File(_itTestEnvironment.getTargetTestDir(), "user-modified.json"), rootNode);
+        m.writeValue(new File(_itTestEnvironment.getWorkingDir(), "user-modified.json"), rootNode);
 
         // verify changes in result
-        assertThat(FileUtils.readFileToString(new File(_itTestEnvironment.getTargetTestDir(), "user-modified.json")), containsString("\"name\":{\"last\":\"Jsoner\",\"first\":\"Joe\"}"));
+        assertThat(FileUtils.readFileToString(new File(_itTestEnvironment.getWorkingDir(), "user-modified.json")),
+                containsString("\"name\":{\"last\":\"Jsoner\",\"first\":\"Joe\"}"));
     }
 }

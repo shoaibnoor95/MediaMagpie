@@ -29,6 +29,7 @@ import de.wehner.mediamagpie.common.persistence.entity.ThumbImage;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.test.util.TestEnvironment;
 import de.wehner.mediamagpie.common.testsupport.DbTestEnvironment;
+import de.wehner.mediamagpie.common.util.MinMaxValue;
 import de.wehner.mediamagpie.common.util.TimeUtil;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.SearchCriteriaCommand;
 import de.wehner.mediamagpie.conductor.webapp.controller.media.common.UiMediaSortOrder;
@@ -226,6 +227,7 @@ public class MediaDaoTest {
 
         SearchCriteriaCommand searchCriteria = new SearchCriteriaCommand();
         searchCriteria.setYearCriteria("2010 - 2011");
+        searchCriteria.setSliderYearValues(new MinMaxValue<Integer>(2010, 2011));
         searchCriteria.setSortOrder(UiMediaSortOrder.DATE);
         List<Media> foundMedias = mediaDao.getAllBySearchCriterias(_user, 0, Integer.MAX_VALUE, true, searchCriteria, LifecyleStatus.Living);
 
@@ -252,6 +254,7 @@ public class MediaDaoTest {
 
         SearchCriteriaCommand searchCriteria = new SearchCriteriaCommand();
         searchCriteria.setYearCriteria("2010 - 2011");
+        searchCriteria.setSliderYearValues(new MinMaxValue<Integer>(2010, 2011));
         searchCriteria.setBuzzword("Rotkohl");
         List<Media> foundMedias = mediaDao.getAllBySearchCriterias(_user, 0, Integer.MAX_VALUE, true, searchCriteria, LifecyleStatus.Living);
 

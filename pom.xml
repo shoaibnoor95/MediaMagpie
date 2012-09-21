@@ -12,7 +12,7 @@
 		<project.reporting.outputEncoding>iso8859-15</project.reporting.outputEncoding>
 		<maven.version>3.0.3</maven.version>
 		<org.springframework.ws.version>2.1.0.RELEASE</org.springframework.ws.version>
-		<org.springframework.version>3.2.0.M2</org.springframework.version>
+		<org.springframework.version>3.2.0.BUILD</org.springframework.version>
 		<springframework-security.version>3.1.2.RELEASE</springframework-security.version>
 		<mongodb.version>1.1.0.RC1</mongodb.version>
 		<org.slf4j.version>1.7.0</org.slf4j.version>
@@ -261,6 +261,23 @@
 				<artifactId>jetty-java5-threadpool</artifactId>
 				<version>${jetty.version}</version>
 			</dependency>
+	<!-- see: http://mvnrepository.com/artifact/org.eclipse.jetty
+    	<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+			<version>8.1.0.RC5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-webapp</artifactId>
+			<version>8.1.0.RC5</version>
+		</dependency>
+<dependency>
+	<groupId>org.eclipse.jetty</groupId>
+	<artifactId>jetty-jsp-2.1</artifactId>
+	<version>7.5.0.RC2</version>
+</dependency>-->
+
 
 			<!-- Test -->
 			<dependency>

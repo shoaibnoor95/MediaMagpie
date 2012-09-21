@@ -64,6 +64,11 @@ Deploy to tomcat
     $ cd module/mm-conductor
     $ mvn tomcat:deploy -DskipTests=true -P warFile
 
+# Maven
+Some useful command lines:
+   $ mvn 
+   $ mvn build-helper:remove-project-artifact -> see http://mojo.codehaus.org/build-helper-maven-plugin/remove-project-artifact-mojo.html
+
 
 # MongoDB
 Download MongoDB to your computer
@@ -87,11 +92,7 @@ or with non-default data directory:
 
 Hint for md-formatting: See https://github.com/SpringSource/cloudfoundry-samples/blob/master/stocks/README.md
 
-# Maven
-Some useful command lines:
-   $ mvn versions:display-dependency-updates
 
- 
 # EC2 Instances
 ---------------
 
