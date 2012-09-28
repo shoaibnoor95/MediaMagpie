@@ -16,7 +16,6 @@ import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
 
 public class ImageResizeJob extends AbstractJob {
 
-    private static final long serialVersionUID = -1;
     private static final Logger LOG = LoggerFactory.getLogger(ImageResizeJob.class);
 
     private final MediaDao _mediaDao;

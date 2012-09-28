@@ -49,6 +49,7 @@ public class ManifestMetaData {
             return;
         }
 
+        _parsed = true;
         try {
             Manifest manifest = new Manifest(manifestUrl.openStream());
             Attributes mainAttributes = manifest.getMainAttributes();

@@ -116,6 +116,7 @@ public class UploadService {
             LOG.warn("Can not write upload file to disk.", e);
         } finally {
             IOUtils.closeQuietly(outputStream);
+            IOUtils.closeQuietly(inputStream);
         }
 
         // create a Media entity, add to db and create a ThumbImage as well

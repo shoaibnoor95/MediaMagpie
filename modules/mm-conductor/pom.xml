@@ -11,8 +11,7 @@
 
 	<artifactId>mm-conductor</artifactId>
 	<name>MediaMagpie Web</name>
-	<packaging>jar</packaging>
-	<!-- <packaging>${packaging.type}</packaging> -->
+	<packaging>${packaging.type}</packaging>
 
 	<profiles>
 		<profile>

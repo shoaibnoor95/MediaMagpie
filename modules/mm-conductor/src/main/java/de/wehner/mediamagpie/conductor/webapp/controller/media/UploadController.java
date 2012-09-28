@@ -93,7 +93,7 @@ public class UploadController {
             User currentUser = SecurityUtil.getCurrentUser();
             Pair<String, File> uploadFileInfo = _uploadControllerService.createUniqueUserStoreFile(currentUser, multipartFile.getOriginalFilename());
             String contextPath = request.getContextPath();
-            LOG.info("Try dump upload stream into file '" + uploadFileInfo.getSecond().getPath() + "'");
+            LOG.info("Try dump upload stream '" + uploadFileInfo.getFirst() + "' into file '" + uploadFileInfo.getSecond().getPath() + "'");
             String thumbUrl = contextPath
                     + _uploadControllerService.handleUploadStream(currentUser, uploadFileInfo.getSecond(), multipartFile.getInputStream(), i++);
             JQueryUploadCommand command = new JQueryUploadCommand(multipartFile.getOriginalFilename(), (int) multipartFile.getSize(), "url", thumbUrl,
