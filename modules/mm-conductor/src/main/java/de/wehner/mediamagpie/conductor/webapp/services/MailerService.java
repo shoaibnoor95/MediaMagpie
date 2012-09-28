@@ -19,7 +19,7 @@ import de.wehner.mediamagpie.common.persistence.entity.Registration;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.conductor.mail.MailSenderFacade;
 import de.wehner.mediamagpie.conductor.mail.MailTemplateType;
-import de.wehner.mediamagpie.conductor.webapp.util.Env;
+import de.wehner.mediamagpie.conductor.util.Env;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;

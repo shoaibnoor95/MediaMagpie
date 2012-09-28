@@ -6,7 +6,6 @@ import java.net.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.wehner.mediamagpie.common.core.util.ManifestMetaData;
 import de.wehner.mediamagpie.common.fs.ApplicationFS;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.Orientation;
@@ -17,7 +16,7 @@ import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
 
 public class ImageResizeJob extends AbstractJob {
 
-    private static final long serialVersionUID = ManifestMetaData.SERIAL_VERSION_UID;
+    private static final long serialVersionUID = -1;
     private static final Logger LOG = LoggerFactory.getLogger(ImageResizeJob.class);
 
     private final MediaDao _mediaDao;

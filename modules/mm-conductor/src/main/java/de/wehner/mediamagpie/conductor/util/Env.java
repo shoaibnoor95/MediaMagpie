@@ -1,4 +1,4 @@
-package de.wehner.mediamagpie.conductor.webapp.util;
+package de.wehner.mediamagpie.conductor.util;
 
 public class Env {
 

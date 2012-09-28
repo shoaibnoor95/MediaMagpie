@@ -4,13 +4,10 @@ import java.io.Serializable;
 
 import org.springframework.stereotype.Component;
 
-import de.wehner.mediamagpie.common.core.util.ManifestMetaData;
-
-
 @Component
 public class TimeProvider implements Serializable {
 
-    private static final long serialVersionUID = ManifestMetaData.SERIAL_VERSION_UID;
+    private static final long serialVersionUID = -1;
 
     public long getTime() {
         return System.currentTimeMillis();

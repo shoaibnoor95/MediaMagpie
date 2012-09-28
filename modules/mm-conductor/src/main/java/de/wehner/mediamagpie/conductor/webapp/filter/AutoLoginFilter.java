@@ -19,8 +19,8 @@ import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.util.StringUtil;
 import de.wehner.mediamagpie.conductor.persistence.TransactionHandler;
 import de.wehner.mediamagpie.conductor.persistence.dao.UserDao;
+import de.wehner.mediamagpie.conductor.util.Env;
 import de.wehner.mediamagpie.conductor.webapp.services.UserSecurityService;
-import de.wehner.mediamagpie.conductor.webapp.util.Env;
 import de.wehner.mediamagpie.conductor.webapp.util.security.SecurityUtil;
 
 

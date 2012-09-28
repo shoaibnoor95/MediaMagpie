@@ -11,7 +11,8 @@
 
 	<artifactId>mm-conductor</artifactId>
 	<name>MediaMagpie Web</name>
-	<packaging>${packaging.type}</packaging>
+	<packaging>jar</packaging>
+	<!-- <packaging>${packaging.type}</packaging> -->
 
 	<profiles>
 		<profile>
@@ -30,8 +31,8 @@
 			</properties>
 		</profile>
 	</profiles>
-	<dependencies>
 
+	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>mm-common</artifactId>
@@ -71,10 +72,10 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 		</dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
@@ -219,11 +220,8 @@
 		</dependency>
 
 		<!-- VMWare Cloud Foundry -->
-		<!-- <dependency>
-			<groupId>org.cloudfoundry</groupId>
-			<artifactId>cloudfoundry-runtime</artifactId>
-			<version>0.8.1</version>
-		</dependency>-->
+		<!-- <dependency> <groupId>org.cloudfoundry</groupId> <artifactId>cloudfoundry-runtime</artifactId> 
+			<version>0.8.1</version> </dependency> -->
 
 		<!-- Test -->
 		<dependency>
@@ -263,10 +261,60 @@
 				</configuration>
 			</plugin>
 
-			<!-- rwe: experimental for ManifestMetaData.java (see also http://maven.apache.org/plugins/maven-war-plugin/examples/war-manifest-guide.html) -->
-			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-war-plugin</artifactId> 
-				<configuration> <archive> <manifestEntries> <manifest_entry>value</manifest_entry> </manifestEntries> 
-				</archive> </configuration> </plugin> -->
+			<!-- setup MANIFEST.MF -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<!-- Safety -->
+								<mkdir dir="${project.build.directory}" />
+
+								<tstamp>
+									<format property="last.updated" pattern="yyyy-MM-dd hh:mm:ss" />
+								</tstamp>
+								<echo file="${basedir}/target/filter.properties" message="build.time=${last.updated}" />
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1.1</version>
+				<configuration>
+					<useDefaultManifestFile>true</useDefaultManifestFile>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+						</manifest>
+						<!-- <manifestEntries> <version>${project.version}</version> </manifestEntries> -->
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<inherited>true</inherited>
+				<configuration>
+					<useDefaultManifestFile>true</useDefaultManifestFile>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -337,7 +385,17 @@
 				</configuration>
 			</plugin>
 		</plugins>
+
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+
+		<filters>
+			<filter>${basedir}/target/filter.properties</filter>
+		</filters>
+
 	</build>
-
-
 </project>
