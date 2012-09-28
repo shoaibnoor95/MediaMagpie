@@ -43,7 +43,7 @@
 						<c:choose>
 							<c:when test="${album.visibility == 'PUBLIC'}">
 								<img class="image-action copyLink" alt="<%=WebAppUtils.getRequestUrlUpToContextPath(request)+PublicAlbumController.getBaseRequestMappingUrl()%>/${album.uid}/view"
-									src="<%=request.getContextPath()%>/static/images/famfamfam_silk/paste_plain.png" />
+									title="copy the public album link into clipboard" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/paste_plain.png" />
 							</c:when>
 							<c:otherwise>
 								---
@@ -52,11 +52,11 @@
 					</td>
 					<td><core:date date="${album.creationDate}" /></td>
 					<td>
-						<img class="image-action view" alt="view"
+						<img class="image-action view" alt="view" title="only this your album settings"
 							src="<%=request.getContextPath()%>/static/images/famfamfam_silk/image.png" /> 
-						<img class="image-action edit" alt="edit"
+						<img class="image-action edit" alt="edit" title="edit this album settings"
 							src="<%=request.getContextPath()%>/static/images/famfamfam_silk/image_edit.png" /> 
-						<img class="image-action delete" alt="delete"
+						<img class="image-action delete" alt="delete" title="delete this album"
 							src="<%=request.getContextPath()%>/static/images/famfamfam_silk/bin_closed.png" />
 					</td>
 				</tr>

@@ -490,8 +490,20 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>1.5</version>
+				<version>1.7</version>
 				<executions>
+                    <!-- Remove project's artifacts from local repository. 
+                        Useful to keep only one copy of large local snapshot, for example: installer, for disk space optimization purpose. 
+                        (http://mojo.codehaus.org/build-helper-maven-plugin/remove-project-artifact-mojo.html)-->
+					<!--<execution>
+						<id>remove-old-installers</id>
+						<goals>
+							<goal>remove-project-artifact</goal>
+						</goals>
+						<configuration>
+							<removeAll>true</removeAll>
+						</configuration>
+					</execution>-->
 					<execution>
 						<id>add-test-source</id>
 						<phase>generate-test-sources</phase>

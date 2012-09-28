@@ -150,7 +150,17 @@ function initDragAndDropAndButtonListeners() {
 	$( "#albumArea div#album ul" ).disableSelection();
 }
 
+function wireUpAutoSubmitAlbumSelect() {
+	  $("#albumId").each(function (index) {
+	    $(this).change(function () {
+	      var form = $(this).closest('form');
+	      form.submit();
+	    })
+	  });
+	}
+
 $(document).ready(function() {
 	initSlider();
 	loadTemplateAlbum();
+	wireUpAutoSubmitAlbumSelect();
 });

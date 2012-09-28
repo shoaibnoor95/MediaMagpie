@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
@@ -39,5 +40,13 @@ public class WebAppUtils {
         }
         builder.append(contextPath);
         return builder.toString();
+    }
+
+    public static String getBaseRequestMappingUrl(Class<?> controllerClass) {
+        return controllerClass.getAnnotation(RequestMapping.class).value()[0];
+    }
+
+    public static String redirect(Object controller, String targetUrlPart) {
+        return "redirect:" + getBaseRequestMappingUrl(controller.getClass()) + targetUrlPart;
     }
 }

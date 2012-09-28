@@ -42,6 +42,7 @@ import de.wehner.mediamagpie.conductor.webapp.controller.commands.SearchCriteria
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.SearchCriteriaCommand.Action;
 import de.wehner.mediamagpie.conductor.webapp.controller.media.common.UiMediaSortOrder;
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
+import de.wehner.mediamagpie.conductor.webapp.util.WebAppUtils;
 import de.wehner.mediamagpie.conductor.webapp.util.security.SecurityUtil;
 import de.wehner.mediamagpie.conductor.webapp.validator.SearchCriteriaCommandValidator;
 
@@ -134,13 +135,14 @@ public class SearchController extends AbstractConfigurationSupportController {
     @RequestMapping(method = RequestMethod.POST, value = URL_SELECT_ALBUM)
     public String submitAlbumSelection(Model model, AlbumSelectionCommand albumSelectionCommand,
             @RequestParam(value = "start", required = false) Integer startMedia, @RequestParam(value = "startAlbum", required = false) Integer start) {
-        Album album = _albumDao.getById(albumSelectionCommand.getAlbumId());
-        AlbumCommand albumCommand = new AlbumCommand();
-        albumCommand.init(album);
-        model.addAttribute(albumCommand);
-        model.addAttribute("start", startMedia);
-        RequestMapping requestMapping = getClass().getAnnotation(RequestMapping.class);
-        return "redirect:" + requestMapping.value()[0] + URL_MEDIA_SEARCH;
+        if (albumSelectionCommand.getAlbumId() != null) {
+            Album album = _albumDao.getById(albumSelectionCommand.getAlbumId());
+            AlbumCommand albumCommand = new AlbumCommand();
+            albumCommand.init(album);
+            model.addAttribute(albumCommand);
+            model.addAttribute("start", startMedia);
+        }
+        return WebAppUtils.redirect(this, URL_MEDIA_SEARCH);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = URL_ADD_MEDIA_TO_ALBUM)

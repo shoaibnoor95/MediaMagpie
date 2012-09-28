@@ -86,7 +86,7 @@
 	                	<dd><form:input path="tagsAsString"/></dd>
 	                </dl>
 	                <input id="overviewUrl" name="overviewUrl" type="hidden" value="<c:out value="${mediaDetailCommand.overviewUrl}"/>"/>
-                	<button id="saveAndGoBack" type="button" class="default" onclick="$('form input[type=hidden][name=submitSelect]').val('goBack');document.forms[0].submit();"><span>Speichern und zurück</span></button>
+                	<button id="saveAndGoBack" type="button" class="default" onclick="$('form input[type=hidden][name=submitSelect]').val('goBack');document.forms[0].submit();"><span>Save and go back</span></button>
 	                <input type="hidden" name="submitSelect"/>
                 </form:form>
 		</div>

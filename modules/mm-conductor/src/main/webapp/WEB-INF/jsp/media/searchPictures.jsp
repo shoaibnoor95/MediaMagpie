@@ -24,7 +24,7 @@
 					<fieldset>
 						<legend>Search Criterias</legend>
 						<dl>
-							<dt><label for="yearCriteria">Year selection:</label></dt>
+							<dt><label for="yearCriteria">Year:</label></dt>
 							<dd><div id="slider-select-year" style="float:left;"></div></dd>
 							<dd style="width:100px;"><form:input path="yearCriteria" style="border:0; font-weight:bold; width:auto;" size="12"/></dd>
 							<form:errors path="yearCriteria" cssClass="error"/>
@@ -74,11 +74,12 @@
 				</div>
 
 				<core:pagination current="${start}" pageSize="${pageSize}" total="${totalHits}" query="<%=request.getContextPath()%>" />
+				<br/>
 				
 				<!--  album selection and droppable area -->
 				<form:form action="select_album" commandName="albumSelectionCommand" >
 					select Album: <form:select path="albumId" items="${availableAlbums}" itemValue="id" itemLabel="name" multiple="false" />
-					<button type="submit"><span>Select</span></button>
+					<%/*<button type="submit"><span>Select</span></button>*/%>
 					<input type="hidden"  name="start" value="${start}"/>
 				</form:form>
 				
