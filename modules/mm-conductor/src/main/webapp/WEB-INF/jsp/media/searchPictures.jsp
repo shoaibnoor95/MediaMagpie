@@ -79,7 +79,7 @@
 				<!--  album selection and droppable area -->
 				<form:form action="select_album" commandName="albumSelectionCommand" >
 					select Album: <form:select path="albumId" items="${availableAlbums}" itemValue="id" itemLabel="name" multiple="false" />
-					<%/*<button type="submit"><span>Select</span></button>*/%>
+					<button type="submit"><span>Select</span></button>
 					<input type="hidden"  name="start" value="${start}"/>
 				</form:form>
 				

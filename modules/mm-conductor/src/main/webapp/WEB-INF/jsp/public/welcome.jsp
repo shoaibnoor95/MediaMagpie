@@ -40,8 +40,12 @@
 	                <div class="download"><a href="${mediaThumbCommand.urlDownload}">Download Original</a></div>
 	                <div class="image-title"><c:out value="${mediaThumbCommand.title}"/></div>
 	                <div class="image-desc">
-	                   <strong><c:out value="${mediaThumbCommand.description}"/></strong>
-						<div class="meta">
+	                   <i><c:out value="${mediaThumbCommand.description}"/></i><br/>
+<div style="padding: 3px 0 2px 5px;">
+    <img class="toggle-img" style="box-shadow: 0 0 0;" src="<%=request.getContextPath()%>static/images/famfamfam_silk/bullet_arrow_down.png" alt="hide meta information" onclick="toggleMetaInformation();"/>
+    <a class="toggle-link" onclick="toggleMetaInformation();">Show camera meta informations</a>
+</div>
+						<div class="meta" style="display: none;" >
 	       					<ul>
 	                           <li>ID: ${mediaThumbCommand.id}</li>
 <li>Camera: NIKON D50</li>
@@ -60,15 +64,17 @@
 		</c:forEach>
 		</ul>
 	</div>
-	
+
 	<div id="gallery" class="content">
     	<div id="controls" class="controls"></div>
         <div class="slideshow-container">
         	<div id="loading" class="loader"></div>
             <div id="slideshow" class="slideshow"></div>
         </div>	
-        <div id="caption" class="caption-container embox" style="opacity: 1;"></div>
+        <div id="caption" class="caption-container embox" style="opacity: 1;">
+        </div>
 	</div>
+	
     <div style="clear: both;">
 		<%java.security.Principal  principal = request.getUserPrincipal();
 		if(principal != null) {%>

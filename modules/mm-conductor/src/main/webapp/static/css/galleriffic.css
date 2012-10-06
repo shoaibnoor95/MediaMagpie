@@ -88,13 +88,13 @@ div.download {
 div.caption-container {
 	position: relative;
 	clear: left;
-	height: 75px;
+/*	height: 75px;*/
 	margin-top: 12px;
 }
 
 span.image-caption {
-	display: block;
-	position: absolute;
+/*	display: block;*/
+/*	position: absolute;*/
 	width: 550px;
 	top: 0;
 	left: 0;
@@ -104,11 +104,11 @@ div.embox {
     background-color: #EEEEEE;
     border: 1px solid #CCCCCC;
     clear: both;
-    padding: 12px;
+    padding: 6px;
 }
 
 div.caption {
-	padding: 12px;
+	padding: 6px;
 }
 
 div.image-title {
@@ -118,7 +118,7 @@ div.image-title {
 
 div.image-desc {
 	line-height: 1.3em;
-	padding-top: 0px;
+	padding-top: 2px;
 }
 
 div.navigation {
@@ -202,14 +202,14 @@ div.pagination span.ellipsis {
 }
 div.meta {
     font-size: 0.8em;
-    margin-top: 4px;
+    margin: 4px 4px 0 4px;
 }
 div.meta ul {
     margin: 0;
     padding: 0;
 }
 div.meta li {
-    float: left;
+/*    float: left;*/
     list-style: none outside none;
     margin-right: 10px;
     padding: 0;

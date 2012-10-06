@@ -14,9 +14,11 @@ import org.apache.commons.io.IOUtils;
 import org.subethamail.wiser.Wiser;
 import org.subethamail.wiser.WiserMessage;
 
+import de.wehner.mediamagpie.common.core.util.FindFreeSocket;
+
 /**
  * Helper class for the {@link Wiser} smtp server which provides some convenient methods to start/stop and access sent emails.<br/>
- * The wiser server is set up to port 2501.<br/>
+ * The wiser server is set up to port 2501 by default. If this port is not available, it start scanning for next free port up to 2600.<br/>
  * General, to work with the wiser in junit tests, you have to set the property <code>System.setProperty("deploy.mode", "test")</code>
  * before the spring context is set up. This will force spring to inject the {@link LocalhostMailer} into <code>MailserService</code>
  * constructor. '
@@ -43,11 +45,10 @@ import org.subethamail.wiser.WiserMessage;
  * ...
  * </pre>
  * 
- * @author rwe-extern
  */
 public class WiserClient {
 
-    public static final int PORT = 2501;
+    private Integer _port;
 
     private Wiser _wiser;
 
@@ -77,7 +78,8 @@ public class WiserClient {
     }
 
     public void start() throws InterruptedException {
-        _wiser.setPort(PORT);
+        _port = FindFreeSocket.findFreeSocket(2501, 2600);
+        _wiser.setPort(_port);
         _wiser.start();
         do {
             Thread.sleep(50);
@@ -91,6 +93,10 @@ public class WiserClient {
             Thread.sleep(50);
             System.out.print(".");
         } while (_wiser.getServer().isRunning());
+    }
+
+    public Integer getPort() {
+        return _port;
     }
 
     public Wiser getWiser() {
@@ -114,7 +120,6 @@ public class WiserClient {
         MimeMessage mimeMessage = messages.get(index).getMimeMessage();
         Object content = mimeMessage.getContent();
         System.out.println(content.toString());
-
     }
 
     /**
@@ -138,7 +143,7 @@ public class WiserClient {
             byte[] byteArray = IOUtils.toByteArray(inputStream);
             return new FilenameAndData(fileName, byteArray);
         } else {
-            System.out.println("Content of MimeMessage is not the class 'MimeMultipart', it is '" + content.getClass().getSimpleName() + "'.");
+            System.out.println("Content of MimeMessage is not class 'MimeMultipart', it is '" + content.getClass().getSimpleName() + "'.");
         }
         return null;
     }

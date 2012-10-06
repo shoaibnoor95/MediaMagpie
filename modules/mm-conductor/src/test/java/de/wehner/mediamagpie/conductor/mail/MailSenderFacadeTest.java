@@ -50,7 +50,7 @@ public class MailSenderFacadeTest {
         ConfigurationDao configurationDao = mock(ConfigurationDao.class);
         _mailServerConfiguration = new MailServerConfiguration();
         _mailServerConfiguration.setHostName(SMTP_HOST);
-        _mailServerConfiguration.setPort(WiserClient.PORT);
+        _mailServerConfiguration.setPort(_wiserClient.getPort());
         _mailServerConfiguration.setSenderName(SENDER_NAME);
         _mailServerConfiguration.setSenderAddress(SENDER_ADDRESS);
         when(configurationDao.getConfiguration(MailServerConfiguration.class)).thenReturn(_mailServerConfiguration);
