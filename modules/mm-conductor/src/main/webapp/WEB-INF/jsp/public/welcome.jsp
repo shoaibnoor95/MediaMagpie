@@ -47,7 +47,7 @@
 </div>
 						<div class="meta" style="display: none;" >
 	                        ID: ${mediaThumbCommand.id}<br/>
-                            <c:if test="${not empty mediaThumbCommand.cameraMetaData.exifData}">
+                            <c:if test="${mediaThumbCommand.cameraMetaData != null && not empty mediaThumbCommand.cameraMetaData.exifData}">
 	                           -- EXIF-Data --<br />
 							   <ul>
 								    <c:forEach items="${mediaThumbCommand.cameraMetaData.exifData}" var="exifData">
