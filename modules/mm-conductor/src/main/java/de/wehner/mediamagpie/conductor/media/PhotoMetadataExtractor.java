@@ -1,4 +1,4 @@
-package de.wehner.mediamagpie.conductor.webapp.media;
+package de.wehner.mediamagpie.conductor.media;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URLConnection;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,11 +19,14 @@ import org.slf4j.LoggerFactory;
 
 import com.drew.imaging.jpeg.JpegMetadataReader;
 import com.drew.imaging.jpeg.JpegProcessingException;
+import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
+import com.drew.metadata.Tag;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 
 import de.wehner.mediamagpie.common.persistence.entity.Orientation;
+import de.wehner.mediamagpie.conductor.metadata.CameraMetaData;
 
 public class PhotoMetadataExtractor {
 
@@ -114,5 +118,28 @@ public class PhotoMetadataExtractor {
             }
         }
         return Orientation.UNKNOWN;
+    }
+
+    public CameraMetaData createCameraMetaData() {
+        if (_metadata == null) {
+            return null;
+        }
+
+        CameraMetaData metaData = new CameraMetaData();
+        for (Directory directory : _metadata.getDirectories()) {
+            if (directory.getClass().getSimpleName().toLowerCase().startsWith("exif")) {
+                Collection<Tag> tags = directory.getTags();
+                for (Tag tag : tags) {
+                    metaData.getExifData().put(tag.getTagName(), tag.getDescription());
+                }
+                continue;
+            }
+            String name = directory.getName();
+            Collection<Tag> tags = directory.getTags();
+            for (Tag tag : tags) {
+                metaData.getMetaData().put(name + ", " + tag.getTagName(), tag.getDescription());
+            }
+        }
+        return metaData;
     }
 }

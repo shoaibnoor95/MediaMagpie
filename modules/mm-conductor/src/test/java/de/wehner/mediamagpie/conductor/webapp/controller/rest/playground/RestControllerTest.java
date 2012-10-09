@@ -23,14 +23,14 @@ import de.wehner.mediamagpie.common.test.util.TestEnvironment;
 
 public class RestControllerTest {
 
-    private ObjectMapper mapper;
+    private ObjectMapper _mapper;
 
     @Rule
     public final TestEnvironment _itTestEnvironment = new TestEnvironment(getClass());
 
     @Before
     public void setUp() {
-        mapper = new ObjectMapper();
+        _mapper = new ObjectMapper();
     }
 
     @Test
@@ -44,7 +44,7 @@ public class RestControllerTest {
         userData.put("gender", "MALE");
         userData.put("verified", Boolean.FALSE);
         userData.put("userImage", "Rm9vYmFyIQ==");
-        mapper.writeValue(new File(_itTestEnvironment.getWorkingDir(), "user.json"), userData);
+        _mapper.writeValue(new File(_itTestEnvironment.getWorkingDir(), "user.json"), userData);
 
         // load json into a tree model and modify an object within a node (last name here)
         ObjectMapper m = new ObjectMapper();

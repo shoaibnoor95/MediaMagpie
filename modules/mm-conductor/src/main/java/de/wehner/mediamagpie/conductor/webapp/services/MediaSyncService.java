@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -20,6 +22,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.IOUtils;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.hibernate.criterion.Order;
 import org.mortbay.log.Log;
 import org.slf4j.Logger;
@@ -35,11 +40,12 @@ import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
 import de.wehner.mediamagpie.common.util.ExceptionUtil;
 import de.wehner.mediamagpie.conductor.job.SingleThreadedController;
+import de.wehner.mediamagpie.conductor.media.PhotoMetadataExtractor;
+import de.wehner.mediamagpie.conductor.metadata.CameraMetaData;
 import de.wehner.mediamagpie.conductor.persistence.TransactionHandler;
 import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.UserDao;
-import de.wehner.mediamagpie.conductor.webapp.media.PhotoMetadataExtractor;
 
 @Service
 public class MediaSyncService extends SingleThreadedController {
@@ -54,6 +60,7 @@ public class MediaSyncService extends SingleThreadedController {
     private final MediaDao _mediaDao;
     private final UserDao _userDao;
     private final Map<File, CountDownLatch> _processingPathes = new ConcurrentHashMap<File, CountDownLatch>();
+    private static ObjectMapper _mapper = new ObjectMapper();
 
     @Autowired
     public MediaSyncService(TransactionHandler transactionHandler, UserDao userDao, MediaDao mediaDao, UserConfigurationDao userConfigurationDao) {
@@ -125,7 +132,7 @@ public class MediaSyncService extends SingleThreadedController {
                 boolean wasBusy = filesSynchronized > 0;
 
                 if (!wasBusy) {
-                    wasBusy = purgeObsoleteMedias(syncDirPath);
+                    wasBusy = purgeObsoleteMedias();
                 }
                 if (!someOneWasBusy) {
                     someOneWasBusy = wasBusy;
@@ -139,8 +146,7 @@ public class MediaSyncService extends SingleThreadedController {
         return someOneWasBusy;
     }
 
-    // TODO rwe: check, if syncDirPath is needed
-    private synchronized boolean purgeObsoleteMedias(File syncDirPath) {
+    private synchronized boolean purgeObsoleteMedias() {
         Integer purgedMediasCount = _transactionHandler.executeInTransaction(new Callable<Integer>() {
 
             @Override
@@ -276,6 +282,7 @@ public class MediaSyncService extends SingleThreadedController {
         Orientation orientation = metadataExtractor.resolveOrientation();
         Media newMedia = new Media(user, null, mediaFileUri, creationDate);
         newMedia.setOrientation(orientation);
+        addCameraMetaDataToMedia(metadataExtractor, newMedia);
         InputStream is = null;
         try {
             is = new FileInputStream(new File(mediaFileUri));
@@ -284,6 +291,18 @@ public class MediaSyncService extends SingleThreadedController {
             IOUtils.closeQuietly(is);
         }
         return newMedia;
+    }
+
+    private static void addCameraMetaDataToMedia(PhotoMetadataExtractor metadataExtractor, Media newMedia) throws IOException, JsonGenerationException,
+            JsonMappingException {
+        CameraMetaData cameraMetaData = metadataExtractor.createCameraMetaData();
+        if (cameraMetaData == null) {
+            return;
+        }
+
+        Writer stringWriter = new StringWriter();
+        _mapper.writeValue(stringWriter, cameraMetaData);
+        newMedia.setCameraMetaData(stringWriter.toString());
     }
 
     private static Date resolveCreationDateOfMedia(PhotoMetadataExtractor metadataExtractor, URI mediaUri) {

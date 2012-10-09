@@ -12,6 +12,8 @@ import org.junit.Test;
 import com.drew.metadata.MetadataException;
 
 import de.wehner.mediamagpie.common.persistence.entity.Orientation;
+import de.wehner.mediamagpie.conductor.media.PhotoMetadataExtractor;
+import de.wehner.mediamagpie.conductor.metadata.CameraMetaData;
 
 public class PhotoMetadataExtractorTest {
 
@@ -57,5 +59,23 @@ public class PhotoMetadataExtractorTest {
         PhotoMetadataExtractor metadataExtractor = new PhotoMetadataExtractor(mediaFileRightSide.toURI());
         Orientation orientation = metadataExtractor.resolveOrientation();
         assertThat(orientation).isEqualTo(Orientation.UNKNOWN);
+    }
+
+    @Test
+    public void test_createCameraMetaData() throws IOException {
+        File mediaFile = new File("src/test/resources/images/IMG_0013.JPG");
+        PhotoMetadataExtractor metadataExtractor = new PhotoMetadataExtractor(mediaFile.toURI());
+        CameraMetaData cameraMetaData = metadataExtractor.createCameraMetaData();
+        System.out.println(cameraMetaData);
+        assertThat(cameraMetaData.getExifData().get("Exif Image Height")).isEqualTo("3000 pixels");
+    }
+
+    @Test
+    public void test_createCameraMetaData_but_PhotoHasNoMetaData() throws IOException {
+        File mediaFile = new File("src/test/resources/images/accept.png");
+        PhotoMetadataExtractor metadataExtractor = new PhotoMetadataExtractor(mediaFile.toURI());
+        CameraMetaData cameraMetaData = metadataExtractor.createCameraMetaData();
+        System.out.println(cameraMetaData);
+        assertThat(cameraMetaData).isNull();
     }
 }

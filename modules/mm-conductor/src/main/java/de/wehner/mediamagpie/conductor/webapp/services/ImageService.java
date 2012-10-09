@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.mortbay.log.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +34,7 @@ import de.wehner.mediamagpie.common.persistence.entity.Priority;
 import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
 import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
 import de.wehner.mediamagpie.common.util.ExceptionUtil;
-import de.wehner.mediamagpie.conductor.persistence.TransactionHandler;
+import de.wehner.mediamagpie.conductor.metadata.CameraMetaData;
 import de.wehner.mediamagpie.conductor.persistence.dao.ImageResizeJobExecutionDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.MediaDeleteJobExecutionDao;
@@ -47,16 +50,20 @@ public class ImageService {
     private final MediaDao _mediaDao;
 
     private final ImageResizeJobExecutionDao _imageResizeJobDao;
+
     private final MediaDeleteJobExecutionDao _mediaDeleteJobDao;
 
+    private final ObjectMapper _mapper;
+
     @Autowired
-    public ImageService(TransactionHandler th, ThumbImageDao imageDao, MediaDao mediaDao, ImageResizeJobExecutionDao imageResizeJobDao,
+    public ImageService(ThumbImageDao imageDao, MediaDao mediaDao, ImageResizeJobExecutionDao imageResizeJobDao,
             MediaDeleteJobExecutionDao mediaDeleteJobDao) {
         super();
         _thumbImageDao = imageDao;
         _mediaDao = mediaDao;
         _imageResizeJobDao = imageResizeJobDao;
         _mediaDeleteJobDao = mediaDeleteJobDao;
+        _mapper = new ObjectMapper();
     }
 
     // better use the resizeImageInQueue() method
@@ -285,23 +292,42 @@ public class ImageService {
 
     public MediaThumbCommand createMediaThumbCommand(Media media, MainConfiguration mainConfiguration, UserConfiguration userConfiguration,
             HttpServletRequest request) {
-        String contextPath = request.getContextPath();
         int thumbSize = mainConfiguration.getDefaultThumbSize();
-        int thumbDetailMediumSize = mainConfiguration.getDefaultGalleryDetailThumbSize();
         if (userConfiguration != null) {
             thumbSize = userConfiguration.getThumbImageSize();
         }
+
         MediaThumbCommand mediaThumbCommand = new MediaThumbCommand(media);
         mediaThumbCommand.setId(media.getId());
-        String thumbImageUrl = getOrCreateImageUrl(media, thumbSize, true, Priority.NORMAL);
-        String thumbDetailImageUrl = getOrCreateImageUrl(media, thumbDetailMediumSize, false, Priority.LOW);
-        String downloadUrl = getOrCreateImageUrl(media, null, false, Priority.LOW);
+        final String contextPath = request.getContextPath();
+        final String thumbImageUrl = getOrCreateImageUrl(media, thumbSize, true, Priority.NORMAL);
         mediaThumbCommand.setUrlThumbImage(contextPath + thumbImageUrl);
+        final int thumbDetailMediumSize = mainConfiguration.getDefaultGalleryDetailThumbSize();
+        final String thumbDetailImageUrl = getOrCreateImageUrl(media, thumbDetailMediumSize, false, Priority.LOW);
         mediaThumbCommand.setUrlThumbDetail(contextPath + thumbDetailImageUrl);
+        String downloadUrl = getOrCreateImageUrl(media, null, false, Priority.LOW);
         mediaThumbCommand.setUrlDownload(contextPath + downloadUrl);
         String title = !StringUtils.isEmpty(media.getName()) ? media.getName() : ("<" + media.getFileFromUri().getName() + ">");
         mediaThumbCommand.setTitle(title);
         mediaThumbCommand.setDescription(media.getDescription());
+
+        final String jsonCameraMetaData = media.getCameraMetaData();
+        if (!StringUtils.isEmpty(jsonCameraMetaData) && !"null".equals(jsonCameraMetaData)) {
+            try {
+                CameraMetaData cameraMetaData = _mapper.readValue(jsonCameraMetaData, CameraMetaData.class);
+                mediaThumbCommand.setCameraMetaData(cameraMetaData);
+            } catch (JsonParseException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (JsonMappingException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
         return mediaThumbCommand;
     }
 }

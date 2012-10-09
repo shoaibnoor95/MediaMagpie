@@ -5,6 +5,14 @@ import java.io.Serializable;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * Generic class to store two values in attributes <code>first</code> and <code>second</code>.
+ * 
+ * @param <M>
+ *            the type of attribute <code>first</code>
+ * @param <N>
+ *            the type of attribute <code>first</code>
+ */
 public class Pair<M, N> implements Serializable {
 
     private static final long serialVersionUID = 1L;

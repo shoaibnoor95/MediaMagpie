@@ -33,6 +33,7 @@ import de.wehner.mediamagpie.conductor.persistence.dao.ThumbImageDao;
 public class UploadServiceTest {
 
     private static final File TEST_MEDIA = new File("src/test/resources/data/media/2010/07/12/resized_img_4556.jpg");
+    private static final File TEST_MEDIA_NO_METADATA = new File("src/test/resources/images/accept.png");
 
     @Rule
     public TestEnvironment _testEnvironment = new TestEnvironment(getClass());
@@ -90,9 +91,20 @@ public class UploadServiceTest {
     public void testHandleUploadStream() throws FileNotFoundException {
         FileInputStream inputStream = new FileInputStream(TEST_MEDIA);
         Pair<String, File> origAndStoreFileName = _uploadService.createUniqueUserStoreFile(_user, "fileB");
+        
         _uploadService.handleUploadStream(_user, origAndStoreFileName.getSecond(), inputStream, 0);
 
         assertThat(new File(mc.getBaseUploadPath(), "user_000123/fileB")).exists();
         assertThat(new File(mc.getBaseUploadPath(), "user_000123/fileB")).hasSameContentAs(TEST_MEDIA);
+    }
+    
+    @Test
+    public void testHandleUploadStream_ButMediaHasNotMetadata() throws FileNotFoundException {
+        FileInputStream inputStream = new FileInputStream(TEST_MEDIA_NO_METADATA);
+        Pair<String, File> origAndStoreFileName = _uploadService.createUniqueUserStoreFile(_user, "accept.png");
+        
+        _uploadService.handleUploadStream(_user, origAndStoreFileName.getSecond(), inputStream, 0);
+
+        assertThat(new File(mc.getBaseUploadPath(), "user_000123/accept.png")).hasSameContentAs(TEST_MEDIA_NO_METADATA);
     }
 }

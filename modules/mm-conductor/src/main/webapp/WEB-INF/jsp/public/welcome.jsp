@@ -46,17 +46,21 @@
     <a class="toggle-link" onclick="toggleMetaInformation();">Show camera meta informations</a>
 </div>
 						<div class="meta" style="display: none;" >
-	       					<ul>
-	                           <li>ID: ${mediaThumbCommand.id}</li>
-<li>Camera: NIKON D50</li>
-<li>Resolution: 1999 x 1998</li>
-<li>Focal Length: 0.0mm</li>
-<li>Exposure Time: 1/10s</li>
-<li>ISO: 200</li>
-<li>Aperture: 0.0</li>
-<li>Metering Mode: Center weighted average</li>
-<li>Flash: Flash did not fire</li>
-                            </ul>
+	                        ID: ${mediaThumbCommand.id}<br/>
+                            <c:if test="${not empty mediaThumbCommand.cameraMetaData.exifData}">
+	                           -- EXIF-Data --<br />
+							   <ul>
+								    <c:forEach items="${mediaThumbCommand.cameraMetaData.exifData}" var="exifData">
+									   <li>${exifData.key} : ${exifData.value}</li>
+									</c:forEach>
+								</ul>
+							    -- Camera-Data --<br/>
+                                <ul>
+                                    <c:forEach items="${mediaThumbCommand.cameraMetaData.metaData}" var="metaData">
+                                        <li>${metaData.key} : ${metaData.value}</li>
+                                    </c:forEach>
+                                </ul>
+							</c:if>
                         </div> 
 					</div>
                 </div>

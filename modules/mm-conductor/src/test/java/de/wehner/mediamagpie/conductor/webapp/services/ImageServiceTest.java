@@ -27,7 +27,6 @@ import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.Orientation;
 import de.wehner.mediamagpie.common.persistence.entity.Priority;
 import de.wehner.mediamagpie.common.test.util.TestEnvironment;
-import de.wehner.mediamagpie.conductor.persistence.TransactionHandlerMock;
 import de.wehner.mediamagpie.conductor.persistence.dao.ImageResizeJobExecutionDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.MediaDeleteJobExecutionDao;
@@ -56,7 +55,7 @@ public class ImageServiceTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        _imageService = new ImageService(new TransactionHandlerMock(), _thumbImageDao, _mediaDao, _imageResizeJobExecutionDao, _mediaDeleteJobExecutionDao);
+        _imageService = new ImageService(_thumbImageDao, _mediaDao, _imageResizeJobExecutionDao, _mediaDeleteJobExecutionDao);
     }
 
     @Test

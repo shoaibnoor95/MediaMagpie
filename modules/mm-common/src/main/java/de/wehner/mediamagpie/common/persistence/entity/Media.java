@@ -55,7 +55,7 @@ public class Media extends CreationDateBase {
     private String _uri;
 
     /**
-     * The sha1 hash value of media endoced into base 64
+     * The sha1 hash value of media encoded in base 64
      */
     private String _hashValue;
 
@@ -87,6 +87,10 @@ public class Media extends CreationDateBase {
     private List<Album> _albums = new ArrayList<Album>();
 
     private Orientation _orientation;
+
+    /** an object of <code>CameraMetaData</code> encoded as JSON string */
+    @Column(nullable = true)
+    private String _cameraMetaData;
 
     public Media() {
         // needed for PersistenceUtil.deleteAll()
@@ -232,5 +236,13 @@ public class Media extends CreationDateBase {
 
     public void setOrientation(Orientation orientation) {
         _orientation = orientation;
+    }
+
+    public String getCameraMetaData() {
+        return _cameraMetaData;
+    }
+
+    public void setCameraMetaData(String cameraMetaData) {
+        _cameraMetaData = cameraMetaData;
     }
 }

@@ -1,12 +1,10 @@
 package de.wehner.mediamagpie.conductor.webapp.controller.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
 import de.wehner.mediamagpie.common.persistence.entity.Media;
+import de.wehner.mediamagpie.conductor.metadata.CameraMetaData;
 
 public class MediaThumbCommand {
 
@@ -42,23 +40,12 @@ public class MediaThumbCommand {
     private String _description;
 
     /**
-     * Optionally, you can add here meta information like:
-     * <ul>
-     * <li>Camera: NIKON D50</li>
-     * <li>Resolution: 1999 x 1998</li>
-     * <li>Focal Length: 0.0mm</li>
-     * <li>Exposure Time: 1/10s</li>
-     * <li>ISO: 200</li>
-     * <li>Aperture: 0.0</li>
-     * <li>Metering Mode: Center weighted average</li>
-     * <li>Flash: Flash did not fire</li>
-     * </ul>
+     * Metadata of camera like exif data
      */
-    private List<String> _metainformation;
+    private CameraMetaData _cameraMetaData;
 
     /**
-     * The media entity which can be null
-     * TODO rwe: check, if we really need this
+     * The media entity which can be null TODO rwe: check, if we really need this
      */
     private Media _media;
 
@@ -68,7 +55,7 @@ public class MediaThumbCommand {
 
     public MediaThumbCommand(Media media) {
         super();
-        _metainformation = new ArrayList<String>();
+        _cameraMetaData = new CameraMetaData();
         _media = media;
     }
 
@@ -120,12 +107,12 @@ public class MediaThumbCommand {
         _description = description;
     }
 
-    public List<String> getMetainformation() {
-        return _metainformation;
+    public CameraMetaData getCameraMetaData() {
+        return _cameraMetaData;
     }
 
-    public void setMetainformation(List<String> metainformation) {
-        _metainformation = metainformation;
+    public void setCameraMetaData(CameraMetaData cameraMetaData) {
+        _cameraMetaData = cameraMetaData;
     }
 
     public Media getMedia() {
