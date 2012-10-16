@@ -6,18 +6,20 @@
 	<artifactId>mm-base</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
+    <prerequisites>
+        <maven>3.0.3</maven>
+    </prerequisites>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>iso8859-15</project.reporting.outputEncoding>
-		<maven.version>3.0.3</maven.version>
 		<org.springframework.ws.version>2.1.0.RELEASE</org.springframework.ws.version>
 		<org.springframework.version>3.2.0.M2</org.springframework.version>
 		<springframework-security.version>3.1.2.RELEASE</springframework-security.version>
 		<mongodb.version>1.1.0.RC1</mongodb.version>
 		<org.slf4j.version>1.7.0</org.slf4j.version>
 		<jetty.version>6.1.26</jetty.version>
-		<!--<jetty.version>7.0.0.pre5</jetty.version>-->
+		<!--<jetty.version>7.0.0.pre5</jetty.version> -->
 		<jetty.jsp.version>7.0.0pre2</jetty.jsp.version>
 	</properties>
 
@@ -29,15 +31,17 @@
 	<name>MediaMagpie Super POM</name>
 	<description>
 		MediaMagpie is a Java-based web application able to organize and publish medias
-		(photos and videos). It can be run on your local computer in a local mode or on a big server
-		using a distributed file system to publish medias as web portal.
+		(photos and videos). You can run MediaMagpie on your local computer (in a local mode)
+		or on a (big) server connected to the internet.
+		The system supports user-support to separate file materials from different users.
 	</description>
 	<url>http://www.ralfwehner.org/TODO</url>
 	<modules>
 		<module>modules/mm-conductor</module>
 		<module>modules/mm-common</module>
 		<module>modules/mm-hadoop-core</module>
-		<!--<module>modules/mm-filesystem</module>-->
+		<module>modules/mm-aws</module>
+		<!--<module>modules/mm-filesystem</module> -->
 		<module>mm-distribution</module>
 	</modules>
 	<!--<scm> <connection>scm:svn:http://jamwiki.svn.sourceforge.net/svnroot/jamwiki/wiki/trunk</connection> 
@@ -55,16 +59,42 @@
 		</license>
 	</licenses>
 
-	<prerequisites>
-		<maven>${maven.version}</maven>
-	</prerequisites>
-    <dependencies>
-		<dependency>
+	<dependencies>
+ 		<dependency>
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
-            <version>3.2.1</version>
+			<version>3.2.1</version>
 		</dependency>
-    </dependencies>
+		<dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <!-- <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>-->
+
+        <!-- Test -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easytesting</groupId>
+            <artifactId>fest-assert</artifactId>
+            <scope>provided</scope>
+        </dependency>
+	</dependencies>
 	<dependencyManagement>
 		<dependencies>
 			<!-- Some useful stuff -->
@@ -261,23 +291,10 @@
 				<artifactId>jetty-java5-threadpool</artifactId>
 				<version>${jetty.version}</version>
 			</dependency>
-	<!-- see: http://mvnrepository.com/artifact/org.eclipse.jetty
-    	<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-server</artifactId>
-			<version>8.1.0.RC5</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-webapp</artifactId>
-			<version>8.1.0.RC5</version>
-		</dependency>
-<dependency>
-	<groupId>org.eclipse.jetty</groupId>
-	<artifactId>jetty-jsp-2.1</artifactId>
-	<version>7.5.0.RC2</version>
-</dependency>-->
-
+			<!-- see: http://mvnrepository.com/artifact/org.eclipse.jetty <dependency> <groupId>org.eclipse.jetty</groupId> 
+				<artifactId>jetty-server</artifactId> <version>8.1.0.RC5</version> </dependency> <dependency> <groupId>org.eclipse.jetty</groupId> 
+				<artifactId>jetty-webapp</artifactId> <version>8.1.0.RC5</version> </dependency> <dependency> <groupId>org.eclipse.jetty</groupId> 
+				<artifactId>jetty-jsp-2.1</artifactId> <version>7.5.0.RC2</version> </dependency> -->
 
 			<!-- Test -->
 			<dependency>
@@ -492,18 +509,10 @@
 				<artifactId>build-helper-maven-plugin</artifactId>
 				<version>1.7</version>
 				<executions>
-                    <!-- Remove project's artifacts from local repository. 
-                        Useful to keep only one copy of large local snapshot, for example: installer, for disk space optimization purpose. 
-                        (http://mojo.codehaus.org/build-helper-maven-plugin/remove-project-artifact-mojo.html)-->
-					<!--<execution>
-						<id>remove-old-installers</id>
-						<goals>
-							<goal>remove-project-artifact</goal>
-						</goals>
-						<configuration>
-							<removeAll>true</removeAll>
-						</configuration>
-					</execution>-->
+					<!-- Remove project's artifacts from local repository. Useful to keep only one copy of large local 
+						snapshot, for example: installer, for disk space optimization purpose. (http://mojo.codehaus.org/build-helper-maven-plugin/remove-project-artifact-mojo.html) -->
+					<!--<execution> <id>remove-old-installers</id> <goals> <goal>remove-project-artifact</goal> </goals> 
+						<configuration> <removeAll>true</removeAll> </configuration> </execution> -->
 					<execution>
 						<id>add-test-source</id>
 						<phase>generate-test-sources</phase>

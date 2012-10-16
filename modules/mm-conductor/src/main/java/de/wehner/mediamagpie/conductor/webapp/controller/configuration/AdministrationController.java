@@ -33,9 +33,9 @@ public class AdministrationController {
     private static final Logger LOG = LoggerFactory.getLogger(AdministrationController.class);
 
     public static final String URL_MAINCONFIG = "/mainconfiguration";
-    public static final String VIEW_MAINCONFIG = "configuration/admin/show_mainconfiguration";
+    public static final String VIEW_MAINCONFIG = "config/admin/show_mainconfiguration";
     public static final String URL_MAINCONFIG_EDIT = "/mainconfiguration/edit";
-    public static final String VIEW_MAINCONFIG_EDIT = "configuration/admin/edit_mainconfiguration";
+    public static final String VIEW_MAINCONFIG_EDIT = "config/admin/edit_mainconfiguration";
 
     private final ConfigurationProvider _configurationProvider;
     private final MediaSyncService _mediaSyncService;

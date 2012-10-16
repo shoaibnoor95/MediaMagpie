@@ -83,6 +83,13 @@ public class UploadService {
         return new Pair<String, File>(originalFilename, tempFile);
     }
 
+    /**
+     * Provides the path name of a media below the 'useruploads'-path. E.g. <code>user_000001/IMG_1150.jpg</code>.
+     * 
+     * @param currentUser
+     * @param originalFilename
+     * @return
+     */
     private File buildRelativeMediaFileName(User currentUser, String originalFilename) {
         File testRelFileName = new File(String.format("user_%06d", currentUser.getId()), originalFilename);
         return testRelFileName;

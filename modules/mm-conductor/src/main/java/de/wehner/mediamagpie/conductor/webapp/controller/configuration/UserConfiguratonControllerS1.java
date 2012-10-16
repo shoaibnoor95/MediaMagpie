@@ -34,9 +34,9 @@ public class UserConfiguratonControllerS1 extends AbstractConfigurationSupportCo
     private static final Logger LOG = LoggerFactory.getLogger(UserConfiguratonControllerS1.class);
 
     public static final String URL_USERCONFIG = "/";
-    public static final String VIEW_USERCONFIG = "configuration/user/show_userconfiguration";
+    public static final String VIEW_USERCONFIG = "config/user/show_userconfiguration";
     public static final String URL_USERCONFIG_EDIT_S1 = "/edit";
-    public static final String VIEW_USERCONFIG_EDIT_S1 = "configuration/user/edit_userconfigurationS1";
+    public static final String VIEW_USERCONFIG_EDIT_S1 = "config/user/edit_userconfigurationS1";
 
     @Autowired
     public UserConfiguratonControllerS1(UserConfigurationDao userConfigurationDao, UserDao userDao, ImageService imageService) {

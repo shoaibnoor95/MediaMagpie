@@ -32,11 +32,11 @@ public class MailServerController {
     private static final Logger LOG = LoggerFactory.getLogger(MailServerController.class);
 
     public static final String URL_MAILCONFIG = "/configuration";
-    public static final String VIEW_MAILCONFIG = "configuration/admin/mailServer/show_mailserverconfiguration";
+    public static final String VIEW_MAILCONFIG = "config/admin/mailServer/show_mailserverconfiguration";
     public static final String URL_MAILCONFIG_EDIT = "/configuration/edit";
-    public static final String VIEW_MAILCONFIG_EDIT = "configuration/admin/mailServer/edit_mailserverconfiguration";
+    public static final String VIEW_MAILCONFIG_EDIT = "config/admin/mailServer/edit_mailserverconfiguration";
     public static final String URL_SEND_TEST_MAIL = "/sendTestMail";
-    public static final String VIEW_SEND_TEST_MAIL = "configuration/admin/mailServer/sendTestMail";
+    public static final String VIEW_SEND_TEST_MAIL = "config/admin/mailServer/sendTestMail";
 
     private final ConfigurationDao _configurationDao;
     private final MailSenderFacade _mailSenderFacade;

@@ -19,3 +19,7 @@ modules/mm-filesystem/.classpath
 modules/mm-filesystem/.project
 modules/mm-filesystem/.settings/
 modules/mm-filesystem/target/
+modules/mm-aws/.classpath
+modules/mm-aws/.project
+modules/mm-aws/.settings/
+modules/mm-aws/target/

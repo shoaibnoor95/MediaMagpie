@@ -50,7 +50,7 @@
 								<label>Password:</label>
 							</dt>
 							<dd>
-								<form:password path="password" showPassword="true" cssClass="req"/>
+								<form:password path="password" showPassword="false" cssClass="req"/>
 							</dd>
 							<dd class="help">Only fill in this field if you want to CHANGE your current password</dd>	
 							<form:errors path="password" cssClass="error"/>
@@ -60,7 +60,7 @@
 								<label>Password Confirm:</label>
 							</dt>
 							<dd>
-								<form:password path="passwordConfirm" showPassword="true" cssClass="req"/>
+								<form:password path="passwordConfirm" showPassword="false" cssClass="req"/>
 							</dd>
 							<dd class="help">Confirm your password only if you want to CHANGE your current password</dd>	
 							<form:errors path="passwordConfirm" cssClass="error"/>

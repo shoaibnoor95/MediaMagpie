@@ -41,7 +41,7 @@ public class UserConfiguratonControllerS2 {
     private static final Logger LOG = LoggerFactory.getLogger(UserConfiguratonControllerS2.class);
 
     public static final String URL_USERCONFIG_EDIT_S2 = "/edit2";
-    public static final String VIEW_USERCONFIG_EDIT_S2 = "configuration/user/edit_userconfigurationS2";
+    public static final String VIEW_USERCONFIG_EDIT_S2 = "config/user/edit_userconfigurationS2";
 
     private final UserConfigurationDao _userConfigurationDao;
     private final UserDao _userDao;

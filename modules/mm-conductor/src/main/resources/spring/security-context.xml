@@ -19,7 +19,7 @@
  		<intercept-url pattern="/public/**" filters="none" />-->
 		<intercept-url pattern="/login*" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<intercept-url pattern="/config/admin/**" access="ROLE_ADMIN" />
-		<intercept-url pattern="/config/user/**" access="ROLE_ADMIN,ROLE_USER" />
+		<intercept-url pattern="/config/**" access="ROLE_ADMIN,ROLE_USER" />
 		<intercept-url pattern="/media/**" access="ROLE_USER,ROLE_ADMIN,ROLE_GUEST"  />
 		<intercept-url pattern="/upload/**" access="ROLE_USER,ROLE_ADMIN,ROLE_GUEST"  />
 		
