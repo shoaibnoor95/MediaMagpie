@@ -7,19 +7,16 @@ import org.apache.commons.lang.builder.ToStringStyle;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Mock;
 
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.User.Role;
 import de.wehner.mediamagpie.common.persistence.entity.properties.Property;
+import de.wehner.mediamagpie.common.persistence.entity.properties.S3Configuration;
 import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
 import de.wehner.mediamagpie.common.persistence.entity.properties.UserPropertyBackedConfiguration;
 import de.wehner.mediamagpie.common.testsupport.DbTestEnvironment;
 import de.wehner.mediamagpie.common.util.CipherService;
 import de.wehner.mediamagpie.common.util.properties.PropertiesBacked;
-import de.wehner.mediamagpie.conductor.persistence.dao.UserConfigurationDao;
-import de.wehner.mediamagpie.conductor.persistence.dao.UserDao;
-
 
 public class UserConfigurationDaoTest {
 
@@ -68,8 +65,7 @@ public class UserConfigurationDaoTest {
 
     };
 
-    @Mock
-    CipherService _cipherService;
+    private CipherService _cipherService;
 
     @Rule
     public DbTestEnvironment _dbTestEnvironment = new DbTestEnvironment(/* "mysql-it" */);
@@ -82,6 +78,7 @@ public class UserConfigurationDaoTest {
         _dbTestEnvironment.cleanDb();
         _dbTestEnvironment.beginTransaction();
         _user = _dbTestEnvironment.getOrCreateTestUser();
+        _cipherService = new CipherService("cipherKey");
         _userConfigurationDao = new UserConfigurationDao(_dbTestEnvironment.getPersistenceService(), _cipherService);
     }
 
@@ -96,8 +93,28 @@ public class UserConfigurationDaoTest {
 
         UserConfiguration configurationFromDb = _userConfigurationDao.getConfiguration(_user, UserConfiguration.class);
 
-        assertThat(configurationFromDb).isEqualTo(configuration);
-        _dbTestEnvironment.commitTransaction();
+        try {
+            assertThat(configurationFromDb).isEqualTo(configuration);
+        } finally {
+            _dbTestEnvironment.commitTransaction();
+        }
+    }
+
+    @Test
+    public void testSaveLoad_Encrypted() throws Exception {
+        S3Configuration configuration = new S3Configuration();
+        configuration.setSecretKey("secret key");
+
+        _userConfigurationDao.saveOrUpdateConfiguration(_user, configuration);
+        _dbTestEnvironment.flipTransaction();
+        assertThat(_dbTestEnvironment.getPersistenceService().getAll(Property.class)).hasSize(1);
+
+        S3Configuration configurationFromDb = _userConfigurationDao.getConfiguration(_user, S3Configuration.class);
+        try {
+            assertThat(configurationFromDb).isEqualTo(configuration);
+        } finally {
+            _dbTestEnvironment.commitTransaction();
+        }
     }
 
     @Test

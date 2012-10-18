@@ -20,7 +20,7 @@
 		<dt>
 			<label>Secret Key:</label>
 		</dt>
-		<dd>${conf.secretKey}</dd>
+		<dd>${conf.anonymizedSecretKey}</dd>
 	</dl>
 	<dl>
 		<dt>

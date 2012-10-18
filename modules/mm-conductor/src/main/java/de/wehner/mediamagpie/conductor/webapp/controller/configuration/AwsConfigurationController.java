@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +18,13 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.support.SessionStatus;
 
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.properties.S3Configuration;
 import de.wehner.mediamagpie.conductor.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.UserDao;
 import de.wehner.mediamagpie.conductor.webapp.controller.AbstractConfigurationSupportController;
+import de.wehner.mediamagpie.conductor.webapp.controller.commands.config.S3ConfigurationCommand;
 
 @Controller
 @RequestMapping("/config/aws/s3")
@@ -49,40 +50,48 @@ public class AwsConfigurationController extends AbstractConfigurationSupportCont
 
     @RequestMapping(method = RequestMethod.GET, value = URL_S3CONFIG)
     public String showAwsS3Configuration(Model model, @RequestParam(value = "userId", required = false) Long userId, HttpSession session) {
-        User user = getValidatedRelevantUser(userId);
-        if (user != null) {
-            model.addAttribute("conf", _userConfigurationDao.getConfiguration(user, S3Configuration.class));
-        }
+        S3ConfigurationCommand s3ConfigurationCommand = createS3ConfigurationCommandFromUser(userId);
+        model.addAttribute("conf", s3ConfigurationCommand);
         // session.removeAttribute("userConfigurationCommand");
         return VIEW_S3CONFIG;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = URL_S3CONFIG_EDIT)
     public String editAwsS3Configuration(Model model, @RequestParam(value = "userId", required = false) Long userId, HttpSession session) {
-        User user = getValidatedRelevantUser(userId);
-        model.addAttribute("conf", _userConfigurationDao.getConfiguration(user, S3Configuration.class));
+        S3ConfigurationCommand s3ConfigurationCommand = createS3ConfigurationCommandFromUser(userId);
+        model.addAttribute("conf", s3ConfigurationCommand);
         // session.removeAttribute("userConfigurationCommand");
         return VIEW_S3CONFIG_EDIT;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = URL_S3CONFIG_EDIT)
-    public String submitConfiguration(@Valid S3Configuration command, BindingResult result, Model model,
-            @RequestParam(value = "userId", required = false) Long userId, final SessionStatus status) throws IOException {
+    public String submitConfiguration(@Valid S3ConfigurationCommand command, BindingResult result, Model model,
+            @RequestParam(value = "userId", required = false) Long userId) throws IOException {
 
-        // TODO rwe: add validation of configuration here
+        // TODO rwe: Test validation of configuration here
         // new UserConfigurationValidator().validate(command.getUserConfiguration(), result);
         if (result.hasErrors()) {
             LOG.info(result.toString());
             return VIEW_S3CONFIG_EDIT;
         }
 
-        // save configuration
+        // update existing configuration
         User user = getValidatedRelevantUser(userId);
-        // TODO rwe: only replace secret key, if user sets a new one
-        _userConfigurationDao.saveOrUpdateConfiguration(user, command);
+        S3Configuration existingS3Configuration = _userConfigurationDao.getConfiguration(user, S3Configuration.class);
+        existingS3Configuration.setAccessKey(command.getAccessKey());
+        if (!StringUtils.isEmpty(command.getSecretKey()) && !command.getSecretKey().equals(existingS3Configuration.getSecretKey())) {
+            existingS3Configuration.setSecretKey(command.getSecretKey());
+        }
+        _userConfigurationDao.saveOrUpdateConfiguration(user, existingS3Configuration);
 
-        status.setComplete();
         return "redirect:" + getBaseRequestMappingUrl() + URL_S3CONFIG;
+    }
+
+    private S3ConfigurationCommand createS3ConfigurationCommandFromUser(Long userId) {
+        User user = getValidatedRelevantUser(userId);
+        S3Configuration s3Configuration = _userConfigurationDao.getConfiguration(user, S3Configuration.class);
+        S3ConfigurationCommand s3ConfigurationCommand = S3ConfigurationCommand.createCommand(s3Configuration);
+        return s3ConfigurationCommand;
     }
 
     public static String getBaseRequestMappingUrl() {

@@ -9,5 +9,4 @@ import de.wehner.mediamagpie.common.util.properties.PropertiesBacked;
  * 
  */
 public interface UserPropertyBackedConfiguration {
-//    User getUser();
 }
