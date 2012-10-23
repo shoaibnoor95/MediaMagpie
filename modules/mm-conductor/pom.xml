@@ -37,6 +37,11 @@
 			<artifactId>mm-common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mm-aws</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
 		<!-- Some useful stuff -->
  		<dependency>

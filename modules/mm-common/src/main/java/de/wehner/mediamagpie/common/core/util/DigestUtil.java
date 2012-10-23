@@ -20,6 +20,18 @@ public class DigestUtil {
 
     private static final Logger LOG = Logger.getLogger(DigestUtil.class);
 
+    public static String computeSha1AsHexString(File inputFile) {
+        FileInputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(inputFile);
+            return computeSha1AsHexString(inputStream);
+        } catch (IOException e) {
+            throw ExceptionUtil.convertToRuntimeException(e);
+        } finally {
+            IOUtils.closeQuietly(inputStream);
+        }
+    }
+
     public static String computeSha1AsHexString(String input) {
         try {
             InputStream inputStream = IOUtils.toInputStream(input, "ISO8859-15");

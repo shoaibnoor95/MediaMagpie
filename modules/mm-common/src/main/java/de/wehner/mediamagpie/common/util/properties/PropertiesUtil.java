@@ -1,6 +1,7 @@
 package de.wehner.mediamagpie.common.util.properties;
 
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -166,7 +167,7 @@ public class PropertiesUtil {
 
     private static java.beans.PropertyEditor getCustomPropertyEditor(Class<?> clazz, String fieldName) throws SecurityException, NoSuchFieldException,
             InstantiationException, IllegalAccessException {
-        PropertyDef annotation = clazz.getDeclaredField("_" + fieldName).getAnnotation(PropertyDef.class);
+        PropertyDef annotation = findDeclaredFieldByStrategie(clazz, fieldName).getAnnotation(PropertyDef.class);
         if (annotation == null) {
             return null;
         }
@@ -174,7 +175,15 @@ public class PropertiesUtil {
     }
 
     private static boolean hasEncryptedAnnotation(Class<?> clazz, String fieldName) throws SecurityException, NoSuchFieldException {
-        Encrypted annotation = clazz.getDeclaredField("_" + fieldName).getAnnotation(Encrypted.class);
+        Encrypted annotation = findDeclaredFieldByStrategie(clazz, fieldName).getAnnotation(Encrypted.class);
         return annotation != null;
+    }
+
+    private static Field findDeclaredFieldByStrategie(Class<?> clazz, String fieldName) throws NoSuchFieldException {
+        try {
+            return clazz.getDeclaredField("_" + fieldName);
+        } catch (NoSuchFieldException e) {
+            return clazz.getDeclaredField(fieldName);
+        }
     }
 }

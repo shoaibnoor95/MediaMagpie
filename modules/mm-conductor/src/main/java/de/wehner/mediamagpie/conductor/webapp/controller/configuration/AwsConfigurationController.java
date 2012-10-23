@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -65,11 +66,9 @@ public class AwsConfigurationController extends AbstractConfigurationSupportCont
     }
 
     @RequestMapping(method = RequestMethod.POST, value = URL_S3CONFIG_EDIT)
-    public String submitConfiguration(@Valid S3ConfigurationCommand command, BindingResult result, Model model,
+    public String submitConfiguration(@Valid @ModelAttribute("conf") S3ConfigurationCommand command, BindingResult result, Model model,
             @RequestParam(value = "userId", required = false) Long userId) throws IOException {
 
-        // TODO rwe: Test validation of configuration here
-        // new UserConfigurationValidator().validate(command.getUserConfiguration(), result);
         if (result.hasErrors()) {
             LOG.info(result.toString());
             return VIEW_S3CONFIG_EDIT;

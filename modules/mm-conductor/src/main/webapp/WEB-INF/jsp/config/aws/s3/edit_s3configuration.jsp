@@ -22,10 +22,10 @@
                             </dt>
                             <dd>
                                 <form:input path="accessKey" cssClass="req"/>
+                                <form:errors path="accessKey" cssClass="error"/>
                                 <img src="/static/images/famfamfam_silk/help.png" title="You will find your access key under 'Security Credenticals' of our account. Go to: https://portal.aws.amazon.com/gp/aws/securityCredentials"/>
                             </dd>
                             <dd class="help">e.g. 'LKUAJAFDEFYMGTKDNBUP'</dd>    
-                            <form:errors path="accessKey" cssClass="error"/>
                         </dl>
 
                         <dl>
@@ -34,10 +34,10 @@
                             </dt>
                             <dd>
                                 <form:password path="secretKey" showPassword="false" cssClass="req"/>
+                                <form:errors path="secretKey" cssClass="error"/>
                                 <img src="/static/images/famfamfam_silk/help.png" title="You will find your secret key under 'Security Credenticals' of our account. Go to: https://portal.aws.amazon.com/gp/aws/securityCredentials"/>
                             </dd>
                             <dd class="help">e.g. 'kirpdotW6lY9zjoddtbjzcD0Oy30jkguw9DTjfOr'<br>Leave blank if you dont't want to change existing secret key.</dd>   
-                            <form:errors path="secretKey" cssClass="error"/>
                         </dl>
 
                         <dl class="buttons">

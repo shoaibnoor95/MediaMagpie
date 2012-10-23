@@ -358,11 +358,17 @@
 				<updatePolicy>never</updatePolicy>
 			</snapshots>
 		</repository>
-		<repository>
+	    <repository>
 			<id>org.springframework.maven.milestone</id>
 			<name>Spring Framework Maven Milestone Repository</name>
 			<url>http://maven.springframework.org/milestone</url>
 		</repository>
+        <!-- only necessary for jets3t (aws) -->
+        <repository>
+            <name>jets3t</name>
+            <id>jets3t</id>
+            <url>http://www.jets3t.org/maven2</url>
+        </repository>
 	</repositories>
 
 	<!-- For maven-jaxb2-plugin -->

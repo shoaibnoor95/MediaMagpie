@@ -23,3 +23,4 @@ modules/mm-aws/.classpath
 modules/mm-aws/.project
 modules/mm-aws/.settings/
 modules/mm-aws/target/
+modules/mm-aws/src/test/resources/AwsCredentials.properties

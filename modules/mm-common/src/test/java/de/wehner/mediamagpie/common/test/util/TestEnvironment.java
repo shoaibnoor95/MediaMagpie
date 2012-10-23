@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
  * 
  * </p>
  * 
- * @author rwe-extern
+ * @author Ralf Wehner
  * 
  */
 @Ignore

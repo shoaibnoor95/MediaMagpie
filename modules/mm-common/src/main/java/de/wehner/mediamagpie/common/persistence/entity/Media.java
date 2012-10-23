@@ -27,6 +27,7 @@ import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.Store;
 
+import de.wehner.mediamagpie.common.core.util.DigestUtil;
 import de.wehner.mediamagpie.common.persistence.realms.AlbumMediaRelation;
 
 // select * from (select uri, count(*) as N from media group by uri order by N desc) as uris where N > 1
@@ -55,7 +56,8 @@ public class Media extends CreationDateBase {
     private String _uri;
 
     /**
-     * The sha1 hash value of media encoded in base 64
+     * The sha1 hash value of media encoded in base 64. (This string was created with
+     * {@linkplain DigestUtil#computeSha1AsHexString(java.io.InputStream)};)
      */
     private String _hashValue;
 
@@ -186,6 +188,11 @@ public class Media extends CreationDateBase {
         return FilenameUtils.getExtension(path);
     }
 
+    /**
+     * Provides the media data as <code>File</code>.
+     * 
+     * @return The media data as file.
+     */
     public File getFileFromUri() {
         return new File(URI.create(_uri));
     }

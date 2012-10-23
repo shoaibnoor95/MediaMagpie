@@ -2,6 +2,7 @@ package de.wehner.mediamagpie.common.persistence.entity.properties;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+import org.hibernate.validator.constraints.Length;
 
 import de.wehner.mediamagpie.common.util.properties.Encrypted;
 import de.wehner.mediamagpie.common.util.properties.PropertiesBacked;
@@ -9,36 +10,38 @@ import de.wehner.mediamagpie.common.util.properties.PropertiesBacked;
 @PropertiesBacked(prefix = "aws.s3.configuration", initFromProperties = false)
 public class S3Configuration implements UserPropertyBackedConfiguration {
 
-    protected String _accessKey;
+    @Length(min = 20, max = 20)
+    protected String accessKey;
 
+    @Length(max = 40)
     @Encrypted
-    protected String _secretKey;
+    protected String secretKey;
 
     public S3Configuration() {
     }
 
     public String getAccessKey() {
-        return _accessKey;
+        return accessKey;
     }
 
     public void setAccessKey(String accessKey) {
-        _accessKey = accessKey;
+        this.accessKey = accessKey;
     }
 
     public String getSecretKey() {
-        return _secretKey;
+        return secretKey;
     }
 
     public void setSecretKey(String secretKey) {
-        _secretKey = secretKey;
+        this.secretKey = secretKey;
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((_accessKey == null) ? 0 : _accessKey.hashCode());
-        result = prime * result + ((_secretKey == null) ? 0 : _secretKey.hashCode());
+        result = prime * result + ((accessKey == null) ? 0 : accessKey.hashCode());
+        result = prime * result + ((secretKey == null) ? 0 : secretKey.hashCode());
         return result;
     }
 
@@ -51,15 +54,15 @@ public class S3Configuration implements UserPropertyBackedConfiguration {
         if (getClass() != obj.getClass())
             return false;
         S3Configuration other = (S3Configuration) obj;
-        if (_accessKey == null) {
-            if (other._accessKey != null)
+        if (accessKey == null) {
+            if (other.accessKey != null)
                 return false;
-        } else if (!_accessKey.equals(other._accessKey))
+        } else if (!accessKey.equals(other.accessKey))
             return false;
-        if (_secretKey == null) {
-            if (other._secretKey != null)
+        if (secretKey == null) {
+            if (other.secretKey != null)
                 return false;
-        } else if (!_secretKey.equals(other._secretKey))
+        } else if (!secretKey.equals(other.secretKey))
             return false;
         return true;
     }
