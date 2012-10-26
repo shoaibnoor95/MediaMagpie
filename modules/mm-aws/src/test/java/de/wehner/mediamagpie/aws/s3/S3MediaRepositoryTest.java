@@ -20,6 +20,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
 
 import de.wehner.mediamagpie.api.MediaExport;
+import de.wehner.mediamagpie.api.MediaType;
 
 public class S3MediaRepositoryTest {
 
@@ -47,6 +48,7 @@ public class S3MediaRepositoryTest {
         _mediaExport.setInputStream(new FileInputStream(SRC_TEST_JPG));
         _mediaExport.setMediaId("mediaID");
         _mediaExport.setOriginalFileName("origFileName");
+        _mediaExport.setType(MediaType.PHOTO);
     }
 
     @Test
@@ -54,9 +56,22 @@ public class S3MediaRepositoryTest {
 
         _s3MediaRepository.addMedia("test-user", _mediaExport);
 
-        verify(_s3ClientFacade, times(1)).createBucketIfNotExists("mediamagpie");
-        verify(_s3ClientFacade, times(1)).getObjectIfExists("mediamagpie", "test-user_UNKNOWN_IDmediaID_origFileName");
-        verify(_s3ClientFacade, times(1)).putObject(eq("mediamagpie"), eq("test-user_UNKNOWN_IDmediaID_origFileName"),
+        verify(_s3ClientFacade, times(1)).createBucketIfNotExists("mediamagpie-photo");
+        verify(_s3ClientFacade, times(1)).getObjectIfExists("mediamagpie-photo", "test-user/PHOTO/IDmediaID/origFileName");
+        verify(_s3ClientFacade, times(1)).putObject(eq("mediamagpie-photo"), eq("test-user/PHOTO/IDmediaID/origFileName"),
                 same(_mediaExport.getInputStream()), any(ObjectMetadata.class));
     }
+
+    // @Test
+    // public void testXmlBuilder() throws ParserConfigurationException, FactoryConfigurationError, TransformerException {
+    // XMLBuilder builder = XMLBuilder.create("CompleteMultipartUpload").a("xmlns", Constants.XML_NAMESPACE);
+    // builder.e("Part").e("PartNumber").t("" + 12).up().e("ETag").t("ETag");
+    // Properties outputProperties = new Properties();
+    // // Pretty-print the XML output (doesn't work in all cases)
+    // outputProperties.put(javax.xml.transform.OutputKeys.INDENT, "yes");
+    // // Get 2-space indenting when using the Apache transformer
+    // outputProperties.put("{http://xml.apache.org/xslt}indent-amount", "2");
+    //
+    // System.out.println(builder.asString(outputProperties));
+    // }
 }

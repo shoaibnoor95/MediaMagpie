@@ -34,6 +34,10 @@ public class S3ClientFacade {
         _s3 = new AmazonS3Client(credentials);
     }
 
+    AmazonS3 getS3() {
+        return _s3;
+    }
+
     public S3Object getObjectIfExists(String bucketName, String fileName) {
         S3Object object = null;
         try {
@@ -46,12 +50,15 @@ public class S3ClientFacade {
     public void createBucketIfNotExists(String bucketName) {
         if (!_s3.doesBucketExist(bucketName)) {
             _s3.createBucket(bucketName);
+            LOG.info("Created new bucket '" + bucketName + "'.");
         }
     }
 
     public PutObjectResult putObject(String existingBucketName, String keyName, InputStream is, ObjectMetadata metadata) {
+        //metadata.setContentEncoding("UTF8");
         final PutObjectRequest putObjectRequest = new PutObjectRequest(existingBucketName, keyName, is, metadata);
         PutObjectResult putObject = _s3.putObject(putObjectRequest);
+        LOG.debug("upload object '" + existingBucketName + "'#'" + keyName + "' to S3");
         return putObject;
     }
 
@@ -67,6 +74,7 @@ public class S3ClientFacade {
         try {
             // Or you can block and wait for the upload to finish
             upload.waitForCompletion();
+            LOG.debug("upload object '" + existingBucketName + "', '" + keyName + "' with multipart upload to S3");
         } catch (AmazonClientException amazonClientException) {
             LOG.warn("Unable to upload file, upload was aborted.");
             amazonClientException.printStackTrace();
@@ -83,9 +91,14 @@ public class S3ClientFacade {
 
         try {
             tm.abortMultipartUploads(existingBucketName, oneWeekAgo);
+            LOG.info("abort multipart transfer of bucket '" + existingBucketName + "'");
         } catch (AmazonClientException amazonClientException) {
             System.out.println("Unable to upload file, upload was aborted.");
             amazonClientException.printStackTrace();
         }
+    }
+
+    S3ObjectIterator iterator(String bucketName, String prefix) {
+        return new S3ObjectIterator(_s3, bucketName, prefix);
     }
 }

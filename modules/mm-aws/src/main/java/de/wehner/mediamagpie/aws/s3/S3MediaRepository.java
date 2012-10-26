@@ -1,6 +1,9 @@
 package de.wehner.mediamagpie.aws.s3;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -11,15 +14,28 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.sun.xml.internal.messaging.saaj.packaging.mime.internet.MimeUtility;
 
 import de.wehner.mediamagpie.api.ExportStatus;
 import de.wehner.mediamagpie.api.MediaExport;
+import de.wehner.mediamagpie.api.MediaType;
+import de.wehner.mediamagpie.common.util.ExceptionUtil;
+import de.wehner.mediamagpie.common.util.MMTransformIterator;
 
 public class S3MediaRepository {
 
     private static final Logger LOG = LoggerFactory.getLogger(S3MediaRepository.class);
 
-    public static final String HASH_OF_DATA = "hash-of-data";
+    public static final String KEY_DELIMITER = "/";
+
+    public static final String META_HASH_OF_DATA = "hash-of-data";
+    public static final String META_NAME = "name";
+    public static final String META_DESCRIPTION = "description";
+    public static final String META_CREATION_DATE = "creation-date";
+    public static final String META_ORIGINAL_FILE_NAME = "original-file-name";
+    public static final String META_MEDIA_TYPE = "media-type";
+    public static final String META_TAGS = "media-tags";
 
     private final S3ClientFacade _s3Facade;
 
@@ -35,8 +51,8 @@ public class S3MediaRepository {
 
     public void addMedia(String user, MediaExport mediaExport) {
         // build file name and bucket name
-        String fileName = buildFileName(user, mediaExport);
-        String bucketName = getBucketName(mediaExport);
+        String fileName = getKeyName(user, mediaExport);
+        String bucketName = getBucketName(mediaExport.getType());
 
         _s3Facade.createBucketIfNotExists(bucketName);
 
@@ -52,19 +68,19 @@ public class S3MediaRepository {
             // TODO rwe: remove logging?
             LOG.info("Content-Type: " + object.getObjectMetadata().getContentType());
             // displayTextInputStream(object.getObjectContent());
-            hashValueInS3 = userMetadata.get(HASH_OF_DATA);
+            hashValueInS3 = userMetadata.get(META_HASH_OF_DATA);
         }
         // does we need to overwrite?
-        boolean write = ((hashValueInS3 == null) || hashValueInS3 != mediaExport.getHashValue());
+        boolean write = ((hashValueInS3 == null) || !hashValueInS3.equals(mediaExport.getHashValue()));
 
         if (!write) {
-            LOG.info("Media with key '" + fileName + "' will not uploaded to S3, because this object already exists.");
+            LOG.debug("Media with key '" + fileName + "' will not uploaded to S3, because this object already exists.");
             return;
         }
 
         // upload file to s3
-        PutObjectResult putObject = _s3Facade.putObject(bucketName, fileName, mediaExport.getInputStream(), createObjectMetadata(mediaExport));
-        LOG.info("Upload of media with key '" + fileName + "' sucessfully finished. Got version: " + putObject.getVersionId());
+        ObjectMetadata objectMetadata = createObjectMetadata(mediaExport);
+        PutObjectResult putObject = _s3Facade.putObject(bucketName, fileName, mediaExport.getInputStream(), objectMetadata);
     }
 
     public ExportStatus getStatus(MediaExport mediaExport) {
@@ -73,8 +89,17 @@ public class S3MediaRepository {
 
     /** import functionality */
 
-    public Iterator<MediaExport> iteratorPhotos() {
-        return null;
+    public Iterator<MediaExport> iteratorPhotos(String user) {
+        String prefix = getKeyNamePrefixForUserAndType(user, MediaType.PHOTO).toString();
+
+        // get iterator for S3ObjectSummary objects
+        S3ObjectIterator iterator = _s3Facade.iterator(getBucketName(MediaType.PHOTO), prefix);
+
+        // create a transformer (a kind of factory) which loads a concreate object from S3 and creates a MediaExport object
+        S3ObjectSummary2MediaExportTransformer transformer = new S3ObjectSummary2MediaExportTransformer(_s3Facade.getS3());
+
+        // wrap transformer within a new iterator
+        return new MMTransformIterator<S3ObjectSummary, MediaExport>(iterator, transformer);
     }
 
     public Iterator<MediaExport> iteratorVideos() {
@@ -83,26 +108,62 @@ public class S3MediaRepository {
 
     private ObjectMetadata createObjectMetadata(MediaExport mediaExport) {
         ObjectMetadata objectMetadata = new ObjectMetadata();
+        // mime type
         if (!StringUtils.isEmpty(mediaExport.getMimeType())) {
             objectMetadata.setContentType(mediaExport.getMimeType());
         }
-        objectMetadata.addUserMetadata(HASH_OF_DATA, mediaExport.getHashValue());
+        // name
+        addStringIntoUserMetadata(META_NAME, mediaExport.getName(), objectMetadata);
+        // description (TODO rwe: compress?)
+        addStringIntoUserMetadata(META_DESCRIPTION, mediaExport.getDescription(), objectMetadata);
+        // creation date
+        addStringIntoUserMetadata(META_CREATION_DATE, mediaExport.getCreationDate(), objectMetadata);
+        // hash
+        objectMetadata.addUserMetadata(META_HASH_OF_DATA, mediaExport.getHashValue());
+        // length
         if (mediaExport.getLength() != null) {
             objectMetadata.setContentLength(mediaExport.getLength());
         }
+        // original file name
+        addStringIntoUserMetadata(META_ORIGINAL_FILE_NAME, mediaExport.getOriginalFileName(), objectMetadata);
+        // media type
+        objectMetadata.addUserMetadata(META_MEDIA_TYPE, mediaExport.getType().name());
+        // tags
+        addStringIntoUserMetadata(META_TAGS, mediaExport.getTags(), objectMetadata);
+
         return objectMetadata;
     }
 
-    private String getBucketName(MediaExport mediaExport) {
-        switch (mediaExport.getType()) {
-        case UNKNOWN:
-            return "mediamagpie";
-        case PHOTO:
-            return "mediamagpiePhoto";
-        case STREAM:
-            return "mediamagpieStream";
+    @SuppressWarnings("unchecked")
+    private void addStringIntoUserMetadata(String key, Object value, ObjectMetadata objectMetadata) {
+        String strValue = null;
+        if (value instanceof String) {
+            strValue = (String) value;
+        } else if (value instanceof Date) {
+            strValue = ((Date) value).getTime() + "";
+        } else if (value instanceof List<?>) {
+            strValue = StringUtils.join(((List<String>)value), ',');
         }
-        throw new RuntimeException("Undefined media type: " + mediaExport.getType());
+        if (!StringUtils.isEmpty(strValue)) {
+            String encodedValue = strValue;
+            try {
+                encodedValue = MimeUtility.encodeText(strValue);
+            } catch (UnsupportedEncodingException e) {
+                ExceptionUtil.convertToRuntimeException(e);
+            }
+            objectMetadata.addUserMetadata(key, encodedValue);
+        }
+    }
+
+    private String getBucketName(MediaType type) {
+        switch (type) {
+        case PHOTO:
+            return "mediamagpie-photo";
+        case STREAM:
+            return "mediamagpie-stream";
+        default:
+            throw new RuntimeException("Undefined media type: " + type);
+        }
     }
 
     /**
@@ -113,12 +174,21 @@ public class S3MediaRepository {
      * @param mediaExport
      * @return
      */
-    private String buildFileName(String user, MediaExport mediaExport) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(user).append('_');
-        builder.append(mediaExport.getType()).append('_');
-        builder.append("ID").append(mediaExport.getMediaId()).append('_');
-        builder.append(mediaExport.getOriginalFileName());
+    private String getKeyName(String user, MediaExport mediaExport) {
+        StringBuilder builder = getKeyNamePrefixForUserAndType(user, mediaExport.getType());
+        builder.append("ID").append(mediaExport.getMediaId()).append(KEY_DELIMITER);
+        if (!StringUtils.isEmpty(mediaExport.getOriginalFileName())) {
+            builder.append(mediaExport.getOriginalFileName());
+        } else {
+            builder.append("media.data");
+        }
         return builder.toString();
+    }
+
+    private StringBuilder getKeyNamePrefixForUserAndType(String user, MediaType type) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(user).append(KEY_DELIMITER);
+        builder.append(type).append(KEY_DELIMITER);
+        return builder;
     }
 }
