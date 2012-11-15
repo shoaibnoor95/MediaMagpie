@@ -54,29 +54,29 @@
 #flip2 {
 	position: absolute;
 	left: 300px;
-	perspective: 300px;
+	perspective: 400px;
 	transform-style: preserve-3d;
 }
 
 #flip2 .front,#flip2 .back {
-	border-radius: 105px;
 	background: #333;
 	width: 105px;
 	height: 105px;
 	display: block;
 	position: absolute;
-	color: #fff;
+	backface-visibility: hidden;
+}
+
+.transition-rotate {
 	transition: transform 1s ease-in-out;
 }
 
 #flip2 .front {
 	transform: rotateY(0deg);
-	backface-visibility: hidden;
 }
 
 #flip2 .back {
 	transform: rotateY(-180deg);
-	backface-visibility: hidden;
 	background: red;
 }
 </style>
@@ -91,15 +91,17 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#pushBack").click(function(event) {
-				var $front = $("div#flip2 div.front")
+				var $front = $("div#flip2 .front")
+				$front.addClass('transition-rotate');
 				$front.css('transform', 'rotateY(180deg)');
-				var $back = $("div#flip2 div.back")
+				var $back = $("div#flip2 .back")
+                $back.addClass('transition-rotate');
 				$back.css('transform', 'rotateY(0deg)');
 			});
 			$("#pushFront").click(function(event) {
-				var $front = $("div#flip2 div.front")
+				var $front = $("div#flip2 .front")
 				$front.css('transform', 'rotateY(0deg)');
-				var $back = $("div#flip2 div.back")
+				var $back = $("div#flip2 .back")
 				$back.css('transform', 'rotateY(-180deg)');
 			});
 		});
