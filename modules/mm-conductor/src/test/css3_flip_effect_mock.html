@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Based on example: http://www.tommaitland.net/2012/05/how-to-css3-3d-flip-effects/ -->
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"
+	type="text/javascript"></script>
+<script src="../main/webapp/static/js/prefixfree.min.js"
+	type="text/javascript"></script>
+
+<style type="text/css">
+/** original */
+#flip {
+	position: absolute;
+	z-index: 11;
+	perspective: 300px;
+	transform-style: preserve-3d;
+}
+
+#flip .front,#flip .back {
+	border-radius: 105px;
+	background: #333;
+	width: 105px;
+	height: 105px;
+	display: block;
+	position: absolute;
+	color: #fff;
+	transition: transform 1s ease-in-out;
+}
+
+#flip .front {
+	transform: rotateX(0deg);
+	backface-visibility: hidden;
+	z-index: 13;
+}
+
+#flip:hover .front {
+	transform: rotateX(180deg);
+}
+
+#flip .back {
+	transform: rotateX(-180deg);
+	backface-visibility: hidden;
+	z-index: 12;
+	background: red;
+}
+
+#flip:hover .back {
+	transform: rotateX(0deg);
+	z-index: 14;
+}
+
+/* modified */
+#flip2 {
+	position: absolute;
+	left: 300px;
+	perspective: 300px;
+	transform-style: preserve-3d;
+}
+
+#flip2 .front,#flip2 .back {
+	border-radius: 105px;
+	background: #333;
+	width: 105px;
+	height: 105px;
+	display: block;
+	position: absolute;
+	color: #fff;
+	transition: transform 1s ease-in-out;
+}
+
+#flip2 .front {
+	transform: rotateY(0deg);
+	backface-visibility: hidden;
+}
+
+#flip2 .back {
+	transform: rotateY(-180deg);
+	backface-visibility: hidden;
+	background: red;
+}
+</style>
+</head>
+<body>
+	<div id="flip">
+		<div class="front"></div>
+		<div class="back">
+			<a href="#">Some HTML content here...</a>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("#pushBack").click(function(event) {
+				var $item = $(this);
+				//var $target = $(event.target);
+				var $front = $("div#flip2 div.front")
+				$front.css('transform', 'rotateY(180deg)');
+				var $back = $("div#flip2 div.back")
+				$back.css('transform', 'rotateY(0deg)');
+			});
+			$("#pushFront").click(function(event) {
+				var $item = $(this);
+				//var $target = $(event.target);
+				var $front = $("div#flip2 div.front")
+				$front.css('transform', 'rotateY(0deg)');
+				var $back = $("div#flip2 div.back")
+				$back.css('transform', 'rotateY(-180deg)');
+			});
+		});
+	</script>
+	<div id="flip2">
+		<div class="front">
+			<img alt="" src="../test/resources/images/IMG_1414.JPG" width="105px">
+		</div>
+		<div class="back">
+			<a href="#">Some HTML content here...</a>
+		</div>
+	</div>
+	<div style="position: absolute; top: 150px;">
+		<p id="pushBack">back</p>
+
+		<p id="pushFront">front</p>
+	</div>
+</body>
+</html>
