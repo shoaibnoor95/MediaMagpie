@@ -71,6 +71,8 @@ public class S3ObjectSummary2MediaExportTransformer implements MMTransformer<S3O
         }
         // description
         mediaExport.setDescription(getValueFromUserMetadata(S3MediaRepository.META_DESCRIPTION, objectMetadata));
+        // mime type
+        mediaExport.setMimeType(objectMetadata.getContentType());
         
         return mediaExport;
     }

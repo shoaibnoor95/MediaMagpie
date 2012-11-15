@@ -33,42 +33,41 @@ public class JobExecutionDao extends Dao<JobExecution> {
         super(JobExecution.class, persistenceService);
     }
 
-    @Deprecated
-    protected Criteria createMostRecentJobsCriteria(Object source, Collection<JobStatus> status) {
-        List<Criterion> criteria = new ArrayList<Criterion>();
-        if (source != null) {
-            criteria.add(Restrictions.eq("_source", source));
-        }
-        if (status != null) {
-            criteria.add(Restrictions.in("_status", status));
-        }
-        Criteria crit = createCriteria();
-        for (Criterion c : criteria) {
-            crit.add(c);
-        }
-        return crit;
-    }
+//    @Deprecated
+//    protected Criteria createMostRecentJobsCriteria(Object source, Collection<JobStatus> status) {
+//        List<Criterion> criteria = new ArrayList<Criterion>();
+//        if (source != null) {
+//            criteria.add(Restrictions.eq("_source", source));
+//        }
+//        if (status != null) {
+//            criteria.add(Restrictions.in("_status", status));
+//        }
+//        Criteria crit = createCriteria();
+//        for (Criterion c : criteria) {
+//            crit.add(c);
+//        }
+//        return crit;
+//    }
 
-    // TODO VMa - review and cleanup
-    @Deprecated
-    @SuppressWarnings("unchecked")
-    public List<JobExecution> getJobs(JobOrder order, Object source, Collection<JobStatus> status, int start, int maxNumber) {
-        Criteria criteria = createMostRecentJobsCriteria(source, status);
-
-        switch (order) {
-        case OLDEST_FIRST:
-            criteria.addOrder(Order.asc("id"));
-            break;
-        case MOST_RECENT_FIRST:
-            criteria.addOrder(Order.desc("id"));
-            break;
-        case BY_PRIORITY_OLDEST_FIRST:
-            criteria.addOrder(Order.desc("_priority"));
-            criteria.addOrder(Order.asc("id"));
-            break;
-        }
-        return criteria.setFirstResult(start).setMaxResults(maxNumber).list();
-    }
+//    @Deprecated
+//    @SuppressWarnings("unchecked")
+//    public List<JobExecution> getJobs(JobOrder order, Object source, Collection<JobStatus> status, int start, int maxNumber) {
+//        Criteria criteria = createMostRecentJobsCriteria(source, status);
+//
+//        switch (order) {
+//        case OLDEST_FIRST:
+//            criteria.addOrder(Order.asc("id"));
+//            break;
+//        case MOST_RECENT_FIRST:
+//            criteria.addOrder(Order.desc("id"));
+//            break;
+//        case BY_PRIORITY_OLDEST_FIRST:
+//            criteria.addOrder(Order.desc("_priority"));
+//            criteria.addOrder(Order.asc("id"));
+//            break;
+//        }
+//        return criteria.setFirstResult(start).setMaxResults(maxNumber).list();
+//    }
 
     // @SuppressWarnings("unchecked")
     // public <T extends Job<?>> List<T> getJobsForHousekeeping(Class<T> jobClass, int maxNumber, Date purgeDate, JobStatus... status) {
