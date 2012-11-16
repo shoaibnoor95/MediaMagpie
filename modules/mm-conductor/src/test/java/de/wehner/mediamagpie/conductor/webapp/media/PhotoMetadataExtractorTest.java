@@ -38,6 +38,15 @@ public class PhotoMetadataExtractorTest {
     }
 
     @Test
+    public void test_resolveDateTimeOriginal_ButMediaHasObscurceDate() throws IOException {
+        File mediaFile = new File("src/test/resources/images/DSCN0006.JPG");
+        PhotoMetadataExtractor metadataExtractor = new PhotoMetadataExtractor(mediaFile.toURI());
+        //metadataExtractor.dumpMetadataToStdOut();
+        Date dateOfMedia = metadataExtractor.resolveDateTimeOriginal();
+        assertThat(dateOfMedia).isNull();
+    }
+
+    @Test
     public void testGetMetadataFromMedia_Normal() throws IOException, MetadataException {
         File mediaFileNormal = new File("src/test/resources/images/IMG_0013.JPG");
         PhotoMetadataExtractor metadataExtractor = new PhotoMetadataExtractor(mediaFileNormal.toURI());

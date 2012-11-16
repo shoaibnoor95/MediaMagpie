@@ -202,6 +202,11 @@
 				<artifactId>jackson-mapper-asl</artifactId>
 				<version>1.9.9</version>
 			</dependency>
+			<dependency>
+				<groupId>org.codehaus.jackson</groupId>
+				<artifactId>jackson-core-asl</artifactId>
+				<version>1.9.9</version>
+			</dependency>
 
 			<!-- Drewnoakes exif tool -->
 			<dependency>
@@ -486,7 +491,7 @@
 				<configuration>
 					<wtpversion>2.0</wtpversion>
 					<downloadSources>true</downloadSources>
-					<downloadJavadocs>true</downloadJavadocs>
+					<!-- <downloadJavadocs>true</downloadJavadocs> -->
 					<additionalProjectnatures>
 						<projectnature>org.springframework.ide.eclipse.core.springnature</projectnature>
 					</additionalProjectnatures>

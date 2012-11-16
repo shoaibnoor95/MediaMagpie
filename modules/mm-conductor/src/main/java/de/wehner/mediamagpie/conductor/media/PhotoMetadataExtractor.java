@@ -9,11 +9,13 @@ import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,9 +36,12 @@ public class PhotoMetadataExtractor {
 
     private final Metadata _metadata;
 
+    private final GregorianCalendar YEAR_1900 = new GregorianCalendar();
+
     public PhotoMetadataExtractor(URI mediaFileUri) throws IOException {
         super();
         _metadata = getMetadataFromMedia(mediaFileUri);
+        YEAR_1900.set(1900, 0, 0);
     }
 
     /**
@@ -86,13 +91,33 @@ public class PhotoMetadataExtractor {
 
             if (directory != null) {
                 // query the tag's value
-                Date date = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
-                if (date != null) {
-                    return date;
+                // try to find out which tag contains the date of creation
+                Integer validTag = ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL;
+                String validDateStr = directory.getString(validTag);
+                if (!isValidDateFormat(validDateStr)) {
+                    validTag = ExifSubIFDDirectory.TAG_DATETIME_DIGITIZED;
+                    validDateStr = directory.getString(validTag);
+                    if (!isValidDateFormat(validDateStr)) {
+                        return null;
+                    }
+                }
+
+                // try to read date
+                Date timeOriginal = directory.getDate(validTag);
+                if (timeOriginal != null && timeOriginal.after(YEAR_1900.getTime())) {
+                    return timeOriginal;
                 }
             }
         }
         return null;
+    }
+
+    private boolean isValidDateFormat(String dateStr) {
+        // test for invalid date strings, eg: '0000:00:00 00:00:00'
+        if (!StringUtils.isEmpty(dateStr)) {
+            return !StringUtils.containsOnly(dateStr, "0: ");
+        }
+        return false;
     }
 
     public Orientation resolveOrientation() {
@@ -141,5 +166,13 @@ public class PhotoMetadataExtractor {
             }
         }
         return metaData;
+    }
+
+    public void dumpMetadataToStdOut() {
+        for (Directory directory : _metadata.getDirectories()) {
+            for (Tag tag : directory.getTags()) {
+                System.out.println(tag);
+            }
+        }
     }
 }
