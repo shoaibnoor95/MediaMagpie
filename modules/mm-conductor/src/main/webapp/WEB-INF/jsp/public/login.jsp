@@ -20,7 +20,8 @@
 				            <div class="field">
 				                <div class="label"><label for="j_username"><fmt:message key="login.username"/>:</label></div>
 				                <div class="output">
-				                    <input type="text" name="j_username" id="j_username" <c:if test="${not empty param.login_error}">value="<%= session.getAttribute(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_USERNAME_KEY) %>"</c:if> />
+				                    <!--  <input type="text" name="j_username" id="j_username" <c:if test="${not empty param.login_error}"> value="<%= session.getAttribute(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_USERNAME_KEY) %>"</c:if> />-->
+                                    <input type="text" name="j_username" id="j_username" />
 				                </div>
 				            </div>
 				            <div class="field">

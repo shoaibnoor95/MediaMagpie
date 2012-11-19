@@ -300,3 +300,39 @@ ul#nav-bar { /*float: right;*/
 #nav-bar.button-list a:hover {
 	color: #0191D0;
 }
+
+/** Flip Effect */
+li.flippable {
+	left: 300px;
+	perspective: 400px;
+	transform-style: preserve-3d;
+	float: left;
+}
+
+li.flippable .front,li.flippable .back {
+	display: block;
+	backface-visibility: hidden;
+}
+
+li.flippable .back {
+	position: absolute;
+	top: 0;
+	transform: rotateY(-180deg);
+	background: red;
+}
+
+.transition-rotate {
+	transition: transform 1s ease-in-out;
+}
+
+li.flippable .front {
+	transform: rotateY(0deg);
+}
+
+.ui-helper-clearfix:AFTER {
+	clear: both;
+	display: block;
+	height: 0;
+	visibility: hidden;
+	position: relative;
+}
