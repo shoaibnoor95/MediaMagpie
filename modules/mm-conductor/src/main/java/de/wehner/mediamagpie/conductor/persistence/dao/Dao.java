@@ -14,7 +14,6 @@ import org.hibernate.criterion.Order;
 import de.wehner.mediamagpie.common.persistence.entity.Base;
 import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
 
-
 public abstract class Dao<T extends Base> {
 
     protected final Class<T> _clazz;

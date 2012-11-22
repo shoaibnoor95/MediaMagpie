@@ -12,9 +12,11 @@ import org.apache.commons.lang.builder.ToStringStyle;
 
 import de.wehner.mediamagpie.common.util.ExceptionUtil;
 
-
 /**
  * Base class for all jobs that must be stored into db. It uses the strategy <code>InheritanceType.JOINED</code>.
+ * <p>
+ * In comparision to <i>SpringBatch</i> concepts this is a mixture of <code>JobInstance</code> and <code>JobExecution</code>.
+ * </p>
  * 
  * @param <T>
  *            The subclass of this Job which is at now: StreamJob, FeedJob or FountainJob.

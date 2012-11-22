@@ -49,9 +49,9 @@ public class ImageService {
     private final ThumbImageDao _thumbImageDao;
     private final MediaDao _mediaDao;
 
-    private final ImageResizeJobExecutionDao _imageResizeJobDao;
+    private final ImageResizeJobExecutionDao _imageResizeJobExecutionDao;
 
-    private final MediaDeleteJobExecutionDao _mediaDeleteJobDao;
+    private final MediaDeleteJobExecutionDao _mediaDeleteJobExecutionDao;
 
     private final ObjectMapper _mapper;
 
@@ -61,8 +61,8 @@ public class ImageService {
         super();
         _thumbImageDao = imageDao;
         _mediaDao = mediaDao;
-        _imageResizeJobDao = imageResizeJobDao;
-        _mediaDeleteJobDao = mediaDeleteJobDao;
+        _imageResizeJobExecutionDao = imageResizeJobDao;
+        _mediaDeleteJobExecutionDao = mediaDeleteJobDao;
         _mapper = new ObjectMapper();
     }
 
@@ -230,12 +230,12 @@ public class ImageService {
         if (StringUtils.isEmpty(label)) {
             throw new IllegalArgumentException("label must not be empty");
         }
-        if (!_imageResizeJobDao.hasResizeJob(media, label)) {
+        if (!_imageResizeJobExecutionDao.hasResizeJob(media, label)) {
             ImageResizeJobExecution resizeImageJob = new ImageResizeJobExecution(media, label);
             if (priority != null) {
                 resizeImageJob.setPriority(priority);
             }
-            _imageResizeJobDao.makePersistent(resizeImageJob);
+            _imageResizeJobExecutionDao.makePersistent(resizeImageJob);
             LOG.info("Resize job for media '" + media.getId() + "' added with priority '" + resizeImageJob.getPriority() + "'.");
             return true;
         }
@@ -250,17 +250,17 @@ public class ImageService {
     }
 
     public boolean addDeleteJobIfNecessary(Media media) {
-        if (!_mediaDeleteJobDao.hasJob(media)) {
+        if (!_mediaDeleteJobExecutionDao.hasJob(media)) {
             // finish all image resize jobs before
-            for (ImageResizeJobExecution resizeJob : _imageResizeJobDao.getJobsByMedia(media)) {
+            for (ImageResizeJobExecution resizeJob : _imageResizeJobExecutionDao.getJobsByMedia(media)) {
                 resizeJob.setJobStatus(JobStatus.STOPPING);
-                _imageResizeJobDao.makePersistent(resizeJob);
+                _imageResizeJobExecutionDao.makePersistent(resizeJob);
             }
 
             // add new delete job for this media
             MediaDeleteJobExecution jobExecution = new MediaDeleteJobExecution(media);
             jobExecution.setPriority(Priority.LOW);
-            _mediaDeleteJobDao.makePersistent(jobExecution);
+            _mediaDeleteJobExecutionDao.makePersistent(jobExecution);
             LOG.info("Delete job for media '" + media.getId() + "' added with priority '" + jobExecution.getPriority() + "'.");
             return true;
         }

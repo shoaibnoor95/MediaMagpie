@@ -9,34 +9,26 @@ import org.springframework.stereotype.Repository;
 
 import de.wehner.mediamagpie.common.persistence.entity.ImageResizeJobExecution;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
+import de.wehner.mediamagpie.common.persistence.entity.S3JobExecution;
 import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
 
 @Repository
-public class ImageResizeJobExecutionDao extends JobExecutionDao {
+public class S3JobExecutionDao extends JobExecutionDao {
 
     @Autowired
-    public ImageResizeJobExecutionDao(PersistenceService persistenceService) {
+    public S3JobExecutionDao(PersistenceService persistenceService) {
         super(persistenceService);
     }
 
     @SuppressWarnings("unchecked")
-    public boolean hasResizeJob(Media media, String label) {
-        final Criteria crit = _persistenceService.createCriteria(ImageResizeJobExecution.class);
+    public boolean hasUploadJob(Media media) {
+        final Criteria crit = _persistenceService.createCriteria(S3JobExecution.class);
 
         crit.add(Restrictions.eq("_media", media));
-        crit.add(Restrictions.eq("_label", label));
+        crit.add(Restrictions.eq("_direction", S3JobExecution.Direction.PUT));
         crit.setMaxResults(1);
         List<ImageResizeJobExecution> jobs = crit.list();
         return (jobs.size() > 0);
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<ImageResizeJobExecution> getJobsByMedia(Media media) {
-        final Criteria crit = _persistenceService.createCriteria(ImageResizeJobExecution.class);
-
-        crit.add(Restrictions.eq("_media", media));
-        crit.setMaxResults(1);
-        return crit.list();
     }
 
 }

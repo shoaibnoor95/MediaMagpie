@@ -91,7 +91,7 @@ public class Media extends CreationDateBase {
     private Orientation _orientation;
 
     /** an object of <code>CameraMetaData</code> encoded as JSON string */
-    @Column(nullable = true)
+    @Column(nullable = true, length = 65535)
     private String _cameraMetaData;
 
     public Media() {

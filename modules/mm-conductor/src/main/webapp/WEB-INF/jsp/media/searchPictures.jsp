@@ -4,6 +4,7 @@
 
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.media.SearchController"%>
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.media.MediaDetailController"%>
+<%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.media.S3Controller"%>
 
 <c:set var="title" value="Media Pool" scope="request" />
 <c:set var="activeMenu" value="media" scope="request" />
@@ -12,35 +13,8 @@
 
 <!-- <script type="text/javascript" src="<%=request.getContextPath()%>/static/js/pages/searchMedias.js"></script>*/%>-->
 <script type="text/javascript">
-	
-<%@ include file="../../../static/js/pages/searchMedias.js" %>
-	
+    <%@ include file="../../../static/js/pages/searchMedias.js" %>
 </script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $("ul > li.flippable").click(function(event) {
-                var $item = $(this);
-                var $target = $(event.target);
-                var $front = $(".front", $item);
-                var $back = $(".back", $item);
-                if ($target.is(".image-action.flipBack")) {
-                    $front.addClass('transition-rotate');
-                    $front.css('transform', 'rotateY(180deg)');
-                    $back.addClass('transition-rotate');
-                    $back.css('transform', 'rotateY(0deg)');
-                    return true;
-                } else if ($target.is(".image-action.flipFront")) {
-                    $front.css('transform', 'rotateY(0deg)');
-                    $back.css('transform', 'rotateY(-180deg)');
-                    return true;
-                }
-
-                return false;
-            });
-
-        });
-    </script>
-
 <div id="content">
 	<h1>${title}</h1>
 
@@ -102,7 +76,7 @@
 		<ul id="gallery" class="gallery ui-helper-reset ui-helper-clearfix">
 			<c:forEach items="${pictures}" var="picture">
 				<li class="ui-widget-content ui-corner-tr flippable" id="${picture.id}">
-				    <div class="front">
+					<div class="front">
 						<h5 class="ui-widget-header">
 							<c:out value="${picture.title}" />
 						</h5>
@@ -111,21 +85,22 @@
 							<a href="<%=request.getContextPath()+MediaDetailController.URL_BASE_DETAIL_PICTURE_EDIT%>${picture.id}"><img
 								src="${picture.urlThumbImage}" /></a>
 						</p>
-						<p class="metadata">
-							<core:date date="${picture.media.creationDate}" />
-						</p> 
 						<img class="image-action flipBack" alt="Information" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/information.png" />
-	                    <img class="image-action delete" alt="delete" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/bin_closed.png" />
-	                </div>
-                    <div class="back">
-                        <h5 class="ui-widget-header">
-                            <c:out value="${picture.title}" />
-                        </h5>
+						<img class="image-action delete" alt="delete" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/bin_closed.png" />
+					</div>
+					<div class="back">
+						<h5 class="ui-widget-header">
+							<c:out value="${picture.title}" />
+						</h5>
+						<p class="metadata">
+							date: <core:date date="${picture.media.creationDate}" />
+						</p>
                         <p class="metadata">
-                            <core:date date="${picture.media.creationDate}" />
-                        </p> 
-                        <img class="image-action flipFront" alt="Picture" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/information.png" />
-                    </div>
+                            <button>Export to S3</button>
+                            <img class="in-process" alt="exporting" width="20px" src="<%=request.getContextPath()%>/static/images/loader.gif" />
+                        </p>
+						<img class="image-action flipFront" alt="Picture" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/bullet_go.png" />
+					</div>
 				</li>
 			</c:forEach>
 		</ul>
@@ -136,7 +111,7 @@
 
 	<!--  album selection and droppable area -->
 	<form:form action="select_album" commandName="albumSelectionCommand">
-					select Album: <form:select path="albumId" items="${availableAlbums}" itemValue="id" itemLabel="name" multiple="false" />
+		select Album: <form:select path="albumId" items="${availableAlbums}" itemValue="id" itemLabel="name" multiple="false" />
 		<button type="submit">
 			<span>Select</span>
 		</button>
@@ -144,8 +119,6 @@
 	</form:form>
 
 	<div id="albumArea">
-		rwe: include album-media-template.jsp START
 		<%@ include file="album-media-template.jsp"%>
-		rwe: include album-media-template.jsp END
 	</div>
 </div>

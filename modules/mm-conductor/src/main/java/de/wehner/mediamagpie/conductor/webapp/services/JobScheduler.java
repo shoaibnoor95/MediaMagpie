@@ -37,7 +37,7 @@ public class JobScheduler extends SingleThreadedTransactionController {
 
     private static final Logger LOG = LoggerFactory.getLogger(JobScheduler.class);
 
-    private final JobExecutionDao _dapJobExecutionDao;
+    private final JobExecutionDao _jobExecutionDao;
     private final ConfigurationDao _configurationDao;
     private final JobExecutor _jobExecutor;
     private final ExecutorService _executorService;
@@ -52,7 +52,7 @@ public class JobScheduler extends SingleThreadedTransactionController {
     public JobScheduler(TransactionHandler transactionHandler, JobExecutionDao jobExecutionDao, ConfigurationDao configurationDao,
             JobExecutor jobExecutor, ExecutorService executorService) {
         super(transactionHandler);
-        _dapJobExecutionDao = jobExecutionDao;
+        _jobExecutionDao = jobExecutionDao;
         _configurationDao = configurationDao;
         _jobExecutor = jobExecutor;
         _executorService = executorService;
@@ -99,24 +99,24 @@ public class JobScheduler extends SingleThreadedTransactionController {
      * @return the next jobs that should be started.
      */
     private List<JobExecution> getJobsToStart(int startIndex, int numberOfJobs) {
-        return _dapJobExecutionDao.getByStatus(Arrays.asList(JobStatus.QUEUED), startIndex, numberOfJobs);
+        return _jobExecutionDao.getByStatus(Arrays.asList(JobStatus.QUEUED), startIndex, numberOfJobs);
     }
 
     /**
      * Starts a job.
      * 
-     * @param dapJobExecution
+     * @param jobExecution
      *            The job to start.
      */
-    private void startJob(JobExecution dapJobExecution) {
-        dapJobExecution.setJobStatus(JobStatus.RUNNING);
-        dapJobExecution.setStartTime(new Date());
+    private void startJob(JobExecution jobExecution) {
+        jobExecution.setJobStatus(JobStatus.RUNNING);
+        jobExecution.setStartTime(new Date());
 
-        final JobExecution offlineJobExecution = dapJobExecution.makeOfflineCopy();
+        final JobExecution offlineJobExecution = jobExecution.makeOfflineCopy();
         MainConfiguration mainConfiguration = _configurationDao.getConfiguration(MainConfiguration.class);
         JobCallable jobCallable = _jobExecutor.prepare(mainConfiguration, offlineJobExecution);
-        _runningJobCallableByJobId.put(dapJobExecution.getId(), jobCallable);
-        _runningJobFutureByJobId.put(dapJobExecution.getId(), _executorService.submit(jobCallable));
+        _runningJobCallableByJobId.put(jobExecution.getId(), jobCallable);
+        _runningJobFutureByJobId.put(jobExecution.getId(), _executorService.submit(jobCallable));
     }
 
     private void resetRunningJobsToQueued() {
@@ -125,7 +125,7 @@ public class JobScheduler extends SingleThreadedTransactionController {
             jobs = getTransactionHandler().executeInTransaction(new Callable<List<JobExecution>>() {
                 @Override
                 public List<JobExecution> call() throws Exception {
-                    List<JobExecution> jobs = _dapJobExecutionDao.getByStatus(Arrays.asList(JobStatus.RUNNING), 0, 100);
+                    List<JobExecution> jobs = _jobExecutionDao.getByStatus(Arrays.asList(JobStatus.RUNNING), 0, 100);
                     for (JobExecution dapJobExecution : jobs) {
                         dapJobExecution.setJobStatus(JobStatus.QUEUED);
                         dapJobExecution.setStartTime(null);
@@ -141,15 +141,15 @@ public class JobScheduler extends SingleThreadedTransactionController {
             Future<URI> future = entry.getValue();
             if (future.isDone()) {
                 Long dapJobExecutionId = entry.getKey();
-                JobExecution jobExecution = _dapJobExecutionDao.getById(dapJobExecutionId);
+                JobExecution jobExecution = _jobExecutionDao.getById(dapJobExecutionId);
                 try {
                     URI resultData = future.get();
-                    JobCallable dapJobCallable = _runningJobCallableByJobId.get(jobExecution.getId());
+                    JobCallable jobCallable = _runningJobCallableByJobId.get(jobExecution.getId());
                     JobStatus jobStatus = extractJobStatus(new ArrayList<String>()/* errorLogs */);
                     jobExecution.setJobStatus(jobStatus);
                     jobExecution.setCreatedDataUri((resultData != null) ? resultData.toASCIIString() : null);
                     completeJob(jobExecution);
-                    dapJobCallable.handleResult(resultData);
+                    jobCallable.handleResult(resultData);
                     LOG.info("Job " + jobExecution + " completed with status " + jobStatus + ".");
                 } catch (RuntimeException e) {
                     handleJobException(jobExecution, e);

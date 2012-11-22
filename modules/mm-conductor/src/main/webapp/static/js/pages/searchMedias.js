@@ -28,6 +28,19 @@ function submitMediaToAlbum(mediaId) {
 	      }  
 		});
 }
+function submitMediaToS3(mediaId) {
+	$.ajax({
+		  type: 'POST',
+		  url: "<%=request.getContextPath()%><%=S3Controller.getAjaxUrlAddMediaToS3()%>",
+		  data: { id: mediaId },
+	      complete: function(request, message) {
+	    	   ;// initDragAndDropAndButtonListeners();
+	      },
+	      success: function(data) {
+	          ;// $('#albumArea').html(data);
+	      }  
+		});
+}
 var $gallery;
 var $album;
 function initVars(){
@@ -118,11 +131,13 @@ function initDragAndDropAndButtonListeners() {
 	$( "ul.gallery > li" ).click(function( event ) {
 		var $item = $( this ),
 			$target = $( event.target );
+		var mediaId = $item.attr("id");
 		if ( $target.is( "img.image-action.delete" ) ) {
-			var mediaId = $item.attr("id");
 			postDeleteCommand("DELETE", mediaId);
 		} else if ( $target.is( "a img" ) ) {
 			return true;
+		} else {
+			return handleFlippable($item, $target, mediaId);
 		}
 
 		return false;
@@ -157,10 +172,36 @@ function wireUpAutoSubmitAlbumSelect() {
 	      form.submit();
 	    })
 	  });
-	}
+}
 
+/** * flip effect *** */
+function handleFlippable($item, $target, mediaId) {
+    var $front = $(".front", $item);
+    var $back = $(".back", $item);
+    if ($target.is(".image-action.flipBack")) {
+        $front.addClass('transition-rotate');
+        $front.css('transform', 'rotateY(180deg)');
+        $back.addClass('transition-rotate');
+        $back.css('transform', 'rotateY(0deg)');
+        return true;
+    } else if ($target.is(".image-action.flipFront")) {
+        $front.css('transform', 'rotateY(0deg)');
+        $back.css('transform', 'rotateY(-180deg)');
+        return true;
+    } else if ($target.is("div.back button")) {
+    	submitMediaToS3(mediaId);
+    	var imgAnimation = $("img.in-process", $item);
+    	imgAnimation.show();
+    	//imgAnimation.toggle();
+    	return true;
+    }
+    return false;
+}
+
+/** init methods after dom is loaded completely */
 $(document).ready(function() {
 	initSlider();
 	loadTemplateAlbum();
 	wireUpAutoSubmitAlbumSelect();
+	// initFlipEffect();
 });
