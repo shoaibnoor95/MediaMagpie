@@ -4,7 +4,6 @@
 @import url('button.css');
 @import url('form.css');
 @import url('dialog.css');
-@import url('effects.css');
 
 /*******************
  logo etc. 
@@ -154,6 +153,7 @@ media gallery
 }
 
 .gallery li {
+	position: relative;
 	float: left;
 	margin: 0 0.4em 0.4em 0;
 	text-align: center;

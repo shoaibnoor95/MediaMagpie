@@ -8,8 +8,30 @@
 	    <meta http-equiv="expires" content="0"/>
 	    <title>${title}</title>
 	    <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/styles-all.css"/>" />
+        <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/effects.css"/>" />
 	    <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/ui-lightness/jquery-ui-1.8.13.custom.css"/>" />
-	    <%@ include file="/WEB-INF/jsp/includes/js.jsp" %>
+		<!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>-->
+		<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery-1.6.4.min.js"></script>
+		<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery-ui-1.8.13.custom.min.js"></script>
+		<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/utils.js" ></script>
+		<script type="text/javascript">
+/*			(function($, self){
+	
+				if(!$ || !self) {
+				    return;
+				}
+	
+				for(var i=0; i<self.properties.length; i++) {
+				    var property = self.properties[i],
+				        camelCased = StyleFix.camelCase(property),
+				        PrefixCamelCased = self.prefixProperty(property, true);
+				    
+				    $.cssProps[camelCased] = PrefixCamelCased;
+				}
+	
+				})(window.jQuery, window.PrefixFree);*/
+		</script>
+		<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/prefixfree.min.js"></script>
 	    <decorator:head />
 	</head>
 	<body onload="focusFirstEnabledField()">

@@ -1,6 +1,5 @@
 /** Flip Effect */
 li.flippable {
-	left: 300px;
 	perspective: 400px;
 	transform-style: preserve-3d;
 	float: left;
@@ -15,7 +14,7 @@ li.flippable .back {
 	position: absolute;
 	top: 0;
 	transform: rotateY(-180deg);
-	background: url("images/ui-bg_highlight-soft_100_eeeeee_1x100.png") repeat-x scroll 50% top #EEEEEE;
+	background: url("ui-lightness/images/ui-bg_highlight-soft_100_eeeeee_1x100.png") repeat-x scroll 50% top #EEEEEE;
 }
 
 .transition-rotate {

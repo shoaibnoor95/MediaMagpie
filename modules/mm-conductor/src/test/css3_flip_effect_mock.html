@@ -49,7 +49,6 @@
 
 /************************ modified *********************/
 li.flippable { /*	position: absolute;*/
-	left: 300px;
 	perspective: 400px;
 	transform-style: preserve-3d;
 	float: left;
@@ -78,13 +77,13 @@ li.flippable .back {
 	background: red;
 }
 
-.ui-helper-clearfix:AFTER {
+/*.ui-helper-clearfix:AFTER {
 	clear: both;
 	display: block;
 	height: 0;
 	visibility: hidden;
 	position: relative;
-}
+}*/
 </style>
 </head>
 <body>
@@ -139,27 +138,30 @@ li.flippable .back {
 		});
 	</script>
 	<!-- new part for own project -->
-	<ul style="position: absolute; left: 300px">
-		<li class="flippable ui-helper-clearfix" id="123">
-			<div class="front">
-				<img alt="" src="../test/resources/images/IMG_1414.JPG" width="105px">
-				<p class="image-action flipBack" style="position: absolute; top: 70px;" id="pushBack">back</p>
-			</div>
-			<div class="back">
-				<a href="#">Some HTML content here...</a>
-				<p class="image-action flipFront" style="position: absolute; top: 70px;" id="pushFront">front</p>
-			</div>
-		</li>
-		<li class="flippable ui-helper-clearfix" id="124">
-			<div class="front">
-				<img alt="" src="../test/resources/images/IMG_1414.JPG" width="105px">
-				<p class="image-action flipBack" style="position: absolute; top: 70px;" id="pushBack">back</p>
-			</div>
-			<div class="back">
-				<a href="#">Some HTML content here...</a>
-				<p class="image-action flipFront" style="position: absolute; top: 70px;" id="pushFront">front</p>
-			</div>
-		</li>
-	</ul>
+	<h1>Mock</h1>
+	<div style="top: 100px; left: 200px;">
+		<ul >
+			<li class="flippable ui-helper-clearfix" id="123">
+				<div class="front">
+					<img alt="" src="../test/resources/images/IMG_1414.JPG" width="105px">
+					<p class="image-action flipBack" style="position: absolute; top: 70px;" id="pushBack">back</p>
+				</div>
+				<div class="back">
+					<a href="#">Some HTML content here...</a>
+					<p class="image-action flipFront" style="position: absolute; top: 70px;" id="pushFront">front</p>
+				</div>
+			</li>
+			<li class="flippable ui-helper-clearfix" id="124">
+				<div class="front">
+					<img alt="" src="../test/resources/images/IMG_1414.JPG" width="105px">
+					<p class="image-action flipBack" style="position: absolute; top: 70px;" id="pushBack">back</p>
+				</div>
+				<div class="back">
+					<a href="#">Some HTML content here...</a>
+					<p class="image-action flipFront" style="position: absolute; top: 70px;" id="pushFront">front</p>
+				</div>
+			</li>
+		</ul>
+	</div>
 </body>
 </html>
