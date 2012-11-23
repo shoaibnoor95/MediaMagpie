@@ -181,16 +181,12 @@ function handleFlippable($item, $target, mediaId) {
     if ($target.is(".image-action.flipBack")) {
         $front.addClass('transition-rotate');
         $front.css('transform', 'rotateY(180deg)');
-        $front.css('webkit-transform', 'rotateY(180deg)');
         $back.addClass('transition-rotate');
         $back.css('transform', 'rotateY(0deg)');
-        $back.css('webkit-transform', 'rotateY(0deg)');
         return true;
     } else if ($target.is(".image-action.flipFront")) {
         $front.css('transform', 'rotateY(0deg)');
-        $front.css('webkit-transform', 'rotateY(0deg)');
         $back.css('transform', 'rotateY(-180deg)');
-        $back.css('webkit-transform', 'rotateY(-180deg)');
         return true;
     } else if ($target.is("div.back button")) {
     	submitMediaToS3(mediaId);

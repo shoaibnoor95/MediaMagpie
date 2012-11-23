@@ -14,13 +14,13 @@
 		<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery-1.6.4.min.js"></script>
 		<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery-ui-1.8.13.custom.min.js"></script>
 		<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/utils.js" ></script>
+		<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/prefixfree.min.js"></script>
 		<script type="text/javascript">
-/*			(function($, self){
-	
+		     // prefixfree plugin for jquery to enable prefixfree functionality for css changes by jquery
+			(function($, self){
 				if(!$ || !self) {
 				    return;
 				}
-	
 				for(var i=0; i<self.properties.length; i++) {
 				    var property = self.properties[i],
 				        camelCased = StyleFix.camelCase(property),
@@ -28,10 +28,8 @@
 				    
 				    $.cssProps[camelCased] = PrefixCamelCased;
 				}
-	
-				})(window.jQuery, window.PrefixFree);*/
+				})(window.jQuery, window.PrefixFree);
 		</script>
-		<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/prefixfree.min.js"></script>
 	    <decorator:head />
 	</head>
 	<body onload="focusFirstEnabledField()">
