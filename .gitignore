@@ -1,3 +1,7 @@
+modules/mm-api/.classpath
+modules/mm-api/.project
+modules/mm-api/.settings/
+modules/mm-api/target/
 modules/mm-common/.classpath
 modules/mm-common/.project
 modules/mm-common/.settings/

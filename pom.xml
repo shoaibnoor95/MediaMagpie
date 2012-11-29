@@ -37,6 +37,7 @@
 	</description>
 	<url>http://www.ralfwehner.org/TODO</url>
 	<modules>
+		<module>modules/mm-api</module>
 		<module>modules/mm-conductor</module>
 		<module>modules/mm-common</module>
 		<module>modules/mm-hadoop-core</module>

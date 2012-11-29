@@ -58,17 +58,17 @@ public class S3ObjectSummary2MediaExportTransformerTest {
         S3Object s3Object = new S3Object();
         ObjectMetadata objectMetadata = s3Object.getObjectMetadata();
         _userMetadata = objectMetadata.getUserMetadata();
-        _userMetadata.put(S3MediaRepository.META_NAME, MimeUtility.encodeText(MEDIA_NAME));
-        _userMetadata.put(S3MediaRepository.META_DESCRIPTION, MimeUtility.encodeText(MEDIA_DESC));
-        _userMetadata.put(S3MediaRepository.META_CREATION_DATE, "" + CREATION_DATE.getTime());
+        _userMetadata.put(S3MediaExportRepository.META_NAME, MimeUtility.encodeText(MEDIA_NAME));
+        _userMetadata.put(S3MediaExportRepository.META_DESCRIPTION, MimeUtility.encodeText(MEDIA_DESC));
+        _userMetadata.put(S3MediaExportRepository.META_CREATION_DATE, "" + CREATION_DATE.getTime());
         String random = RandomStringUtils.random(128);
         _content = random.getBytes();
         s3Object.setObjectContent(new ByteArrayInputStream(_content));
-        _userMetadata.put(S3MediaRepository.META_HASH_OF_DATA, DigestUtil.computeSha1AsHexString(new ByteArrayInputStream(_content)));
-        _userMetadata.put(S3MediaRepository.META_ORIGINAL_FILE_NAME, MimeUtility.encodeText(MEDIA_ORIG_FILE_NAME));
+        _userMetadata.put(S3MediaExportRepository.META_HASH_OF_DATA, DigestUtil.computeSha1AsHexString(new ByteArrayInputStream(_content)));
+        _userMetadata.put(S3MediaExportRepository.META_ORIGINAL_FILE_NAME, MimeUtility.encodeText(MEDIA_ORIG_FILE_NAME));
         objectMetadata.setContentType(MIME_TYPE);
-        _userMetadata.put(S3MediaRepository.META_TAGS, MimeUtility.encodeText(StringUtils.join(MEDIA_TAGS, ',')));
-        _userMetadata.put(S3MediaRepository.META_MEDIA_TYPE, MediaType.PHOTO.toString());
+        _userMetadata.put(S3MediaExportRepository.META_TAGS, MimeUtility.encodeText(StringUtils.join(MEDIA_TAGS, ',')));
+        _userMetadata.put(S3MediaExportRepository.META_MEDIA_TYPE, MediaType.PHOTO.toString());
 
         // link test object to S3Client
         when(_s3.getObject(BUCKET_NAME, KEY)).thenReturn(s3Object);

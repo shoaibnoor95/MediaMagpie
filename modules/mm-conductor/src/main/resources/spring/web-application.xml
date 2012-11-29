@@ -12,8 +12,9 @@
     </bean>
 	
 	<!-- enable processing of annotations such as @Autowired and @Configuration <context:annotation-config/> -->
-	<context:component-scan base-package="de.wehner.mediamagpie.common" />
+    <context:component-scan base-package="de.wehner.mediamagpie.common" />
 	<context:component-scan base-package="de.wehner.mediamagpie.conductor" />
+	<context:component-scan base-package="de.wehner.mediamagpie.aws" />
 	
     <!--  I18N  -->
     <bean id="messageSource"

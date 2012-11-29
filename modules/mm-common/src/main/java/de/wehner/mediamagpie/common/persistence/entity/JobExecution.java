@@ -114,7 +114,6 @@ public abstract class JobExecution extends Base implements Cloneable {
     public JobExecution makeOfflineCopy() {
         try {
             JobExecution offlineCopy = (JobExecution) super.clone();
-            // offlineCopy._dapJobConfiguration = _dapJobConfiguration.makeOfflineCopy();
             return offlineCopy;
         } catch (CloneNotSupportedException e) {
             throw ExceptionUtil.convertToRuntimeException(e);

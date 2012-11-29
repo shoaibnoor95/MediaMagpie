@@ -17,11 +17,11 @@ public class JobExecutor {
 
     private static final Logger LOG = LoggerFactory.getLogger(JobExecutor.class);
 
-    private final JobFactory _dapJobFactory;
+    private final JobFactory _jobFactory;
 
     @Autowired
     public JobExecutor(JobFactory dapJobFactory, TransactionHandler transactionHandler) {
-        _dapJobFactory = dapJobFactory;
+        _jobFactory = dapJobFactory;
         // ThreadLocalLog4jAppender.install();
     }
 
@@ -54,7 +54,7 @@ public class JobExecutor {
 
             @Override
             public URI call() throws Exception {
-                PerformingJob job = _dapJobFactory.createPerformingJob(/* dapJobConfiguration, */dapJobExecution);
+                PerformingJob job = _jobFactory.createPerformingJob(dapJobExecution);
                 job.init(new PerformingJobContext(mainConfiguraiton));
                 _jobCallable = job.prepare();
 

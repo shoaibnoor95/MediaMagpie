@@ -17,6 +17,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import de.wehner.mediamagpie.api.MediaExport;
+import de.wehner.mediamagpie.api.MediaExportRepository;
 import de.wehner.mediamagpie.api.MediaType;
 import de.wehner.mediamagpie.aws.test.util.S3TestEnvironment;
 
@@ -41,7 +42,7 @@ public class S3MediaRepositoryItTest {
     public void test_addMedia() throws FileNotFoundException {
         org.junit.Assume.assumeTrue(_s3TestEnvironment.getS3Credentials() != null);
 
-        S3MediaRepository repository = new S3MediaRepository(_s3TestEnvironment.getS3Credentials());
+        MediaExportRepository repository = new S3MediaExportRepository(_s3TestEnvironment.getS3Credentials());
 
         MediaExport mediaExport = createTestMediaExport(TEST_NAME);
 
@@ -52,7 +53,7 @@ public class S3MediaRepositoryItTest {
     public void test_iteratorPhotos_readObjectFromPreviousTest() throws IOException {
         org.junit.Assume.assumeTrue(_s3TestEnvironment.getS3Credentials() != null);
 
-        S3MediaRepository repository = new S3MediaRepository(_s3TestEnvironment.getS3Credentials());
+        MediaExportRepository repository = new S3MediaExportRepository(_s3TestEnvironment.getS3Credentials());
 
         Iterator<MediaExport> it = repository.iteratorPhotos(USER);
 

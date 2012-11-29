@@ -19,6 +19,12 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
 
+/**
+ * This class provides some convenient methods to use the aws API.
+ * 
+ * @author ralfwehner
+ * 
+ */
 public class S3ClientFacade {
 
     private static final Logger LOG = LoggerFactory.getLogger(S3ClientFacade.class);
@@ -26,9 +32,6 @@ public class S3ClientFacade {
     public static final String HASH_OF_DATA = "hash-of-data";
 
     private final AmazonS3 _s3;
-
-    // an alternative:
-    // private final RestS3Service;
 
     public S3ClientFacade(AWSCredentials credentials) {
         _s3 = new AmazonS3Client(credentials);
@@ -55,7 +58,7 @@ public class S3ClientFacade {
     }
 
     public PutObjectResult putObject(String existingBucketName, String keyName, InputStream is, ObjectMetadata metadata) {
-        //metadata.setContentEncoding("UTF8");
+        // metadata.setContentEncoding("UTF8");
         final PutObjectRequest putObjectRequest = new PutObjectRequest(existingBucketName, keyName, is, metadata);
         PutObjectResult putObject = _s3.putObject(putObjectRequest);
         LOG.debug("upload object '" + existingBucketName + "'#'" + keyName + "' to S3");

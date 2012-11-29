@@ -19,8 +19,6 @@ import de.wehner.mediamagpie.common.util.CipherService;
 import de.wehner.mediamagpie.common.util.properties.PropertiesUtil;
 import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
 
-
-// TODO rwe: move methods into ConfigurationDao?
 @Repository
 public class UserConfigurationDao {
 

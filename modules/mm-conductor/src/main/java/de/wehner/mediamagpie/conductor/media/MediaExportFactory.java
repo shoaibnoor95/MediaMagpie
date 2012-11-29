@@ -13,6 +13,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
 import de.wehner.mediamagpie.api.MediaExport;
+import de.wehner.mediamagpie.api.MediaType;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.MediaTag;
 
@@ -41,6 +42,8 @@ public class MediaExportFactory {
         mediaExport.setTags(getAsList(media.getTags()));
         // id
         mediaExport.setMediaId("" + media.getId());
+        // type
+        mediaExport.setType(MediaType.PHOTO);
 
         return mediaExport;
     }

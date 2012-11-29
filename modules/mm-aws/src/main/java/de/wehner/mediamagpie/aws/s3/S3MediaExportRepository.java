@@ -1,9 +1,6 @@
 package de.wehner.mediamagpie.aws.s3;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -15,17 +12,16 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.sun.xml.internal.messaging.saaj.packaging.mime.internet.MimeUtility;
 
 import de.wehner.mediamagpie.api.ExportStatus;
 import de.wehner.mediamagpie.api.MediaExport;
+import de.wehner.mediamagpie.api.MediaExportRepository;
 import de.wehner.mediamagpie.api.MediaType;
-import de.wehner.mediamagpie.common.util.ExceptionUtil;
 import de.wehner.mediamagpie.common.util.MMTransformIterator;
 
-public class S3MediaRepository {
+public class S3MediaExportRepository implements MediaExportRepository {
 
-    private static final Logger LOG = LoggerFactory.getLogger(S3MediaRepository.class);
+    private static final Logger LOG = LoggerFactory.getLogger(S3MediaExportRepository.class);
 
     public static final String KEY_DELIMITER = "/";
 
@@ -39,16 +35,19 @@ public class S3MediaRepository {
 
     private final S3ClientFacade _s3Facade;
 
-    public S3MediaRepository(AWSCredentials credentials) {
+    public S3MediaExportRepository(AWSCredentials credentials) {
         this(new S3ClientFacade(credentials));
     }
 
-    public S3MediaRepository(S3ClientFacade s3facde) {
+    public S3MediaExportRepository(S3ClientFacade s3facde) {
         _s3Facade = s3facde;
     }
 
-    /** export functionality */
+    /* (non-Javadoc)
+     * @see de.wehner.mediamagpie.aws.s3.MediaExportRepository#addMedia(java.lang.String, de.wehner.mediamagpie.api.MediaExport)
+     */
 
+    @Override
     public void addMedia(String user, MediaExport mediaExport) {
         // build file name and bucket name
         String fileName = getKeyName(user, mediaExport);
@@ -79,16 +78,22 @@ public class S3MediaRepository {
         }
 
         // upload file to s3
-        ObjectMetadata objectMetadata = createObjectMetadata(mediaExport);
+        MediaExport2S3ObjectMetadataTransformer metadataTransformer = new MediaExport2S3ObjectMetadataTransformer();
+        ObjectMetadata objectMetadata = metadataTransformer.transform(mediaExport);
         PutObjectResult putObject = _s3Facade.putObject(bucketName, fileName, mediaExport.getInputStream(), objectMetadata);
     }
 
+    // TODO rwe: do we need this?
+    @Deprecated
     public ExportStatus getStatus(MediaExport mediaExport) {
         return ExportStatus.UNDEFINED;
     }
 
-    /** import functionality */
+    /* (non-Javadoc)
+     * @see de.wehner.mediamagpie.aws.s3.MediaExportRepository#iteratorPhotos(java.lang.String)
+     */
 
+    @Override
     public Iterator<MediaExport> iteratorPhotos(String user) {
         String prefix = getKeyNamePrefixForUserAndType(user, MediaType.PHOTO).toString();
 
@@ -102,57 +107,12 @@ public class S3MediaRepository {
         return new MMTransformIterator<S3ObjectSummary, MediaExport>(iterator, transformer);
     }
 
+    /* (non-Javadoc)
+     * @see de.wehner.mediamagpie.aws.s3.MediaExportRepository#iteratorVideos()
+     */
+    @Override
     public Iterator<MediaExport> iteratorVideos() {
         return null;
-    }
-
-    private ObjectMetadata createObjectMetadata(MediaExport mediaExport) {
-        ObjectMetadata objectMetadata = new ObjectMetadata();
-        // mime type
-        if (!StringUtils.isEmpty(mediaExport.getMimeType())) {
-            objectMetadata.setContentType(mediaExport.getMimeType());
-        }
-        // name
-        addStringIntoUserMetadata(META_NAME, mediaExport.getName(), objectMetadata);
-        // description (TODO rwe: compress?)
-        addStringIntoUserMetadata(META_DESCRIPTION, mediaExport.getDescription(), objectMetadata);
-        // creation date
-        addStringIntoUserMetadata(META_CREATION_DATE, mediaExport.getCreationDate(), objectMetadata);
-        // hash
-        objectMetadata.addUserMetadata(META_HASH_OF_DATA, mediaExport.getHashValue());
-        // length
-        if (mediaExport.getLength() != null) {
-            objectMetadata.setContentLength(mediaExport.getLength());
-        }
-        // original file name
-        addStringIntoUserMetadata(META_ORIGINAL_FILE_NAME, mediaExport.getOriginalFileName(), objectMetadata);
-        // media type
-        objectMetadata.addUserMetadata(META_MEDIA_TYPE, mediaExport.getType().name());
-        // tags
-        addStringIntoUserMetadata(META_TAGS, mediaExport.getTags(), objectMetadata);
-
-        return objectMetadata;
-    }
-
-    @SuppressWarnings("unchecked")
-    private void addStringIntoUserMetadata(String key, Object value, ObjectMetadata objectMetadata) {
-        String strValue = null;
-        if (value instanceof String) {
-            strValue = (String) value;
-        } else if (value instanceof Date) {
-            strValue = ((Date) value).getTime() + "";
-        } else if (value instanceof List<?>) {
-            strValue = StringUtils.join(((List<String>)value), ',');
-        }
-        if (!StringUtils.isEmpty(strValue)) {
-            String encodedValue = strValue;
-            try {
-                encodedValue = MimeUtility.encodeText(strValue);
-            } catch (UnsupportedEncodingException e) {
-                ExceptionUtil.convertToRuntimeException(e);
-            }
-            objectMetadata.addUserMetadata(key, encodedValue);
-        }
     }
 
     private String getBucketName(MediaType type) {

@@ -23,7 +23,7 @@ public abstract class TransactionalJobCreator<T extends PerformingJob> implement
     }
 
     @Override
-    public T create(/*final DapJobConfiguration configuration,*/ final JobExecution execution) {
+    public T create(final JobExecution execution) {
         return _transactionHandler.executeInTransaction(new Callable<T>() {
             @Override
             public T call() throws Exception {

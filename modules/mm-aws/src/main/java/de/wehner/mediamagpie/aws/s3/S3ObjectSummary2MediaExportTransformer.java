@@ -45,32 +45,32 @@ public class S3ObjectSummary2MediaExportTransformer implements MMTransformer<S3O
         MediaExport mediaExport = new MediaExport(getNameByStrategie(objectMetadata, objectSummary));
         // creation date
         Map<String, String> userMetadata = objectMetadata.getUserMetadata();
-        if (!StringUtils.isEmpty(userMetadata.get(S3MediaRepository.META_CREATION_DATE))) {
-            long time = Long.parseLong(userMetadata.get(S3MediaRepository.META_CREATION_DATE));
+        if (!StringUtils.isEmpty(userMetadata.get(S3MediaExportRepository.META_CREATION_DATE))) {
+            long time = Long.parseLong(userMetadata.get(S3MediaExportRepository.META_CREATION_DATE));
             mediaExport.setCreationDate(new Date(time));
         }
         // hash value
-        if (!StringUtils.isEmpty(userMetadata.get(S3MediaRepository.META_HASH_OF_DATA))) {
-            mediaExport.setHashValue(userMetadata.get(S3MediaRepository.META_HASH_OF_DATA));
+        if (!StringUtils.isEmpty(userMetadata.get(S3MediaExportRepository.META_HASH_OF_DATA))) {
+            mediaExport.setHashValue(userMetadata.get(S3MediaExportRepository.META_HASH_OF_DATA));
         }
         // content
         mediaExport.setInputStream(s3object.getObjectContent());
         // original file name
-        mediaExport.setOriginalFileName(getValueFromUserMetadata(S3MediaRepository.META_ORIGINAL_FILE_NAME, objectMetadata));
+        mediaExport.setOriginalFileName(getValueFromUserMetadata(S3MediaExportRepository.META_ORIGINAL_FILE_NAME, objectMetadata));
         // size
         mediaExport.setLength(objectSummary.getSize());
         // MediaType
-        if (!StringUtils.isEmpty(userMetadata.get(S3MediaRepository.META_MEDIA_TYPE))) {
-            mediaExport.setType(MediaType.valueOf(userMetadata.get(S3MediaRepository.META_MEDIA_TYPE)));
+        if (!StringUtils.isEmpty(userMetadata.get(S3MediaExportRepository.META_MEDIA_TYPE))) {
+            mediaExport.setType(MediaType.valueOf(userMetadata.get(S3MediaExportRepository.META_MEDIA_TYPE)));
         }
         // tags
-        String tags = getValueFromUserMetadata(S3MediaRepository.META_TAGS, objectMetadata);
+        String tags = getValueFromUserMetadata(S3MediaExportRepository.META_TAGS, objectMetadata);
         if (!StringUtils.isEmpty(tags)) {
             String[] tagArray = StringUtils.split(tags, ',');
             mediaExport.setTags(Arrays.asList(tagArray));
         }
         // description
-        mediaExport.setDescription(getValueFromUserMetadata(S3MediaRepository.META_DESCRIPTION, objectMetadata));
+        mediaExport.setDescription(getValueFromUserMetadata(S3MediaExportRepository.META_DESCRIPTION, objectMetadata));
         // mime type
         mediaExport.setMimeType(objectMetadata.getContentType());
         
@@ -78,7 +78,7 @@ public class S3ObjectSummary2MediaExportTransformer implements MMTransformer<S3O
     }
 
     private String getNameByStrategie(ObjectMetadata objectMetadata, S3ObjectSummary objectSummary) {
-        String name = getValueFromUserMetadata(S3MediaRepository.META_NAME, objectMetadata);
+        String name = getValueFromUserMetadata(S3MediaExportRepository.META_NAME, objectMetadata);
         if (!StringUtils.isEmpty(name)) {
             return name;
         }

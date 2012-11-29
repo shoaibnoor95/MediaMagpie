@@ -20,6 +20,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
 
 import de.wehner.mediamagpie.api.MediaExport;
+import de.wehner.mediamagpie.api.MediaExportRepository;
 import de.wehner.mediamagpie.api.MediaType;
 
 public class S3MediaRepositoryTest {
@@ -35,13 +36,13 @@ public class S3MediaRepositoryTest {
 
     MediaExport _mediaExport;
 
-    private S3MediaRepository _s3MediaRepository;
+    private MediaExportRepository _s3MediaRepository;
 
     @Before
     public void setUp() throws IOException {
         MockitoAnnotations.initMocks(this);
         when(_s3ClientFacade.putObject(anyString(), anyString(), any(InputStream.class), any(ObjectMetadata.class))).thenReturn(new PutObjectResult());
-        _s3MediaRepository = new S3MediaRepository(_s3ClientFacade);
+        _s3MediaRepository = new S3MediaExportRepository(_s3ClientFacade);
 
         _mediaExport = new MediaExport("media1");
         _mediaExport.setHashValue("pseudo-hash-value");
