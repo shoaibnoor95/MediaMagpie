@@ -14,7 +14,7 @@
 				</h1>
 				
 				<c:if test="${!empty conf.hostName}">
-				<h2><img src="<%=request.getContextPath()%>/static/images/famfamfam_silk/email_edit.png" align="absmiddle" /> 
+				<h2><img src="<%=request.getContextPath()%>/static/images/famfamfam_silk/email_edit.png" /> 
 					<a href="<%=request.getContextPath()+MailServerController.getBaseRequestMappingUrl()+MailServerController.URL_SEND_TEST_MAIL%>">Send Test Mail</a></h2>
 				</c:if>
 				

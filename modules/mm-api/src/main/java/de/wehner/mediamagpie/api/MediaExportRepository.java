@@ -6,7 +6,7 @@ public interface MediaExportRepository {
 
     /** export functionality */
 
-    public abstract void addMedia(String user, MediaExport mediaExport);
+    public abstract MediaExportResult addMedia(String user, MediaExport mediaExport);
 
     /** import functionality */
 

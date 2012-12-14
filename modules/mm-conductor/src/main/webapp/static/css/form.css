@@ -80,6 +80,11 @@ legend {
 	line-height: 30px;
 }
 
+div.ok {
+    color: green;
+    line-height: 30px;
+}
+
 div.focused {
 	background-color: #e6e6e6;
 	padding: 5px;

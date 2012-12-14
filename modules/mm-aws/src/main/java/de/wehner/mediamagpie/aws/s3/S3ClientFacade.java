@@ -11,13 +11,17 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.Owner;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
+
+import de.wehner.mediamagpie.common.util.Pair;
 
 /**
  * This class provides some convenient methods to use the aws API.
@@ -61,7 +65,7 @@ public class S3ClientFacade {
         // metadata.setContentEncoding("UTF8");
         final PutObjectRequest putObjectRequest = new PutObjectRequest(existingBucketName, keyName, is, metadata);
         PutObjectResult putObject = _s3.putObject(putObjectRequest);
-        LOG.debug("upload object '" + existingBucketName + "'#'" + keyName + "' to S3");
+        LOG.debug("uploaded object '" + existingBucketName + "'#'" + keyName + "' to S3");
         return putObject;
     }
 
@@ -103,5 +107,16 @@ public class S3ClientFacade {
 
     S3ObjectIterator iterator(String bucketName, String prefix) {
         return new S3ObjectIterator(_s3, bucketName, prefix);
+    }
+
+    public Pair<Boolean, String> testConnection() {
+        try {
+            Owner s3AccountOwner = _s3.getS3AccountOwner();
+            LOG.debug("found owner: " + s3AccountOwner);
+            return new Pair<Boolean, String>((s3AccountOwner != null), null);
+        } catch (AmazonS3Exception e) {
+            LOG.debug("Can not connecto to S3.", e);
+            return new Pair<Boolean, String>(false, e.getMessage());
+        }
     }
 }

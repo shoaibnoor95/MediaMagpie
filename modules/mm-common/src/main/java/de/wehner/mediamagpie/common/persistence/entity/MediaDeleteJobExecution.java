@@ -9,11 +9,6 @@ public class MediaDeleteJobExecution extends JobExecution {
      */
     private Long _mediaId;
 
-    @Override
-    public boolean isRetryAllowed() {
-        return true;
-    }
-
     public MediaDeleteJobExecution() {
     }
 

@@ -2,7 +2,6 @@ package de.wehner.mediamagpie.conductor.webapp.controller.configuration;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
@@ -20,12 +19,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.BasicAWSCredentials;
+
+import de.wehner.mediamagpie.aws.s3.S3ClientFacade;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.properties.S3Configuration;
+import de.wehner.mediamagpie.common.util.Pair;
 import de.wehner.mediamagpie.conductor.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.UserDao;
 import de.wehner.mediamagpie.conductor.webapp.controller.AbstractConfigurationSupportController;
+import de.wehner.mediamagpie.conductor.webapp.controller.commands.CheckResultCommand;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.config.S3ConfigurationCommand;
+import de.wehner.mediamagpie.conductor.webapp.util.security.SecurityUtil;
 
 @Controller
 @RequestMapping("/config/aws/s3")
@@ -39,6 +45,8 @@ public class AwsConfigurationController extends AbstractConfigurationSupportCont
     public static final String URL_S3CONFIG_EDIT = "/edit";
     public static final String VIEW_S3CONFIG_EDIT = "config/aws/s3/edit_s3configuration";
 
+    public static final String URL_TEST_SETTINGS = "/test";
+
     @Autowired
     public AwsConfigurationController(UserConfigurationDao userConfigurationDao, UserDao userDao) {
         super(null, userConfigurationDao, userDao);
@@ -50,19 +58,41 @@ public class AwsConfigurationController extends AbstractConfigurationSupportCont
     }
 
     @RequestMapping(method = RequestMethod.GET, value = URL_S3CONFIG)
-    public String showAwsS3Configuration(Model model, @RequestParam(value = "userId", required = false) Long userId, HttpSession session) {
-        S3ConfigurationCommand s3ConfigurationCommand = createS3ConfigurationCommandFromUser(userId);
-        model.addAttribute("conf", s3ConfigurationCommand);
-        // session.removeAttribute("userConfigurationCommand");
+    public String showAwsS3Configuration(Model model, @RequestParam(value = "userId", required = false) Long userId) {
+        addConfigurationIntoModel(model, userId);
         return VIEW_S3CONFIG;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = URL_S3CONFIG_EDIT)
-    public String editAwsS3Configuration(Model model, @RequestParam(value = "userId", required = false) Long userId, HttpSession session) {
+    private void addConfigurationIntoModel(Model model, Long userId) {
         S3ConfigurationCommand s3ConfigurationCommand = createS3ConfigurationCommandFromUser(userId);
         model.addAttribute("conf", s3ConfigurationCommand);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = URL_S3CONFIG_EDIT)
+    public String editAwsS3Configuration(Model model, @RequestParam(value = "userId", required = false) Long userId) {
+        addConfigurationIntoModel(model, userId);
         // session.removeAttribute("userConfigurationCommand");
         return VIEW_S3CONFIG_EDIT;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = URL_TEST_SETTINGS)
+    public String testAwsS3Configuration(Model model, @RequestParam(value = "userId", required = false) Long userId) {
+        User user = SecurityUtil.getCurrentUser(false);
+        if (user == null) {
+            return VIEW_S3CONFIG;
+        }
+
+        S3Configuration s3Configuration = _userConfigurationDao.getConfiguration(user, S3Configuration.class);
+        AWSCredentials credentials = new BasicAWSCredentials(s3Configuration.getAccessKey(), s3Configuration.getSecretKey());
+        S3ClientFacade s3ClientFacade = new S3ClientFacade(credentials);
+        Pair<Boolean, String> result = s3ClientFacade.testConnection();
+        if (result.getFirst()) {
+            model.addAttribute(new CheckResultCommand(true, "awsConfigurationController.s3settings.ok"));
+        } else {
+            model.addAttribute(new CheckResultCommand(false, "awsConfigurationController.s3settings.invalid", result.getSecond()));
+        }
+        addConfigurationIntoModel(model, userId);
+        return VIEW_S3CONFIG;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = URL_S3CONFIG_EDIT)

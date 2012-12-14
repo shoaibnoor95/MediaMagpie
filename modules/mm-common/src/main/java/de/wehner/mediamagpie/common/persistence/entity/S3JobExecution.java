@@ -1,5 +1,7 @@
 package de.wehner.mediamagpie.common.persistence.entity;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -26,11 +28,6 @@ public class S3JobExecution extends JobExecution {
 
     private Direction _direction;
 
-    @Override
-    public boolean isRetryAllowed() {
-        return true;
-    }
-
     public S3JobExecution() {
     }
 
@@ -51,6 +48,32 @@ public class S3JobExecution extends JobExecution {
         setMedia(media);
         _direction = direction;
         setPriority(Priority.LOW);
+    }
+
+    @Override
+    public Long getNextRetryTime(int retryCount) {
+        switch (retryCount) {
+        case 0:
+            return TimeUnit.SECONDS.toMillis(1);
+        case 1:
+            return TimeUnit.SECONDS.toMillis(10);
+        case 2:
+            return TimeUnit.MINUTES.toMillis(1);
+        case 3:
+            return TimeUnit.MINUTES.toMillis(15);
+        case 4:
+            return TimeUnit.HOURS.toMillis(1);
+        case 5:
+            return TimeUnit.DAYS.toMillis(1);
+        default:
+            return null;
+        }
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        // TODO Auto-generated method stub
+        return super.clone();
     }
 
     public void setMedia(Media media) {

@@ -15,11 +15,6 @@ public class ImageResizeJobExecution extends JobExecution {
 
     private String _label;
 
-    @Override
-    public boolean isRetryAllowed() {
-        return true;
-    }
-
     public ImageResizeJobExecution() {
     }
 

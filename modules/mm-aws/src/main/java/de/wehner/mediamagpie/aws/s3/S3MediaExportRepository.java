@@ -1,5 +1,8 @@
 package de.wehner.mediamagpie.aws.s3;
 
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -13,10 +16,12 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 
-import de.wehner.mediamagpie.api.ExportStatus;
 import de.wehner.mediamagpie.api.MediaExport;
 import de.wehner.mediamagpie.api.MediaExportRepository;
+import de.wehner.mediamagpie.api.MediaExportResult;
+import de.wehner.mediamagpie.api.MediaExportResult.ExportStatus;
 import de.wehner.mediamagpie.api.MediaType;
+import de.wehner.mediamagpie.common.util.ExceptionUtil;
 import de.wehner.mediamagpie.common.util.MMTransformIterator;
 
 public class S3MediaExportRepository implements MediaExportRepository {
@@ -43,12 +48,14 @@ public class S3MediaExportRepository implements MediaExportRepository {
         _s3Facade = s3facde;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see de.wehner.mediamagpie.aws.s3.MediaExportRepository#addMedia(java.lang.String, de.wehner.mediamagpie.api.MediaExport)
      */
 
     @Override
-    public void addMedia(String user, MediaExport mediaExport) {
+    public MediaExportResult addMedia(String user, MediaExport mediaExport) {
         // build file name and bucket name
         String fileName = getKeyName(user, mediaExport);
         String bucketName = getBucketName(mediaExport.getType());
@@ -74,22 +81,32 @@ public class S3MediaExportRepository implements MediaExportRepository {
 
         if (!write) {
             LOG.debug("Media with key '" + fileName + "' will not uploaded to S3, because this object already exists.");
-            return;
+            return createMediaExportResult(MediaExportResult.ExportStatus.ALREADY_EXPORTED, bucketName, fileName);
         }
 
         // upload file to s3
         MediaExport2S3ObjectMetadataTransformer metadataTransformer = new MediaExport2S3ObjectMetadataTransformer();
         ObjectMetadata objectMetadata = metadataTransformer.transform(mediaExport);
-        PutObjectResult putObject = _s3Facade.putObject(bucketName, fileName, mediaExport.getInputStream(), objectMetadata);
+        PutObjectResult putObjectResult = _s3Facade.putObject(bucketName, fileName, mediaExport.getInputStream(), objectMetadata);
+        LOG.debug("eTag: " + putObjectResult.getETag());
+        return createMediaExportResult(MediaExportResult.ExportStatus.SUCESS, bucketName, fileName);
     }
 
-    // TODO rwe: do we need this?
-    @Deprecated
-    public ExportStatus getStatus(MediaExport mediaExport) {
-        return ExportStatus.UNDEFINED;
+    private MediaExportResult createMediaExportResult(ExportStatus exportStatus, String bucketName, String fileName) {
+        try {
+            URL url = new URL("https", "s3.amazonaws.com", bucketName + "/" + fileName);
+            return new MediaExportResult(exportStatus, url.toURI());
+        } catch (MalformedURLException e) {
+            ExceptionUtil.convertToRuntimeException(e);
+        } catch (URISyntaxException e) {
+            ExceptionUtil.convertToRuntimeException(e);
+        }
+        return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see de.wehner.mediamagpie.aws.s3.MediaExportRepository#iteratorPhotos(java.lang.String)
      */
 
@@ -107,7 +124,9 @@ public class S3MediaExportRepository implements MediaExportRepository {
         return new MMTransformIterator<S3ObjectSummary, MediaExport>(iterator, transformer);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see de.wehner.mediamagpie.aws.s3.MediaExportRepository#iteratorVideos()
      */
     @Override

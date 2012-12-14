@@ -1,8 +1,5 @@
 package de.wehner.mediamagpie.conductor.webapp.controller.media;
 
-import java.util.Date;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -16,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.S3JobExecution;
-import de.wehner.mediamagpie.common.util.TimeProvider;
 import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
 import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.S3JobExecutionDao;
@@ -33,32 +29,23 @@ public class S3Controller extends AbstractConfigurationSupportController {
 
     private final MediaDao _mediaDao;
     private final S3JobExecutionDao _s3JobExecutionDao;
-    private final TimeProvider _timeProvider;
 
     @Autowired
     public S3Controller(MediaDao mediaDao, S3JobExecutionDao s3JobExecutionDao, ConfigurationProvider configurationProvider,
-            UserConfigurationDao userConfigurationDao, TimeProvider timeProvider) {
+            UserConfigurationDao userConfigurationDao) {
         super(configurationProvider, userConfigurationDao, null);
         _mediaDao = mediaDao;
         _s3JobExecutionDao = s3JobExecutionDao;
-        _timeProvider = timeProvider;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = AJAX_PUTTOS3, params = {})
     public void putMediaToS3(Model model, @RequestParam("id") Long mediaId, HttpServletRequest request) {
         LOG.info("Try to move media " + mediaId + " to s3");
         Media media = _mediaDao.getById(mediaId);
-//        List<S3JobExecution> pendingJobs = _s3JobExecutionDao.getUploadJobsForMedia(media);
-//        if (pendingJobs == null || pendingJobs.size() == 0) {
-            // add new job for upload to S3
-            S3JobExecution s3JobExecution = new S3JobExecution(media, S3JobExecution.Direction.PUT);
-            _s3JobExecutionDao.makePersistent(s3JobExecution);
-            LOG.info("Upload to S3 job for media '" + media.getId() + "' added with priority '" + s3JobExecution.getPriority() + "'.");
-//        }else {
-//            for (S3JobExecution s3JobExecution : pendingJobs) {
-//                s3JobExecution.setStartTime(new Date(_timeProvider.getTime()));
-//            }
-//        }
+        // add new upload job to S3
+        S3JobExecution s3JobExecution = new S3JobExecution(media, S3JobExecution.Direction.PUT);
+        _s3JobExecutionDao.makePersistent(s3JobExecution);
+        LOG.info("Upload to S3 job for media '" + media.getId() + "' added with priority '" + s3JobExecution.getPriority() + "'.");
     }
 
     public static String getBaseRequestMappingUrl() {

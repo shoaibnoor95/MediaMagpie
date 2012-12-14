@@ -10,6 +10,17 @@
 <div id="content">
 	<h1>${title}</h1>
 
+	<c:if test="${not empty checkResultCommand}">
+		<div class="${checkResultCommand.divClass}">
+			<spring:message code="${checkResultCommand.messageKey}"/>&nbsp;<c:out value="${checkResultCommand.details}"></c:out>
+		</div>
+	</c:if>
+
+	<c:if test="${!empty conf.accessKey && !empty conf.anonymizedSecretKey}">
+	<h2><img src="<%=request.getContextPath()%>/static/images/famfamfam_silk/disconnect.png" /> 
+	    <a href="<%=request.getContextPath() + AwsConfigurationController.getBaseRequestMappingUrl() + AwsConfigurationController.URL_TEST_SETTINGS%>">Test AWS settings</a></h2>
+	</c:if>
+
 	<dl>
 		<dt>
 			<label>Access Key:</label>

@@ -58,13 +58,12 @@ public class ImageResizeJob extends AbstractJob {
 
             @Override
             public int getProgress() {
-                // TODO Auto-generated method stub
                 return 0;
             }
 
             @Override
             public void cancel() throws Exception {
-                // TODO Auto-generated method stub
+                LOG.info("cancel called....");
             }
 
             @Override

@@ -38,13 +38,13 @@ import de.wehner.mediamagpie.common.testsupport.DbTestEnvironment;
 import de.wehner.mediamagpie.common.testsupport.NonParallelTest;
 import de.wehner.mediamagpie.common.util.CipherService;
 import de.wehner.mediamagpie.common.util.StringUtil;
+import de.wehner.mediamagpie.common.util.TimeProvider;
 import de.wehner.mediamagpie.conductor.performingjob.JobCallable;
 import de.wehner.mediamagpie.conductor.performingjob.JobExecutor;
 import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
 import de.wehner.mediamagpie.conductor.persistence.TransactionHandler;
 import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.JobExecutionDao;
-import de.wehner.mediamagpie.conductor.webapp.services.JobScheduler;
 
 
 @RunWith(NonParallelTest.class)
@@ -80,7 +80,7 @@ public class JobSchedulerIntegrationTest {
         _persistenceService.beginTransaction();
         _media = new Media(DbTestEnvironment.getOrCreateTestUser(_persistenceService), "name", fakeImageFile.toURI(), new Date());
         _persistenceService.persist(_media);
-        _jobScheduler = new JobScheduler(transactionHandler, _jobExecutionDao, configurationDao, _jobExecutor, Executors.newSingleThreadExecutor());
+        _jobScheduler = new JobScheduler(transactionHandler, _jobExecutionDao, configurationDao, _jobExecutor, new TimeProvider(), Executors.newSingleThreadExecutor());
     }
 
     @Test(timeout = 15000)

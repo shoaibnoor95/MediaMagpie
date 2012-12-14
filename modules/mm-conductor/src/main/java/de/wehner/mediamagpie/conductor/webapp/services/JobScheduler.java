@@ -25,6 +25,7 @@ import de.wehner.mediamagpie.common.persistence.entity.JobExecution;
 import de.wehner.mediamagpie.common.persistence.entity.JobStatus;
 import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
 import de.wehner.mediamagpie.common.util.ExceptionUtil;
+import de.wehner.mediamagpie.common.util.TimeProvider;
 import de.wehner.mediamagpie.conductor.job.SingleThreadedTransactionController;
 import de.wehner.mediamagpie.conductor.performingjob.JobCallable;
 import de.wehner.mediamagpie.conductor.performingjob.JobExecutor;
@@ -41,21 +42,24 @@ public class JobScheduler extends SingleThreadedTransactionController {
     private final ConfigurationDao _configurationDao;
     private final JobExecutor _jobExecutor;
     private final ExecutorService _executorService;
+    private final TimeProvider _timeProvider;
     private final Map<Long, Future<URI>> _runningJobFutureByJobId = new ConcurrentHashMap<Long, Future<URI>>();
     private final Map<Long, JobCallable> _runningJobCallableByJobId = new ConcurrentHashMap<Long, JobCallable>();
 
     @Autowired
-    public JobScheduler(TransactionHandler transactionHandler, JobExecutionDao jobExecutionDao, ConfigurationDao configurationDao, JobExecutor jobExecutor) {
-        this(transactionHandler, jobExecutionDao, configurationDao, jobExecutor, Executors.newFixedThreadPool(4));
+    public JobScheduler(TransactionHandler transactionHandler, JobExecutionDao jobExecutionDao, ConfigurationDao configurationDao,
+            JobExecutor jobExecutor, TimeProvider timeProvider) {
+        this(transactionHandler, jobExecutionDao, configurationDao, jobExecutor, timeProvider, Executors.newFixedThreadPool(4));
     }
 
     public JobScheduler(TransactionHandler transactionHandler, JobExecutionDao jobExecutionDao, ConfigurationDao configurationDao,
-            JobExecutor jobExecutor, ExecutorService executorService) {
+            JobExecutor jobExecutor, TimeProvider timeProvider, ExecutorService executorService) {
         super(transactionHandler);
         _jobExecutionDao = jobExecutionDao;
         _configurationDao = configurationDao;
         _jobExecutor = jobExecutor;
         _executorService = executorService;
+        _timeProvider = timeProvider;
     }
 
     @Override
@@ -175,8 +179,10 @@ public class JobScheduler extends SingleThreadedTransactionController {
             return;
         }
         jobExecution.setStopTime(new Date());
-        if (mustJobRerun(jobExecution)) {
+        Long retryWaitingTime = jobExecution.getNextRetryTime(jobExecution.getRetryCount());
+        if (retryWaitingTime != null) {
             jobExecution.setRetryCount(jobExecution.getRetryCount() + 1);
+            jobExecution.setStartTime(new Date(_timeProvider.getTime() + retryWaitingTime));
             jobExecution.setJobStatus(JobStatus.QUEUED);
         } else {
             LOG.warn("Set job '" + jobExecution + "' to new status '" + JobStatus.TERMINATED_WITH_ERROR + "' caused by multiple errors.");
@@ -184,15 +190,6 @@ public class JobScheduler extends SingleThreadedTransactionController {
             jobExecution.setJobStatus(JobStatus.TERMINATED_WITH_ERROR);
         }
         completeJob(jobExecution);
-    }
-
-    private boolean mustJobRerun(JobExecution jobExecution) {
-        if (jobExecution.isRetryAllowed()) {
-            if (jobExecution.getRetryCount() < 3) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private void completeJob(JobExecution dapJobExecution) {

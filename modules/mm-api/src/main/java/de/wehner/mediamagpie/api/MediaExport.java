@@ -5,18 +5,24 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * This is a container class to encapsulate a <code>Media</code> entity for export or import operations.
+ * 
+ * @author ralfwehner
+ * 
+ */
 public class MediaExport {
 
     private final String _name;
-    
+
     private String _mediaId;
 
     private InputStream _inputStream;
-    
+
     private Long _length;
 
     private String mimeType;
-    
+
     /**
      * The sha1 hash value of media encoded in base 64
      */

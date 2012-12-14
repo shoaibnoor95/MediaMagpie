@@ -39,8 +39,16 @@ public abstract class JobExecution extends Base implements Cloneable {
 
     private int _retryCount;
 
-    public boolean isRetryAllowed() {
-        return false;
+    /**
+     * This method controls whether or not a new retry job will start and if so when it starts.
+     * 
+     * @param retryCount
+     *            The restart attempts before. This is zero if the previous jobs fails the first time.
+     * @return The waiting time in milli seconds the next retry job will start. When <code>null</code> is returned no more retry job will be
+     *         started..
+     */
+    public Long getNextRetryTime(int retryCount) {
+        return ((retryCount > 2) ? 0L : null);
     }
 
     public JobExecution() {

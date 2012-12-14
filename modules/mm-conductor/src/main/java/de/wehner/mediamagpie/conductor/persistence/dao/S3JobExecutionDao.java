@@ -20,15 +20,14 @@ public class S3JobExecutionDao extends JobExecutionDao {
     }
 
     @SuppressWarnings("unchecked")
-    // TODO rwe: does we need this really?
-    public List<S3JobExecution> getUploadJobsForMedia(Media media) {
+    public boolean hasJob(Media media) {
         final Criteria crit = _persistenceService.createCriteria(S3JobExecution.class);
 
         crit.add(Restrictions.eq("_media", media));
         crit.add(Restrictions.eq("_direction", S3JobExecution.Direction.PUT));
         crit.setMaxResults(1);
         List<S3JobExecution> jobs = crit.list();
-        return jobs;
+        return (jobs.size() > 0);
     }
 
 }
