@@ -19,7 +19,6 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
@@ -35,7 +34,6 @@ import de.wehner.mediamagpie.common.persistence.entity.MediaDeleteJobExecution;
 import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
 import de.wehner.mediamagpie.common.test.util.TestEnvironment;
 import de.wehner.mediamagpie.common.testsupport.DbTestEnvironment;
-import de.wehner.mediamagpie.common.testsupport.NonParallelTest;
 import de.wehner.mediamagpie.common.util.CipherService;
 import de.wehner.mediamagpie.common.util.StringUtil;
 import de.wehner.mediamagpie.common.util.TimeProvider;
@@ -46,8 +44,7 @@ import de.wehner.mediamagpie.conductor.persistence.TransactionHandler;
 import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.JobExecutionDao;
 
-
-@RunWith(NonParallelTest.class)
+//@RunWith(NonParallelTest.class)
 public class JobSchedulerIntegrationTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(JobSchedulerIntegrationTest.class);
@@ -70,7 +67,7 @@ public class JobSchedulerIntegrationTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         _dbTestEnvironment.cleanDb();
-        //LOG.warn("##### working with _jobExecutor: " + _jobExecutor.getClass());
+        // LOG.warn("##### working with _jobExecutor: " + _jobExecutor.getClass());
         File fakeImageFile = new File(_testEnvironment.getWorkingDir(), "fake_image.png");
         FileUtils.writeStringToFile(fakeImageFile, "fake");
         _persistenceService = _dbTestEnvironment.getPersistenceService();
@@ -80,7 +77,8 @@ public class JobSchedulerIntegrationTest {
         _persistenceService.beginTransaction();
         _media = new Media(DbTestEnvironment.getOrCreateTestUser(_persistenceService), "name", fakeImageFile.toURI(), new Date());
         _persistenceService.persist(_media);
-        _jobScheduler = new JobScheduler(transactionHandler, _jobExecutionDao, configurationDao, _jobExecutor, new TimeProvider(), Executors.newSingleThreadExecutor());
+        _jobScheduler = new JobScheduler(transactionHandler, _jobExecutionDao, configurationDao, _jobExecutor, new TimeProvider(),
+                Executors.newSingleThreadExecutor());
     }
 
     @Test(timeout = 15000)
@@ -89,9 +87,9 @@ public class JobSchedulerIntegrationTest {
         CountDownLatch jobExecutionRunning = createExecutionRunningCountDownLatch(false);
 
         _jobScheduler.start();
-        //System.out.println("waiting for jobExecutionRunning...");
+        // System.out.println("waiting for jobExecutionRunning...");
         jobExecutionRunning.await();
-        //System.out.println("waiting for jobExecutionRunning...DONE");
+        // System.out.println("waiting for jobExecutionRunning...DONE");
 
         JobExecution jobExecutionFromDb = getJobExecutionFromDb();
         assertEquals(JobStatus.RUNNING, jobExecutionFromDb.getJobStatus());
@@ -180,11 +178,11 @@ public class JobSchedulerIntegrationTest {
         final CountDownLatch dapJobExecutionRunning = new CountDownLatch(1);
 
         JobCallable jobCallable = mock(JobCallable.class);
-        doReturn(jobCallable).when(_jobExecutor).prepare(any(MainConfiguration.class), eq(getJobExecutionFromDb())/*any(JobExecution.class)*/);
+        doReturn(jobCallable).when(_jobExecutor).prepare(any(MainConfiguration.class), eq(getJobExecutionFromDb())/* any(JobExecution.class) */);
         doAnswer(new Answer<URI>() {
             @Override
             public URI answer(InvocationOnMock arg0) throws Throwable {
-                //LOG.warn("###############Performing JobCallable.call() an mock. That's ok.##############");
+                // LOG.warn("###############Performing JobCallable.call() an mock. That's ok.##############");
                 Thread.sleep(100);
                 dapJobExecutionRunning.countDown();
                 Thread.sleep(100);
@@ -224,63 +222,6 @@ public class JobSchedulerIntegrationTest {
         _persistenceService.commitTransaction();
     }
 
-    // @Test
-    // public void testGetFieldDefinitionsFromDataSource() throws Exception {
-    // addJobToDb(_dataSource, JobStatus.QUEUED);
-    //
-    // DapJobExecution dapJobExecution = runJob();
-    //
-    // DataSourceConfiguration dataSource = (DataSourceConfiguration) dapJobExecution.getDapJobConfiguration();
-    // assertEquals(2, dataSource.getFields().size());
-    //
-    // _jobScheduler.stop();
-    // }
-    //
-    // @Test
-    // public void testWorkbooksInitialized() throws Exception {
-    // addJobToDb(_workbook, JobStatus.QUEUED);
-    //
-    // DapJobExecution dapJobExecution = runJob();
-    // WorkbookConfiguration workbook = (WorkbookConfiguration) dapJobExecution.getDapJobConfiguration();
-    // assertEquals(3, workbook.getSheets().size());
-    // assertEquals(2, workbook.getSheets().get(0).getFormulas().size());
-    //
-    // Sheet filterSheet = workbook.getSheets().get(1);
-    // assertEquals(1, filterSheet.getFilter().getFilterArguments().size());
-    // assertEquals("sheet1", filterSheet.getFilter().getSourceSheet().getName());
-    // assertEquals("Sheet2", filterSheet.getFilter().getTargetSheet().getName());
-    //
-    // Sheet sortSheet = workbook.getSheets().get(2);
-    // assertEquals(1, sortSheet.getSort().getSortKeys().size());
-    // assertEquals("sheet1", sortSheet.getSort().getSourceSheet().getName());
-    // assertEquals("Sheet3", sortSheet.getSort().getTargetSheet().getName());
-    //
-    // _jobScheduler.stop();
-    // }
-    //
-    // private DapJobExecution runJob() throws Exception {
-    // final CountDownLatch dapJobExecuting = new CountDownLatch(1);
-    //
-    // final DapJobExecution[] dapJobExecution = new DapJobExecution[1];
-    // DapJobCallable dapJobCallable = mock(DapJobCallable.class);
-    // final ArgumentCaptor<DapJobExecution> argumentCaptor = ArgumentCaptor.forClass(DapJobExecution.class);
-    // doReturn(dapJobCallable).when(_jobExecutor).prepare(any(ExecutionEngine.class), argumentCaptor.capture());
-    // doAnswer(new Answer<Data>() {
-    // @Override
-    // public Data answer(InvocationOnMock arg) throws Throwable {
-    // dapJobExecution[0] = argumentCaptor.getValue();
-    // dapJobExecuting.countDown();
-    // return new DataSourceData(_dataSource, "uri");
-    // }
-    // }).when(dapJobCallable).call();
-    //
-    // _jobScheduler.start();
-    // dapJobExecuting.await();
-    //
-    // waitUntilAllJobsCompleted();
-    // return dapJobExecution[0];
-    // }
-    //
     private void waitUntilAllJobsCompleted() throws InterruptedException {
         System.out.println("waitUntilAllJobsCompleted()...");
         while (!_jobScheduler.getRunningJobs().isEmpty()) {

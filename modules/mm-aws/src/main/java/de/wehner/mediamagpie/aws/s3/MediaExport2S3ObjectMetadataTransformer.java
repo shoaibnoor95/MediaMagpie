@@ -4,10 +4,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 
+import javax.mail.internet.MimeUtility;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.sun.xml.internal.messaging.saaj.packaging.mime.internet.MimeUtility;
 
 import de.wehner.mediamagpie.api.MediaExport;
 import de.wehner.mediamagpie.common.util.ExceptionUtil;

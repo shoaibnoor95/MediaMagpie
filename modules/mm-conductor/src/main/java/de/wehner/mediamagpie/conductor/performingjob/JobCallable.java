@@ -5,7 +5,6 @@ import java.util.concurrent.Callable;
 
 import de.wehner.mediamagpie.common.persistence.entity.JobExecution;
 
-
 /**
  * Callable for the execution of an {@link JobExecution}.
  */
@@ -16,13 +15,13 @@ public interface JobCallable extends Callable<URI> {
      */
     int getProgress();
 
-    // Map<DapJobCounter, Long> getDapJobCounter();
-
     void cancel() throws Exception;
 
     /**
      * Called after job is finished and runs within a <b>persistence session</b>.
-     * @param result The result of the job.
+     * 
+     * @param result
+     *            The result of the job.
      */
     void handleResult(URI result);
 

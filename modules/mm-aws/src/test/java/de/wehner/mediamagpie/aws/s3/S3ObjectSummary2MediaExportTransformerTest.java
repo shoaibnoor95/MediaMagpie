@@ -12,6 +12,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.internet.MimeUtility;
+import javax.mail.internet.ParseException;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -24,7 +27,6 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.sun.xml.internal.messaging.saaj.packaging.mime.internet.MimeUtility;
 
 import de.wehner.mediamagpie.api.MediaExport;
 import de.wehner.mediamagpie.api.MediaType;
@@ -72,6 +74,14 @@ public class S3ObjectSummary2MediaExportTransformerTest {
 
         // link test object to S3Client
         when(_s3.getObject(BUCKET_NAME, KEY)).thenReturn(s3Object);
+    }
+
+    @Test
+    public void test_RFC2047_RoundRobin() throws UnsupportedEncodingException, ParseException {
+
+        String encoded = MimeUtility.encodeText(MEDIA_DESC);
+        String decoded = MimeUtility.decodeText(encoded);
+        assertThat(decoded).isEqualTo(MEDIA_DESC);
     }
 
     @Test

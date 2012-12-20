@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 
+import javax.mail.internet.MimeUtility;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +15,6 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.sun.xml.internal.messaging.saaj.packaging.mime.internet.MimeUtility;
 
 import de.wehner.mediamagpie.api.MediaExport;
 import de.wehner.mediamagpie.api.MediaType;

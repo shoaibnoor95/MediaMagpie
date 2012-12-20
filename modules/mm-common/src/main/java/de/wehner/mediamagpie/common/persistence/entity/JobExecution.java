@@ -48,7 +48,7 @@ public abstract class JobExecution extends Base implements Cloneable {
      *         started..
      */
     public Long getNextRetryTime(int retryCount) {
-        return ((retryCount > 2) ? 0L : null);
+        return ((retryCount <= 2) ? 0L : null);
     }
 
     public JobExecution() {
