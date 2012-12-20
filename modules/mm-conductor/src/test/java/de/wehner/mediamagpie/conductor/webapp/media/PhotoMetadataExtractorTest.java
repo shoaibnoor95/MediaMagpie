@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,7 +27,8 @@ public class PhotoMetadataExtractorTest {
         File mediaFile = new File("src/test/resources/images/IMG_0013.JPG");
         PhotoMetadataExtractor metadataExtractor = new PhotoMetadataExtractor(mediaFile.toURI());
         Date dateOfMedia = metadataExtractor.resolveDateTimeOriginal();
-        assertThat(dateOfMedia.getTime()).isEqualTo(1250280049000L);
+        String string = DateFormatUtils.ISO_DATETIME_FORMAT.format(dateOfMedia);
+        assertThat(string).isEqualTo("2009-08-14T22:00:49");
     }
 
     @Test

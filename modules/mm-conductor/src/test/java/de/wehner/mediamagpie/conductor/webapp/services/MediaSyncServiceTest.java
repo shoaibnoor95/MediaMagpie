@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -137,8 +138,16 @@ public class MediaSyncServiceTest {
         assertTrue(updatedDb);
         CapturingMatcher<Media> mediaCapturer = new CapturingMatcher<Media>();
         verify(_mediaDao, times(2)).makePersistent(argThat(mediaCapturer));
-        assertTrue(mediaCapturer.getAllValues().get(0).getUri().endsWith("/2010/07/10/resized_img_4358.jpg"));
-        assertTrue(mediaCapturer.getAllValues().get(1).getUri().endsWith("/2010/07/12/resized_img_4636.jpg"));
+        List<Media> persistedMedias = mediaCapturer.getAllValues();
+        Collections.sort(persistedMedias, new Comparator<Media>() {
+
+            @Override
+            public int compare(Media arg0, Media arg1) {
+                return arg0.getUri().compareTo(arg1.getUri());
+            }
+        });
+        assertTrue(persistedMedias.get(0).getUri().endsWith("/2010/07/10/resized_img_4358.jpg"));
+        assertTrue(persistedMedias.get(1).getUri().endsWith("/2010/07/12/resized_img_4636.jpg"));
     }
 
     @Test
@@ -244,7 +253,7 @@ public class MediaSyncServiceTest {
     }
 
     @Test
-    public void test_resolveCreationDate(){
-        
+    public void test_resolveCreationDate() {
+
     }
 }

@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FilenameUtils;
@@ -33,9 +34,9 @@ public class TimeUtil {
 
     private Date _date;
     private final static SimpleDateFormat TIMESTAMPFORMATTER = new SimpleDateFormat("DDDHHmmssSSS");
-    private final static SimpleDateFormat FILE_TIMESTAMPFORMATTER = new SimpleDateFormat("yyMMdd_HHmmss");
-    private final static SimpleDateFormat GERMAN_SECOND_TIMESTAMPFORMATTER = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-    private final static SimpleDateFormat GERMAN_DAY_TIMESTAMPFORMATTER = new SimpleDateFormat("dd.MM.yyyy");
+    private final static SimpleDateFormat FILE_TIMESTAMPFORMATTER = new SimpleDateFormat("yyMMdd_HHmmss", Locale.US);
+    private final static SimpleDateFormat GERMAN_SECOND_TIMESTAMPFORMATTER = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.GERMANY);
+    private final static SimpleDateFormat GERMAN_DAY_TIMESTAMPFORMATTER = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
 
     /** Creates a new instance of TimeUtil */
     public TimeUtil() {
