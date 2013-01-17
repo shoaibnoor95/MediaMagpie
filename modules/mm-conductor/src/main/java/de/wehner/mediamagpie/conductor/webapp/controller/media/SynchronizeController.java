@@ -31,7 +31,7 @@ public class SynchronizeController {
 
     @RequestMapping(method = RequestMethod.POST, value = URL_SYNC_S3, params = { "submitSelect=push" })
     public String pushToS3() {
-        LOG.info("Start pushing to s3...");
+        LOG.info("Start pushing to s3... ");
         return VIEW_INDEX;
     }
 
