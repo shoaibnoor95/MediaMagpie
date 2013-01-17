@@ -317,14 +317,12 @@ public class ImageService {
                 CameraMetaData cameraMetaData = _mapper.readValue(jsonCameraMetaData, CameraMetaData.class);
                 mediaThumbCommand.setCameraMetaData(cameraMetaData);
             } catch (JsonParseException e) {
-                // TODO Auto-generated catch block
+                LOG.error("Internal error", e);
                 e.printStackTrace();
             } catch (JsonMappingException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                LOG.error("Internal error", e);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                LOG.error("Internal error", e);
             }
         }
 

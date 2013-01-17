@@ -67,6 +67,15 @@
 							</dd>
 							<dd class="help"></dd>	
 						</dl>
+                        <dl>
+                            <dt>
+                                <label>Use TLS:</label>
+                            </dt>
+                            <dd>
+                                <form:checkbox path="useTls" cssClass="req"/>
+                            </dd>
+                            <dd class="help"></dd>  
+                        </dl>
 						<dl>
 							<dt>
 								<label>User name:</label>

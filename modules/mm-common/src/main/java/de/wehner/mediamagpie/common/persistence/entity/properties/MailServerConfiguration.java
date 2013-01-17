@@ -20,6 +20,7 @@ public class MailServerConfiguration implements PropertyBackedConfiguration {
     private String _userName;
     @Encrypted
     private String _password;
+    private boolean _useTls;
 
     public boolean isEnabled() {
         return _enabled;
@@ -87,6 +88,14 @@ public class MailServerConfiguration implements PropertyBackedConfiguration {
 
     public void setPassword(String password) {
         _password = password;
+    }
+
+    public boolean isUseTls() {
+        return _useTls;
+    }
+
+    public void setUseTls(boolean useTls) {
+        _useTls = useTls;
     }
 
     @Override

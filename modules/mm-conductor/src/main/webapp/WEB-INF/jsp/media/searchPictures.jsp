@@ -93,9 +93,10 @@
 							<c:out value="${picture.title}" />
 						</h5>
 						<p class="metadata">
-							date: <core:date date="${picture.media.creationDate}" />
+							date: <core:date date="${picture.media.creationDate}" /><br/>
+							ID: <c:out value="${picture.media.id}"/>
 						</p>
-                        <p class="metadata">
+                        <p>
                             <button>Export to S3</button>
                             <img class="in-process" alt="exporting" width="20px" src="<%=request.getContextPath()%>/static/images/loader.gif" />
                         </p>

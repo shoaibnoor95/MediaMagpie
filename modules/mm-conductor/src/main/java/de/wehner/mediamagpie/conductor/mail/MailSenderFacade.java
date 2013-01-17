@@ -2,6 +2,7 @@ package de.wehner.mediamagpie.conductor.mail;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.Callable;
 
 import javax.mail.MessagingException;
@@ -58,6 +59,15 @@ public class MailSenderFacade {
         _mailSender.setPort((serverConf.getPort() != null) ? serverConf.getPort() : 25);
         _mailSender.setUsername(serverConf.getUserName());
         _mailSender.setPassword(serverConf.getPassword());
+        Properties javaMailProperties = _mailSender.getJavaMailProperties();
+        if (serverConf.isUseTls()) {
+            javaMailProperties.setProperty("mail.smtp.auth", "true");
+            javaMailProperties.setProperty("mail.smtp.starttls.enable", "true");
+        } else {
+            javaMailProperties.remove("mail.smtp.auth");
+            javaMailProperties.remove("mail.smtp.starttls.enable");
+        }
+        _mailSender.setJavaMailProperties(javaMailProperties);
         _senderAdress = new InternetAddress(serverConf.getSenderAddress(), serverConf.getSenderName());
     }
 

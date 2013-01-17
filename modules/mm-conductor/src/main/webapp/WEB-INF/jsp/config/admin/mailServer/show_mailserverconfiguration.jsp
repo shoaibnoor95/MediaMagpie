@@ -48,6 +48,12 @@
 					</dt>
 					<dd>${conf.port}</dd>	
 				</dl>
+                <dl>
+                    <dt>
+                        <label>Use TLS:</label>
+                    </dt>
+                    <dd>${conf.useTls}</dd>   
+                </dl>
 				<dl>
 					<dt>
 						<label>User name:</label>

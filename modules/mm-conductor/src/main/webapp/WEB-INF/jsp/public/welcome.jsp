@@ -86,3 +86,4 @@
 			... todo add user's pictures here
 		<%}%>
     </div>
+</div>
