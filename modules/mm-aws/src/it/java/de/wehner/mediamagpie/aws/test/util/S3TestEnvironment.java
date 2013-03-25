@@ -20,8 +20,8 @@ public class S3TestEnvironment extends ExternalResource {
 
     private AWSCredentials _s3Credentials;
 
-    public S3TestEnvironment() {
-
+    @Override
+    protected void before() throws Throwable {
         InputStream configIS = null;
         try {
             configIS = SearchPathUtil.openStream("classpath:/AwsCredentials.properties");
@@ -38,6 +38,12 @@ public class S3TestEnvironment extends ExternalResource {
         } finally {
             IOUtils.closeQuietly(configIS);
         }
+        super.before();
+    }
+
+    @Override
+    protected void after() {
+        super.after();
     }
 
     public AWSCredentials getS3Credentials() {

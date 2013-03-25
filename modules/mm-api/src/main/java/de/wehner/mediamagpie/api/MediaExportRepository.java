@@ -6,7 +6,16 @@ public interface MediaExportRepository {
 
     /** export functionality */
 
-    public abstract MediaExportResult addMedia(String user, MediaExport mediaExport);
+    /**
+     * Exports a <code>MediaExport</code> object
+     * 
+     * @param user
+     *            The user's name used for login (equivalent to <code>User.getName()</code>)
+     * @param mediaExport
+     *            The media to export
+     * @return The result of media export
+     */
+    public abstract MediaExportResults addMedia(String user, MediaExport mediaExport);
 
     /** import functionality */
 

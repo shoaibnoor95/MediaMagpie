@@ -10,7 +10,7 @@ import de.wehner.mediamagpie.common.util.properties.PropertiesBacked;
 public class AdminConfiguration implements PropertyBackedConfiguration {
 
     private String _email;
-    private String _password;// TODO jz: encode ?!
+    private String _password;
 
     @NotEmpty
     public String getEmail() {

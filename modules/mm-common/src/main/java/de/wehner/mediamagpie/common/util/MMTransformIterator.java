@@ -66,6 +66,7 @@ public class MMTransformIterator<I, O> implements Iterator<O> {
      * @return the transformed object
      */
     protected O transform(I source) {
+        // FIXME rwe: Hier müsste noch differenziert werden ob es sich um das data oder das metainfo objekt handel...
         return transformer.transform(source);
     }
 }

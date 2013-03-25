@@ -35,6 +35,31 @@ public class S3ClientFacade {
 
     public static final String HASH_OF_DATA = "hash-of-data";
 
+    public static class FileNameInfo {
+
+        private final String _nameObject;
+
+        private String _nameMetadata;
+
+        public FileNameInfo(String nameObject, String nameMetadata) {
+            super();
+            _nameObject = nameObject;
+            _nameMetadata = nameMetadata;
+        }
+
+        public String getNameObject() {
+            return _nameObject;
+        }
+
+        public String getNameMetadata() {
+            return _nameMetadata;
+        }
+
+        public void setNameMetadata(String nameMetadata) {
+            _nameMetadata = nameMetadata;
+        }
+    }
+
     private final AmazonS3 _s3;
 
     public S3ClientFacade(AWSCredentials credentials) {

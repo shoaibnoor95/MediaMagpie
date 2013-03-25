@@ -16,7 +16,7 @@ public class S3ObjectIterator implements Iterator<S3ObjectSummary> {
 
     private static final int MAX_OBJECTS_PER_READ = 50;
     private final AmazonS3 _s3;
-    private final String _bucketName;
+    final String _bucketName;
     private final String _prefix;
     private ObjectListing _lastObjectListing;
     private int _objectSummaryIndex = 0;

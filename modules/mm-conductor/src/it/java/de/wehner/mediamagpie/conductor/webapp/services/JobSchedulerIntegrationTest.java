@@ -16,6 +16,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -35,7 +36,6 @@ import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfigurat
 import de.wehner.mediamagpie.common.test.util.TestEnvironment;
 import de.wehner.mediamagpie.common.testsupport.DbTestEnvironment;
 import de.wehner.mediamagpie.common.util.CipherService;
-import de.wehner.mediamagpie.common.util.StringUtil;
 import de.wehner.mediamagpie.common.util.TimeProvider;
 import de.wehner.mediamagpie.conductor.performingjob.JobCallable;
 import de.wehner.mediamagpie.conductor.performingjob.JobExecutor;
@@ -104,7 +104,7 @@ public class JobSchedulerIntegrationTest {
         assertEquals(0, jobExecutionFromDb.getRetryCount());
         assertEquals(JobStatus.COMPLETED, jobExecutionFromDb.getJobStatus());
         assertNotNull(jobExecutionFromDb.getStopTime());
-        assertTrue(!StringUtil.isEmpty(jobExecutionFromDb.getCreatedDataUri()));
+        assertTrue(!StringUtils.isEmpty(jobExecutionFromDb.getCreatedDataUri()));
     }
 
     @Test(timeout = 15000)
@@ -175,7 +175,7 @@ public class JobSchedulerIntegrationTest {
     }
 
     private CountDownLatch createExecutionRunningCountDownLatch(final boolean deleteMedia) throws Exception {
-        final CountDownLatch dapJobExecutionRunning = new CountDownLatch(1);
+        final CountDownLatch jobExecutionRunning = new CountDownLatch(1);
 
         JobCallable jobCallable = mock(JobCallable.class);
         doReturn(jobCallable).when(_jobExecutor).prepare(any(MainConfiguration.class), eq(getJobExecutionFromDb())/* any(JobExecution.class) */);
@@ -184,7 +184,7 @@ public class JobSchedulerIntegrationTest {
             public URI answer(InvocationOnMock arg0) throws Throwable {
                 // LOG.warn("###############Performing JobCallable.call() an mock. That's ok.##############");
                 Thread.sleep(100);
-                dapJobExecutionRunning.countDown();
+                jobExecutionRunning.countDown();
                 Thread.sleep(100);
                 if (deleteMedia) {
                     return null;
@@ -192,7 +192,7 @@ public class JobSchedulerIntegrationTest {
                 return new URI(_media.getUri());
             }
         }).when(jobCallable).call();
-        return dapJobExecutionRunning;
+        return jobExecutionRunning;
     }
 
     private JobExecution getJobExecutionFromDb() {

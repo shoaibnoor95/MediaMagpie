@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -16,7 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import de.wehner.mediamagpie.common.persistence.entity.User;
-import de.wehner.mediamagpie.common.util.StringUtil;
 import de.wehner.mediamagpie.conductor.persistence.TransactionHandler;
 import de.wehner.mediamagpie.conductor.persistence.dao.UserDao;
 import de.wehner.mediamagpie.conductor.util.Env;
@@ -64,7 +64,7 @@ public class AutoLoginFilter extends AbstractExcludeFilter {
                       LOG.warn("Auto-login with 'admin' user duo to "+Env.DEPLOY_MODE_KEY+"=local is set.");
                       
                       UserDetails userDetails = UserSecurityService.createUserDetails(user);
-                      if(!StringUtil.isEmpty(user.getPassword())){
+                      if(!StringUtils.isEmpty(user.getPassword())){
                           SecurityUtil.setCurrentPassword(user.getPassword());
                       }
                       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

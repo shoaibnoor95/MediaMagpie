@@ -8,14 +8,15 @@ What for software you need?
 + apache ant 1.7.1
 + sun java 6
 
-
 How to build?
 -------------
  
+```bash
     mvn clean
     mvn compile
     mvn test
     mvn package [-P warFile]
+```
 
 
 How to import project files into Eclipse?

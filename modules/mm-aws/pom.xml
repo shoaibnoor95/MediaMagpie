@@ -13,11 +13,11 @@
 	<name>MediaMagpie AWS functionality</name>
 	<dependencies>
 
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>mm-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>mm-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>mm-common</artifactId>
@@ -28,18 +28,16 @@
 		<dependency>
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk</artifactId>
-			<version>1.3.9</version>
 		</dependency>
 		<dependency>
 			<groupId>net.java.dev.jets3t</groupId>
 			<artifactId>jets3t</artifactId>
-			<version>0.9.0</version>
 		</dependency>
-		
-        <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-        </dependency>
+
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+		</dependency>
 
 		<!-- Logging for slf4j see also: http://blog.frankel.ch/thoughts-on-java-logging-and-slf4j -->
 		<dependency>

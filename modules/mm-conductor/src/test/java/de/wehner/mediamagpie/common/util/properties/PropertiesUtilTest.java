@@ -1,12 +1,6 @@
 package de.wehner.mediamagpie.common.util.properties;
 
-import static org.hamcrest.CoreMatchers.*;
-
-import static org.junit.Assert.*;
-
 import static org.fest.assertions.Assertions.*;
-
-import static org.junit.internal.matchers.IsCollectionContaining.*;
 
 import java.security.GeneralSecurityException;
 import java.util.List;
@@ -14,13 +8,9 @@ import java.util.Properties;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.propertyeditors.StringArrayPropertyEditor;
 
-import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
 import de.wehner.mediamagpie.common.util.CipherService;
-import de.wehner.mediamagpie.common.util.properties.Encrypted;
-import de.wehner.mediamagpie.common.util.properties.PropertiesBacked;
-import de.wehner.mediamagpie.common.util.properties.PropertiesUtil;
-
 
 public class PropertiesUtilTest {
 
@@ -34,11 +24,11 @@ public class PropertiesUtilTest {
     @Test
     public void testGetProperties() throws Exception {
         List<String> properties = PropertiesUtil.getPropertyKeys(TestConfiguration.class);
-        assertEquals(4, properties.size());
-        assertThat(properties, hasItem("conf.test.a"));
-        assertThat(properties, hasItem("conf.test.caMel"));
-        assertThat(properties, hasItem("conf.test.boolean"));
-        assertThat(properties, hasItem("conf.test.encrypted"));
+        assertThat(properties).hasSize(5);
+        assertThat(properties).contains("conf.test.a");
+        assertThat(properties).contains("conf.test.caMel");
+        assertThat(properties).contains("conf.test.boolean");
+        assertThat(properties).contains("conf.test.encrypted");
     }
 
     @Test
@@ -48,9 +38,9 @@ public class PropertiesUtilTest {
         properties.setProperty("conf.test.caMel", "2");
         properties.setProperty("conf.test.boolean", "true");
         TestConfiguration testConfiguration = PropertiesUtil.readFromProperties(_cipherService, TestConfiguration.class, properties);
-        assertEquals("1", testConfiguration.getA());
-        assertEquals("2", testConfiguration.getCaMel());
-        assertThat(testConfiguration.isBoolean(), is(true));
+        assertThat(testConfiguration.getA()).isEqualTo("1");
+        assertThat(testConfiguration.getCaMel()).isEqualTo("2");
+        assertThat(testConfiguration.isBoolean()).isTrue();
     }
 
     @Test
@@ -61,29 +51,21 @@ public class PropertiesUtilTest {
         testConfiguration.setBoolean(true);
 
         Properties properties = PropertiesUtil.transformToProperties(_cipherService, testConfiguration);
-        assertEquals(3, properties.size());
-        assertEquals("1", properties.getProperty("conf.test.a"));
-        assertEquals("2", properties.getProperty("conf.test.caMel"));
-        assertEquals("true", properties.getProperty("conf.test.boolean"));
+        assertThat(properties).hasSize(4);
+        assertThat(properties.getProperty("conf.test.a")).isEqualTo("1");
+        assertThat(properties.getProperty("conf.test.caMel")).isEqualTo("2");
+        assertThat(properties.getProperty("conf.test.boolean")).isEqualTo("true");
     }
 
+    // TODO rwe:
     @Test
     public void testTransformToProperties_StringArray() throws Exception {
-        // HadoopConfiguration conf = new HadoopConfiguration();
-        // conf.setMode(GridMode.LOCAL);
-        // conf.setNodes(new String[] { "n1", "n2" });
-        //
-        // Properties properties = PropertiesUtil.transformToProperties(_cipherService, conf);
-        // HadoopConfiguration readConf = PropertiesUtil.readFromProperties(_cipherService,
-        // HadoopConfiguration.class, properties);
-        // assertArrayEquals(conf.getNodes(), readConf.getNodes());
-        UserConfiguration conf = new UserConfiguration();
-        // conf.setMode(GridMode.LOCAL);
-        conf.setRootMediaPathes(new String[] { "/tmp/pathA", "/home/pathB" });
+        TestConfiguration conf = new TestConfiguration();
+        conf.setArray(new String[] { "/tmp/pathA", "/home/pathB" });
 
         Properties properties = PropertiesUtil.transformToProperties(_cipherService, conf);
-        UserConfiguration readConf = PropertiesUtil.readFromProperties(_cipherService, UserConfiguration.class, properties);
-        assertThat(conf.getRootMediaPathes()).isEqualTo(readConf.getRootMediaPathes());
+        TestConfiguration readConf = PropertiesUtil.readFromProperties(_cipherService, TestConfiguration.class, properties);
+        assertThat(conf.getArray()).isEqualTo(readConf.getArray());
 
     }
 
@@ -107,6 +89,7 @@ public class PropertiesUtilTest {
         properties.setProperty("conf.test.caMel", "2");
         properties.setProperty("conf.test.boolean", "true");
         properties.setProperty("conf.test.encrypted", "xxx");
+        properties.setProperty("conf.test.array", "1,2");
         PropertiesUtil.checkPropertyCompleteness(TestConfiguration.class, properties, true);
     }
 
@@ -118,7 +101,7 @@ public class PropertiesUtilTest {
         properties.setProperty("conf.test.boolean", "true");
         properties.setProperty("conf.test.encrypted", _cipherService.encryptToBase64("password"));
         TestConfiguration testConfiguration = PropertiesUtil.readFromProperties(_cipherService, TestConfiguration.class, properties);
-        assertEquals("password", testConfiguration.getEncrypted());
+        assertThat(testConfiguration.getEncrypted()).isEqualTo("password");
     }
 
     @Test
@@ -126,13 +109,13 @@ public class PropertiesUtilTest {
         TestConfiguration testConfiguration = new TestConfiguration();
         testConfiguration.setEncrypted("password");
         Properties properties = PropertiesUtil.transformToProperties(_cipherService, testConfiguration);
-        assertEquals("password", _cipherService.decryptFromBase64(properties.getProperty("conf.test.encrypted")));
+        assertThat(_cipherService.decryptFromBase64(properties.getProperty("conf.test.encrypted"))).isEqualTo("password");
     }
 
     @Test
     public void testGetAnnotatedClass() throws Exception {
-        assertEquals(TestConfiguration.class, PropertiesUtil.getAnnotatedClass(TestConfiguration.class));
-        assertEquals(TestConfiguration.class, PropertiesUtil.getAnnotatedClass(SubclassTestConfiguration.class));
+        assertThat(PropertiesUtil.getAnnotatedClass(TestConfiguration.class)).isEqualTo(TestConfiguration.class);
+        assertThat(PropertiesUtil.getAnnotatedClass(SubclassTestConfiguration.class)).isEqualTo(TestConfiguration.class);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -144,18 +127,18 @@ public class PropertiesUtilTest {
     public void testGetPrefix_FromSuperClass() throws Exception {
         String prefix = PropertiesUtil.getPrefix(SubclassTestConfiguration.class);
 
-        assertEquals("conf.test", prefix);
+        assertThat(prefix).isEqualTo("conf.test");
     }
 
     @Test
     public void testGetProperties_FromSuperClass() throws Exception {
         List<String> properties = PropertiesUtil.getPropertyKeys(SubclassTestConfiguration.class);
-        assertEquals(4, properties.size());
-        assertThat(properties, hasItem("conf.test.a"));
-        assertThat(properties, hasItem("conf.test.caMel"));
-        assertThat(properties, hasItem("conf.test.boolean"));
-        assertThat(properties, hasItem("conf.test.encrypted"));
-        assertFalse(properties.contains("conf.test.myTransientField"));
+        assertThat(properties).hasSize(5);
+        assertThat(properties).contains("conf.test.a");
+        assertThat(properties).contains("conf.test.caMel");
+        assertThat(properties).contains("conf.test.boolean");
+        assertThat(properties).contains("conf.test.encrypted");
+        assertThat(properties.contains("conf.test.myTransientField")).isFalse();
     }
 
     @Test
@@ -165,11 +148,11 @@ public class PropertiesUtilTest {
         properties.setProperty("conf.test.caMel", "2");
         properties.setProperty("conf.test.boolean", "true");
         SubclassTestConfiguration testConfiguration = PropertiesUtil.readFromProperties(_cipherService, SubclassTestConfiguration.class, properties);
-        assertThat(testConfiguration, instanceOf(SubclassTestConfiguration.class));
-        assertEquals("1", testConfiguration.getA());
-        assertEquals("2", testConfiguration.getCaMel());
-        assertEquals(0, testConfiguration.getMyTransientField());
-        assertThat(testConfiguration.isBoolean(), is(true));
+        assertThat(testConfiguration).isInstanceOf(SubclassTestConfiguration.class);
+        assertThat(testConfiguration.getA()).isEqualTo("1");
+        assertThat(testConfiguration.getCaMel()).isEqualTo("2");
+        assertThat(testConfiguration.getMyTransientField()).isEqualTo(0);
+        assertThat(testConfiguration.isBoolean()).isTrue();
     }
 
     @Test
@@ -183,20 +166,26 @@ public class PropertiesUtilTest {
         // Verify, that only the tree field in the annotated base class will be provided as result.
         // The field SubclassTestConfiguration._myTransientField must be ignored.
         Properties properties = PropertiesUtil.transformToProperties(_cipherService, testConfiguration);
-        assertEquals(3, properties.size());
-        assertEquals("1", properties.getProperty("conf.test.a"));
-        assertEquals("2", properties.getProperty("conf.test.caMel"));
-        assertEquals("true", properties.getProperty("conf.test.boolean"));
+        assertThat(properties).hasSize(4);
+        assertThat(properties.getProperty("conf.test.a")).isEqualTo("1");
+        assertThat(properties.getProperty("conf.test.caMel")).isEqualTo("2");
+        assertThat(properties.getProperty("conf.test.boolean")).isEqualTo("true");
     }
 
     @PropertiesBacked(prefix = "conf.test")
     static class TestConfiguration {
 
         private String _a;
+
         private String _caMel;
+
         private boolean _boolean;
+
         @Encrypted
         private String _encrypted;
+
+        @PropertyDef(editorClass = StringArrayPropertyEditor.class)
+        private String[] array;
 
         public String getA() {
             return _a;
@@ -228,6 +217,14 @@ public class PropertiesUtilTest {
 
         public String getEncrypted() {
             return _encrypted;
+        }
+
+        public void setArray(String[] array) {
+            this.array = array;
+        }
+
+        public String[] getArray() {
+            return array;
         }
     }
 

@@ -147,4 +147,11 @@ public class SearchCriteriaCommand {
         }
         return null;
     }
+
+    public static SearchCriteriaCommand createInstance() {
+        SearchCriteriaCommand searchCriteriaCommand = new SearchCriteriaCommand();
+        searchCriteriaCommand.setSliderYearValues(new MinMaxValue<Integer>(0, Integer.MAX_VALUE));
+        searchCriteriaCommand.setSortOrder(UiMediaSortOrder.ID);
+        return searchCriteriaCommand;
+    }
 }

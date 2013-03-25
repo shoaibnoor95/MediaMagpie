@@ -1,7 +1,6 @@
 package de.wehner.mediamagpie.aws.s3;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 
@@ -17,33 +16,37 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 
 import de.wehner.mediamagpie.api.MediaExport;
+import de.wehner.mediamagpie.api.MediaExportMetadata;
 import de.wehner.mediamagpie.api.MediaType;
 import de.wehner.mediamagpie.common.util.ExceptionUtil;
 import de.wehner.mediamagpie.common.util.MMTransformer;
+import de.wehner.mediamagpie.common.util.StringUtil;
 
-public class S3ObjectSummary2MediaExportTransformer implements MMTransformer<S3ObjectSummary, MediaExport> {
+public class S3ObjectTuple2MediaExportTransformer implements MMTransformer<S3ObjectTuple, MediaExport> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(S3ObjectSummary2MediaExportTransformer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(S3ObjectTuple2MediaExportTransformer.class);
 
     private final AmazonS3 _s3;
 
-    public S3ObjectSummary2MediaExportTransformer(AmazonS3 s3) {
+    public S3ObjectTuple2MediaExportTransformer(AmazonS3 s3) {
         super();
         _s3 = s3;
     }
 
     @Override
-    public MediaExport transform(S3ObjectSummary objectSummary) {
-        final S3Object s3object = _s3.getObject(objectSummary.getBucketName(), objectSummary.getKey());
-        if (s3object == null) {
-            LOG.warn("Can not load bucket '" + objectSummary.getBucketName() + "' with key '" + objectSummary.getKey() + "'.");
-            return null;
-        }
-        LOG.debug("Load object with name '' and size ''.");
-        ObjectMetadata objectMetadata = s3object.getObjectMetadata();
+    public MediaExport transform(S3ObjectTuple objectSummary) {
+
+        // a) try to read the data part of MediaExport
+        // See also de.wehner.mediamagpie.aws.s3.export.MediaExport2S3ObjectMetadataTransformer.transform(MediaExport)
+        final S3Object s3objectData = loadS3Object(objectSummary.getDataObject());
+        final ObjectMetadata objectMetadata = s3objectData.getObjectMetadata();
 
         // name
-        MediaExport mediaExport = new MediaExport(getNameByStrategie(objectMetadata, objectSummary));
+        final MediaExport mediaExport = new MediaExport(getNameByStrategie(objectMetadata, objectSummary.getDataObject()));
+        // mime type
+        if (!StringUtils.isEmpty(objectMetadata.getContentType())) {
+            mediaExport.setMimeType(objectMetadata.getContentType());
+        }
         // creation date
         Map<String, String> userMetadata = objectMetadata.getUserMetadata();
         if (!StringUtils.isEmpty(userMetadata.get(S3MediaExportRepository.META_CREATION_DATE))) {
@@ -54,28 +57,39 @@ public class S3ObjectSummary2MediaExportTransformer implements MMTransformer<S3O
         if (!StringUtils.isEmpty(userMetadata.get(S3MediaExportRepository.META_HASH_OF_DATA))) {
             mediaExport.setHashValue(userMetadata.get(S3MediaExportRepository.META_HASH_OF_DATA));
         }
-        // content
-        mediaExport.setInputStream(s3object.getObjectContent());
-        // original file name
-        mediaExport.setOriginalFileName(getValueFromUserMetadata(S3MediaExportRepository.META_ORIGINAL_FILE_NAME, objectMetadata));
         // size
-        mediaExport.setLength(objectSummary.getSize());
+        mediaExport.setLength(objectSummary.getDataObject().getSize());
         // MediaType
         if (!StringUtils.isEmpty(userMetadata.get(S3MediaExportRepository.META_MEDIA_TYPE))) {
             mediaExport.setType(MediaType.valueOf(userMetadata.get(S3MediaExportRepository.META_MEDIA_TYPE)));
         }
-        // tags
-        String tags = getValueFromUserMetadata(S3MediaExportRepository.META_TAGS, objectMetadata);
-        if (!StringUtils.isEmpty(tags)) {
-            String[] tagArray = StringUtils.split(tags, ',');
-            mediaExport.setTags(Arrays.asList(tagArray));
-        }
-        // description
-        mediaExport.setDescription(getValueFromUserMetadata(S3MediaExportRepository.META_DESCRIPTION, objectMetadata));
-        // mime type
-        mediaExport.setMimeType(objectMetadata.getContentType());
-        
+        // content
+        mediaExport.setInputStream(s3objectData.getObjectContent());
+
+        // b) try to read the meta data part of object
+        // see also de.wehner.mediamagpie.api.MediaExportMetadata.createInputStream()
+        final S3Object s3ObjectMetadata = loadS3Object(objectSummary.getMetaObject());
+        MediaExportMetadata exportMetadata = MediaExportMetadata.createInstance(s3ObjectMetadata.getObjectContent());
+
+        mediaExport.setOriginalFileName(exportMetadata.getOriginalFileName());
+        mediaExport.setDescription(exportMetadata.getDescription());
+        mediaExport.setTags(exportMetadata.getTags());
+
         return mediaExport;
+    }
+
+    private S3Object loadS3Object(S3ObjectSummary s3ObjectSummary) {
+        if (s3ObjectSummary == null) {
+            return null;
+        }
+        final S3Object s3object = _s3.getObject(s3ObjectSummary.getBucketName(), s3ObjectSummary.getKey());
+        if (s3object == null) {
+            LOG.warn("Can not load bucket '" + s3ObjectSummary.getBucketName() + "' with key '" + s3ObjectSummary.getKey() + "'.");
+            return null;
+        }
+        LOG.debug(String.format("Load object with name '%s' and size '%s'.", s3ObjectSummary.getBucketName(),
+                StringUtil.humanReadableByteCount(s3ObjectSummary.getSize(), true)));
+        return s3object;
     }
 
     private String getNameByStrategie(ObjectMetadata objectMetadata, S3ObjectSummary objectSummary) {

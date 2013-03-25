@@ -22,8 +22,7 @@ public class CipherService {
     private static final Logger LOG = LoggerFactory.getLogger(CipherService.class);
 
     /**
-     * rwe: For a stronger encryption use the AES algorithm. See http://stackoverflow.com/questions/992019/java-256bit-aes-encryption and
-     * see de.innovas.amnog.usermanagement.gl.std.PasswordChangeLinkSender
+     * rwe: For a stronger encryption use the AES algorithm. See http://stackoverflow.com/questions/992019/java-256bit-aes-encryption
      */
     private static final String ALGORITHM = "DES";
 

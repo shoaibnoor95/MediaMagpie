@@ -1,8 +1,6 @@
 package de.wehner.mediamagpie.conductor.webapp.controller.rest.playground;
 
-import static org.junit.Assert.*;
-
-import static org.junit.internal.matchers.StringContains.*;
+import static org.fest.assertions.Assertions.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,7 +57,6 @@ public class RestControllerTest {
         m.writeValue(new File(_itTestEnvironment.getWorkingDir(), "user-modified.json"), rootNode);
 
         // verify changes in result
-        assertThat(FileUtils.readFileToString(new File(_itTestEnvironment.getWorkingDir(), "user-modified.json")),
-                containsString("\"name\":{\"last\":\"Jsoner\",\"first\":\"Joe\"}"));
+        assertThat(FileUtils.readFileToString(new File(_itTestEnvironment.getWorkingDir(), "user-modified.json"))).contains("\"name\":{\"last\":\"Jsoner\",\"first\":\"Joe\"}");
     }
 }

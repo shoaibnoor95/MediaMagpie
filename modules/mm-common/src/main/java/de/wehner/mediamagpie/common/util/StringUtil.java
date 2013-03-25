@@ -12,13 +12,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringUtil {
-    public static final String[] LABELS = new String[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
-            "U", "V", "W", "X", "Y", "Z" };
-
-    @Deprecated
-    public static boolean isEmpty(String string) {
-        return string == null || string.trim().length() == 0;
-    }
+    public static final String[] LABELS = new String[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S",
+            "T", "U", "V", "W", "X", "Y", "Z" };
 
     public static List<String> getParametersAsStringList(Map<String, String[]> parameterMap) {
         return Arrays.asList(getParametersAsStrings(parameterMap));
@@ -44,6 +39,15 @@ public class StringUtil {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         exception.printStackTrace(new PrintStream(baos));
         return new String(baos.toByteArray());
+    }
+
+    public static String humanReadableByteCount(long bytes, boolean si) {
+        int unit = si ? 1000 : 1024;
+        if (bytes < unit)
+            return bytes + " B";
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
+        return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
     public static String formatTimeDuration(long timeDuration) {
@@ -132,10 +136,9 @@ public class StringUtil {
     }
 
     /**
-     * Converters a string into a list of strings, were the break criteria is the comma or new line
-     * character. The incoming string will be cut into parts, each part will be trimmed by the
-     * <code>String.trim()</code> method and each element that is not empty it will be pushed into
-     * the return array.
+     * Converters a string into a list of strings, were the break criteria is the comma or new line character. The incoming string will be
+     * cut into parts, each part will be trimmed by the <code>String.trim()</code> method and each element that is not empty it will be
+     * pushed into the return array.
      * 
      * <pre>
      * Input:      Output:
@@ -189,13 +192,14 @@ public class StringUtil {
         return splitList.toArray(new String[splitList.size()]);
     }
 
-    public static String emptyToNull(String string) {
-        if (isEmpty(string)) {
-            return null;
-        }
-        return string;
-    }
-
+    // rwe: see Strings.emptyToNull() in guava lib
+    // public static String emptyToNull(String string) {
+    // if (isEmpty(string)) {
+    // return null;
+    // }
+    // return string;
+    // }
+    //
     public static boolean containsIgnoreCase(Collection<String> collection, String test) {
         for (String s : collection) {
             if (s.equalsIgnoreCase(test)) {
@@ -206,11 +210,9 @@ public class StringUtil {
     }
 
     /**
-     * Resolves a sequence of control character as given from a web ui imput field into a String
-     * object. The normal 1:1 copy is sometimes not usable, because quote characters will be
-     * interpreted as normal characters. E.g. the user types the string <code>'\t'</code> into an
-     * input field which is stored in spring's command objects as a two character string
-     * <code>'\'</code> and <code>'t'</code>.<br/>
+     * Resolves a sequence of control character as given from a web ui imput field into a String object. The normal 1:1 copy is sometimes
+     * not usable, because quote characters will be interpreted as normal characters. E.g. the user types the string <code>'\t'</code> into
+     * an input field which is stored in spring's command objects as a two character string <code>'\'</code> and <code>'t'</code>.<br/>
      * For example the method maps:
      * 
      * <pre>
@@ -276,8 +278,8 @@ public class StringUtil {
     }
 
     /**
-     * This is the inverse method to {@link #resolveControlCharsFromWebUi(String)} and maps some
-     * control chars into separate chars that can be displayed in html input fields.<br/>
+     * This is the inverse method to {@link #resolveControlCharsFromWebUi(String)} and maps some control chars into separate chars that can
+     * be displayed in html input fields.<br/>
      * For example the method maps:
      * 
      * <pre>

@@ -5,6 +5,9 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 /**
  * This is a container class to encapsulate a <code>Media</code> entity for export or import operations.
  * 
@@ -40,6 +43,14 @@ public class MediaExport {
 
     public MediaExport(String name) {
         _name = name;
+    }
+
+    public MediaExportMetadata createMediaExportMetadata() {
+        MediaExportMetadata mediaExportMetaData = new MediaExportMetadata(_name);
+        mediaExportMetaData.setDescription(_description);
+        mediaExportMetaData.setOriginalFileName(_originalFileName);
+        mediaExportMetaData.setTags(_tags);
+        return mediaExportMetaData;
     }
 
     public String getName() {
@@ -125,4 +136,10 @@ public class MediaExport {
     public void setType(MediaType type) {
         _type = type;
     }
+
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    }
+
 }
