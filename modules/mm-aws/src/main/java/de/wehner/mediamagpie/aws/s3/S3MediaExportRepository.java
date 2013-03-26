@@ -42,13 +42,11 @@ public class S3MediaExportRepository implements MediaExportRepository {
 
     public static final String KEY_DELIMITER = "/";
 
+    public static final String META_MEDIA_ID = "id";
     public static final String META_HASH_OF_DATA = "hash-of-data";
     public static final String META_NAME = "name";
-    // public static final String META_DESCRIPTION = "description";
     public static final String META_CREATION_DATE = "creation-date";
-    // public static final String META_ORIGINAL_FILE_NAME = "original-file-name";
     public static final String META_MEDIA_TYPE = "media-type";
-    // public static final String META_TAGS = "media-tags";
 
     private final S3ClientFacade _s3Facade;
 

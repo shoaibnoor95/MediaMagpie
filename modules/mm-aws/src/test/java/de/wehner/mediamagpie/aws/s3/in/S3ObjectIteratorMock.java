@@ -1,4 +1,4 @@
-package de.wehner.mediamagpie.aws.s3;
+package de.wehner.mediamagpie.aws.s3.in;
 
 import static org.mockito.Mockito.*;
 

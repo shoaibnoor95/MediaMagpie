@@ -41,16 +41,24 @@ public class S3ObjectTuple2MediaExportTransformer implements MMTransformer<S3Obj
         // a) try to read the data part of MediaExport
         // See also de.wehner.mediamagpie.aws.s3.export.MediaExport2S3ObjectMetadataTransformer.transform(MediaExport)
         final S3Object s3objectData = loadS3Object(objectSummary.getDataObject());
+        if (s3objectData == null) {
+            return null;
+        }
+
         final ObjectMetadata objectMetadata = s3objectData.getObjectMetadata();
+        final Map<String, String> userMetadata = objectMetadata.getUserMetadata();
 
         // name
         final MediaExport mediaExport = new MediaExport(getNameByStrategie(objectMetadata, objectSummary.getDataObject()));
+        // mediaId
+        if (!StringUtils.isEmpty(userMetadata.get(S3MediaExportRepository.META_MEDIA_ID))) {
+            mediaExport.setMediaId(userMetadata.get(S3MediaExportRepository.META_MEDIA_ID));
+        }
         // mime type
         if (!StringUtils.isEmpty(objectMetadata.getContentType())) {
             mediaExport.setMimeType(objectMetadata.getContentType());
         }
         // creation date
-        Map<String, String> userMetadata = objectMetadata.getUserMetadata();
         if (!StringUtils.isEmpty(userMetadata.get(S3MediaExportRepository.META_CREATION_DATE))) {
             long time = Long.parseLong(userMetadata.get(S3MediaExportRepository.META_CREATION_DATE));
             mediaExport.setCreationDate(new Date(time));
@@ -71,12 +79,13 @@ public class S3ObjectTuple2MediaExportTransformer implements MMTransformer<S3Obj
         // b) try to read the meta data part of object
         // see also de.wehner.mediamagpie.api.MediaExportMetadata.createInputStream()
         final S3Object s3ObjectMetadata = loadS3Object(objectSummary.getMetaObject());
-        MediaExportMetadata exportMetadata = MediaExportMetadata.createInstance(s3ObjectMetadata.getObjectContent());
+        if (s3ObjectMetadata != null) {
+            MediaExportMetadata exportMetadata = MediaExportMetadata.createInstance(s3ObjectMetadata.getObjectContent());
 
-        mediaExport.setOriginalFileName(exportMetadata.getOriginalFileName());
-        mediaExport.setDescription(exportMetadata.getDescription());
-        mediaExport.setTags(exportMetadata.getTags());
-
+            mediaExport.setOriginalFileName(exportMetadata.getOriginalFileName());
+            mediaExport.setDescription(exportMetadata.getDescription());
+            mediaExport.setTags(exportMetadata.getTags());
+        }
         return mediaExport;
     }
 

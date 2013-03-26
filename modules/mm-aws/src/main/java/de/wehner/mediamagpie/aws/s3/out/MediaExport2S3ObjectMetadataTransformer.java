@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 
 import de.wehner.mediamagpie.api.MediaExport;
+import de.wehner.mediamagpie.api.MediaExportMetadata;
 import de.wehner.mediamagpie.aws.s3.BaseMMTransformer;
 import de.wehner.mediamagpie.aws.s3.S3MediaExportRepository;
 import de.wehner.mediamagpie.common.util.MMTransformer;
@@ -27,6 +28,8 @@ public class MediaExport2S3ObjectMetadataTransformer extends BaseMMTransformer i
         if (!StringUtils.isEmpty(mediaExport.getMimeType())) {
             objectMetadata.setContentType(mediaExport.getMimeType());
         }
+        // id
+        objectMetadata.addUserMetadata(S3MediaExportRepository.META_MEDIA_ID, mediaExport.getMediaId());
         // name
         addStringIntoUserMetadata(S3MediaExportRepository.META_NAME, mediaExport.getName(), objectMetadata);
         // creation date

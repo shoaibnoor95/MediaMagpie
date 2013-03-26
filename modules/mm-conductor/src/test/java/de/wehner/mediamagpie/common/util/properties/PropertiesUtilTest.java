@@ -57,7 +57,6 @@ public class PropertiesUtilTest {
         assertThat(properties.getProperty("conf.test.boolean")).isEqualTo("true");
     }
 
-    // TODO rwe:
     @Test
     public void testTransformToProperties_StringArray() throws Exception {
         TestConfiguration conf = new TestConfiguration();

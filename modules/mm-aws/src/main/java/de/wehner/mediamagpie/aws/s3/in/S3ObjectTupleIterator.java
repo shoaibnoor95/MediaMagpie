@@ -91,7 +91,6 @@ public class S3ObjectTupleIterator implements Iterator<S3ObjectTuple> {
 
     @Override
     public void remove() {
-        // TODO Auto-generated method stub
-
+        throw new RuntimeException("Method not supported.");
     }
 }

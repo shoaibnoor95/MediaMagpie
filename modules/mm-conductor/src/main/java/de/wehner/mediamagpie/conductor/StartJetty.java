@@ -35,8 +35,7 @@ public class StartJetty {
             public void run() {
                 LOG.info("Got shutdown signal to stop server.");
 
-                // TODO Do some cleanup tasks etc.
-                // ..
+                // Do some cleanup tasks here...
 
                 terminate.set(true);
                 try {
