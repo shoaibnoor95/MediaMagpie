@@ -1,4 +1,4 @@
-package de.wehner.mediamagpie.aws.s3.export;
+package de.wehner.mediamagpie.aws.s3.out;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -37,8 +37,6 @@ public class MediaExport2S3ObjectMetadataTransformer extends BaseMMTransformer i
         if (mediaExport.getLength() != null) {
             objectMetadata.setContentLength(mediaExport.getLength());
         }
-//        // original file name
-//        addStringIntoUserMetadata(S3MediaExportRepository.META_ORIGINAL_FILE_NAME, mediaExport.getOriginalFileName(), objectMetadata);
         // media type
         objectMetadata.addUserMetadata(S3MediaExportRepository.META_MEDIA_TYPE, mediaExport.getType().name());
 

@@ -26,8 +26,11 @@ import de.wehner.mediamagpie.api.MediaExportResult.ExportStatus;
 import de.wehner.mediamagpie.api.MediaExportResults;
 import de.wehner.mediamagpie.api.MediaType;
 import de.wehner.mediamagpie.aws.s3.S3ClientFacade.FileNameInfo;
-import de.wehner.mediamagpie.aws.s3.export.MediaExport2S3ObjectMetadataTransformer;
-import de.wehner.mediamagpie.aws.s3.export.MediaExportMetaData2S3ObjectMetadataTransformer;
+import de.wehner.mediamagpie.aws.s3.in.S3ObjectIterator;
+import de.wehner.mediamagpie.aws.s3.in.S3ObjectTuple2MediaExportTransformer;
+import de.wehner.mediamagpie.aws.s3.in.S3ObjectTupleIterator;
+import de.wehner.mediamagpie.aws.s3.out.MediaExport2S3ObjectMetadataTransformer;
+import de.wehner.mediamagpie.aws.s3.out.MediaExportMetaData2S3ObjectMetadataTransformer;
 import de.wehner.mediamagpie.common.core.util.DigestUtil;
 import de.wehner.mediamagpie.common.util.ExceptionUtil;
 
@@ -115,7 +118,7 @@ public class S3MediaExportRepository implements MediaExportRepository {
             // Map<String, Object> rawMetadata = metadata.getRawMetadata();
             Map<String, String> userMetadata = metadata.getUserMetadata();
 
-            LOG.info("Content-Type for '" + fileName + "': " + object.getObjectMetadata().getContentType());
+            LOG.debug("Content-Type for '" + fileName + "': " + object.getObjectMetadata().getContentType());
             hashValueInS3 = userMetadata.get(META_HASH_OF_DATA);
         }
         // does we need to overwrite?

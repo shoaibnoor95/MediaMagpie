@@ -30,6 +30,7 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 
 import de.wehner.mediamagpie.api.MediaExport;
 import de.wehner.mediamagpie.api.MediaType;
+import de.wehner.mediamagpie.aws.s3.in.S3ObjectTuple2MediaExportTransformer;
 import de.wehner.mediamagpie.common.core.util.DigestUtil;
 
 public class S3ObjectSummary2MediaExportTransformerTest {

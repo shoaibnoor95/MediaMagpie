@@ -63,7 +63,7 @@ public class S3MediaRepositoryItTest {
             System.out.println(" found: '" + mediaExport.getName() + "', size: " + mediaExport.getLength());
             mediaExportsFromS3.add(mediaExport);
         }
-        assertThat(mediaExportsFromS3).hasSize(1);
+        assertThat(mediaExportsFromS3).hasSize(2);
         MediaExport mediaExportFromS3 = mediaExportsFromS3.get(0);
         MediaExport mediaExport = MediaExportFixture.createMediaExportTestObject(123, TEST_NAME, SRC_TEST_JPG);
         assertThat(mediaExportFromS3.getCreationDate()).isEqualTo(mediaExport.getCreationDate());

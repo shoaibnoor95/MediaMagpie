@@ -21,6 +21,7 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
 
+import de.wehner.mediamagpie.aws.s3.in.S3ObjectIterator;
 import de.wehner.mediamagpie.common.util.Pair;
 
 /**

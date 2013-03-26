@@ -1,4 +1,4 @@
-package de.wehner.mediamagpie.aws.s3;
+package de.wehner.mediamagpie.aws.s3.in;
 
 import java.util.Iterator;
 
@@ -6,6 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+
+import de.wehner.mediamagpie.aws.s3.S3MediaExportRepository;
+import de.wehner.mediamagpie.aws.s3.S3ObjectTuple;
 
 /**
  * This is a layer on top of <code>S3ObjectIterator</code> to read a pair of <code>S3ObjectTuple</code>s, one for the data stream and one

@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
+import de.wehner.mediamagpie.aws.s3.in.S3ObjectTupleIterator;
+
 public class S3ObjectTupleIteratorTest {
 
     private S3ObjectTupleIterator _s3ObjectTupleIterator;

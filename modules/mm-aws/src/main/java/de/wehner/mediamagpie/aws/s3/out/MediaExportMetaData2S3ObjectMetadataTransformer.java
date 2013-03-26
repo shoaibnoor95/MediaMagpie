@@ -1,4 +1,4 @@
-package de.wehner.mediamagpie.aws.s3.export;
+package de.wehner.mediamagpie.aws.s3.out;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
 

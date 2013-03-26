@@ -7,6 +7,8 @@ import java.util.Deque;
 
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 
+import de.wehner.mediamagpie.aws.s3.in.S3ObjectIterator;
+
 public class S3ObjectIteratorMock extends S3ObjectIterator {
 
     private final Deque<S3ObjectSummary> objectSummaries = new ArrayDeque<S3ObjectSummary>();

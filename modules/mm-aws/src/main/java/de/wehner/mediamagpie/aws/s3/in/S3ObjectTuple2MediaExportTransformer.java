@@ -1,4 +1,4 @@
-package de.wehner.mediamagpie.aws.s3;
+package de.wehner.mediamagpie.aws.s3.in;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
@@ -18,6 +18,8 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import de.wehner.mediamagpie.api.MediaExport;
 import de.wehner.mediamagpie.api.MediaExportMetadata;
 import de.wehner.mediamagpie.api.MediaType;
+import de.wehner.mediamagpie.aws.s3.S3MediaExportRepository;
+import de.wehner.mediamagpie.aws.s3.S3ObjectTuple;
 import de.wehner.mediamagpie.common.util.ExceptionUtil;
 import de.wehner.mediamagpie.common.util.MMTransformer;
 import de.wehner.mediamagpie.common.util.StringUtil;
@@ -88,7 +90,7 @@ public class S3ObjectTuple2MediaExportTransformer implements MMTransformer<S3Obj
             return null;
         }
         LOG.debug(String.format("Load object with name '%s' and size '%s'.", s3ObjectSummary.getBucketName(),
-                StringUtil.humanReadableByteCount(s3ObjectSummary.getSize(), true)));
+                StringUtil.formatBytesToHumanReadableRepresentation(s3ObjectSummary.getSize())));
         return s3object;
     }
 
