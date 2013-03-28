@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -89,6 +90,7 @@ public class Media extends CreationDateBase {
     private Orientation _orientation;
 
     /** an object of <code>CameraMetaData</code> encoded as JSON string */
+    @Lob
     @Column(nullable = true, length = 65535)
     private String _cameraMetaData;
 

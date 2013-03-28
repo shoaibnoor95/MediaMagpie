@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
+import de.wehner.mediamagpie.common.persistence.entity.Priority;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.util.Pair;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.FileUploadCommand;
@@ -96,6 +97,12 @@ public class UploadController {
             LOG.info("Try dump upload stream '" + uploadFileInfo.getFirst() + "' into file '" + uploadFileInfo.getSecond().getPath() + "'");
             String thumbUrl = contextPath
                     + _uploadControllerService.handleUploadStream(currentUser, uploadFileInfo.getSecond(), multipartFile.getInputStream(), i++);
+
+            // TODO rwe: remove the imageresizejob creation from uploadControllerService and do this here!
+            // additionally, create jobs for detail and normal thumb images
+            // _imageService.addImageResizeJobExecutionIfNecessary(UPLOAD_PREVIEW_THUMB_LABEL, _mediaDao.getById(newMedia.getId()),
+            // Priority.HIGH);
+
             JQueryUploadCommand command = new JQueryUploadCommand(multipartFile.getOriginalFilename(), (int) multipartFile.getSize(), "url", thumbUrl,
                     contextPath + getDeleteUrl(uploadFileInfo.getSecond().getName()), "DELETE");
             jQueryUploadCommands.add(command);

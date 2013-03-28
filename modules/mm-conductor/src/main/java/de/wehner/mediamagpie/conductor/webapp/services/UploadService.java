@@ -96,7 +96,7 @@ public class UploadService {
     }
 
     /**
-     * Currently the media provided in <code>inputStream</code> is simply stored within the user's baseUploadPath.<br/>
+     * The <code>inputStream</code> is just written to file system using the user's baseUploadPath and given mediaFile name.
      * 
      * @param currentUser
      * @param mediaFile
@@ -135,6 +135,7 @@ public class UploadService {
         }
         _mediaDao.makePersistent(newMedia);
 
+        // create a thumb image for the upload view
         _imageService.addImageResizeJobExecutionIfNecessary(UPLOAD_PREVIEW_THUMB_LABEL, _mediaDao.getById(newMedia.getId()), Priority.HIGH);
         _persistenceService.flipTransaction();
 

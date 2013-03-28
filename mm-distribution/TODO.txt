@@ -1,2 +1,12 @@
+
+TODO
+====
+- Add image resize job immediately the image is uploaded
+- Add a synch-mode to S3 containing all images (use local file system only as cache)
+- add mail support on ec2
+
+DONE
+====
 - Add an extra file near to the media resouce which contails ALL meta information, so this can be updated when user wants to reexport his media
-- add mail support on ec2 
+
+ 
