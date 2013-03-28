@@ -32,31 +32,23 @@
 	</profiles>
 
 	<dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>mm-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>mm-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>mm-common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>mm-aws</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>mm-aws</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
 		<!-- Some useful stuff -->
- 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
@@ -78,16 +70,27 @@
 		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
+			<artifactId>spring-webmvc</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
+			<version>${spring-framework.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>quartz</groupId>
+					<artifactId>quartz</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
+			<artifactId>spring-orm</artifactId>
+			<version>${spring-framework.version}</version>
 		</dependency>
+		<!-- <dependency> <groupId>org.springframework</groupId> <artifactId>spring-context</artifactId> </dependency> 
+			<dependency> <groupId>org.springframework</groupId> <artifactId>spring-context-support</artifactId> </dependency> 
+			<dependency> <groupId>org.springframework</groupId> <artifactId>spring-webmvc</artifactId> </dependency> -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
@@ -100,39 +103,22 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-taglibs</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-orm</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-		</dependency>
+		<!-- <dependency> <groupId>org.springframework</groupId> <artifactId>spring-orm</artifactId> </dependency> -->
 
 		<!-- spring web service stuff -->
-		<dependency>
-			<groupId>org.springframework.ws</groupId>
-			<artifactId>spring-ws</artifactId>
-			<classifier>all</classifier>
-		</dependency>
-		<dependency>
-			<groupId>wsdl4j</groupId>
-			<artifactId>wsdl4j</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-oxm</artifactId>
-		</dependency>
+		<!-- <dependency> <groupId>org.springframework.ws</groupId> <artifactId>spring-ws</artifactId> <classifier>all</classifier> 
+			</dependency> <dependency> <groupId>wsdl4j</groupId> <artifactId>wsdl4j</artifactId> </dependency> <dependency> 
+			<groupId>org.springframework</groupId> <artifactId>spring-oxm</artifactId> </dependency> -->
 
 		<!-- Jackson JSON Mapper (for marshall/unmarshall JSON objects) -->
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 		</dependency>
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-core-asl</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+		</dependency>
 
 		<!-- Drewnoakes exif tool -->
 		<dependency>
@@ -141,14 +127,8 @@
 		</dependency>
 
 		<!-- Hibernate/JPA -->
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-search</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
-		</dependency>
+		<!-- <dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-search</artifactId> </dependency> 
+			<dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-entitymanager</artifactId> </dependency> -->
 
 		<!-- JSR 303 with Hibernate Validator, see http://www.roseindia.net/tutorial/spring/spring3/web/spring-3-mvc-validation-example.html -->
 		<dependency>
@@ -190,16 +170,6 @@
 			<version>2.4.2</version>
 		</dependency>
 
-		<!-- JDBC -->
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>hsqldb</groupId>
-			<artifactId>hsqldb</artifactId>
-		</dependency>
-
 		<!-- freemarker -->
 		<dependency>
 			<groupId>org.freemarker</groupId>
@@ -236,6 +206,11 @@
 
 		<!-- Test -->
 		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>provided</scope>
@@ -268,7 +243,7 @@
 					<downloadSources>true</downloadSources>
 					<downloadJavadocs>true</downloadJavadocs>
 					<!-- <projectNameTemplate>[artifactId]-[version]</projectNameTemplate> -->
-					<manifest>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifest>
+					<!-- <manifest>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifest>-->
 				</configuration>
 			</plugin>
 

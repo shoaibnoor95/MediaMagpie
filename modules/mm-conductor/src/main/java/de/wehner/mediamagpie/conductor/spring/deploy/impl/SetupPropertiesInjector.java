@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
-import org.hibernate.classic.Validatable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,17 +84,17 @@ public class SetupPropertiesInjector implements DataInjector {
                             // FIXME rwe: In case we still want to use the spring's Validator to validate classes here, we have to create
                             // our own Annotation class, because the <code>Validatabe</code> class comes from hibernate and isn't available
                             // in version 4.0.
-                            Annotation validatable = clazz.getAnnotation(Validatable.class);
+                            // Annotation validatable = clazz.getAnnotation(Validatable.class);
                             Object setupEntity = PropertiesUtil.readFromProperties(_cipherService, clazz, properties);
-                            if (validatable == null) {
-                                PropertiesUtil.checkPropertyCompleteness(clazz, properties, true);
-                            } else {
-                                BindingResult bindingResult = new BeanPropertyBindingResult(setupEntity, "");
-                                _validator.validate(setupEntity, bindingResult);
-                                if (bindingResult.hasErrors()) {
-                                    throw new IllegalStateException("following errors on " + setupEntity + ": " + bindingResult.getAllErrors());
-                                }
+                            // if (validatable == null) {
+                            PropertiesUtil.checkPropertyCompleteness(clazz, properties, true);
+                            // } else {
+                            BindingResult bindingResult = new BeanPropertyBindingResult(setupEntity, "");
+                            _validator.validate(setupEntity, bindingResult);
+                            if (bindingResult.hasErrors()) {
+                                throw new IllegalStateException("following errors on " + setupEntity + ": " + bindingResult.getAllErrors());
                             }
+                            // }
                             configurationObjects.add(setupEntity);
                         }
                     } catch (Exception e) {
@@ -120,17 +119,17 @@ public class SetupPropertiesInjector implements DataInjector {
                             // our
                             // own Annotation class, because the <code>Validatabe</code> class comes from hibernate and isn't available in
                             // version 4.0.
-                            Annotation validatable = clazz.getAnnotation(Validatable.class);
+                            // Annotation validatable = clazz.getAnnotation(Validatable.class);
                             Object setupEntity = PropertiesUtil.readFromProperties(_cipherService, clazz, properties);
-                            if (validatable == null) {
-                                PropertiesUtil.checkPropertyCompleteness(clazz, properties, false);
-                            } else {
-                                BindingResult bindingResult = new BeanPropertyBindingResult(setupEntity, "");
-                                _validator.validate(setupEntity, bindingResult);
-                                if (bindingResult.hasErrors()) {
-                                    throw new IllegalStateException("following errors on " + setupEntity + ": " + bindingResult.getAllErrors());
-                                }
+                            // if (validatable == null) {
+                            PropertiesUtil.checkPropertyCompleteness(clazz, properties, false);
+                            // } else {
+                            BindingResult bindingResult = new BeanPropertyBindingResult(setupEntity, "");
+                            _validator.validate(setupEntity, bindingResult);
+                            if (bindingResult.hasErrors()) {
+                                throw new IllegalStateException("following errors on " + setupEntity + ": " + bindingResult.getAllErrors());
                             }
+                            // }
                             LOG.info("Save UserConfiguration with default values for user '" + user.getName() + "'.");
                             _userConfigurationDao.saveOrUpdateConfiguration(user, (UserConfiguration) setupEntity);
                         } catch (Exception e) {

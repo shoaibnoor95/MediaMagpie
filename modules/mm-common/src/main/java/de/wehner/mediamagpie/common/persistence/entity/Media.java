@@ -21,6 +21,7 @@ import javax.persistence.OneToMany;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
@@ -39,12 +40,10 @@ import de.wehner.mediamagpie.common.persistence.realms.AlbumMediaRelation;
         @NamedQuery(name = "getAllLastAddedPublicMedias", query = "select distinct m from Media as m inner join m._albums as a where (a._visibility <= :visibility) order by m._id desc") })
 public class Media extends CreationDateBase {
 
-    @Field(index = Index.TOKENIZED, store = Store.NO)
-    // @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
+    @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
     private String _name;
 
-    @Field(index = Index.TOKENIZED, store = Store.NO)
-    // @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
+    @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
     private String _description;
 
     /** the path in fs were the picture is located */
@@ -80,8 +79,7 @@ public class Media extends CreationDateBase {
     @IndexedEmbedded
     private User _owner;
 
-    @Field(index = Index.UN_TOKENIZED, store = Store.NO)
-    // @Field(index = Index.YES, analyze = Analyze.NO, store = Store.NO)
+    @Field(index = Index.YES, analyze = Analyze.NO, store = Store.NO)
     @Column(nullable = false)
     private LifecyleStatus _lifeCycleStatus = LifecyleStatus.Living;
 

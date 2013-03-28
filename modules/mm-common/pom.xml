@@ -9,19 +9,12 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 	<artifactId>mm-common</artifactId>
-	<packaging>jar</packaging>
 	<name>MediaMagpie Common</name>
+	<packaging>jar</packaging>
+
 	<dependencies>
 		<!-- Some useful stuff -->
 		<!-- <dependency> <groupId>commons-lang</groupId> <artifactId>commons-lang</artifactId> </dependency> -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
@@ -32,34 +25,14 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 		</dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
-        </dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-config</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-taglibs</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-orm</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-		</dependency>
+		<!-- <dependency> <groupId>org.springframework</groupId> <artifactId>spring-context-support</artifactId> 
+			</dependency> <dependency> <groupId>org.springframework</groupId> <artifactId>spring-webmvc</artifactId> 
+			</dependency> <dependency> <groupId>org.springframework.security</groupId> <artifactId>spring-security-web</artifactId> 
+			</dependency> <dependency> <groupId>org.springframework.security</groupId> <artifactId>spring-security-config</artifactId> 
+			</dependency> <dependency> <groupId>org.springframework.security</groupId> <artifactId>spring-security-taglibs</artifactId> 
+			</dependency> <dependency> <groupId>org.springframework</groupId> <artifactId>spring-orm</artifactId> 
+			</dependency> <dependency> <groupId>org.springframework</groupId> <artifactId>spring-test</artifactId> 
+			</dependency> -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
@@ -70,20 +43,49 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-search</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>asm</groupId>
+                    <artifactId>asm-attrs</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.0-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
 
 		<!-- JSR 303 with Hibernate Validator, see http://www.roseindia.net/tutorial/spring/spring3/web/spring-3-mvc-validation-example.html -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
-		</dependency>
+		</dependency>-->
+
+        <!-- JDBC -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+        </dependency>
 
 		<!-- Logging for slf4j see also: http://blog.frankel.ch/thoughts-on-java-logging-and-slf4j -->
 		<dependency>
@@ -122,6 +124,11 @@
 		<dependency>
 			<groupId>org.subethamail</groupId>
 			<artifactId>subethasmtp-wiser</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
 			<scope>provided</scope>
 		</dependency>
 

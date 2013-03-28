@@ -1,6 +1,5 @@
 package de.wehner.mediamagpie.common.util;
 
-import org.apache.commons.collections.FunctorException;
 
 /**
  * Defines a functor interface implemented by classes that transform one object into another.

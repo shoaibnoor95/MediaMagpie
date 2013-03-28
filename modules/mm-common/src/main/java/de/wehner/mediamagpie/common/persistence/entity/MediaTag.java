@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
@@ -16,8 +17,7 @@ import org.hibernate.search.annotations.Store;
 // @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "media_fk" }) })
 public class MediaTag extends Base {
 
-    @Field(index = Index.UN_TOKENIZED, store = Store.YES)
-    // @Field(index = Index.YES, analyze = Analyze.NO, store = Store.YES)
+    @Field(index = Index.YES, analyze = Analyze.NO, store = Store.YES)
     @Column(name = "name", nullable = false)
     private String _name;
 

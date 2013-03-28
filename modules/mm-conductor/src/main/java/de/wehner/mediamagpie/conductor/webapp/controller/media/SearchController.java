@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -206,7 +205,7 @@ public class SearchController extends AbstractConfigurationSupportController {
         if (searchCriteria.getYearStartFromInputField() != null) {
             searchCriteria.getSliderYearValues().setMin(searchCriteria.getYearStartFromInputField());
         } else {
-            if (!CollectionUtils.isEmpty(allPictures)) {
+            if (allPictures.size() > 0) {
                 Media oldestMedia = allPictures.get(0);
                 if (oldestMedia.getCreationDate() != null) {
                     searchCriteria.getSliderYearValues().setMin(TimeUtil.getYearFromDate(oldestMedia.getCreationDate()));
