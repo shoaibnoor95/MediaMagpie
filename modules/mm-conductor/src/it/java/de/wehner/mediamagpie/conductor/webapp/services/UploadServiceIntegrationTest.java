@@ -106,4 +106,10 @@ public class UploadServiceIntegrationTest {
             _persistenceService.commitTransaction();
         }
     }
+
+    @Test
+    public void test_createThumbImage() {
+        // TODO rwe:
+
+    }
 }

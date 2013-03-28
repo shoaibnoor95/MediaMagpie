@@ -130,9 +130,9 @@ public class JobScheduler extends SingleThreadedTransactionController {
                 @Override
                 public List<JobExecution> call() throws Exception {
                     List<JobExecution> jobs = _jobExecutionDao.getByStatus(Arrays.asList(JobStatus.RUNNING), 0, 100);
-                    for (JobExecution dapJobExecution : jobs) {
-                        dapJobExecution.setJobStatus(JobStatus.QUEUED);
-                        dapJobExecution.setStartTime(null);
+                    for (JobExecution runningJobExecution : jobs) {
+                        runningJobExecution.setJobStatus(JobStatus.QUEUED);
+                        runningJobExecution.setStartTime(null);
                     }
                     return jobs;
                 }

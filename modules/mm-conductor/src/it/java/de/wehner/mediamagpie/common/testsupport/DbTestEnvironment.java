@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
+import javax.persistence.EntityManagerFactory;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.rules.ExternalResource;
 import org.slf4j.Logger;
@@ -21,6 +23,8 @@ public class DbTestEnvironment extends ExternalResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(DbTestEnvironment.class);
 
+    private EntityManagerFactory _entityManagerFactory;
+
     private PersistenceService _persistenceService;
 
     public DbTestEnvironment() {
@@ -37,7 +41,8 @@ public class DbTestEnvironment extends ExternalResource {
 
     @Override
     protected void before() throws Throwable {
-        _persistenceService = PersistenceTestUtil.createPersistenceService();
+        _entityManagerFactory = PersistenceTestUtil.createEntityManagerFactory();
+        _persistenceService = new PersistenceService(_entityManagerFactory);
         super.before();
     }
 
@@ -53,6 +58,7 @@ public class DbTestEnvironment extends ExternalResource {
                 ExceptionUtil.convertToRuntimeException(e);
             }
         }
+        _entityManagerFactory.close();
         super.after();
     }
 

@@ -103,9 +103,9 @@ public class UploadService {
      *            The final and unique file name were the input bytes will be written into.
      * @param inputStream
      * @param uniqueCounter
-     * @return
+     * @return A new created and persisted <code>Media</code> object which refers to the stored file.
      */
-    public String handleUploadStream(final User currentUser, File mediaFile, InputStream inputStream, int uniqueCounter) {
+    public Media handleUploadStream(final User currentUser, File mediaFile, InputStream inputStream, int uniqueCounter) {
         if (mediaFile.exists()) {
             // we expect an empty existing file to write into
             if (mediaFile.length() > 0) {
@@ -135,22 +135,7 @@ public class UploadService {
         }
         _mediaDao.makePersistent(newMedia);
 
-        // create a thumb image for the upload view
-        _imageService.addImageResizeJobExecutionIfNecessary(UPLOAD_PREVIEW_THUMB_LABEL, _mediaDao.getById(newMedia.getId()), Priority.HIGH);
-        _persistenceService.flipTransaction();
-
-        // wait a little time until the thumb is ready
-        TimeoutExecutor timeoutExecutor = new TimeoutExecutor(2000, 250);
-        final Long newMediaId = newMedia.getId();
-        timeoutExecutor.checkUntilConditionIsTrue(new Callable<Boolean>() {
-
-            @Override
-            public Boolean call() throws Exception {
-                ThumbImage thumbImage = _thumbImageDao.getByMediaIdAndLabel(newMediaId, UPLOAD_PREVIEW_THUMB_LABEL);
-                return (thumbImage != null);
-            }
-        });
-        return _imageService.createLink(newMedia, UPLOAD_PREVIEW_THUMB_LABEL, Priority.NORMAL);
+        return newMedia;
     }
 
     public void deleteFile(User user, String mediaFileName) {
@@ -161,6 +146,26 @@ public class UploadService {
         if (media != null) {
             _imageService.deleteMediaCompletely(media);
         }
+    }
+
+    public String createThumbImage(Media media, final String label, Priority priority, int waitUntilFinished) {
+        final Long mediaId = media.getId();
+        _imageService.addImageResizeJobExecutionIfNecessary(label, _mediaDao.getById(mediaId), priority);
+        _persistenceService.flipTransaction();
+
+        // if wanted, wait until thumb image is resized
+        if (waitUntilFinished > 0) {
+            TimeoutExecutor timeoutExecutor = new TimeoutExecutor(waitUntilFinished, 250);
+            timeoutExecutor.checkUntilConditionIsTrue(new Callable<Boolean>() {
+
+                @Override
+                public Boolean call() throws Exception {
+                    ThumbImage thumbImage = _thumbImageDao.getByMediaIdAndLabel(mediaId, label);
+                    return (thumbImage != null);
+                }
+            });
+        }
+        return _imageService.createLink(media, UPLOAD_PREVIEW_THUMB_LABEL, Priority.NORMAL);
     }
 
 }

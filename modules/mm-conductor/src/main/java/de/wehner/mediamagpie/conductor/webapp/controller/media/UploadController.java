@@ -27,9 +27,15 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
+import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.Priority;
 import de.wehner.mediamagpie.common.persistence.entity.User;
+import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
+import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
 import de.wehner.mediamagpie.common.util.Pair;
+import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
+import de.wehner.mediamagpie.conductor.persistence.dao.UserConfigurationDao;
+import de.wehner.mediamagpie.conductor.webapp.controller.AbstractConfigurationSupportController;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.FileUploadCommand;
 import de.wehner.mediamagpie.conductor.webapp.controller.json.JQueryUploadCommand;
 import de.wehner.mediamagpie.conductor.webapp.services.UploadService;
@@ -42,7 +48,7 @@ import de.wehner.mediamagpie.conductor.webapp.util.security.SecurityUtil;
  */
 @Controller
 @RequestMapping("/upload")
-public class UploadController {
+public class UploadController extends AbstractConfigurationSupportController {
 
     private static final Logger LOG = LoggerFactory.getLogger(UploadController.class);
 
@@ -54,7 +60,8 @@ public class UploadController {
     private UploadService _uploadControllerService;
 
     @Autowired
-    public UploadController(UploadService uploadControllerService) {
+    public UploadController(ConfigurationProvider configurationProvider, UserConfigurationDao userConfigurationDao, UploadService uploadControllerService) {
+        super(configurationProvider, userConfigurationDao, null);
         _uploadControllerService = uploadControllerService;
     }
 
@@ -95,19 +102,37 @@ public class UploadController {
             Pair<String, File> uploadFileInfo = _uploadControllerService.createUniqueUserStoreFile(currentUser, multipartFile.getOriginalFilename());
             String contextPath = request.getContextPath();
             LOG.info("Try dump upload stream '" + uploadFileInfo.getFirst() + "' into file '" + uploadFileInfo.getSecond().getPath() + "'");
+            Media newMedia = _uploadControllerService.handleUploadStream(currentUser, uploadFileInfo.getSecond(), multipartFile.getInputStream(), i++);
+
+            // create job executions for image resize jobs to create the thumbs for normal thumbs and detail view
+            createJobsForOptionalThumbImages(newMedia);
+
+            // create a thumb image for the upload view
             String thumbUrl = contextPath
-                    + _uploadControllerService.handleUploadStream(currentUser, uploadFileInfo.getSecond(), multipartFile.getInputStream(), i++);
+                    + _uploadControllerService.createThumbImage(newMedia,
+                            de.wehner.mediamagpie.conductor.webapp.services.UploadService.UPLOAD_PREVIEW_THUMB_LABEL, Priority.HIGH, 2000);
 
-            // TODO rwe: remove the imageresizejob creation from uploadControllerService and do this here!
-            // additionally, create jobs for detail and normal thumb images
-            // _imageService.addImageResizeJobExecutionIfNecessary(UPLOAD_PREVIEW_THUMB_LABEL, _mediaDao.getById(newMedia.getId()),
-            // Priority.HIGH);
-
+            // build propper command for respose
             JQueryUploadCommand command = new JQueryUploadCommand(multipartFile.getOriginalFilename(), (int) multipartFile.getSize(), "url", thumbUrl,
                     contextPath + getDeleteUrl(uploadFileInfo.getSecond().getName()), "DELETE");
             jQueryUploadCommands.add(command);
         }
         return jQueryUploadCommands;
+    }
+
+    private void createJobsForOptionalThumbImages(Media newMedia) {
+        MainConfiguration mainConfiguration = getMainConfiguration();
+        UserConfiguration userConfiguration = getCurrentUserConfiguration();
+        int thumbSize = mainConfiguration.getDefaultThumbSize();
+        if (userConfiguration != null) {
+            thumbSize = userConfiguration.getThumbImageSize();
+        }
+        _uploadControllerService.createThumbImage(newMedia, "" + thumbSize, Priority.LOW, 0);
+        thumbSize = mainConfiguration.getDefaultDetailThumbSize();
+        if (userConfiguration != null) {
+            thumbSize = userConfiguration.getDetailImageSize();
+        }
+        _uploadControllerService.createThumbImage(newMedia, "" + thumbSize, Priority.LOW, 0);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = URL_DELETE_FILE)

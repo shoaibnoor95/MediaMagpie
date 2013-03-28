@@ -53,6 +53,7 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
 
         synchronized (_lockTime) {
             if (_lockTime.containsKey(userName)) {
+                // the user is locked and the lock is now active!
                 if (new Date().getTime() < _lockTime.get(userName)) {
                     throw new LockedException(messageSource.getMessage("user.too.many.failed.authentications", new String[] { userName,
                             "" + (LOCK_TIME / 1000) }, Locale.getDefault()));

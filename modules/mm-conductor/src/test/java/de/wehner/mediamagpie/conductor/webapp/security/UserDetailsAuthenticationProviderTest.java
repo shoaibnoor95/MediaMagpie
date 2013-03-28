@@ -5,6 +5,7 @@ import static org.fest.assertions.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
+import java.util.Hashtable;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +16,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.User.Role;
@@ -43,6 +45,10 @@ public class UserDetailsAuthenticationProviderTest {
         when(_userDao.getByName(_adminUser.getUsername())).thenReturn(_adminUser);
         _userSecurityService = new UserSecurityService(new TransactionHandlerMock(), _userDao);
         _userDetailsAuthenticationProvider = new UserDetailsAuthenticationProvider(_userSecurityService, _messageSource);
+        // remove possible locked information in static object
+        @SuppressWarnings("unchecked")
+        Hashtable<String, Long> lockedTime = (Hashtable<String, Long>) ReflectionTestUtils.getField(_userDetailsAuthenticationProvider, "_lockTime");
+        lockedTime.remove(_adminUser.getName());
     }
 
     @Test
@@ -59,6 +65,7 @@ public class UserDetailsAuthenticationProviderTest {
 
     @Test(expected = BadCredentialsException.class)
     public void testAdditionalAuthenticationChecks_InvalidPassword() {
+        
         _userDetailsAuthenticationProvider.additionalAuthenticationChecks(_adminUser, new UsernamePasswordAuthenticationToken("admin", "blah"));
     }
 

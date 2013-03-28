@@ -72,11 +72,12 @@ public class JobSchedulerIntegrationTest {
         FileUtils.writeStringToFile(fakeImageFile, "fake");
         _persistenceService = _dbTestEnvironment.getPersistenceService();
         _jobExecutionDao = new JobExecutionDao(_persistenceService);
-        TransactionHandler transactionHandler = new TransactionHandler(_persistenceService);
         ConfigurationDao configurationDao = new ConfigurationDao(_persistenceService, _cipherService);
         _persistenceService.beginTransaction();
         _media = new Media(DbTestEnvironment.getOrCreateTestUser(_persistenceService), "name", fakeImageFile.toURI(), new Date());
         _persistenceService.persist(_media);
+        _persistenceService.commitTransaction();
+        TransactionHandler transactionHandler = new TransactionHandler(_persistenceService);
         _jobScheduler = new JobScheduler(transactionHandler, _jobExecutionDao, configurationDao, _jobExecutor, new TimeProvider(),
                 Executors.newSingleThreadExecutor());
     }
@@ -131,7 +132,7 @@ public class JobSchedulerIntegrationTest {
         assertNull(jobExecutionFromDb.getCreatedDataUri());
     }
 
-    @Test(timeout = 15000)
+    @Test//(timeout = 15000)
     public void testResetJobsToQueuedAfterRestart() throws Exception {
         addImageResizeJobToDb(_media, "200");
 

@@ -47,6 +47,7 @@ public class ImageService {
     public static final Logger LOG = LoggerFactory.getLogger(ImageService.class);
 
     private final ThumbImageDao _thumbImageDao;
+    
     private final MediaDao _mediaDao;
 
     private final ImageResizeJobExecutionDao _imageResizeJobExecutionDao;

@@ -1,5 +1,7 @@
 package de.wehner.mediamagpie.conductor.persistence.dao;
 
+import javax.persistence.EntityManagerFactory;
+
 import org.junit.After;
 import org.junit.Before;
 
@@ -11,12 +13,16 @@ import de.wehner.mediamagpie.conductor.persistence.dao.Dao;
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public abstract class AbstractDaoTest<T extends Dao> {
 
-    public PersistenceService _persistenceService;
+    protected PersistenceService _persistenceService;
+    
+    private EntityManagerFactory _entityManagerFactory;
+
     private T _dao;
 
     @Before
     public void setUp() {
-        _persistenceService = PersistenceTestUtil.createPersistenceService();
+        _entityManagerFactory = PersistenceTestUtil.createEntityManagerFactory();
+        _persistenceService = new PersistenceService(_entityManagerFactory);
         _dao = createDao(_persistenceService);
         cleanDb();
         _persistenceService.beginTransaction();
@@ -30,6 +36,7 @@ public abstract class AbstractDaoTest<T extends Dao> {
     @After
     public void tearDown() throws Exception {
         cleanDb();
+        _entityManagerFactory.close();
     }
 
     protected T getDao() {

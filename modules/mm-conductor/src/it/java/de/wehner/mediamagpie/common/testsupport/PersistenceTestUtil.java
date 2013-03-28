@@ -29,10 +29,6 @@ public class PersistenceTestUtil {
         return Persistence.createEntityManagerFactory("hsql-memory-withoutDS");
     }
 
-    public static PersistenceService createPersistenceService() {
-        return new PersistenceService(createEntityManagerFactory());
-    }
-
     @Deprecated
     public static <T extends Base> void deleteAllEntities(Dao<T> dao) {
         dao.getPersistenceService().beginTransaction();
