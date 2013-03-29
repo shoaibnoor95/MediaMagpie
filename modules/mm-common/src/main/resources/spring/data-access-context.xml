@@ -19,12 +19,6 @@
 		<property name="username" value="mmagpie" />
 		<property name="password" value="mmagpie" />
 	</bean>
-	<bean id="DS-mysql-mediabutler" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost/mediabutler?autoReconnect=true" />
-		<property name="username" value="mbutler" />
-		<property name="password" value="mbutler" />
-	</bean>
 	<bean id="DS-hsql-file" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="org.hsqldb.jdbcDriver" />
 		<property name="url" value="jdbc:hsqldb:file:target/database/hsqlDB" />

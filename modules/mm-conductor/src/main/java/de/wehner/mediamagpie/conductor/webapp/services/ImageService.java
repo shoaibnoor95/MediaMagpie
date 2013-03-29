@@ -5,16 +5,26 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.awt.image.renderable.ParameterBlock;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.media.jai.JAI;
+import javax.media.jai.OpImage;
+import javax.media.jai.RenderedOp;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -24,6 +34,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.sun.media.jai.codec.SeekableStream;
 
 import de.wehner.mediamagpie.common.persistence.entity.ImageResizeJobExecution;
 import de.wehner.mediamagpie.common.persistence.entity.JobStatus;
@@ -47,7 +59,7 @@ public class ImageService {
     public static final Logger LOG = LoggerFactory.getLogger(ImageService.class);
 
     private final ThumbImageDao _thumbImageDao;
-    
+
     private final MediaDao _mediaDao;
 
     private final ImageResizeJobExecutionDao _imageResizeJobExecutionDao;
@@ -111,9 +123,116 @@ public class ImageService {
         }
     }
 
+    /**** TODO rwe: testing JAI *********************/
+    /**
+     * The JAI.create action name for handling a stream.
+     */
+    private static final String JAI_STREAM_ACTION = "stream";
+
+    /**
+     * The JAI.create action name for handling a resizing using a subsample averaging technique.
+     */
+    private static final String JAI_SUBSAMPLE_AVERAGE_ACTION = "SubsampleAverage";
+
+    /**
+     * The JAI.create encoding format name for JPEG.
+     */
+    private static final String JAI_ENCODE_FORMAT_JPEG = "JPEG";
+
+    /**
+     * The JAI.create action name for encoding image data.
+     */
+    private static final String JAI_ENCODE_ACTION = "encode";
+
+    /**
+     * The http content type/mime-type for JPEG images.
+     */
+    private static final String JPEG_CONTENT_TYPE = "image/jpeg";
+
+    private int mMaxWidth = 800;
+
+    private int mMaxWidthThumbnail = 150;
+
+    /**
+     * This method takes in an image as a byte array (currently supports GIF, JPG, PNG and possibly other formats) and resizes it to have a
+     * width no greater than the pMaxWidth parameter in pixels. It converts the image to a standard quality JPG and returns the byte array
+     * of that JPG image.
+     * 
+     * @param pImageData
+     *            the image data.
+     * @param pMaxWidth
+     *            the max width in pixels, 0 means do not scale.
+     * @return the resized JPG image.
+     * @throws IOException
+     *             if the image could not be manipulated correctly.
+     */
+    private byte[] resizeImageAsJPG(byte[] pImageData, int pMaxWidth) throws IOException {
+        InputStream imageInputStream = new ByteArrayInputStream(pImageData);
+        // read in the original image from an input stream
+        SeekableStream seekableImageStream = SeekableStream.wrapInputStream(imageInputStream, true);
+        RenderedOp originalImage = JAI.create(JAI_STREAM_ACTION, seekableImageStream);
+        ((OpImage) originalImage.getRendering()).setTileCache(null);
+        int origImageWidth = originalImage.getWidth();
+        // now resize the image
+        double scale = 1.0;
+        if (pMaxWidth > 0 && origImageWidth > pMaxWidth) {
+            scale = (double) pMaxWidth / originalImage.getWidth();
+        }
+        ParameterBlock paramBlock = new ParameterBlock();
+        paramBlock.addSource(originalImage); // The source image
+        paramBlock.add(scale); // The xScale
+        paramBlock.add(scale); // The yScale
+        paramBlock.add(0.0); // The x translation
+        paramBlock.add(0.0); // The y translation
+
+        RenderingHints qualityHints = new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+
+        RenderedOp resizedImage = JAI.create(JAI_SUBSAMPLE_AVERAGE_ACTION, paramBlock, qualityHints);
+
+        // lastly, write the newly-resized image to an output stream, in a specific encoding
+        ByteArrayOutputStream encoderOutputStream = new ByteArrayOutputStream();
+        JAI.create(JAI_ENCODE_ACTION, resizedImage, encoderOutputStream, JAI_ENCODE_FORMAT_JPEG, null);
+        // Export to Byte Array
+        byte[] resizedImageByteArray = encoderOutputStream.toByteArray();
+        return resizedImageByteArray;
+    }
+
     public static File resizeImageInQueue(File originImage, long id, File destPath, int width, int height, int necessaryRotation) {
         try {
             Log.info("Begin resizing image '" + originImage.getPath() + "' to " + width + " x " + height + " with rotation " + necessaryRotation + "...");
+
+            /** TODO rwe: alternative routing to resize using JAI (Jpeg currently only!) */
+//            SeekableStream seekableImageStream = SeekableStream.wrapInputStream(new FileInputStream(originImage), true);
+//            RenderedOp originalImage = JAI.create(JAI_STREAM_ACTION, seekableImageStream);
+//            ((OpImage) originalImage.getRendering()).setTileCache(null);
+//            int origWidth = originalImage.getWidth();
+//            int origHeight = originalImage.getHeight();
+//            Dimension newDimension = computeNewDimension(origWidth, origHeight, width, height);
+//            // now resize the image
+//            double scale = (double) newDimension.width / (double) origWidth;
+//            ParameterBlock paramBlock = new ParameterBlock();
+//            paramBlock.addSource(originalImage); // The source image
+//            paramBlock.add(scale); // The xScale
+//            paramBlock.add(scale); // The yScale
+//            paramBlock.add(0.0); // The x translation
+//            paramBlock.add(0.0); // The y translation
+//
+//            RenderingHints qualityHints = new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+//            RenderedOp resizedImage = JAI.create(JAI_SUBSAMPLE_AVERAGE_ACTION, paramBlock, qualityHints);
+//
+//            // lastly, write the newly-resized image to an output stream, in a specific encoding
+//            ByteArrayOutputStream encoderOutputStream = new ByteArrayOutputStream();
+//            JAI.create(JAI_ENCODE_ACTION, resizedImage, encoderOutputStream, JAI_ENCODE_FORMAT_JPEG, null);
+//            // Export to Byte Array
+//            byte[] resizedImageByteArray = encoderOutputStream.toByteArray();
+//            // save result to file
+//            File thumbImagePath = buildThumbImagePath(originImage, id, destPath, resizedImage.getWidth(), resizedImage.getHeight());
+//            FileOutputStream fos = new FileOutputStream(thumbImagePath);
+//            fos.write(resizedImageByteArray);
+//            IOUtils.closeQuietly(fos);
+            /** alternative routing to resize using JAI */
+
+            //rwe: see also: http://www.thebuzzmedia.com/software/imgscalr-java-image-scaling-library/
             BufferedImage originBitmap = ImageIO.read(originImage);
             if (originBitmap == null) {
                 // image can not be loaded - mayby this is not a valid image file
@@ -122,7 +241,9 @@ public class ImageService {
             }
 
             // scale image
-            Dimension newDimension = computeNewDimension(originBitmap, width, height);
+            int origWidth = originBitmap.getWidth();
+            int origHeight = originBitmap.getHeight();
+            Dimension newDimension = computeNewDimension(origWidth, origHeight, width, height);
             BufferedImage newImage = resizeImageWithAffineTransform(originBitmap, newDimension);
 
             // rotate if necessary
@@ -141,18 +262,16 @@ public class ImageService {
         }
     }
 
-    public static Dimension computeNewDimension(BufferedImage originBitmap, int width, int height) {
-        int newWidth = originBitmap.getWidth();
-        int newHeight = originBitmap.getHeight();
+    public static Dimension computeNewDimension(int origWidth, int origHeight, int width, int height) {
         float minRatio = 1.0f;
-        if (originBitmap.getWidth() >= width || originBitmap.getHeight() >= height) {
-            float ratioX = (float) width / originBitmap.getWidth();
-            float ratioY = (float) height / originBitmap.getHeight();
+        if (origWidth >= width || origHeight >= height) {
+            float ratioX = (float) width / origWidth;
+            float ratioY = (float) height / origHeight;
             minRatio = Math.min(ratioX, ratioY);
-            newWidth = (int) Math.max(1, originBitmap.getWidth() * minRatio);
-            newHeight = (int) Math.max(1, originBitmap.getHeight() * minRatio);
+            origWidth = (int) Math.max(1, origWidth * minRatio);
+            origHeight = (int) Math.max(1, origHeight * minRatio);
         }
-        return new Dimension(newWidth, newHeight);
+        return new Dimension(origWidth, origHeight);
     }
 
     /**

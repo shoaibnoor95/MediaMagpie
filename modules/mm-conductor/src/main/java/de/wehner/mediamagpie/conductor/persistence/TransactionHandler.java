@@ -3,14 +3,17 @@ package de.wehner.mediamagpie.conductor.persistence;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import de.wehner.mediamagpie.common.util.ExceptionUtil;
 
-
 @Service
 public class TransactionHandler {
+
+    private final Logger LOG = LoggerFactory.getLogger(TransactionHandler.class);
 
     private final PersistenceService _persistenceService;
 
@@ -20,11 +23,11 @@ public class TransactionHandler {
     }
 
     public <K> K executeInTransaction(Callable<K> callable) {
-        // TODO rwe: Check, if we really need and want this block. I think, it makes no sense to
-        // do something without begin() and commit().
+        // Is a transaction opened before?
         if (_persistenceService.isTransactionActive()) {
+            // We are running with a transaction that was opened before. Just use this and don't commit/rollback
             try {
-                assert (false);
+                LOG.debug("using current opened transaction");
                 return callable.call();
             } catch (Exception e) {
                 throw ExceptionUtil.convertToRuntimeException(e);

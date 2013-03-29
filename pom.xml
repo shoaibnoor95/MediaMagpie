@@ -469,10 +469,7 @@
 	<repositories>
 		<!-- For JSR 303 and Hibernate Validator only - Encourage JBoss to publish these artifacts to Maven 
 			Central! -->
-		<!-- <repository> <id>org.jboss.repository.maven</id> <url>http://repository.jboss.org/maven2</url> 
-			<snapshots> <enabled>false</enabled> </snapshots> </repository> <repository> <id>maven2-repository.dev.java.net</id> 
-			<name>Java.net Maven 2 Repository</name> <url>http://download.java.net/maven/2</url> </repository> -->
-		<repository>
+		<!--<repository>
 			<id>jboss-public-repository-group</id>
 			<name>JBoss Public Maven Repository Group</name>
 			<url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
@@ -485,18 +482,23 @@
 				<enabled>true</enabled>
 				<updatePolicy>never</updatePolicy>
 			</snapshots>
-		</repository>
-		<repository>
+		</repository>-->
+		<!--<repository>
 			<id>org.springframework.maven.milestone</id>
 			<name>Spring Framework Maven Milestone Repository</name>
 			<url>http://maven.springframework.org/milestone</url>
-		</repository>
+		</repository>-->
+        <repository>
+            <id>com.springsource.repository.bundles.external</id>
+            <name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
+            <url>http://repository.springsource.com/maven/bundles/external</url>
+        </repository>
 		<!-- only necessary for jets3t (aws) -->
-		<repository>
+		<!--<repository>
 			<name>jets3t</name>
 			<id>jets3t</id>
 			<url>http://www.jets3t.org/maven2</url>
-		</repository>
+		</repository>-->
 	</repositories>
 
 	<!-- For maven-jaxb2-plugin -->
