@@ -10,7 +10,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -34,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StopWatch;
 
 import com.sun.media.jai.codec.SeekableStream;
 
@@ -52,6 +52,8 @@ import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.MediaDeleteJobExecutionDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.ThumbImageDao;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaThumbCommand;
+import de.wehner.mediamagpie.conductor.webapp.media.process.ImageProcessorImageIO;
+import de.wehner.mediamagpie.conductor.webapp.media.process.ImageProcessorJAI;
 
 @Service
 public class ImageService {
@@ -198,67 +200,45 @@ public class ImageService {
     }
 
     public static File resizeImageInQueue(File originImage, long id, File destPath, int width, int height, int necessaryRotation) {
+        Log.info("Begin resizing image '" + originImage.getPath() + "' to " + width + " x " + height + " with rotation " + necessaryRotation + "...");
+        StopWatch stopWatch = new StopWatch();
         try {
-            Log.info("Begin resizing image '" + originImage.getPath() + "' to " + width + " x " + height + " with rotation " + necessaryRotation + "...");
-
-            /** TODO rwe: alternative routing to resize using JAI (Jpeg currently only!) */
-//            SeekableStream seekableImageStream = SeekableStream.wrapInputStream(new FileInputStream(originImage), true);
-//            RenderedOp originalImage = JAI.create(JAI_STREAM_ACTION, seekableImageStream);
-//            ((OpImage) originalImage.getRendering()).setTileCache(null);
-//            int origWidth = originalImage.getWidth();
-//            int origHeight = originalImage.getHeight();
-//            Dimension newDimension = computeNewDimension(origWidth, origHeight, width, height);
-//            // now resize the image
-//            double scale = (double) newDimension.width / (double) origWidth;
-//            ParameterBlock paramBlock = new ParameterBlock();
-//            paramBlock.addSource(originalImage); // The source image
-//            paramBlock.add(scale); // The xScale
-//            paramBlock.add(scale); // The yScale
-//            paramBlock.add(0.0); // The x translation
-//            paramBlock.add(0.0); // The y translation
-//
-//            RenderingHints qualityHints = new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-//            RenderedOp resizedImage = JAI.create(JAI_SUBSAMPLE_AVERAGE_ACTION, paramBlock, qualityHints);
-//
-//            // lastly, write the newly-resized image to an output stream, in a specific encoding
-//            ByteArrayOutputStream encoderOutputStream = new ByteArrayOutputStream();
-//            JAI.create(JAI_ENCODE_ACTION, resizedImage, encoderOutputStream, JAI_ENCODE_FORMAT_JPEG, null);
-//            // Export to Byte Array
-//            byte[] resizedImageByteArray = encoderOutputStream.toByteArray();
-//            // save result to file
-//            File thumbImagePath = buildThumbImagePath(originImage, id, destPath, resizedImage.getWidth(), resizedImage.getHeight());
-//            FileOutputStream fos = new FileOutputStream(thumbImagePath);
-//            fos.write(resizedImageByteArray);
-//            IOUtils.closeQuietly(fos);
-            /** alternative routing to resize using JAI */
-
-            //rwe: see also: http://www.thebuzzmedia.com/software/imgscalr-java-image-scaling-library/
-            BufferedImage originBitmap = ImageIO.read(originImage);
-            if (originBitmap == null) {
-                // image can not be loaded - mayby this is not a valid image file
-                LOG.error("Image '" + originImage.getPath() + "' seems to be corrupted or is no image.");
-                return null;
-            }
-
             // scale image
-            int origWidth = originBitmap.getWidth();
-            int origHeight = originBitmap.getHeight();
-            Dimension newDimension = computeNewDimension(origWidth, origHeight, width, height);
-            BufferedImage newImage = resizeImageWithAffineTransform(originBitmap, newDimension);
-
+            stopWatch.start("resize direct API (" + width + "/" + height + ")");
+            ImageProcessorImageIO imageResizeByImageIO = new ImageProcessorImageIO(originImage);
+            BufferedImage resizedImage = imageResizeByImageIO.resize(width, height);
             // rotate if necessary
             if (necessaryRotation != 0) {
-                newImage = rotateImage(newImage, necessaryRotation);
+                resizedImage = rotateImage(resizedImage, necessaryRotation);
             }
 
             // save result to file
-            File thumbImagePath = buildThumbImagePath(originImage, id, destPath, newImage.getWidth(), newImage.getHeight());
-            ImageIO.write(newImage, FilenameUtils.getExtension(thumbImagePath.getPath()), thumbImagePath);
+            File thumbImagePath = buildThumbImagePath(originImage, id, destPath, resizedImage.getWidth(), resizedImage.getHeight());
+            ImageIO.write(resizedImage, FilenameUtils.getExtension(thumbImagePath.getPath()), thumbImagePath);
+            stopWatch.stop();
             Log.info("Begin resizing image... finished. Resized image into file '" + thumbImagePath.getPath() + "'.");
             return thumbImagePath;
         } catch (Throwable e) {
-            Log.warn("Exception arised during image resizing.", e);
-            throw new RuntimeException(e);
+            stopWatch.stop();
+            Log.warn("Exception arised during image resizing. Try JAI library for processing...", e);
+
+            try {
+                stopWatch.start("resize JAI (" + width + "/" + height + ")");
+                FileInputStream is = new FileInputStream(originImage);
+                ImageProcessorJAI imageProcessorJAI = new ImageProcessorJAI(is);
+                ByteArrayOutputStream resizedImage = imageProcessorJAI.resize(width, height);
+                File thumbImagePath = buildThumbImagePath(originImage, id, destPath, imageProcessorJAI.getProcessedDimension().width,
+                        imageProcessorJAI.getProcessedDimension().height);
+                IOUtils.closeQuietly(is);
+                FileUtils.writeByteArrayToFile(thumbImagePath, resizedImage.toByteArray());
+                stopWatch.stop();
+                Log.info("Begin resizing image... finished. Resized image into file '" + thumbImagePath.getPath() + "'.");
+                return thumbImagePath;
+            } catch (Throwable e2) {
+                throw new RuntimeException(e2);
+            }
+        } finally {
+            System.out.println(stopWatch.prettyPrint());
         }
     }
 
@@ -272,28 +252,6 @@ public class ImageService {
             origHeight = (int) Math.max(1, origHeight * minRatio);
         }
         return new Dimension(origWidth, origHeight);
-    }
-
-    /**
-     * Resizes an image to new dimensions. See: http://stackoverflow.com/questions/4787066/how-to-resize-and-rotate-an-image
-     * 
-     * @param srcBImage
-     *            The source image
-     * @param newSize
-     *            The new with and height
-     * @return The resized image as <code>BufferedImage</code>
-     */
-    public static BufferedImage resizeImageWithAffineTransform(BufferedImage srcBImage, Dimension newSize) {
-        BufferedImage bdest;
-        // scale the image
-        int w = newSize.width;
-        int h = newSize.height;
-        bdest = new BufferedImage(w, h, srcBImage.getType());
-        Graphics2D g = bdest.createGraphics();
-        AffineTransform at = AffineTransform.getScaleInstance((double) w / srcBImage.getWidth(), (double) h / srcBImage.getHeight());
-        g.drawRenderedImage(srcBImage, at);
-        g.dispose();
-        return bdest;
     }
 
     /**

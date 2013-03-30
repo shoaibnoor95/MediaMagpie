@@ -8,14 +8,9 @@ import static org.mockito.Matchers.*;
 
 import static org.mockito.Mockito.*;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 
-import javax.imageio.ImageIO;
-
-import org.apache.commons.io.FilenameUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,11 +29,10 @@ import de.wehner.mediamagpie.conductor.persistence.dao.ThumbImageDao;
 
 public class ImageServiceTest {
 
-    private static final String SRC_IMAGE_UPRIGHT = "src/test/resources/images/IMG_1414.JPG";
     static final int RESIZE_W = 1500;
+    
     static final int RESIZE_H = 600;
 
-    private final int LOOP_COUNT = 20;
     @Rule
     public TestEnvironment _testEnvironment = new TestEnvironment(ImageServiceTest.class);
 
@@ -96,21 +90,6 @@ public class ImageServiceTest {
         link = _imageService.createLink(media, null, Priority.NORMAL);
 
         assertEquals("/content/images/1/original.jpg?priority=NORMAL", link);
-    }
-
-    @Test
-    public void testResizeAndRotateImageNTimes_6() throws IOException {
-        File originMediaFile = new File(SRC_IMAGE_UPRIGHT);
-        File resizedImageFile = new File(_testEnvironment.getWorkingDir(), "resizedrotated_6.jpg");
-
-        BufferedImage originBitmap = ImageIO.read(originMediaFile);
-        BufferedImage destImage = null;
-        for (int i = 0; i < LOOP_COUNT; i++) {
-            destImage = ImageService.resizeImageWithAffineTransform(originBitmap, ImageService.computeNewDimension(originBitmap, RESIZE_W, RESIZE_H));
-            destImage = ImageService.rotateImage(destImage, 90.0);
-            System.out.println(i);
-        }
-        assertThat(ImageIO.write(destImage, FilenameUtils.getExtension(resizedImageFile.getPath()), resizedImageFile)).isTrue();
     }
 
 }
