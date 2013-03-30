@@ -57,4 +57,29 @@ public class ImageProcessorImageIO extends AbstractImageProcessor {
         return bdest;
     }
 
+    /**
+     * The code is based on an example on: http://stackoverflow.com/questions/4787066/how-to-resize-and-rotate-an-image
+     * 
+     * @param srcBImage
+     * @param angle
+     *            The angle in degree
+     * @return
+     */
+    public static BufferedImage rotateImage(BufferedImage srcBImage, double angle) {
+        angle = Math.toRadians(angle);
+        double sin = Math.abs(Math.sin(angle));
+        double cos = Math.abs(Math.cos(angle));
+        int w = srcBImage.getWidth(), h = srcBImage.getHeight();
+        int neww = (int) Math.floor(w * cos + h * sin);
+        int newh = (int) Math.floor(h * cos + w * sin);
+        BufferedImage result = new BufferedImage(neww, newh, srcBImage.getType());
+        Graphics2D g = result.createGraphics();
+        g.translate((neww - w) / 2, (newh - h) / 2);
+        g.rotate(angle, w / 2, h / 2);
+        g.drawRenderedImage(srcBImage, null);
+        g.dispose();
+        return result;
+    }
+
+
 }

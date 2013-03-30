@@ -10,10 +10,9 @@ import javax.media.jai.JAI;
 import javax.media.jai.OpImage;
 import javax.media.jai.RenderedOp;
 
-import org.apache.commons.io.IOUtils;
-
 import com.sun.media.jai.codec.SeekableStream;
 
+// TODO rwe: add a rotate method or try to rotate image with ImageProcessingImageIO after picture was resized!
 public class ImageProcessorJAI extends AbstractImageProcessor {
 
     private final RenderedOp originalImage;
@@ -45,6 +44,13 @@ public class ImageProcessorJAI extends AbstractImageProcessor {
         originalImage = JAI.create(JAI_STREAM_ACTION, seekableImageStream);
     }
 
+    /**
+     * Resizes an image and writes it as jpeg
+     * 
+     * @param width
+     * @param height
+     * @return
+     */
     public ByteArrayOutputStream resize(int width, int height) {
         ((OpImage) originalImage.getRendering()).setTileCache(null);
         int origWidth = originalImage.getWidth();

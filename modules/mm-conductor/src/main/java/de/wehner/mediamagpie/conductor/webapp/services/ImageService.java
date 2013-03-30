@@ -125,80 +125,6 @@ public class ImageService {
         }
     }
 
-    /**** TODO rwe: testing JAI *********************/
-    /**
-     * The JAI.create action name for handling a stream.
-     */
-    private static final String JAI_STREAM_ACTION = "stream";
-
-    /**
-     * The JAI.create action name for handling a resizing using a subsample averaging technique.
-     */
-    private static final String JAI_SUBSAMPLE_AVERAGE_ACTION = "SubsampleAverage";
-
-    /**
-     * The JAI.create encoding format name for JPEG.
-     */
-    private static final String JAI_ENCODE_FORMAT_JPEG = "JPEG";
-
-    /**
-     * The JAI.create action name for encoding image data.
-     */
-    private static final String JAI_ENCODE_ACTION = "encode";
-
-    /**
-     * The http content type/mime-type for JPEG images.
-     */
-    private static final String JPEG_CONTENT_TYPE = "image/jpeg";
-
-    private int mMaxWidth = 800;
-
-    private int mMaxWidthThumbnail = 150;
-
-    /**
-     * This method takes in an image as a byte array (currently supports GIF, JPG, PNG and possibly other formats) and resizes it to have a
-     * width no greater than the pMaxWidth parameter in pixels. It converts the image to a standard quality JPG and returns the byte array
-     * of that JPG image.
-     * 
-     * @param pImageData
-     *            the image data.
-     * @param pMaxWidth
-     *            the max width in pixels, 0 means do not scale.
-     * @return the resized JPG image.
-     * @throws IOException
-     *             if the image could not be manipulated correctly.
-     */
-    private byte[] resizeImageAsJPG(byte[] pImageData, int pMaxWidth) throws IOException {
-        InputStream imageInputStream = new ByteArrayInputStream(pImageData);
-        // read in the original image from an input stream
-        SeekableStream seekableImageStream = SeekableStream.wrapInputStream(imageInputStream, true);
-        RenderedOp originalImage = JAI.create(JAI_STREAM_ACTION, seekableImageStream);
-        ((OpImage) originalImage.getRendering()).setTileCache(null);
-        int origImageWidth = originalImage.getWidth();
-        // now resize the image
-        double scale = 1.0;
-        if (pMaxWidth > 0 && origImageWidth > pMaxWidth) {
-            scale = (double) pMaxWidth / originalImage.getWidth();
-        }
-        ParameterBlock paramBlock = new ParameterBlock();
-        paramBlock.addSource(originalImage); // The source image
-        paramBlock.add(scale); // The xScale
-        paramBlock.add(scale); // The yScale
-        paramBlock.add(0.0); // The x translation
-        paramBlock.add(0.0); // The y translation
-
-        RenderingHints qualityHints = new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-
-        RenderedOp resizedImage = JAI.create(JAI_SUBSAMPLE_AVERAGE_ACTION, paramBlock, qualityHints);
-
-        // lastly, write the newly-resized image to an output stream, in a specific encoding
-        ByteArrayOutputStream encoderOutputStream = new ByteArrayOutputStream();
-        JAI.create(JAI_ENCODE_ACTION, resizedImage, encoderOutputStream, JAI_ENCODE_FORMAT_JPEG, null);
-        // Export to Byte Array
-        byte[] resizedImageByteArray = encoderOutputStream.toByteArray();
-        return resizedImageByteArray;
-    }
-
     public static File resizeImageInQueue(File originImage, long id, File destPath, int width, int height, int necessaryRotation) {
         Log.info("Begin resizing image '" + originImage.getPath() + "' to " + width + " x " + height + " with rotation " + necessaryRotation + "...");
         StopWatch stopWatch = new StopWatch();
@@ -209,7 +135,7 @@ public class ImageService {
             BufferedImage resizedImage = imageResizeByImageIO.resize(width, height);
             // rotate if necessary
             if (necessaryRotation != 0) {
-                resizedImage = rotateImage(resizedImage, necessaryRotation);
+                resizedImage = ImageProcessorImageIO.rotateImage(resizedImage, necessaryRotation);
             }
 
             // save result to file
@@ -252,30 +178,6 @@ public class ImageService {
             origHeight = (int) Math.max(1, origHeight * minRatio);
         }
         return new Dimension(origWidth, origHeight);
-    }
-
-    /**
-     * The code is based on an example on: http://stackoverflow.com/questions/4787066/how-to-resize-and-rotate-an-image
-     * 
-     * @param srcBImage
-     * @param angle
-     *            The angle in degree
-     * @return
-     */
-    public static BufferedImage rotateImage(BufferedImage srcBImage, double angle) {
-        angle = Math.toRadians(angle);
-        double sin = Math.abs(Math.sin(angle));
-        double cos = Math.abs(Math.cos(angle));
-        int w = srcBImage.getWidth(), h = srcBImage.getHeight();
-        int neww = (int) Math.floor(w * cos + h * sin);
-        int newh = (int) Math.floor(h * cos + w * sin);
-        BufferedImage result = new BufferedImage(neww, newh, srcBImage.getType());
-        Graphics2D g = result.createGraphics();
-        g.translate((neww - w) / 2, (newh - h) / 2);
-        g.rotate(angle, w / 2, h / 2);
-        g.drawRenderedImage(srcBImage, null);
-        g.dispose();
-        return result;
     }
 
     private static File buildThumbImagePath(File originFileName, long id, File destPath, int width, int height) {

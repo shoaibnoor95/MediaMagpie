@@ -26,7 +26,7 @@ public class ImageProcessorImageIOTest {
     public TestEnvironment _testEnvironment = new TestEnvironment(ImageProcessorImageIOTest.class);
 
     @Test
-    public void testResizeAndRotateImageNTimes_6() throws IOException {
+    public void testResizeAndRotateImageNTimes() throws IOException {
         File originMediaFile = new File(SRC_IMAGE_UPRIGHT);
         File resizedImageFile = new File(_testEnvironment.getWorkingDir(), "resizedrotated_6.jpg");
 
@@ -35,10 +35,19 @@ public class ImageProcessorImageIOTest {
         for (int i = 0; i < LOOP_COUNT; i++) {
             destImage = ImageProcessorImageIO.resizeImageWithAffineTransform(originBitmap,
                     ImageService.computeNewDimension(originBitmap.getWidth(), originBitmap.getHeight(), RESIZE_W, RESIZE_H));
-            destImage = ImageService.rotateImage(destImage, 90.0);
+            destImage = ImageProcessorImageIO.rotateImage(destImage, 90.0);
             System.out.println(i);
         }
         assertThat(ImageIO.write(destImage, FilenameUtils.getExtension(resizedImageFile.getPath()), resizedImageFile)).isTrue();
     }
 
+    @Test
+    public void testRotateImage() throws IOException {
+        File originMediaFile = new File(SRC_IMAGE_UPRIGHT);
+        File rotatedImageFile = new File(_testEnvironment.getWorkingDir(), "rotated.jpg");
+
+        BufferedImage originBitmap = ImageIO.read(originMediaFile);
+        BufferedImage destImage = ImageProcessorImageIO.rotateImage(originBitmap, 270.0);
+        assertThat(ImageIO.write(destImage, FilenameUtils.getExtension(rotatedImageFile.getPath()), rotatedImageFile)).isTrue();
+    }
 }

@@ -18,6 +18,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.ThumbImage;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.User.Role;
@@ -91,20 +92,22 @@ public class UploadServiceTest {
     public void testHandleUploadStream() throws FileNotFoundException {
         FileInputStream inputStream = new FileInputStream(TEST_MEDIA);
         Pair<String, File> origAndStoreFileName = _uploadService.createUniqueUserStoreFile(_user, "fileB");
-        
-        _uploadService.handleUploadStream(_user, origAndStoreFileName.getSecond(), inputStream, 0);
 
+        Media media = _uploadService.handleUploadStream(_user, origAndStoreFileName.getSecond(), inputStream, 0);
+
+        assertThat(media).isNotNull();
         assertThat(new File(mc.getBaseUploadPath(), "user_000123/fileB")).exists();
         assertThat(new File(mc.getBaseUploadPath(), "user_000123/fileB")).hasSameContentAs(TEST_MEDIA);
     }
-    
+
     @Test
     public void testHandleUploadStream_ButMediaHasNotMetadata() throws FileNotFoundException {
         FileInputStream inputStream = new FileInputStream(TEST_MEDIA_NO_METADATA);
         Pair<String, File> origAndStoreFileName = _uploadService.createUniqueUserStoreFile(_user, "accept.png");
-        
-        _uploadService.handleUploadStream(_user, origAndStoreFileName.getSecond(), inputStream, 0);
 
+        Media media = _uploadService.handleUploadStream(_user, origAndStoreFileName.getSecond(), inputStream, 0);
+
+        assertThat(media).isNotNull();
         assertThat(new File(mc.getBaseUploadPath(), "user_000123/accept.png")).hasSameContentAs(TEST_MEDIA_NO_METADATA);
     }
 }
