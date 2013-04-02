@@ -96,10 +96,19 @@
 							date: <core:date date="${picture.media.creationDate}" /><br/>
 							ID: <c:out value="${picture.media.id}"/>
 						</p>
-                        <p>
-                            <button>Export to S3</button>
-                            <img class="in-process" alt="exporting" width="20px" src="<%=request.getContextPath()%>/static/images/loader.gif" />
-                        </p>
+						<p>
+							<c:if test="${picture.s3Available}">
+								<c:choose>
+									<c:when test="${picture.media.exportedToS3}">
+										<button>Export to S3 (overwrite)</button>
+									</c:when>
+									<c:otherwise>
+										<button>Export to S3</button>
+									</c:otherwise>
+								</c:choose>
+								<img class="in-process" alt="exporting" width="20px" src="<%=request.getContextPath()%>/static/images/loader.gif" />
+							</c:if>
+						</p>
 						<img class="image-action flipFront" alt="Picture" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/bullet_go.png" />
 					</div>
 				</li>

@@ -4,6 +4,7 @@ import org.springframework.security.authentication.InsufficientAuthenticationExc
 
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
+import de.wehner.mediamagpie.common.persistence.entity.properties.S3Configuration;
 import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
 import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
 import de.wehner.mediamagpie.conductor.persistence.dao.UserConfigurationDao;
@@ -25,6 +26,10 @@ public class AbstractConfigurationSupportController {
 
     protected UserConfiguration getCurrentUserConfiguration() {
         return _userConfigurationDao.getConfiguration(SecurityUtil.getCurrentUser(), UserConfiguration.class);
+    }
+
+    protected S3Configuration getCurrentUserS3Configuration() {
+        return _userConfigurationDao.getConfiguration(SecurityUtil.getCurrentUser(), S3Configuration.class);
     }
 
     protected User getValidatedRelevantUser(Long userId) {

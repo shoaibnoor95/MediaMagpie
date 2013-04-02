@@ -32,7 +32,7 @@ public class ImageServiceTest {
     private static final String SRC_BAD_IMAGE_IO_IMAGE = "src/test/resources/images/ralf_small.jpg";
 
     static final int RESIZE_W = 1500;
-    
+
     static final int RESIZE_H = 600;
 
     @Rule

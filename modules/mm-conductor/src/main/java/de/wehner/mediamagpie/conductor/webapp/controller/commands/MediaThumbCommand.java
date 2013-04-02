@@ -45,9 +45,11 @@ public class MediaThumbCommand {
     private CameraMetaData _cameraMetaData;
 
     /**
-     * The media entity which can be null TODO rwe: check, if we really need this
+     * The media entity, eg. used to get meta information
      */
     private Media _media;
+
+    private boolean _s3Available;
 
     public MediaThumbCommand() {
         this(null);
@@ -121,6 +123,14 @@ public class MediaThumbCommand {
 
     public void setMedia(Media media) {
         _media = media;
+    }
+
+    public boolean isS3Available() {
+        return _s3Available;
+    }
+
+    public void setS3Available(boolean s3Available) {
+        _s3Available = s3Available;
     }
 
     @Override

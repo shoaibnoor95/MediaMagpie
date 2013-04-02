@@ -11,6 +11,8 @@ import de.wehner.mediamagpie.api.MediaExport;
 import de.wehner.mediamagpie.api.MediaExportRepository;
 import de.wehner.mediamagpie.api.MediaExportResults;
 import de.wehner.mediamagpie.aws.s3.S3MediaExportRepository;
+import de.wehner.mediamagpie.common.persistence.entity.Media;
+import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
 
 public class S3PutJob extends AbstractJob {
 
@@ -19,12 +21,14 @@ public class S3PutJob extends AbstractJob {
     private final String _user;
     private final MediaExport _mediaExport;
     protected final MediaExportRepository _s3MediaRepositiory;
+    private final MediaDao _mediaDao;
 
-    public S3PutJob(String user, AWSCredentials credentials, MediaExport mediaExport) {
+    public S3PutJob(String user, AWSCredentials credentials, MediaExport mediaExport, MediaDao mediaDao) {
         super();
         _user = user;
         _mediaExport = mediaExport;
         _s3MediaRepositiory = new S3MediaExportRepository(credentials);
+        _mediaDao =mediaDao;
     }
 
     @Override
@@ -51,7 +55,11 @@ public class S3PutJob extends AbstractJob {
 
             @Override
             public void handleResult(URI result) {
-                // maybe we will mark the origin media for sucessful exporting but currently we will do nothing here
+                // mark media to be sucessfully exported to S3
+                Media media = _mediaDao.getById(Long.parseLong(_mediaExport.getMediaId()));
+                media.setExportedToS3(true);
+                LOG.info("Mark Media entity with URI '" + media.getUri() + "' to be sucessfully exported to S3.");
+                _mediaDao.makePersistent(media);
             }
         };
     }

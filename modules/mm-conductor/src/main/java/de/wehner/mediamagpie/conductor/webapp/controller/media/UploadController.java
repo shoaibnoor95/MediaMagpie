@@ -30,9 +30,8 @@ import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequ
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.Priority;
 import de.wehner.mediamagpie.common.persistence.entity.User;
-import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
-import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
 import de.wehner.mediamagpie.common.util.Pair;
+import de.wehner.mediamagpie.conductor.configuration.ConfigurationHelper;
 import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
 import de.wehner.mediamagpie.conductor.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.conductor.webapp.controller.AbstractConfigurationSupportController;
@@ -121,18 +120,13 @@ public class UploadController extends AbstractConfigurationSupportController {
     }
 
     private void createJobsForOptionalThumbImages(Media newMedia) {
-        MainConfiguration mainConfiguration = getMainConfiguration();
-        UserConfiguration userConfiguration = getCurrentUserConfiguration();
-        int thumbSize = mainConfiguration.getDefaultThumbSize();
-        if (userConfiguration != null) {
-            thumbSize = userConfiguration.getThumbImageSize();
+        ConfigurationHelper configurationHelper = new ConfigurationHelper(getMainConfiguration(), getCurrentUserConfiguration());
+        List<Integer> allThumbSizes = configurationHelper.getAllThumbSizes();
+
+        for (Integer thumbSize : allThumbSizes) {
+            _uploadControllerService.createThumbImage(newMedia, "" + thumbSize, Priority.LOW, 0);
+
         }
-        _uploadControllerService.createThumbImage(newMedia, "" + thumbSize, Priority.LOW, 0);
-        thumbSize = mainConfiguration.getDefaultDetailThumbSize();
-        if (userConfiguration != null) {
-            thumbSize = userConfiguration.getDetailImageSize();
-        }
-        _uploadControllerService.createThumbImage(newMedia, "" + thumbSize, Priority.LOW, 0);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = URL_DELETE_FILE)

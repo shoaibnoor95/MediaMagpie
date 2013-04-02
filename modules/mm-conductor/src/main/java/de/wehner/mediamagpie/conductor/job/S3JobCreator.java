@@ -19,17 +19,21 @@ import de.wehner.mediamagpie.conductor.performingjob.AbstractJob;
 import de.wehner.mediamagpie.conductor.performingjob.S3PutJob;
 import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
 import de.wehner.mediamagpie.conductor.persistence.TransactionHandler;
+import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.UserConfigurationDao;
 
 @Component
 public class S3JobCreator extends TransactionalJobCreator<AbstractJob> {
 
     private final UserConfigurationDao _userConfigurationDao;
+    private final MediaDao _mediaDao;
 
     @Autowired
-    public S3JobCreator(UserConfigurationDao userConfigurationDao, TransactionHandler transactionHandler, PersistenceService persistenceService) {
+    public S3JobCreator(UserConfigurationDao userConfigurationDao, MediaDao mediaDao, TransactionHandler transactionHandler,
+            PersistenceService persistenceService) {
         super(transactionHandler, persistenceService);
         _userConfigurationDao = userConfigurationDao;
+        _mediaDao = mediaDao;
     }
 
     @Override
@@ -46,7 +50,7 @@ public class S3JobCreator extends TransactionalJobCreator<AbstractJob> {
 
         switch (s3JobExecution.getDirection()) {
         case PUT:
-            return new S3PutJob(media.getOwner().getName(), credentials, mediaExportFactory.create(media));
+            return new S3PutJob(media.getOwner().getName(), credentials, mediaExportFactory.create(media), _mediaDao);
         }
         return null;
     }

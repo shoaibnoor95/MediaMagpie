@@ -94,6 +94,8 @@ public class Media extends CreationDateBase {
     @Column(nullable = true, length = 65535)
     private String _cameraMetaData;
 
+    private boolean _exportedToS3 = false;
+
     public Media() {
         // needed for PersistenceUtil.deleteAll()
     }
@@ -251,5 +253,13 @@ public class Media extends CreationDateBase {
 
     public void setCameraMetaData(String cameraMetaData) {
         _cameraMetaData = cameraMetaData;
+    }
+
+    public boolean isExportedToS3() {
+        return _exportedToS3;
+    }
+
+    public void setExportedToS3(boolean exportedToS3) {
+        _exportedToS3 = exportedToS3;
     }
 }

@@ -194,7 +194,7 @@ public class JobScheduler extends SingleThreadedTransactionController {
         completeJob(jobExecution);
     }
 
-    private void completeJob(JobExecution dapJobExecution) {
+    private void completeJob(JobExecution jobExecution) {
     }
 
     private JobStatus extractJobStatus(List<String> errorLogs) {

@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ import de.wehner.mediamagpie.common.persistence.entity.Album;
 import de.wehner.mediamagpie.common.persistence.entity.LifecyleStatus;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.User;
+import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
+import de.wehner.mediamagpie.common.persistence.entity.properties.S3Configuration;
+import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
 import de.wehner.mediamagpie.common.util.MinMaxValue;
 import de.wehner.mediamagpie.common.util.TimeUtil;
 import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
@@ -188,13 +192,18 @@ public class SearchController extends AbstractConfigurationSupportController {
     private String searchMediaAndPutIntoModel(Model model, Integer start, SearchCriteriaCommand searchCriteria, HttpServletRequest request) {
         int startIndex = (start != null) ? start : 0;
         List<MediaThumbCommand> mediaThumbCommands = new ArrayList<MediaThumbCommand>();
-        final int hitsPerPage = getMainConfiguration().getHitsPerPage();
+        MainConfiguration mainConfiguration = getMainConfiguration();
+        UserConfiguration currentUserConfiguration = getCurrentUserConfiguration();
+        S3Configuration currentUserS3Configuration = getCurrentUserS3Configuration();
+        final int hitsPerPage = mainConfiguration.getHitsPerPage();
         List<Media> allPictures = _mediaDao.getAllBySearchCriterias(SecurityUtil.getCurrentUser(), startIndex, hitsPerPage, true, searchCriteria,
                 LifecyleStatus.Living);
         int hits = _mediaDao.getAllBySearchCriteriasCount(SecurityUtil.getCurrentUser(), searchCriteria, LifecyleStatus.Living);
         for (Media media : allPictures) {
-            MediaThumbCommand mediaThumbCommand = _imageSerivce.createMediaThumbCommand(media, getMainConfiguration(), getCurrentUserConfiguration(),
-                    request);
+            MediaThumbCommand mediaThumbCommand = _imageSerivce.createMediaThumbCommand(media, mainConfiguration, currentUserConfiguration, request);
+            if (!StringUtils.isEmpty(currentUserS3Configuration.getAccessKey()) && !StringUtils.isEmpty(currentUserS3Configuration.getSecretKey())) {
+                mediaThumbCommand.setS3Available(true);
+            }
             mediaThumbCommands.add(mediaThumbCommand);
         }
 
