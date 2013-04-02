@@ -18,6 +18,7 @@ import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
 public class ImageProcessorImageIOTest {
 
     private static final String SRC_IMAGE_UPRIGHT = "src/test/resources/images/IMG_1414.JPG";
+
     static final int RESIZE_W = 1500;
     static final int RESIZE_H = 600;
 

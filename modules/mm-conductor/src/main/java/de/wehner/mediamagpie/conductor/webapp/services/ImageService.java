@@ -5,7 +5,6 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.awt.image.renderable.ParameterBlock;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -16,9 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.media.jai.JAI;
-import javax.media.jai.OpImage;
-import javax.media.jai.RenderedOp;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
@@ -34,8 +30,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
-
-import com.sun.media.jai.codec.SeekableStream;
 
 import de.wehner.mediamagpie.common.persistence.entity.ImageResizeJobExecution;
 import de.wehner.mediamagpie.common.persistence.entity.JobStatus;
@@ -146,17 +140,27 @@ public class ImageService {
             return thumbImagePath;
         } catch (Throwable e) {
             stopWatch.stop();
-            Log.warn("Exception arised during image resizing. Try JAI library for processing...", e);
+            Log.debug("Exception arised during image resizing. Try JAI library for processing...", e);
 
             try {
                 stopWatch.start("resize JAI (" + width + "/" + height + ")");
                 FileInputStream is = new FileInputStream(originImage);
                 ImageProcessorJAI imageProcessorJAI = new ImageProcessorJAI(is);
                 ByteArrayOutputStream resizedImage = imageProcessorJAI.resize(width, height);
-                File thumbImagePath = buildThumbImagePath(originImage, id, destPath, imageProcessorJAI.getProcessedDimension().width,
-                        imageProcessorJAI.getProcessedDimension().height);
-                IOUtils.closeQuietly(is);
-                FileUtils.writeByteArrayToFile(thumbImagePath, resizedImage.toByteArray());
+                // rotate if necessary
+                File thumbImagePath;
+                if (necessaryRotation != 0) {
+                    LOG.warn("Ratation is currently not supported");
+                    InputStream isResized = new ByteArrayInputStream(resizedImage.toByteArray());
+                    BufferedImage rotateImage = ImageProcessorImageIO.rotateImage(ImageIO.read(isResized), necessaryRotation);
+                    thumbImagePath = buildThumbImagePath(originImage, id, destPath, rotateImage.getWidth(), rotateImage.getHeight());
+                    ImageIO.write(rotateImage, FilenameUtils.getExtension(thumbImagePath.getPath()), thumbImagePath);
+                } else {
+                    thumbImagePath = buildThumbImagePath(originImage, id, destPath, imageProcessorJAI.getProcessedDimension().width,
+                            imageProcessorJAI.getProcessedDimension().height);
+                    IOUtils.closeQuietly(is);
+                    FileUtils.writeByteArrayToFile(thumbImagePath, resizedImage.toByteArray());
+                }
                 stopWatch.stop();
                 Log.info("Begin resizing image... finished. Resized image into file '" + thumbImagePath.getPath() + "'.");
                 return thumbImagePath;
@@ -164,7 +168,7 @@ public class ImageService {
                 throw new RuntimeException(e2);
             }
         } finally {
-            System.out.println(stopWatch.prettyPrint());
+            // System.out.println(stopWatch.prettyPrint());
         }
     }
 

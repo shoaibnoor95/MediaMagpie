@@ -29,6 +29,8 @@ import de.wehner.mediamagpie.conductor.persistence.dao.ThumbImageDao;
 
 public class ImageServiceTest {
 
+    private static final String SRC_BAD_IMAGE_IO_IMAGE = "src/test/resources/images/ralf_small.jpg";
+
     static final int RESIZE_W = 1500;
     
     static final int RESIZE_H = 600;
@@ -70,8 +72,26 @@ public class ImageServiceTest {
     }
 
     @Test
-    public void testResizeAndRotateImage() {
+    public void test_resizeImageInQueue() {
         File originMediaFile = new File("src/test/resources/images/IMG_0013.JPG");
+        File resizedImageFile = ImageService.resizeImageInQueue(originMediaFile, 1L, _testEnvironment.getWorkingDir(), 2000, 2000,
+                Orientation.LEFT_SIDE_TOP.getNecessaryRotation());
+
+        assertThat(resizedImageFile).exists();
+    }
+
+    @Test
+    public void test_resizeImageInQueue_ButImageIoFails() {
+        File originMediaFile = new File(SRC_BAD_IMAGE_IO_IMAGE);
+        File resizedImageFile = ImageService.resizeImageInQueue(originMediaFile, 1L, _testEnvironment.getWorkingDir(), 2000, 2000,
+                Orientation.TOP_LEFT_SIDE.getNecessaryRotation());
+
+        assertThat(resizedImageFile).exists();
+    }
+
+    @Test
+    public void test_resizeImageInQueue_WithRotation_ButImageIoFails() {
+        File originMediaFile = new File(SRC_BAD_IMAGE_IO_IMAGE);
         File resizedImageFile = ImageService.resizeImageInQueue(originMediaFile, 1L, _testEnvironment.getWorkingDir(), 2000, 2000,
                 Orientation.LEFT_SIDE_TOP.getNecessaryRotation());
 
