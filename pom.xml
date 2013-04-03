@@ -40,7 +40,8 @@
 		<!-- Database access -->
 		<commons-dbcp.version>1.4</commons-dbcp.version>
 		<ehcache.version>2.6.5</ehcache.version>
-		<hsqldb.version>2.2.9</hsqldb.version>
+		<!--<hsqldb.version>2.2.9</hsqldb.version>-->
+		<hsqldb.version>SNAPSHOT</hsqldb.version>
 
 		<!-- etc... -->
 		<mongodb.version>1.1.0.RC1</mongodb.version>
@@ -132,12 +133,12 @@
 			<dependency>
 				<groupId>commons-fileupload</groupId>
 				<artifactId>commons-fileupload</artifactId>
-				<version>1.2.2</version>
+				<version>1.3</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
-				<version>14.0-rc3</version>
+				<version>14.0.1</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.mail</groupId>
@@ -517,6 +518,12 @@
             <id>com.springsource.repository.bundles.external</id>
             <name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
             <url>http://repository.springsource.com/maven/bundles/external</url>
+        </repository>
+        <!-- needed to get the latest version of HSQLDB (>= 3.0) -->
+        <repository>
+            <id>http://www.hsqldb.org/repos</id>
+            <name>HSQL-Project Repository</name>
+            <url>http://www.hsqldb.org/repos</url>
         </repository>
 		<!-- only necessary for jets3t (aws) -->
 		<!--<repository>

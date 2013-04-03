@@ -135,7 +135,7 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
-		
+
 		<!-- Hibernate/JPA -->
 		<!-- <dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-search</artifactId> </dependency> 
 			<dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-entitymanager</artifactId> </dependency> -->
@@ -245,19 +245,21 @@
 	<build>
 		<plugins>
 			<plugin>
+				<!-- be careful when modifying the wtp/manifest entries, because this will have effect when creation 
+					the MANIFEST.FM which contains some version information (ManifestMetaData.java) -->
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<configuration>
 					<wtpversion>2.0</wtpversion>
-					<wtpapplicationxml>true</wtpapplicationxml>
 					<wtpmanifest>true</wtpmanifest>
+					<wtpapplicationxml>true</wtpapplicationxml>
+					<manifest>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifest>
 					<downloadSources>true</downloadSources>
 					<downloadJavadocs>true</downloadJavadocs>
 					<!-- <projectNameTemplate>[artifactId]-[version]</projectNameTemplate> -->
-					<!-- <manifest>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifest> -->
 				</configuration>
 			</plugin>
 
-			<!-- setup MANIFEST.MF -->
+			<!-- setup filter.properties used for MANIFEST.MF -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>

@@ -25,19 +25,19 @@
 								<form:input path="tempMediaPath" cssClass="req"/>
 								<img src="/static/images/famfamfam_silk/help.png" title="Path used to store temporary generated files for thumb images."/>
 							</dd>
-							<dd class="help">e.g. '/tmp/mediabutler/thumbs'</dd>	
+							<dd class="help">e.g. '/tmp/mediamagpie/thumbs'</dd>	
 							<form:errors path="tempMediaPath" cssClass="error"/>
 						</dl>
 
 						<dl>
 							<dt>
-								<label>Base Path to user's upload medias:</label>
+								<label>Base Path to user's upload media files:</label>
 							</dt>
 							<dd>
 								<form:input path="baseUploadPath" cssClass="req"/>
 								<img src="/static/images/famfamfam_silk/help.png" title="Base path where user specific directories will be created used to store uploaded media files."/>
 							</dd>
-							<dd class="help">e.g. '/tmp/mediabutler/usermedias'</dd>	
+							<dd class="help">e.g. '/tmp/mediamagpie/usermedias'</dd>	
 							<form:errors path="baseUploadPath" cssClass="error"/>
 						</dl>
 

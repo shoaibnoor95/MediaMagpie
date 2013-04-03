@@ -21,7 +21,7 @@
 				</dl>
 				<dl>
 					<dt>
-						<label>Base Path to user's upload medias:</label>
+						<label>Base Path to user's upload media files:</label>
 					</dt>
 					<dd>${conf.baseUploadPath}</dd>	
 				</dl>

@@ -9,6 +9,7 @@ import static org.mockito.Mockito.*;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -21,12 +22,14 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import de.wehner.mediamagpie.common.persistence.entity.Album;
 import de.wehner.mediamagpie.common.persistence.entity.ImageResizeJobExecution;
 import de.wehner.mediamagpie.common.persistence.entity.LifecyleStatus;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.MediaTag;
 import de.wehner.mediamagpie.common.persistence.entity.ThumbImage;
 import de.wehner.mediamagpie.common.persistence.entity.User;
+import de.wehner.mediamagpie.common.persistence.entity.Visibility;
 import de.wehner.mediamagpie.common.test.util.TestEnvironment;
 import de.wehner.mediamagpie.common.testsupport.DbTestEnvironment;
 import de.wehner.mediamagpie.common.util.MinMaxValue;
@@ -262,5 +265,21 @@ public class MediaDaoTest {
         assertThat(foundMedias).contains(m0);
         assertThat(mediaDao.getAllBySearchCriteriasCount(_user, searchCriteria, LifecyleStatus.Living)).isEqualTo(1);
         _dbTestEnvironment.commitTransaction();
+    }
+
+    @Test
+    public void test_getAllLastAddedPublicMedias() throws ParseException {
+        MediaDao mediaDao = new MediaDao(_dbTestEnvironment.getPersistenceService());
+        AlbumDao albumDao = new AlbumDao(_dbTestEnvironment.getPersistenceService());
+        Album album = new Album(_user, "name");
+        album.setVisibility(Visibility.PUBLIC);
+        albumDao.makePersistent(album);
+        Media m0 = new Media(_user, "Die Kinder beim Rotkohl essen.", new File("/data/picture1.jpg").toURI(), DateUtil.parseDate("2011-05-12"));
+        m0.setAlbums(Arrays.asList(album));
+        album.addMedia(m0);
+        mediaDao.makePersistent(m0);
+        _dbTestEnvironment.flipTransaction();
+        List<Media> lastAddedPublicMedias = mediaDao.getAllLastAddedPublicMedias(Visibility.PUBLIC, 100);
+        assertThat(lastAddedPublicMedias).hasSize(1);
     }
 }

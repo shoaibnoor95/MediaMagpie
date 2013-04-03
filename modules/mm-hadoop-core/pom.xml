@@ -13,7 +13,7 @@
 	<name>MediaMagpie Hadoop Core</name>
 	<dependencies>
 
-    	<dependency>
+		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>mm-common</artifactId>
 			<version>${project.version}</version>
@@ -103,6 +103,12 @@
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-core</artifactId>
 			<version>1.0.3</version>
+			<exclusions>
+				<exclusion>
+					<groupId>hsqldb</groupId>
+					<artifactId>hsqldb</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- Test -->
