@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Built-By: ralfwehner
+Build-Jdk: 1.7.0_09
+Specification-Title: MediaMagpie Web
+Specification-Version: 0.1-SNAPSHOT
+Specification-Vendor: Ralf Wehner
+Implementation-Title: MediaMagpie Web
+Implementation-Version: 0.1-SNAPSHOT
+Implementation-Vendor-Id: de.wehner.mediamagpie
+Implementation-Vendor: Ralf Wehner
+Build-Time: 2013-04-03 23:37:44
+
