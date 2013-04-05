@@ -10,12 +10,12 @@
 	</parent>
 	<artifactId>mm-hadoop-core</artifactId>
 	<packaging>jar</packaging>
-	<name>MediaMagpie Hadoop Core</name>
+	<name>MediaMagpie Shared classes and resources</name>
 	<dependencies>
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>mm-common</artifactId>
+			<artifactId>mm-persistence</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

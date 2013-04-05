@@ -6,11 +6,11 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import de.wehner.mediamagpie.common.persistence.dao.JobExecutionDao;
 import de.wehner.mediamagpie.common.persistence.entity.ImageResizeJobExecution;
 import de.wehner.mediamagpie.common.persistence.entity.JobExecution;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
-import de.wehner.mediamagpie.common.testsupport.DbTestEnvironment;
-import de.wehner.mediamagpie.conductor.persistence.dao.JobExecutionDao;
+import de.wehner.mediamagpie.common.persistence.testsupport.DbTestEnvironment;
 
 
 public class JobExecutionDaoTest {

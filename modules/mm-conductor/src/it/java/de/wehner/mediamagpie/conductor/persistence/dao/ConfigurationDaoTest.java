@@ -9,17 +9,17 @@ import org.junit.Test;
 
 import de.wehner.mediamagpie.common.persistence.entity.properties.AdminConfiguration;
 import de.wehner.mediamagpie.common.persistence.entity.properties.Property;
-import de.wehner.mediamagpie.common.util.CipherService;
-import de.wehner.mediamagpie.common.util.properties.PropertiesUtil;
-import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
+import de.wehner.mediamagpie.common.util.CipherServiceImpl;
 import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
+import de.wehner.mediamagpie.core.util.properties.PropertiesUtil;
+import de.wehner.mediamagpie.persistence.PersistenceService;
 
 
 public class ConfigurationDaoTest extends AbstractDaoTest<ConfigurationDao> {
 
     @Override
     protected ConfigurationDao createDao(PersistenceService persistenceService) {
-        return new ConfigurationDao(persistenceService, mock(CipherService.class));
+        return new ConfigurationDao(persistenceService, mock(CipherServiceImpl.class));
     }
 
     @Test

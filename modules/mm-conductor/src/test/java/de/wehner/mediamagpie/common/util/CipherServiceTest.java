@@ -4,13 +4,12 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import de.wehner.mediamagpie.common.util.CipherService;
 
 public class CipherServiceTest {
 
     @Test
     public void testDecryptUnencrypedData() {
-        CipherService cipherService = new CipherService("password");
+        CipherServiceImpl cipherService = new CipherServiceImpl("password");
         String plain = "hello";
         String decrypt = cipherService.decryptFromBase64("hello");
         assertEquals(plain, decrypt);
@@ -18,7 +17,7 @@ public class CipherServiceTest {
 
     @Test
     public void testRoundTrip() {
-        CipherService cipherService = new CipherService("password");
+        CipherServiceImpl cipherService = new CipherServiceImpl("password");
         String plain = "hello";
         String encrypt = cipherService.encryptToBase64(plain);
         assertFalse(plain.equals(encrypt));
@@ -28,8 +27,8 @@ public class CipherServiceTest {
 
     @Test
     public void testDifferentKeys() {
-        CipherService cipherService1 = new CipherService("password1");
-        CipherService cipherService2 = new CipherService("other");
+        CipherServiceImpl cipherService1 = new CipherServiceImpl("password1");
+        CipherServiceImpl cipherService2 = new CipherServiceImpl("other");
         String plain = "hello";
         String encrypt1 = cipherService1.encryptToBase64(plain);
         String encrypt2 = cipherService2.encryptToBase64(plain);

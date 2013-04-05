@@ -11,8 +11,8 @@ import de.wehner.mediamagpie.api.MediaExport;
 import de.wehner.mediamagpie.api.MediaExportRepository;
 import de.wehner.mediamagpie.api.MediaExportResults;
 import de.wehner.mediamagpie.aws.s3.S3MediaExportRepository;
+import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
-import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
 
 public class S3PutJob extends AbstractJob {
 

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 
+import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
+import de.wehner.mediamagpie.common.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.common.persistence.entity.JobExecution;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.S3JobExecution;
@@ -17,10 +19,8 @@ import de.wehner.mediamagpie.common.persistence.entity.properties.S3Configuratio
 import de.wehner.mediamagpie.conductor.media.MediaExportFactory;
 import de.wehner.mediamagpie.conductor.performingjob.AbstractJob;
 import de.wehner.mediamagpie.conductor.performingjob.S3PutJob;
-import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
-import de.wehner.mediamagpie.conductor.persistence.TransactionHandler;
-import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
-import de.wehner.mediamagpie.conductor.persistence.dao.UserConfigurationDao;
+import de.wehner.mediamagpie.persistence.PersistenceService;
+import de.wehner.mediamagpie.persistence.TransactionHandler;
 
 @Component
 public class S3JobCreator extends TransactionalJobCreator<AbstractJob> {

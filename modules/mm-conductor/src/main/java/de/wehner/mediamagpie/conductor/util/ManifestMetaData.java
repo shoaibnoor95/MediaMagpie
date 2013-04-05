@@ -11,7 +11,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.wehner.mediamagpie.common.util.ExceptionUtil;
+import de.wehner.mediamagpie.core.util.ExceptionUtil;
 
 public class ManifestMetaData {
 

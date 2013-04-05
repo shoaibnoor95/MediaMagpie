@@ -19,11 +19,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.Priority;
 import de.wehner.mediamagpie.common.persistence.entity.ThumbImage;
 import de.wehner.mediamagpie.common.util.TimeoutExecutor;
-import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.ThumbImageDao;
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
 

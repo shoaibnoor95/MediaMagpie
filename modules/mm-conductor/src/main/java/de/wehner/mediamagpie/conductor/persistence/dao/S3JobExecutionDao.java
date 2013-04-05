@@ -7,9 +7,10 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import de.wehner.mediamagpie.common.persistence.dao.JobExecutionDao;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.S3JobExecution;
-import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
+import de.wehner.mediamagpie.persistence.PersistenceService;
 
 @Repository
 public class S3JobExecutionDao extends JobExecutionDao {

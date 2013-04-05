@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
+import de.wehner.mediamagpie.persistence.PersistenceService;
 
 
 public class PersistenceFilter implements Filter {

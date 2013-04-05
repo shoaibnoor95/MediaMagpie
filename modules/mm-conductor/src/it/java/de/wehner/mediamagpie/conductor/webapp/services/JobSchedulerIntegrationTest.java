@@ -27,22 +27,22 @@ import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.wehner.mediamagpie.common.persistence.dao.JobExecutionDao;
 import de.wehner.mediamagpie.common.persistence.entity.ImageResizeJobExecution;
 import de.wehner.mediamagpie.common.persistence.entity.JobExecution;
 import de.wehner.mediamagpie.common.persistence.entity.JobStatus;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.MediaDeleteJobExecution;
 import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
-import de.wehner.mediamagpie.common.test.util.TestEnvironment;
-import de.wehner.mediamagpie.common.testsupport.DbTestEnvironment;
-import de.wehner.mediamagpie.common.util.CipherService;
+import de.wehner.mediamagpie.common.persistence.testsupport.DbTestEnvironment;
+import de.wehner.mediamagpie.common.util.CipherServiceImpl;
 import de.wehner.mediamagpie.common.util.TimeProvider;
 import de.wehner.mediamagpie.conductor.performingjob.JobCallable;
 import de.wehner.mediamagpie.conductor.performingjob.JobExecutor;
-import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
-import de.wehner.mediamagpie.conductor.persistence.TransactionHandler;
 import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
-import de.wehner.mediamagpie.conductor.persistence.dao.JobExecutionDao;
+import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
+import de.wehner.mediamagpie.persistence.PersistenceService;
+import de.wehner.mediamagpie.persistence.TransactionHandler;
 
 //@RunWith(NonParallelTest.class)
 public class JobSchedulerIntegrationTest {
@@ -57,7 +57,7 @@ public class JobSchedulerIntegrationTest {
     @Mock
     private JobExecutor _jobExecutor;
     @Mock
-    private CipherService _cipherService;
+    private CipherServiceImpl _cipherService;
     private JobExecutionDao _jobExecutionDao;
     private PersistenceService _persistenceService;
     private Media _media;

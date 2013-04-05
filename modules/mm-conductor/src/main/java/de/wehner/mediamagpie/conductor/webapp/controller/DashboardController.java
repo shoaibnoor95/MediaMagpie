@@ -19,16 +19,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
 import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
-import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaCommand;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaFeedCommand;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaFeedCommand.Item;
-import de.wehner.mediamagpie.conductor.webapp.controller.media.common.UiMediaSortOrder;
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
 import de.wehner.mediamagpie.conductor.webapp.util.WebAppUtils;
+import de.wehner.mediamagpie.persistence.dto.UiMediaSortOrder;
 
 /**
  * @author ralfwehner

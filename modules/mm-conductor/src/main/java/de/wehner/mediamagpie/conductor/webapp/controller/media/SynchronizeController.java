@@ -19,17 +19,17 @@ import de.wehner.mediamagpie.api.MediaExport;
 import de.wehner.mediamagpie.api.MediaExportResult;
 import de.wehner.mediamagpie.api.MediaExportResults;
 import de.wehner.mediamagpie.aws.s3.S3MediaExportRepository;
+import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
+import de.wehner.mediamagpie.common.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.common.persistence.entity.LifecyleStatus;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.properties.S3Configuration;
 import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
 import de.wehner.mediamagpie.conductor.media.MediaExportFactory;
-import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
-import de.wehner.mediamagpie.conductor.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.conductor.webapp.controller.AbstractConfigurationSupportController;
-import de.wehner.mediamagpie.conductor.webapp.controller.commands.SearchCriteriaCommand;
 import de.wehner.mediamagpie.conductor.webapp.util.security.SecurityUtil;
+import de.wehner.mediamagpie.persistence.dto.SearchCriteriaCommand;
 
 @Controller
 @RequestMapping("/media/synchronize")

@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import de.wehner.mediamagpie.common.persistence.dao.AlbumDao;
 import de.wehner.mediamagpie.common.persistence.entity.Album;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.Visibility;
-import de.wehner.mediamagpie.conductor.persistence.dao.AlbumDao;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.AlbumCommand;
-import de.wehner.mediamagpie.conductor.webapp.controller.media.common.CrudOperation;
 import de.wehner.mediamagpie.conductor.webapp.util.security.SecurityUtil;
+import de.wehner.mediamagpie.persistence.dto.CrudOperation;
 
 
 @Controller

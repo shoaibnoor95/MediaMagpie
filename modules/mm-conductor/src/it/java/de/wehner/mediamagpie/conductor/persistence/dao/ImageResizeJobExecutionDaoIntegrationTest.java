@@ -12,17 +12,17 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.wehner.mediamagpie.common.persistence.dao.ImageResizeJobExecutionDao;
+import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.common.persistence.entity.ImageResizeJobExecution;
 import de.wehner.mediamagpie.common.persistence.entity.JobExecution;
 import de.wehner.mediamagpie.common.persistence.entity.JobStatus;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.Priority;
 import de.wehner.mediamagpie.common.persistence.entity.ThumbImage;
-import de.wehner.mediamagpie.common.testsupport.DbTestEnvironment;
-import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
-import de.wehner.mediamagpie.conductor.persistence.dao.ImageResizeJobExecutionDao;
-import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
+import de.wehner.mediamagpie.common.persistence.testsupport.DbTestEnvironment;
 import de.wehner.mediamagpie.conductor.persistence.dao.ThumbImageDao;
+import de.wehner.mediamagpie.persistence.PersistenceService;
 
 
 public class ImageResizeJobExecutionDaoIntegrationTest extends AbstractDaoTest<ImageResizeJobExecutionDao> {

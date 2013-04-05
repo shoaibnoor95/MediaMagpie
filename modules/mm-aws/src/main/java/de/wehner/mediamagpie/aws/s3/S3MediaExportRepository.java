@@ -31,8 +31,8 @@ import de.wehner.mediamagpie.aws.s3.in.S3ObjectTuple2MediaExportTransformer;
 import de.wehner.mediamagpie.aws.s3.in.S3ObjectTupleIterator;
 import de.wehner.mediamagpie.aws.s3.out.MediaExport2S3ObjectMetadataTransformer;
 import de.wehner.mediamagpie.aws.s3.out.MediaExportMetaData2S3ObjectMetadataTransformer;
-import de.wehner.mediamagpie.common.core.util.DigestUtil;
-import de.wehner.mediamagpie.common.util.ExceptionUtil;
+import de.wehner.mediamagpie.core.util.DigestUtil;
+import de.wehner.mediamagpie.core.util.ExceptionUtil;
 
 public class S3MediaExportRepository implements MediaExportRepository {
 

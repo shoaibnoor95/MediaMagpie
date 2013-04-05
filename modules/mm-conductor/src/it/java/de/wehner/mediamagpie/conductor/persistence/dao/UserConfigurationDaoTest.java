@@ -8,15 +8,17 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import de.wehner.mediamagpie.common.persistence.dao.UserConfigurationDao;
+import de.wehner.mediamagpie.common.persistence.dao.UserDao;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.User.Role;
 import de.wehner.mediamagpie.common.persistence.entity.properties.Property;
 import de.wehner.mediamagpie.common.persistence.entity.properties.S3Configuration;
 import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
 import de.wehner.mediamagpie.common.persistence.entity.properties.UserPropertyBackedConfiguration;
-import de.wehner.mediamagpie.common.testsupport.DbTestEnvironment;
-import de.wehner.mediamagpie.common.util.CipherService;
-import de.wehner.mediamagpie.common.util.properties.PropertiesBacked;
+import de.wehner.mediamagpie.common.persistence.testsupport.DbTestEnvironment;
+import de.wehner.mediamagpie.common.util.CipherServiceImpl;
+import de.wehner.mediamagpie.core.util.properties.PropertiesBacked;
 
 public class UserConfigurationDaoTest {
 
@@ -65,7 +67,7 @@ public class UserConfigurationDaoTest {
 
     };
 
-    private CipherService _cipherService;
+    private CipherServiceImpl _cipherService;
 
     @Rule
     public DbTestEnvironment _dbTestEnvironment = new DbTestEnvironment(/* "mysql-it" */);
@@ -78,7 +80,7 @@ public class UserConfigurationDaoTest {
         _dbTestEnvironment.cleanDb();
         _dbTestEnvironment.beginTransaction();
         _user = _dbTestEnvironment.getOrCreateTestUser();
-        _cipherService = new CipherService("cipherKey");
+        _cipherService = new CipherServiceImpl("cipherKey");
         _userConfigurationDao = new UserConfigurationDao(_dbTestEnvironment.getPersistenceService(), _cipherService);
     }
 
@@ -107,7 +109,7 @@ public class UserConfigurationDaoTest {
 
         _userConfigurationDao.saveOrUpdateConfiguration(_user, configuration);
         _dbTestEnvironment.flipTransaction();
-        assertThat(_dbTestEnvironment.getPersistenceService().getAll(Property.class)).hasSize(1);
+        assertThat(_dbTestEnvironment.getPersistenceService().getAll(Property.class)).hasSize(2);
 
         S3Configuration configurationFromDb = _userConfigurationDao.getConfiguration(_user, S3Configuration.class);
         try {

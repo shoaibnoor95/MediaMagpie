@@ -16,10 +16,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.wehner.mediamagpie.api.MediaExport;
-import de.wehner.mediamagpie.common.core.util.DigestUtil;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.MediaTag;
-import de.wehner.mediamagpie.common.test.util.TestEnvironment;
+import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
+import de.wehner.mediamagpie.core.util.DigestUtil;
 
 public class MediaExportFactoryTest {
 

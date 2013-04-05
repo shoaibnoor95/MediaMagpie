@@ -5,12 +5,12 @@ import java.net.URI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.common.persistence.entity.JobExecution;
 import de.wehner.mediamagpie.common.persistence.entity.MediaDeleteJobExecution;
 import de.wehner.mediamagpie.conductor.performingjob.MediaDeleteJob;
-import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
-import de.wehner.mediamagpie.conductor.persistence.TransactionHandler;
-import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
+import de.wehner.mediamagpie.persistence.PersistenceService;
+import de.wehner.mediamagpie.persistence.TransactionHandler;
 
 @Component
 public class MediaDeleteJobCreator extends TransactionalJobCreator<MediaDeleteJob> {

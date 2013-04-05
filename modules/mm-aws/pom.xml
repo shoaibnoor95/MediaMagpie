@@ -18,9 +18,14 @@
 			<artifactId>mm-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mm-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>mm-common</artifactId>
+			<artifactId>mm-persistence</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

@@ -17,7 +17,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import de.wehner.mediamagpie.common.test.util.TestEnvironment;
+import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
 
 public class RestControllerTest {
 

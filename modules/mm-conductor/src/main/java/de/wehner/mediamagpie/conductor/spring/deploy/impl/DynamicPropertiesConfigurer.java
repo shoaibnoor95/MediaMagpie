@@ -19,8 +19,8 @@ import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 
-import de.wehner.mediamagpie.common.util.SearchPathUtil;
 import de.wehner.mediamagpie.common.util.StringUtil;
+import de.wehner.mediamagpie.core.util.SearchPathUtil;
 
 public class DynamicPropertiesConfigurer extends PropertyPlaceholderConfigurer {
 

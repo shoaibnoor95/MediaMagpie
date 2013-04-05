@@ -13,19 +13,19 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import de.wehner.mediamagpie.common.persistence.dao.ImageResizeJobExecutionDao;
+import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
-import de.wehner.mediamagpie.common.test.util.TestEnvironment;
-import de.wehner.mediamagpie.common.testsupport.DbTestEnvironment;
-import de.wehner.mediamagpie.common.util.CipherService;
-import de.wehner.mediamagpie.common.util.Pair;
-import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
+import de.wehner.mediamagpie.common.persistence.testsupport.DbTestEnvironment;
+import de.wehner.mediamagpie.common.util.CipherServiceImpl;
 import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
-import de.wehner.mediamagpie.conductor.persistence.dao.ImageResizeJobExecutionDao;
-import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.MediaDeleteJobExecutionDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.ThumbImageDao;
+import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
+import de.wehner.mediamagpie.core.util.Pair;
+import de.wehner.mediamagpie.persistence.PersistenceService;
 
 public class UploadServiceIntegrationTest {
 
@@ -38,7 +38,7 @@ public class UploadServiceIntegrationTest {
     public TestEnvironment _testEnvironment = new TestEnvironment(getClass());
 
     @Mock
-    private CipherService _cipherService;
+    private CipherServiceImpl _cipherService;
     @Mock
     private ImageResizeJobExecutionDao _imageResizeJobExecutionDao;
     @Mock

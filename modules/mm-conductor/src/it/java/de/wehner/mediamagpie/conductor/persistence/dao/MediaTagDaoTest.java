@@ -7,11 +7,13 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
+import de.wehner.mediamagpie.common.persistence.dao.MediaTagDao;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.MediaTag;
-import de.wehner.mediamagpie.common.testsupport.DbTestEnvironment;
-import de.wehner.mediamagpie.common.testsupport.PersistenceTestUtil;
-import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
+import de.wehner.mediamagpie.common.persistence.testsupport.DbTestEnvironment;
+import de.wehner.mediamagpie.common.persistence.testsupport.PersistenceTestUtil;
+import de.wehner.mediamagpie.persistence.PersistenceService;
 
 public class MediaTagDaoTest extends AbstractDaoTest<MediaTagDao> {
 

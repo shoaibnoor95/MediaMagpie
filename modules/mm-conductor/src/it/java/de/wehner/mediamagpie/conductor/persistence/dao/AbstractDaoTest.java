@@ -5,9 +5,9 @@ import javax.persistence.EntityManagerFactory;
 import org.junit.After;
 import org.junit.Before;
 
-import de.wehner.mediamagpie.common.testsupport.PersistenceTestUtil;
-import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
-import de.wehner.mediamagpie.conductor.persistence.dao.Dao;
+import de.wehner.mediamagpie.common.persistence.dao.Dao;
+import de.wehner.mediamagpie.common.persistence.testsupport.PersistenceTestUtil;
+import de.wehner.mediamagpie.persistence.PersistenceService;
 
 
 @SuppressWarnings({ "unchecked", "rawtypes" })

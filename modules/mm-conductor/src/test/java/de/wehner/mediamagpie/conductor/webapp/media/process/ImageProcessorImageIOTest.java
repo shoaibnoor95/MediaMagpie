@@ -12,8 +12,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.junit.Rule;
 import org.junit.Test;
 
-import de.wehner.mediamagpie.common.test.util.TestEnvironment;
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
+import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
 
 public class ImageProcessorImageIOTest {
 

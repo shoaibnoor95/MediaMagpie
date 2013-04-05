@@ -15,15 +15,15 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.validation.Validator;
 
+import de.wehner.mediamagpie.common.persistence.dao.UserConfigurationDao;
+import de.wehner.mediamagpie.common.persistence.dao.UserDao;
 import de.wehner.mediamagpie.common.persistence.entity.properties.AdminConfiguration;
 import de.wehner.mediamagpie.common.persistence.entity.properties.PropertyBackedConfiguration;
-import de.wehner.mediamagpie.common.util.CipherService;
-import de.wehner.mediamagpie.common.util.properties.PropertiesUtil;
-import de.wehner.mediamagpie.conductor.persistence.TransactionHandler;
+import de.wehner.mediamagpie.common.util.CipherServiceImpl;
 import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
-import de.wehner.mediamagpie.conductor.persistence.dao.UserConfigurationDao;
-import de.wehner.mediamagpie.conductor.persistence.dao.UserDao;
 import de.wehner.mediamagpie.conductor.webapp.services.SetupVerificationService;
+import de.wehner.mediamagpie.core.util.properties.PropertiesUtil;
+import de.wehner.mediamagpie.persistence.TransactionHandler;
 
 public class SetupPropertiesInjectorTest {
 
@@ -42,7 +42,7 @@ public class SetupPropertiesInjectorTest {
     @Mock
     private Validator _beanValidator;
     @Mock
-    private CipherService _cipherService;
+    private CipherServiceImpl _cipherService;
     @Mock
     private SetupVerificationService _setupVerificationService;
     @InjectMocks

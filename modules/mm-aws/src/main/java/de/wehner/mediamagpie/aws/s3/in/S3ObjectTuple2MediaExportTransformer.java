@@ -20,9 +20,9 @@ import de.wehner.mediamagpie.api.MediaExportMetadata;
 import de.wehner.mediamagpie.api.MediaType;
 import de.wehner.mediamagpie.aws.s3.S3MediaExportRepository;
 import de.wehner.mediamagpie.aws.s3.S3ObjectTuple;
-import de.wehner.mediamagpie.common.util.ExceptionUtil;
 import de.wehner.mediamagpie.common.util.MMTransformer;
 import de.wehner.mediamagpie.common.util.StringUtil;
+import de.wehner.mediamagpie.core.util.ExceptionUtil;
 
 public class S3ObjectTuple2MediaExportTransformer implements MMTransformer<S3ObjectTuple, MediaExport> {
 

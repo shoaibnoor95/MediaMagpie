@@ -21,17 +21,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import de.wehner.mediamagpie.common.persistence.dao.JobExecutionDao;
 import de.wehner.mediamagpie.common.persistence.entity.JobExecution;
 import de.wehner.mediamagpie.common.persistence.entity.JobStatus;
 import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
-import de.wehner.mediamagpie.common.util.ExceptionUtil;
 import de.wehner.mediamagpie.common.util.TimeProvider;
 import de.wehner.mediamagpie.conductor.job.SingleThreadedTransactionController;
 import de.wehner.mediamagpie.conductor.performingjob.JobCallable;
 import de.wehner.mediamagpie.conductor.performingjob.JobExecutor;
-import de.wehner.mediamagpie.conductor.persistence.TransactionHandler;
 import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
-import de.wehner.mediamagpie.conductor.persistence.dao.JobExecutionDao;
+import de.wehner.mediamagpie.core.util.ExceptionUtil;
+import de.wehner.mediamagpie.persistence.TransactionHandler;
 
 @Service
 public class JobScheduler extends SingleThreadedTransactionController {

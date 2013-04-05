@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 import de.wehner.mediamagpie.common.persistence.entity.JobExecution;
 import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
-import de.wehner.mediamagpie.common.util.ExceptionUtil;
-import de.wehner.mediamagpie.conductor.persistence.TransactionHandler;
+import de.wehner.mediamagpie.core.util.ExceptionUtil;
+import de.wehner.mediamagpie.persistence.TransactionHandler;
 
 @Component
 public class JobExecutor {

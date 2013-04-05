@@ -10,12 +10,12 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.ThumbImage;
-import de.wehner.mediamagpie.common.test.util.TestEnvironment;
-import de.wehner.mediamagpie.common.testsupport.DbTestEnvironment;
-import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
+import de.wehner.mediamagpie.common.persistence.testsupport.DbTestEnvironment;
 import de.wehner.mediamagpie.conductor.persistence.dao.ThumbImageDao;
+import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
 
 
 public class ThumbImageDaoTest {

@@ -9,19 +9,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import de.wehner.mediamagpie.common.persistence.dao.UserDao;
 import de.wehner.mediamagpie.common.persistence.entity.ImageResizeJobExecution;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.MediaTag;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.User.Role;
 import de.wehner.mediamagpie.common.persistence.entity.UserGroup;
-import de.wehner.mediamagpie.common.util.ExceptionUtil;
-import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
-import de.wehner.mediamagpie.conductor.persistence.TransactionHandler;
-import de.wehner.mediamagpie.conductor.persistence.dao.UserDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.UserGroupDao;
 import de.wehner.mediamagpie.conductor.spring.deploy.PopulateDb;
 import de.wehner.mediamagpie.conductor.webapp.services.UserSecurityService;
+import de.wehner.mediamagpie.core.util.ExceptionUtil;
+import de.wehner.mediamagpie.persistence.PersistenceService;
+import de.wehner.mediamagpie.persistence.TransactionHandler;
 
 @PopulateDb
 @Component

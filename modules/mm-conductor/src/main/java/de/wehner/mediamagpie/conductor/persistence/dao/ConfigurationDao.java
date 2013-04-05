@@ -9,22 +9,23 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import de.wehner.mediamagpie.common.persistence.dao.Dao;
 import de.wehner.mediamagpie.common.persistence.entity.properties.Property;
 import de.wehner.mediamagpie.common.persistence.entity.properties.PropertyBackedConfiguration;
-import de.wehner.mediamagpie.common.util.CipherService;
-import de.wehner.mediamagpie.common.util.properties.PropertiesBacked;
-import de.wehner.mediamagpie.common.util.properties.PropertiesUtil;
-import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
+import de.wehner.mediamagpie.common.util.CipherServiceImpl;
+import de.wehner.mediamagpie.core.util.properties.PropertiesBacked;
+import de.wehner.mediamagpie.core.util.properties.PropertiesUtil;
+import de.wehner.mediamagpie.persistence.PersistenceService;
 
 
 @Repository
 public class ConfigurationDao extends Dao<Property> {
 
     public final static String PROPERTY_SETUP_COMPLETE = "datameer.setup.isComplete";
-    private CipherService _cipherService;
+    private CipherServiceImpl _cipherService;
 
     @Autowired
-    public ConfigurationDao(PersistenceService persistenceService, CipherService cipherService) {
+    public ConfigurationDao(PersistenceService persistenceService, CipherServiceImpl cipherService) {
         super(Property.class, persistenceService);
         _cipherService = cipherService;
     }

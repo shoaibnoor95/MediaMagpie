@@ -17,8 +17,8 @@ import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfigurat
 import de.wehner.mediamagpie.conductor.performingjob.JobExecutor;
 import de.wehner.mediamagpie.conductor.performingjob.JobFactory;
 import de.wehner.mediamagpie.conductor.performingjob.PerformingJob;
-import de.wehner.mediamagpie.conductor.persistence.TransactionHandlerMock;
 import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
+import de.wehner.mediamagpie.persistence.TransactionHandlerMock;
 
 
 public class UnitTestEnvironment extends ExternalResource {

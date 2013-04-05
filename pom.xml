@@ -66,10 +66,11 @@
 	<url>http://www.ralfwehner.org/TODO</url>
 	<modules>
 		<module>modules/mm-api</module>
-		<module>modules/mm-conductor</module>
-		<module>modules/mm-common</module>
+		<module>modules/mm-core</module>
+		<module>modules/mm-persistence</module>
 		<module>modules/mm-hadoop-core</module>
 		<module>modules/mm-aws</module>
+		<module>modules/mm-conductor</module>
 		<!--<module>modules/mm-filesystem</module> -->
 		<module>mm-distribution</module>
 	</modules>
@@ -100,6 +101,24 @@
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
+		</dependency>
+
+		<!-- Logging for slf4j see also: http://blog.frankel.ch/thoughts-on-java-logging-and-slf4j -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<!-- <scope>runtime</scope> -->
+			<!-- rwe: runtime needed for Slf4JLoggerTest, that needs the Log4j Logger directly -->
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 
 		<!-- Test -->
@@ -177,6 +196,16 @@
 			<!-- <dependency> <groupId>org.springframework</groupId> <artifactId>spring-context-support</artifactId> 
 				<version>${spring-framework.version}</version> <exclusions> <exclusion> <groupId>quartz</groupId> <artifactId>quartz</artifactId> 
 				</exclusion> </exclusions> </dependency> -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-core</artifactId>
+				<version>${spring-framework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-beans</artifactId>
+				<version>${spring-framework.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-orm</artifactId>

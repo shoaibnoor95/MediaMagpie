@@ -20,9 +20,9 @@ import org.junit.Test;
 import org.subethamail.wiser.WiserMessage;
 
 import de.wehner.mediamagpie.common.persistence.entity.properties.MailServerConfiguration;
-import de.wehner.mediamagpie.common.util.WiserClient;
-import de.wehner.mediamagpie.conductor.persistence.TransactionHandlerMock;
 import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
+import de.wehner.mediamagpie.core.util.WiserClient;
+import de.wehner.mediamagpie.persistence.TransactionHandlerMock;
 
 public class MailSenderFacadeTest {
 

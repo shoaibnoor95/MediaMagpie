@@ -12,24 +12,24 @@ import de.wehner.mediamagpie.common.persistence.entity.Registration;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.User.Role;
 import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
-import de.wehner.mediamagpie.common.util.CipherService;
-import de.wehner.mediamagpie.common.util.ExceptionUtil;
-import de.wehner.mediamagpie.common.util.properties.PropertiesUtil;
+import de.wehner.mediamagpie.common.util.CipherServiceImpl;
 import de.wehner.mediamagpie.conductor.StartJetty;
 import de.wehner.mediamagpie.conductor.exception.RegistrationException;
 import de.wehner.mediamagpie.conductor.persistence.dao.RegistrationDao;
 import de.wehner.mediamagpie.conductor.spring.deploy.impl.DynamicPropertiesConfigurer;
 import de.wehner.mediamagpie.conductor.webapp.controller.registration.RegistrationProcessController;
+import de.wehner.mediamagpie.core.util.ExceptionUtil;
+import de.wehner.mediamagpie.core.util.properties.PropertiesUtil;
 
 @Service
 public class RegistrationService {
 
-    private final CipherService _cipherService;
+    private final CipherServiceImpl _cipherService;
     private final RegistrationDao _registrationDao;
     private Properties _properties;
 
     @Autowired
-    public RegistrationService(CipherService cipherService, RegistrationDao registrationDao, DynamicPropertiesConfigurer dynamicPropertiesConfigurer)
+    public RegistrationService(CipherServiceImpl cipherService, RegistrationDao registrationDao, DynamicPropertiesConfigurer dynamicPropertiesConfigurer)
             throws IOException {
         super();
         _cipherService = cipherService;

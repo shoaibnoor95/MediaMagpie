@@ -24,7 +24,7 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 
 import de.wehner.mediamagpie.aws.s3.in.S3ObjectIterator;
 import de.wehner.mediamagpie.aws.test.util.S3TestEnvironment;
-import de.wehner.mediamagpie.common.test.util.TestEnvironment;
+import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
 
 public class S3ClientFacadeItTest {
 

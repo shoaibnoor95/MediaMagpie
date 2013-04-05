@@ -37,9 +37,14 @@
 			<artifactId>mm-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mm-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>mm-common</artifactId>
+			<artifactId>mm-persistence</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -249,10 +254,10 @@
 					the MANIFEST.FM which contains some version information (ManifestMetaData.java) -->
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<configuration>
-					<wtpversion>2.0</wtpversion>
+					<!-- <wtpversion>2.0</wtpversion>
 					<wtpmanifest>true</wtpmanifest>
 					<wtpapplicationxml>true</wtpapplicationxml>
-					<manifest>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifest>
+					<manifest>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifest>-->
 					<downloadSources>true</downloadSources>
 					<downloadJavadocs>true</downloadJavadocs>
 					<!-- <projectNameTemplate>[artifactId]-[version]</projectNameTemplate> -->

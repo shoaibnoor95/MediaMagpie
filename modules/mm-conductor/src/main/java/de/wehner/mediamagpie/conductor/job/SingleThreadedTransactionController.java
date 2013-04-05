@@ -3,7 +3,8 @@ package de.wehner.mediamagpie.conductor.job;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-import de.wehner.mediamagpie.conductor.persistence.TransactionHandler;
+import de.wehner.mediamagpie.core.concurrent.SingleThreadedController;
+import de.wehner.mediamagpie.persistence.TransactionHandler;
 
 
 public abstract class SingleThreadedTransactionController extends SingleThreadedController {

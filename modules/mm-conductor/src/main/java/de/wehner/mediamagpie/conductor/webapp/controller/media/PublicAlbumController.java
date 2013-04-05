@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import de.wehner.mediamagpie.common.persistence.dao.AlbumDao;
+import de.wehner.mediamagpie.common.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.common.persistence.entity.Album;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.Priority;
@@ -29,8 +31,6 @@ import de.wehner.mediamagpie.common.persistence.entity.Visibility;
 import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
 import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
 import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
-import de.wehner.mediamagpie.conductor.persistence.dao.AlbumDao;
-import de.wehner.mediamagpie.conductor.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.conductor.webapp.controller.AbstractConfigurationSupportController;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaDetailCommand;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaFeedCommand;

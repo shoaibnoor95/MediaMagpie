@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.PropertiesCredentials;
 
-import de.wehner.mediamagpie.common.util.SearchPathUtil;
+import de.wehner.mediamagpie.core.util.SearchPathUtil;
 
 public class S3TestEnvironment extends ExternalResource {
 

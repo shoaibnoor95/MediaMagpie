@@ -18,18 +18,18 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.ThumbImage;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.User.Role;
 import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
-import de.wehner.mediamagpie.common.test.util.TestEnvironment;
 import de.wehner.mediamagpie.common.util.FileSystemUtil;
-import de.wehner.mediamagpie.common.util.Pair;
-import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
 import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
-import de.wehner.mediamagpie.conductor.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.ThumbImageDao;
+import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
+import de.wehner.mediamagpie.core.util.Pair;
+import de.wehner.mediamagpie.persistence.PersistenceService;
 
 public class UploadServiceTest {
 

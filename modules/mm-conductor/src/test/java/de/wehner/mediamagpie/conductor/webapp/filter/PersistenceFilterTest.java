@@ -19,8 +19,8 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
 import de.wehner.mediamagpie.conductor.webapp.filter.PersistenceFilter;
+import de.wehner.mediamagpie.persistence.PersistenceService;
 
 
 public class PersistenceFilterTest {

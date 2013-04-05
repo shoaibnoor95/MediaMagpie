@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import de.wehner.mediamagpie.common.persistence.dao.UserDao;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.UserGroup;
-import de.wehner.mediamagpie.conductor.persistence.dao.UserDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.UserGroupDao;
 import de.wehner.mediamagpie.conductor.webapp.binder.EntityCollectionEditor;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.UserGroupCommand;

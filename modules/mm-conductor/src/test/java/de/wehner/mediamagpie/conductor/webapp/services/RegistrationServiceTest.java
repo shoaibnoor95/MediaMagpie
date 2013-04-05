@@ -16,7 +16,7 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
 import de.wehner.mediamagpie.common.persistence.entity.Registration;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
-import de.wehner.mediamagpie.common.util.CipherService;
+import de.wehner.mediamagpie.common.util.CipherServiceImpl;
 import de.wehner.mediamagpie.conductor.exception.RegistrationException;
 import de.wehner.mediamagpie.conductor.persistence.dao.RegistrationDao;
 import de.wehner.mediamagpie.conductor.spring.deploy.impl.DynamicPropertiesConfigurer;
@@ -25,7 +25,7 @@ public class RegistrationServiceTest {
 
     private final String CIPHERKEY = "myCipherKey";
     private RegistrationService _registrationService;
-    private CipherService _cipherService;
+    private CipherServiceImpl _cipherService;
     @Mock
     private RegistrationDao _registrationDao;
     @Mock
@@ -36,7 +36,7 @@ public class RegistrationServiceTest {
     @Before
     public void setUp() throws IOException {
         MockitoAnnotations.initMocks(this);
-        _cipherService = new CipherService(CIPHERKEY);
+        _cipherService = new CipherServiceImpl(CIPHERKEY);
         Properties allProperties = PropertiesLoaderUtils.loadAllProperties("properties/test_default.properties");
         when(_dynamicPropertiesConfigurer.getProperties()).thenReturn(allProperties);
         _registrationService = new RegistrationService(_cipherService, _registrationDao, _dynamicPropertiesConfigurer);

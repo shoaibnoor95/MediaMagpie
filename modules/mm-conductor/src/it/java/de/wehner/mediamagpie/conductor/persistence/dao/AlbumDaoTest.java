@@ -13,11 +13,11 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import de.wehner.mediamagpie.common.persistence.dao.AlbumDao;
 import de.wehner.mediamagpie.common.persistence.entity.Album;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.User;
-import de.wehner.mediamagpie.common.testsupport.DbTestEnvironment;
-import de.wehner.mediamagpie.conductor.persistence.dao.AlbumDao;
+import de.wehner.mediamagpie.common.persistence.testsupport.DbTestEnvironment;
 
 
 public class AlbumDaoTest {

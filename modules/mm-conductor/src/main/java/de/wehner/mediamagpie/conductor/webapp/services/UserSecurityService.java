@@ -11,10 +11,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import de.wehner.mediamagpie.common.core.util.Crypt;
+import de.wehner.mediamagpie.common.persistence.dao.UserDao;
 import de.wehner.mediamagpie.common.persistence.entity.User;
-import de.wehner.mediamagpie.conductor.persistence.TransactionHandler;
-import de.wehner.mediamagpie.conductor.persistence.dao.UserDao;
+import de.wehner.mediamagpie.core.util.Crypt;
+import de.wehner.mediamagpie.persistence.TransactionHandler;
 
 @Service
 public class UserSecurityService implements UserDetailsService {

@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import de.wehner.mediamagpie.common.persistence.dao.MediaTagDao;
 import de.wehner.mediamagpie.common.persistence.entity.MediaTag;
 import de.wehner.mediamagpie.common.persistence.entity.User;
-import de.wehner.mediamagpie.conductor.persistence.dao.MediaTagDao;
 import de.wehner.mediamagpie.conductor.webapp.controller.json.TagAutocompleteCommand;
 import de.wehner.mediamagpie.conductor.webapp.util.security.SecurityUtil;
 

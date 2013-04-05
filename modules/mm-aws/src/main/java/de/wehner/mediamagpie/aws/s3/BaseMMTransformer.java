@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
 
-import de.wehner.mediamagpie.common.util.ExceptionUtil;
+import de.wehner.mediamagpie.core.util.ExceptionUtil;
 
 public abstract class BaseMMTransformer {
 

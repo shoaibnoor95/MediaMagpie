@@ -21,14 +21,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import de.wehner.mediamagpie.common.persistence.dao.UserConfigurationDao;
+import de.wehner.mediamagpie.common.persistence.dao.UserDao;
 import de.wehner.mediamagpie.common.persistence.entity.Registration;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
 import de.wehner.mediamagpie.common.util.TimeProvider;
 import de.wehner.mediamagpie.conductor.exception.RegistrationException;
 import de.wehner.mediamagpie.conductor.persistence.dao.RegistrationDao;
-import de.wehner.mediamagpie.conductor.persistence.dao.UserConfigurationDao;
-import de.wehner.mediamagpie.conductor.persistence.dao.UserDao;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.PasswordResetCommand;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.RegistrationCommand;
 import de.wehner.mediamagpie.conductor.webapp.services.MailerService;

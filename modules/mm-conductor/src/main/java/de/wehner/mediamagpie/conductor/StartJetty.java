@@ -10,8 +10,8 @@ import org.mortbay.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.wehner.mediamagpie.common.util.Holder;
 import de.wehner.mediamagpie.conductor.spring.deploy.impl.DynamicPropertiesConfigurer;
+import de.wehner.mediamagpie.core.util.Holder;
 
 public class StartJetty {
 

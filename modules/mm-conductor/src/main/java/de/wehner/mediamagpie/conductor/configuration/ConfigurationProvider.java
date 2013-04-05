@@ -5,9 +5,9 @@ import org.springframework.stereotype.Service;
 
 import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
 import de.wehner.mediamagpie.common.persistence.entity.properties.RequiredSetupTasks;
-import de.wehner.mediamagpie.common.util.Holder;
 import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.MainconfigurationCommand;
+import de.wehner.mediamagpie.core.util.Holder;
 
 @Service
 public class ConfigurationProvider {

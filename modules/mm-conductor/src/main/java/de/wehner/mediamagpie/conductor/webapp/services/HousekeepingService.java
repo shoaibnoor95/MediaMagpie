@@ -13,11 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import de.wehner.mediamagpie.common.persistence.dao.JobExecutionDao;
 import de.wehner.mediamagpie.common.persistence.entity.JobExecution;
 import de.wehner.mediamagpie.common.persistence.entity.JobStatus;
-import de.wehner.mediamagpie.conductor.persistence.PersistenceService;
-import de.wehner.mediamagpie.conductor.persistence.TransactionHandler;
-import de.wehner.mediamagpie.conductor.persistence.dao.JobExecutionDao;
+import de.wehner.mediamagpie.persistence.PersistenceService;
+import de.wehner.mediamagpie.persistence.TransactionHandler;
 
 @Service
 public class HousekeepingService {

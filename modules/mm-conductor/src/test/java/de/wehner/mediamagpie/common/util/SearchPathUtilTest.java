@@ -10,7 +10,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
-import de.wehner.mediamagpie.common.util.SearchPathUtil;
+import de.wehner.mediamagpie.core.util.SearchPathUtil;
 
 public class SearchPathUtilTest {
     @Test

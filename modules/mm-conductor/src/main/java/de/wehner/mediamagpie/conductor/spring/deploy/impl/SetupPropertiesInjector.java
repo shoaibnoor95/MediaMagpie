@@ -16,21 +16,21 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
+import de.wehner.mediamagpie.common.persistence.dao.UserConfigurationDao;
+import de.wehner.mediamagpie.common.persistence.dao.UserDao;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
 import de.wehner.mediamagpie.common.persistence.entity.properties.PropertyBackedConfiguration;
 import de.wehner.mediamagpie.common.persistence.entity.properties.SystemConfiguration;
 import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
-import de.wehner.mediamagpie.common.util.CipherService;
-import de.wehner.mediamagpie.common.util.ClassLocator;
-import de.wehner.mediamagpie.common.util.properties.PropertiesBacked;
-import de.wehner.mediamagpie.common.util.properties.PropertiesUtil;
-import de.wehner.mediamagpie.conductor.persistence.TransactionHandler;
+import de.wehner.mediamagpie.common.util.CipherServiceImpl;
 import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
-import de.wehner.mediamagpie.conductor.persistence.dao.UserConfigurationDao;
-import de.wehner.mediamagpie.conductor.persistence.dao.UserDao;
 import de.wehner.mediamagpie.conductor.spring.deploy.DataInjector;
 import de.wehner.mediamagpie.conductor.webapp.services.SetupVerificationService;
+import de.wehner.mediamagpie.core.util.ClassLocator;
+import de.wehner.mediamagpie.core.util.properties.PropertiesBacked;
+import de.wehner.mediamagpie.core.util.properties.PropertiesUtil;
+import de.wehner.mediamagpie.persistence.TransactionHandler;
 
 @Component
 public class SetupPropertiesInjector implements DataInjector {
@@ -43,12 +43,12 @@ public class SetupPropertiesInjector implements DataInjector {
     private final ConfigurationDao _configurationDao;
     private final UserConfigurationDao _userConfigurationDao;
     private final Validator _validator;
-    private final CipherService _cipherService;
+    private final CipherServiceImpl _cipherService;
     private final SetupVerificationService _setupVerificationService;
 
     @Autowired
     public SetupPropertiesInjector(DynamicPropertiesConfigurer dynamicPropertiesConfigurer, UserDao userDao, ConfigurationDao configurationDao,
-            UserConfigurationDao userConfigurationDao, TransactionHandler transactionHandler, Validator validator, CipherService cipherService,
+            UserConfigurationDao userConfigurationDao, TransactionHandler transactionHandler, Validator validator, CipherServiceImpl cipherService,
             SetupVerificationService setupVerificationService) throws IOException {
         _dynamicPropertiesConfigurer = dynamicPropertiesConfigurer;
         _userDao = userDao;

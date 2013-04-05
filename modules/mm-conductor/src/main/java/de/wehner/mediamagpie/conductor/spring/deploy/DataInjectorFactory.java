@@ -7,7 +7,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import de.wehner.mediamagpie.common.util.ExceptionUtil;
+import de.wehner.mediamagpie.core.util.ExceptionUtil;
 
 
 @Service
