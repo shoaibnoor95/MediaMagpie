@@ -19,10 +19,12 @@ public class S3ConfigurationCommand extends S3Configuration {
     public S3ConfigurationCommand() {
     }
 
+    // TODO rwe: I think this would be a good job for dozer.
     public static S3ConfigurationCommand createCommand(S3Configuration s3Configuration) {
         S3ConfigurationCommand command = new S3ConfigurationCommand();
         command.accessKey = s3Configuration.getAccessKey();
         command.secretKey = s3Configuration.getSecretKey();
+        command.syncToS3 = s3Configuration.isSyncToS3();
         return command;
     }
 

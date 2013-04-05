@@ -17,6 +17,8 @@ public class S3Configuration implements UserPropertyBackedConfiguration {
     @Encrypted
     protected String secretKey;
 
+    protected boolean syncToS3;
+
     public S3Configuration() {
     }
 
@@ -34,6 +36,14 @@ public class S3Configuration implements UserPropertyBackedConfiguration {
 
     public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
+    }
+
+    public boolean isSyncToS3() {
+        return syncToS3;
+    }
+
+    public void setSyncToS3(boolean syncToS3) {
+        this.syncToS3 = syncToS3;
     }
 
     @Override

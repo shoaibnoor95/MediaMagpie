@@ -4,8 +4,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import de.wehner.mediamagpie.conductor.job.SingleThreadedController;
-
 public class SingleThreadedControllerTest {
 
     @Test

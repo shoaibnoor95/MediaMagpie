@@ -34,6 +34,7 @@
 	<import resource="data-access-context.xml" />
 	<import resource="security-context.xml" />
 	<import resource="dispatcher-context.xml" />
+    <import resource="classpath:/spring/aws-context.xml" />
 
 	<!-- deployment mode support for autowiring <bean id="deployModeAutowireConfigurer" class="datameer.dap.conductor.util.spring.deploy.DeployModeAutowireConfigurer" 
 		/> -->

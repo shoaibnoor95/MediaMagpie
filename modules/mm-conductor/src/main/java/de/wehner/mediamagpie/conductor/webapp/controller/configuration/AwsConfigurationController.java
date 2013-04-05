@@ -111,6 +111,7 @@ public class AwsConfigurationController extends AbstractConfigurationSupportCont
         if (!StringUtils.isEmpty(command.getSecretKey()) && !command.getSecretKey().equals(existingS3Configuration.getSecretKey())) {
             existingS3Configuration.setSecretKey(command.getSecretKey());
         }
+        existingS3Configuration.setSyncToS3(command.isSyncToS3());
         _userConfigurationDao.saveOrUpdateConfiguration(user, existingS3Configuration);
 
         return "redirect:" + getBaseRequestMappingUrl() + URL_S3CONFIG;

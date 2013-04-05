@@ -40,6 +40,16 @@
                             <dd class="help">e.g. 'kirpdotW6lY9zjoddtbjzcD0Oy30jkguw9DTjfOr'<br>Leave blank if you dont't want to change existing secret key.</dd>   
                         </dl>
 
+					    <dl>
+					        <dt>
+					            <label>Synchronize Media to S3:</label>
+					        </dt>
+					        <dd>
+					           <form:checkbox path="syncToS3" />
+                               <img src="/static/images/famfamfam_silk/help.png" title="When you set this option mediamagpie will synchronize all your medias to a bucket on your S3."/>
+                            </dd>
+					    </dl>
+
                         <dl class="buttons">
                             <dt>
                                 &nbsp;

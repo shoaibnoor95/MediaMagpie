@@ -33,6 +33,12 @@
 		</dt>
 		<dd>${conf.anonymizedSecretKey}</dd>
 	</dl>
+    <dl>
+        <dt>
+            <label>Synchronize Media to S3:</label>
+        </dt>
+        <dd><form:checkbox path="conf.syncToS3" disabled="true"/></dd>
+    </dl>
 	<dl>
 		<dt>
 			<label>&nbsp;</label>
