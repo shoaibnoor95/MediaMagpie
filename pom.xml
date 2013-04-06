@@ -550,7 +550,7 @@
         </repository>
         <!-- needed to get the latest version of HSQLDB (>= 3.0) -->
         <repository>
-            <id>http://www.hsqldb.org/repos</id>
+            <id>hsqldb.org.repos</id>
             <name>HSQL-Project Repository</name>
             <url>http://www.hsqldb.org/repos</url>
         </repository>
