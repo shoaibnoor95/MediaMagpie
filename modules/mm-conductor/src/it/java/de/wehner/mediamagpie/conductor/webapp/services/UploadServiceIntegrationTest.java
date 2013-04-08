@@ -107,9 +107,9 @@ public class UploadServiceIntegrationTest {
         }
     }
 
-    @Test
-    public void test_createThumbImage() {
-        // TODO rwe:
-
-    }
+//    @Test
+//    public void test_createThumbImage() {
+//        // TODO rwe:
+//
+//    }
 }

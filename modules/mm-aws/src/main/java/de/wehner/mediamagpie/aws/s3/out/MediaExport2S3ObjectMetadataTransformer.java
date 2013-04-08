@@ -1,7 +1,9 @@
 package de.wehner.mediamagpie.aws.s3.out;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import com.amazonaws.services.s3.internal.Mimetypes;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 
 import de.wehner.mediamagpie.api.MediaExport;
@@ -25,8 +27,8 @@ public class MediaExport2S3ObjectMetadataTransformer extends BaseMMTransformer i
     public ObjectMetadata transform(MediaExport mediaExport) {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         // mime type
-        if (!StringUtils.isEmpty(mediaExport.getMimeType())) {
-            objectMetadata.setContentType(mediaExport.getMimeType());
+        if (!StringUtils.isEmpty(mediaExport.getOriginalFileName())) {
+            objectMetadata.setContentType(Mimetypes.getInstance().getMimetype(FilenameUtils.getExtension(mediaExport.getOriginalFileName())));
         }
         // id
         objectMetadata.addUserMetadata(S3MediaExportRepository.META_MEDIA_ID, mediaExport.getMediaId());
@@ -45,5 +47,4 @@ public class MediaExport2S3ObjectMetadataTransformer extends BaseMMTransformer i
 
         return objectMetadata;
     }
-
 }

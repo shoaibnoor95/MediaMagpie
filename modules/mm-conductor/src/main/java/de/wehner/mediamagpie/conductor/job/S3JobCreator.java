@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 
+import de.wehner.mediamagpie.common.persistence.MediaExportFactory;
 import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.common.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.common.persistence.entity.JobExecution;
@@ -16,7 +17,6 @@ import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.S3JobExecution;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.properties.S3Configuration;
-import de.wehner.mediamagpie.conductor.media.MediaExportFactory;
 import de.wehner.mediamagpie.conductor.performingjob.AbstractJob;
 import de.wehner.mediamagpie.conductor.performingjob.S3PutJob;
 import de.wehner.mediamagpie.persistence.PersistenceService;

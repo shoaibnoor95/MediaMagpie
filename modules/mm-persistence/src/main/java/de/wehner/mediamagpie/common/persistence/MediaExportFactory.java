@@ -1,4 +1,4 @@
-package de.wehner.mediamagpie.conductor.media;
+package de.wehner.mediamagpie.common.persistence;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,7 +8,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.amazonaws.services.s3.internal.Mimetypes;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
@@ -28,8 +27,8 @@ public class MediaExportFactory {
         // file (data)
         File mediaResource = media.getFileFromUri();
         mediaExport.setInputStream(new FileInputStream(mediaResource));
+        // length
         mediaExport.setLength(mediaResource.length());
-        mediaExport.setMimeType(Mimetypes.getInstance().getMimetype(mediaResource));
         // file (original name of file)
         mediaExport.setOriginalFileName(mediaResource.getName());
         // file (hash value)

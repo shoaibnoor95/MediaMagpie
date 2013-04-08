@@ -16,6 +16,11 @@
 	<dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>mm-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>mm-core</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -106,6 +111,13 @@
 		</dependency>
 
 		<!-- Test -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mm-core</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+            <type>test-jar</type>
+        </dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

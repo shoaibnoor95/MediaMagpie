@@ -54,10 +54,6 @@ public class S3ObjectTuple2MediaExportTransformer implements MMTransformer<S3Obj
         if (!StringUtils.isEmpty(userMetadata.get(S3MediaExportRepository.META_MEDIA_ID))) {
             mediaExport.setMediaId(userMetadata.get(S3MediaExportRepository.META_MEDIA_ID));
         }
-        // mime type
-        if (!StringUtils.isEmpty(objectMetadata.getContentType())) {
-            mediaExport.setMimeType(objectMetadata.getContentType());
-        }
         // creation date
         if (!StringUtils.isEmpty(userMetadata.get(S3MediaExportRepository.META_CREATION_DATE))) {
             long time = Long.parseLong(userMetadata.get(S3MediaExportRepository.META_CREATION_DATE));

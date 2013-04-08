@@ -2,6 +2,7 @@ package de.wehner.mediamagpie.common.persistence.entity.properties;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 
 import de.wehner.mediamagpie.core.util.properties.Encrypted;
@@ -44,6 +45,10 @@ public class S3Configuration implements UserPropertyBackedConfiguration {
 
     public void setSyncToS3(boolean syncToS3) {
         this.syncToS3 = syncToS3;
+    }
+
+    public boolean isConfigurationComplete() {
+        return (!StringUtils.isEmpty(accessKey) && !StringUtils.isEmpty(secretKey));
     }
 
     @Override

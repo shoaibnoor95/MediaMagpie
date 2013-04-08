@@ -50,9 +50,8 @@ public class S3ObjectTupleIterator implements Iterator<S3ObjectTuple> {
             if (_s3ObjectIterator.hasNext()) {
                 S3ObjectSummary s3ObjectSummary = _s3ObjectIterator.next();
 
-                // TODO rwe: the bucketName is not relevant. Remove this..
-                //String bucketName = s3ObjectSummary.getBucketName();
                 String key = s3ObjectSummary.getKey();
+                //String bucketName = s3ObjectSummary.getBucketName();
                 //LOG.debug("Got S3ObjectSummary with name/key '" + bucketName + "/" + key + "'");
 
                 if (key.endsWith(S3MediaExportRepository.METADATA_FILE_EXTENSION)) {

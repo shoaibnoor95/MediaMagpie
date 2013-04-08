@@ -1,4 +1,4 @@
-package de.wehner.mediamagpie.conductor.media;
+package de.wehner.mediamagpie.common.persistence;
 
 import static org.fest.assertions.Assertions.*;
 
@@ -25,12 +25,12 @@ public class MediaExportFactoryTest {
 
     private static final Date CREATION_DATE = new Date(123456);
 
-    private static final File SRC_TEST_PNG = new File("src/test/resources/images/image1.png");
+    private static final File SRC_TEST_PNG = new File("../mm-core/src/test/resources/images/image1.png");
 
     private final TestEnvironment _testEnvironment = new TestEnvironment(getClass());
 
     private Media _media;
-    
+
     private MediaExportFactory _factory = new MediaExportFactory();
 
     @Before
@@ -76,14 +76,6 @@ public class MediaExportFactoryTest {
         assertThat(mediaExport.getDescription()).isEqualTo(_media.getDescription());
         assertThat(mediaExport.getCreationDate()).isEqualTo(CREATION_DATE);
         assertThat(mediaExport.getMediaId()).isEqualTo(_media.getId() + "");
-    }
-
-    @Test
-    public void testCreate_VerifyMimeType() throws IOException {
-
-        MediaExport mediaExport = _factory.create(_media);
-
-        assertThat(mediaExport.getMimeType()).isEqualTo("image/jpeg");
     }
 
     @Test

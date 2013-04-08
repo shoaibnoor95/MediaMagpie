@@ -42,7 +42,6 @@ public class S3ObjectSummary2MediaExportTransformerTest {
     private static final String MEDIA_NAME = "my media name with äöü";
     private static final String MEDIA_DESC = "This is a long description text, containing some special html characters\nlike <li/> or <b/>. Addionally, there are some chars like äöüß€ etc.";
     private static final String MEDIA_ORIG_FILE_NAME = "original file name.png";
-    private static final String MIME_TYPE = "the mime type";
     private static final Date CREATION_DATE = new Date(54321);
     private static final List<String> MEDIA_TAGS = Arrays.asList("tag 1", "tag 3", "tag 2");
 
@@ -69,7 +68,6 @@ public class S3ObjectSummary2MediaExportTransformerTest {
         _contentS3DataObject = random.getBytes();
         s3DataObject.setObjectContent(new ByteArrayInputStream(_contentS3DataObject));
         map.put(S3MediaExportRepository.META_HASH_OF_DATA, DigestUtil.computeSha1AsHexString(new ByteArrayInputStream(_contentS3DataObject)));
-        objectMetadata_Data.setContentType(MIME_TYPE);
         map.put(S3MediaExportRepository.META_MEDIA_TYPE, MediaType.PHOTO.toString());
 
         // link test object to S3Client
@@ -113,7 +111,6 @@ public class S3ObjectSummary2MediaExportTransformerTest {
         assertThat(IOUtils.toByteArray(mediaExport.getInputStream())).isEqualTo(_contentS3DataObject);
         assertThat(mediaExport.getLength()).isEqualTo(_contentS3DataObject.length);
         assertThat(mediaExport.getMediaId()).isEqualTo(MEDIA_ID);
-        assertThat(mediaExport.getMimeType()).isEqualTo(MIME_TYPE);
         assertThat(mediaExport.getType()).isEqualTo(MediaType.PHOTO);
 
         assertThat(mediaExport.getOriginalFileName()).isNull();
@@ -144,7 +141,6 @@ public class S3ObjectSummary2MediaExportTransformerTest {
         assertThat(IOUtils.toByteArray(mediaExport.getInputStream())).isEqualTo(_contentS3DataObject);
         assertThat(mediaExport.getLength()).isEqualTo(_contentS3DataObject.length);
         assertThat(mediaExport.getMediaId()).isEqualTo(MEDIA_ID);
-        assertThat(mediaExport.getMimeType()).isEqualTo(MIME_TYPE);
         assertThat(mediaExport.getOriginalFileName()).isEqualTo(MEDIA_ORIG_FILE_NAME);
         assertThat(mediaExport.getTags()).isEqualTo(MEDIA_TAGS);
         assertThat(mediaExport.getType()).isEqualTo(MediaType.PHOTO);

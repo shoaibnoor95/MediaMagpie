@@ -24,8 +24,6 @@ public class MediaExport {
 
     private Long _length;
 
-    private String mimeType;
-
     /**
      * The sha1 hash value of media encoded in base 64
      */
@@ -79,14 +77,6 @@ public class MediaExport {
 
     public void setLength(Long length) {
         _length = length;
-    }
-
-    public String getMimeType() {
-        return mimeType;
-    }
-
-    public void setMimeType(String mimeType) {
-        this.mimeType = mimeType;
     }
 
     public String getHashValue() {

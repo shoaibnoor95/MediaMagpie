@@ -27,10 +27,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
+import de.wehner.mediamagpie.aws.s3.service.S3SyncService;
 import de.wehner.mediamagpie.common.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.Priority;
 import de.wehner.mediamagpie.common.persistence.entity.User;
+import de.wehner.mediamagpie.common.persistence.entity.properties.S3Configuration;
 import de.wehner.mediamagpie.conductor.configuration.ConfigurationHelper;
 import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
 import de.wehner.mediamagpie.conductor.webapp.controller.AbstractConfigurationSupportController;
@@ -58,10 +60,14 @@ public class UploadController extends AbstractConfigurationSupportController {
 
     private UploadService _uploadControllerService;
 
+    private S3SyncService _s3SyncService = null;
+
     @Autowired
-    public UploadController(ConfigurationProvider configurationProvider, UserConfigurationDao userConfigurationDao, UploadService uploadControllerService) {
+    public UploadController(ConfigurationProvider configurationProvider, UserConfigurationDao userConfigurationDao, UploadService uploadControllerService,
+            S3SyncService s3SyncService) {
         super(configurationProvider, userConfigurationDao, null);
         _uploadControllerService = uploadControllerService;
+        _s3SyncService = s3SyncService;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = URL_UPLOAD)
@@ -125,7 +131,12 @@ public class UploadController extends AbstractConfigurationSupportController {
 
         for (Integer thumbSize : allThumbSizes) {
             _uploadControllerService.createThumbImage(newMedia, "" + thumbSize, Priority.LOW, 0);
+        }
 
+        S3Configuration userS3Configuration = getCurrentUserS3Configuration();
+        if (_s3SyncService != null && userS3Configuration.isConfigurationComplete() && userS3Configuration.isSyncToS3()) {
+            // sync media to s3 bucket
+            _s3SyncService.pushToS3(newMedia);
         }
     }
 
