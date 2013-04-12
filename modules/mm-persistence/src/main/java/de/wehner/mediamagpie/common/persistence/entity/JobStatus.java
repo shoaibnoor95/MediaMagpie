@@ -6,25 +6,25 @@ import java.util.List;
 
 public enum JobStatus {
 
-    /** Job has been queued for processing. */
+    /** Job has been queued for processing. (0) */
     QUEUED(false, false, false, "Queued"),
 
-    /** Job has been requested to be restarted. */
+    /** Job has been requested to be restarted. (1) */
     RETRY(false, false, false, "Retry"),
 
-    /** Job has been sent to a processing node, but processing hasn't started, yet. */
+    /** Job has been sent to a processing node, but processing hasn't started, yet. (2) */
     SENT_TO_PROCESSING_NODE(false, false, false, "Sent to Processing Node"),
 
-    /** Job is currently running. */
+    /** Job is currently running. (3) */
     RUNNING(false, false, false, "Running"),
 
-    /** Job was aborted. */
+    /** Job was aborted. (4) */
     ABORTED(true, false, true, "Aborted"),
 
-    /** Job completed successfully. */
+    /** Job completed successfully. (5) */
     COMPLETED(true, true, false, "Completed"),
 
-    /** Job terminated with an error. */
+    /** Job terminated with an error. (6) */
     TERMINATED_WITH_ERROR(true, false, true, "Error"),
 
     /** Job completed with warning(s). */

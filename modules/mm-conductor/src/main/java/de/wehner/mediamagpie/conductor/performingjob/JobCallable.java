@@ -6,7 +6,8 @@ import java.util.concurrent.Callable;
 import de.wehner.mediamagpie.common.persistence.entity.JobExecution;
 
 /**
- * Callable for the execution of an {@link JobExecution}.
+ * Callable for the execution of an {@link JobExecution}. The <code>call</code> will be called from a FutureTask and does not run within a
+ * transaction or <code>TransactionHandler</code>.
  */
 public interface JobCallable extends Callable<URI> {
 

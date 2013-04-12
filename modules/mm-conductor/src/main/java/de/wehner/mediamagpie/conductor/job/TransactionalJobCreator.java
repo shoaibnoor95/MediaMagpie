@@ -10,11 +10,13 @@ import de.wehner.mediamagpie.conductor.performingjob.PerformingJob;
 import de.wehner.mediamagpie.persistence.PersistenceService;
 import de.wehner.mediamagpie.persistence.TransactionHandler;
 
-
 public abstract class TransactionalJobCreator<T extends PerformingJob> implements JobCreator {
 
-    private final TransactionHandler _transactionHandler;
-    private PersistenceService _persistenceService;
+    /**
+     * The intention is to use the transactionHandler only in create() method.
+     */
+    protected final TransactionHandler _transactionHandler;
+    protected PersistenceService _persistenceService;
 
     @Autowired
     public TransactionalJobCreator(TransactionHandler transactionHandler, PersistenceService persistenceService) {
@@ -27,10 +29,10 @@ public abstract class TransactionalJobCreator<T extends PerformingJob> implement
         return _transactionHandler.executeInTransaction(new Callable<T>() {
             @Override
             public T call() throws Exception {
-                return createInTransaction(/*configuration,*/ _persistenceService.reload(execution));
+                return createInTransaction(/* configuration, */_persistenceService.reload(execution));
             }
         });
     }
 
-    protected abstract T createInTransaction(/*DapJobConfiguration configuration,*/ JobExecution execution) throws Exception;
+    protected abstract T createInTransaction(/* DapJobConfiguration configuration, */JobExecution execution) throws Exception;
 }

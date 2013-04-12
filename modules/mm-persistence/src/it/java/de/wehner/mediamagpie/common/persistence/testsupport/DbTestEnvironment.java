@@ -30,15 +30,6 @@ public class DbTestEnvironment extends ExternalResource {
     public DbTestEnvironment() {
     }
 
-    /**
-     * @param persistenceUnit
-     *            The persistence unit used to setup the db-connection. (<code>mysql-it, hsql-memory</code> etc.)
-     */
-    public DbTestEnvironment(String persistenceUnit) {
-        // TODO rwe: no more used any more
-        // System.setProperty("db.mode", persistenceUnit);
-    }
-
     @Override
     protected void before() throws Throwable {
         _entityManagerFactory = PersistenceTestUtil.createEntityManagerFactory();

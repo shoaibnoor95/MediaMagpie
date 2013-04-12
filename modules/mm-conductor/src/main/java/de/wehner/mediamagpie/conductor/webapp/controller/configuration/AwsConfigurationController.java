@@ -23,6 +23,7 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 
 import de.wehner.mediamagpie.aws.s3.S3ClientFacade;
+import de.wehner.mediamagpie.aws.s3.service.S3SyncService;
 import de.wehner.mediamagpie.common.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.common.persistence.dao.UserDao;
 import de.wehner.mediamagpie.common.persistence.entity.User;
@@ -47,9 +48,12 @@ public class AwsConfigurationController extends AbstractConfigurationSupportCont
 
     public static final String URL_TEST_SETTINGS = "/test";
 
+    private final S3SyncService _s3SyncService;
+
     @Autowired
-    public AwsConfigurationController(UserConfigurationDao userConfigurationDao, UserDao userDao) {
+    public AwsConfigurationController(UserConfigurationDao userConfigurationDao, UserDao userDao, S3SyncService s3SyncService) {
         super(null, userConfigurationDao, userDao);
+        _s3SyncService = s3SyncService;
     }
 
     @InitBinder
@@ -110,6 +114,11 @@ public class AwsConfigurationController extends AbstractConfigurationSupportCont
         existingS3Configuration.setAccessKey(command.getAccessKey());
         if (!StringUtils.isEmpty(command.getSecretKey()) && !command.getSecretKey().equals(existingS3Configuration.getSecretKey())) {
             existingS3Configuration.setSecretKey(command.getSecretKey());
+        }
+
+        // add a s3 sync job if there is a transition from non-sync to sync
+        if (!existingS3Configuration.isSyncToS3() && command.isSyncToS3()) {
+            _s3SyncService.syncS3Bucket(user);
         }
         existingS3Configuration.setSyncToS3(command.isSyncToS3());
         _userConfigurationDao.saveOrUpdateConfiguration(user, existingS3Configuration);

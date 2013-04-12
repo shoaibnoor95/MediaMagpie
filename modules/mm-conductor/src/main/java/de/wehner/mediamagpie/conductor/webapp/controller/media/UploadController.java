@@ -109,8 +109,8 @@ public class UploadController extends AbstractConfigurationSupportController {
             LOG.info("Try dump upload stream '" + uploadFileInfo.getFirst() + "' into file '" + uploadFileInfo.getSecond().getPath() + "'");
             Media newMedia = _uploadControllerService.handleUploadStream(currentUser, uploadFileInfo.getSecond(), multipartFile.getInputStream(), i++);
 
-            // create job executions for image resize jobs to create the thumbs for normal thumbs and detail view
-            createJobsForOptionalThumbImages(newMedia);
+            // create job executions for image resize or s3 uploading jobs etc.
+            createJobsForFreshUploadedMedias(newMedia);
 
             // create a thumb image for the upload view
             String thumbUrl = contextPath
@@ -125,7 +125,7 @@ public class UploadController extends AbstractConfigurationSupportController {
         return jQueryUploadCommands;
     }
 
-    private void createJobsForOptionalThumbImages(Media newMedia) {
+    private void createJobsForFreshUploadedMedias(Media newMedia) {
         ConfigurationHelper configurationHelper = new ConfigurationHelper(getMainConfiguration(), getCurrentUserConfiguration());
         List<Integer> allThumbSizes = configurationHelper.getAllThumbSizes();
 
@@ -134,7 +134,7 @@ public class UploadController extends AbstractConfigurationSupportController {
         }
 
         S3Configuration userS3Configuration = getCurrentUserS3Configuration();
-        if (_s3SyncService != null && userS3Configuration.isConfigurationComplete() && userS3Configuration.isSyncToS3()) {
+        if (_s3SyncService != null && userS3Configuration.hasToSyncToS3()) {
             // sync media to s3 bucket
             _s3SyncService.pushToS3(newMedia);
         }

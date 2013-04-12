@@ -9,4 +9,8 @@ DONE
 ====
 - Add an extra file near to the media resouce which contails ALL meta information, so this can be updated when user wants to reexport his media
 
+Ideas
+=====
+
+
  

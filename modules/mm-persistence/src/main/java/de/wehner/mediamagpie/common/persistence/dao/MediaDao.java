@@ -120,6 +120,13 @@ public class MediaDao extends CreationDateBaseDao<Media> {
     }
 
     @SuppressWarnings("unchecked")
+    public List<Media> getAllOfUser(User owner, LifecyleStatus lifecyleStatus) {
+        Criteria criteria = createCriteriaForSearchCommand(owner, null, lifecyleStatus);
+        addSortOrderCriterias(UiMediaSortOrder.ID, true, criteria);
+        return criteria.list();
+    }
+
+    @SuppressWarnings("unchecked")
     public List<Media> getAllBySearchCriterias(User owner, int start, int max, boolean ascending, SearchCriteriaCommand searchCriteria,
             LifecyleStatus lifecycleStatus) {
         if (StringUtils.isEmpty(searchCriteria.getBuzzword())) {
@@ -186,8 +193,7 @@ public class MediaDao extends CreationDateBaseDao<Media> {
         Criteria criteria = createCriteria();
         criteria.add(Restrictions.eq("_owner", owner));
         if (searchCriteria != null) {
-            criteria.add(Restrictions.between("_creationDate", searchCriteria.getSearchBeginAsDate(),
-                    searchCriteria.getSearchEndAsDate()));
+            criteria.add(Restrictions.between("_creationDate", searchCriteria.getSearchBeginAsDate(), searchCriteria.getSearchEndAsDate()));
         }
         if (!ArrayUtil.isEmpty(lifecyleStatus)) {
             criteria.add(Restrictions.in("_lifeCycleStatus", lifecyleStatus));

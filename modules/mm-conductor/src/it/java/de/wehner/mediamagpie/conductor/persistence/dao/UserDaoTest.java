@@ -28,6 +28,18 @@ public class UserDaoTest extends AbstractDaoTest<UserDao> {
     }
 
     @Test
+    public void testGetById() {
+        User user = new User("rwe", "r.wehner@mailing.com", Role.USER);
+        getDao().makePersistent(user);
+        _persistenceService.flipTransaction();
+
+        User userFromDb = getDao().getById(user.getId());
+
+        assertThat(userFromDb.getName()).isEqualTo(user.getName());
+        assertThat(userFromDb.getEmail()).isEqualTo(user.getEmail());
+    }
+
+    @Test
     public void testGetByName() {
         User user = new User("", "", Role.USER);
         String name = "user";

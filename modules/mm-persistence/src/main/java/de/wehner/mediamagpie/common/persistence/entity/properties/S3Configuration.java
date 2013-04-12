@@ -51,6 +51,10 @@ public class S3Configuration implements UserPropertyBackedConfiguration {
         return (!StringUtils.isEmpty(accessKey) && !StringUtils.isEmpty(secretKey));
     }
 
+    public boolean hasToSyncToS3() {
+        return (isConfigurationComplete() && isSyncToS3());
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;

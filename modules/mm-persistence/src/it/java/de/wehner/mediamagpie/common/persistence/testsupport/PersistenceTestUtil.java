@@ -8,6 +8,7 @@ import javax.persistence.Persistence;
 import de.wehner.mediamagpie.common.persistence.dao.Dao;
 import de.wehner.mediamagpie.common.persistence.entity.Album;
 import de.wehner.mediamagpie.common.persistence.entity.Base;
+import de.wehner.mediamagpie.common.persistence.entity.CloudSyncJobExecution;
 import de.wehner.mediamagpie.common.persistence.entity.ImageResizeJobExecution;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.MediaDeleteJobExecution;
@@ -50,6 +51,7 @@ public class PersistenceTestUtil {
 
     public static void deleteAll(PersistenceService persistenceService) {
         PersistenceTestUtil.deleteAllEntities(persistenceService, Property.class);
+        PersistenceTestUtil.deleteAllEntities(persistenceService, CloudSyncJobExecution.class);
         PersistenceTestUtil.deleteAllEntities(persistenceService, ImageResizeJobExecution.class);
         PersistenceTestUtil.deleteAllEntities(persistenceService, MediaDeleteJobExecution.class);
         PersistenceTestUtil.deleteAllEntities(persistenceService, ThumbImage.class);

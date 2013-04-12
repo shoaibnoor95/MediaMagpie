@@ -1,27 +1,18 @@
 package de.wehner.mediamagpie.aws.s3.service;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import de.wehner.mediamagpie.common.persistence.MediaExportFactory;
-import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
+import de.wehner.mediamagpie.common.persistence.dao.CloudSyncJobExecutionDao;
 import de.wehner.mediamagpie.common.persistence.dao.S3JobExecutionDao;
-import de.wehner.mediamagpie.common.persistence.dao.UserConfigurationDao;
-import de.wehner.mediamagpie.common.persistence.dao.UserDao;
+import de.wehner.mediamagpie.common.persistence.entity.CloudSyncJobExecution;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.S3JobExecution;
+import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.core.concurrent.SingleThreadedController;
 import de.wehner.mediamagpie.persistence.TransactionHandler;
 
@@ -30,34 +21,23 @@ public class S3SyncService extends SingleThreadedController {
 
     private static final Logger LOG = LoggerFactory.getLogger(S3SyncService.class);
 
-    private final MediaExportFactory _mediaExportFactory = new MediaExportFactory();
-
     private final S3JobExecutionDao _s3JobExecutionDao;
 
-    private static final Set<String> _validMediaExtensions = new HashSet<String>(Arrays.asList(".jpg", ".png"));
-    public static final int MAX_DATAS_PER_REQUEST = 20;
+    private final CloudSyncJobExecutionDao _cloudSyncJobExecutionDao;
 
     private final TransactionHandler _transactionHandler;
-    private final UserConfigurationDao _configurationDao;
-    private final MediaDao _mediaDao;
-    private final UserDao _userDao;
-    private final Map<File, CountDownLatch> _processingPathes = new ConcurrentHashMap<File, CountDownLatch>();
-    private static ObjectMapper _mapper = new ObjectMapper();
 
     @Autowired
-    public S3SyncService(TransactionHandler transactionHandler, UserDao userDao, MediaDao mediaDao, UserConfigurationDao userConfigurationDao,
-            S3JobExecutionDao s3JobExecutionDao) {
+    public S3SyncService(TransactionHandler transactionHandler, S3JobExecutionDao s3JobExecutionDao, CloudSyncJobExecutionDao cloudSyncJobExecutionDao) {
         super(TimeUnit.MINUTES, 5);
-        _userDao = userDao;
-        _mediaDao = mediaDao;
         _transactionHandler = transactionHandler;
-        _configurationDao = userConfigurationDao;
         _s3JobExecutionDao = s3JobExecutionDao;
+        _cloudSyncJobExecutionDao = cloudSyncJobExecutionDao;
     }
 
     @Override
     protected boolean execute() {
-        // TODO Auto-generated method stub
+        // TODO rwe: currently not used as a timer based service
         return false;
     }
 
@@ -65,6 +45,31 @@ public class S3SyncService extends SingleThreadedController {
         S3JobExecution s3JobExecution = new S3JobExecution(media, S3JobExecution.Direction.PUT);
         _s3JobExecutionDao.makePersistent(s3JobExecution);
         LOG.info("Upload to S3 job for media '" + media.getId() + "' added with priority '" + s3JobExecution.getPriority() + "'.");
+    }
+
+    /**
+     * Should be called when the user activates the S3 synchronization in its user settings.
+     * <p>
+     * Read all from S3 and sync against database.
+     * </p>
+     * 
+     * @param user
+     *            The user who wants to sync
+     * @return <code>true</code> if a new sync job is queued, otherweise <code>false</code> if a sync job for requested user is already
+     *         present.
+     */
+    public boolean syncS3Bucket(User user) {
+
+        if (_cloudSyncJobExecutionDao.getJobIfPresent(user) != null) {
+            LOG.info("A sync job for requested user is currently running.");
+            return false;
+        }
+
+        // add sync job for user
+        CloudSyncJobExecution syncJobExecution = new CloudSyncJobExecution(user, CloudSyncJobExecution.CloudType.S3);
+        _cloudSyncJobExecutionDao.makePersistent(syncJobExecution);
+        LOG.info("Added new S3 sync job for user '" + user.getName() + "' with priority '" + syncJobExecution.getPriority() + "'.");
+        return true;
     }
 
 }

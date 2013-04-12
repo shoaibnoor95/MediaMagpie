@@ -9,5 +9,16 @@ package de.wehner.mediamagpie.common.persistence.entity;
  * 
  */
 public enum LifecyleStatus {
-    Living, MovedToTrashCan, MarkedForErasure
+    /**
+     * This is the "normal" status were a media is used
+     */
+    Living,
+    /**
+     * This is the status, when a media should be moved into trash can
+     */
+    MovedToTrashCan,
+    /**
+     * This is the status when a media should be deleted
+     */
+    MarkedForErasure
 }

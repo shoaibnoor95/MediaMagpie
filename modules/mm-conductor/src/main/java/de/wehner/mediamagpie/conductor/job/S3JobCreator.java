@@ -2,7 +2,6 @@ package de.wehner.mediamagpie.conductor.job;
 
 import java.io.FileNotFoundException;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -42,7 +41,8 @@ public class S3JobCreator extends TransactionalJobCreator<AbstractJob> {
         Media media = s3JobExecution.getMedia();
         User user = media.getOwner();
         S3Configuration existingS3Configuration = _userConfigurationDao.getConfiguration(user, S3Configuration.class);
-        if (StringUtils.isEmpty(existingS3Configuration.getAccessKey()) || StringUtils.isEmpty(existingS3Configuration.getSecretKey())) {
+        if (!existingS3Configuration.hasToSyncToS3()) {
+            // does the configuration has changed during the time this job was queued?
             throw new RuntimeException("The AWS access key or secret key is empty. Can not export to S3.");
         }
         AWSCredentials credentials = new BasicAWSCredentials(existingS3Configuration.getAccessKey(), existingS3Configuration.getSecretKey());

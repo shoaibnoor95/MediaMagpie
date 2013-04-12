@@ -1,22 +1,20 @@
 package de.wehner.mediamagpie.common.persistence.entity;
 
-import java.util.concurrent.TimeUnit;
-
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @javax.persistence.Entity
-public class S3JobExecution extends JobExecution {
+public class S3JobExecution extends AbstractCloudJobExecution {
 
     public static enum Direction {
         /**
-         * put to S3
+         * put a media to S3
          */
         PUT,
         /**
-         * Load from S3
+         * Load a specified media from S3 (but currently not used)
          */
         GET
     }
@@ -48,26 +46,6 @@ public class S3JobExecution extends JobExecution {
         setMedia(media);
         _direction = direction;
         setPriority(Priority.LOW);
-    }
-
-    @Override
-    public Long getNextRetryTime(int retryCount) {
-        switch (retryCount) {
-        case 0:
-            return TimeUnit.SECONDS.toMillis(1);
-        case 1:
-            return TimeUnit.SECONDS.toMillis(10);
-        case 2:
-            return TimeUnit.MINUTES.toMillis(1);
-        case 3:
-            return TimeUnit.MINUTES.toMillis(15);
-        case 4:
-            return TimeUnit.HOURS.toMillis(1);
-        case 5:
-            return TimeUnit.DAYS.toMillis(1);
-        default:
-            return null;
-        }
     }
 
     @Override
