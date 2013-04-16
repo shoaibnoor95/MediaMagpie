@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import de.wehner.mediamagpie.common.persistence.dao.AlbumDao;
 import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
-import de.wehner.mediamagpie.common.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.common.persistence.entity.Album;
 import de.wehner.mediamagpie.common.persistence.entity.LifecyleStatus;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
@@ -46,8 +45,8 @@ import de.wehner.mediamagpie.conductor.webapp.util.WebAppUtils;
 import de.wehner.mediamagpie.conductor.webapp.util.security.SecurityUtil;
 import de.wehner.mediamagpie.conductor.webapp.validator.SearchCriteriaCommandValidator;
 import de.wehner.mediamagpie.persistence.dto.SearchCriteriaCommand;
-import de.wehner.mediamagpie.persistence.dto.UiMediaSortOrder;
 import de.wehner.mediamagpie.persistence.dto.SearchCriteriaCommand.Action;
+import de.wehner.mediamagpie.persistence.dto.UiMediaSortOrder;
 
 @Controller
 @RequestMapping("/media")
@@ -74,9 +73,8 @@ public class SearchController extends AbstractConfigurationSupportController {
     private final ImageService _imageSerivce;
 
     @Autowired
-    public SearchController(MediaDao mediaDao, AlbumDao albumDao, ImageService imageService, ConfigurationProvider configurationProvider,
-            UserConfigurationDao userConfigurationDao) {
-        super(configurationProvider, userConfigurationDao, null);
+    public SearchController(MediaDao mediaDao, AlbumDao albumDao, ImageService imageService, ConfigurationProvider configurationProvider) {
+        super(configurationProvider, null);
         _mediaDao = mediaDao;
         _albumDao = albumDao;
         _imageSerivce = imageService;
@@ -194,7 +192,7 @@ public class SearchController extends AbstractConfigurationSupportController {
         List<MediaThumbCommand> mediaThumbCommands = new ArrayList<MediaThumbCommand>();
         MainConfiguration mainConfiguration = getMainConfiguration();
         UserConfiguration currentUserConfiguration = getCurrentUserConfiguration();
-        S3Configuration currentUserS3Configuration = getCurrentUserS3Configuration();
+        S3Configuration currentUserS3Configuration = getCurrentUsersS3Configuration();
         final int hitsPerPage = mainConfiguration.getHitsPerPage();
         List<Media> allPictures = _mediaDao.getAllBySearchCriterias(SecurityUtil.getCurrentUser(), startIndex, hitsPerPage, true, searchCriteria,
                 LifecyleStatus.Living);

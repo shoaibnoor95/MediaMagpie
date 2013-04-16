@@ -93,7 +93,7 @@ public class UploadServiceTest {
         FileInputStream inputStream = new FileInputStream(TEST_MEDIA);
         Pair<String, File> origAndStoreFileName = _uploadService.createUniqueUserStoreFile(_user, "fileB");
 
-        Media media = _uploadService.handleUploadStream(_user, origAndStoreFileName.getSecond(), inputStream, 0);
+        Media media = _uploadService.handleUploadStream(_user, origAndStoreFileName.getSecond(), inputStream);
 
         assertThat(media).isNotNull();
         assertThat(new File(mc.getBaseUploadPath(), "user_000123/fileB")).exists();
@@ -105,7 +105,7 @@ public class UploadServiceTest {
         FileInputStream inputStream = new FileInputStream(TEST_MEDIA_NO_METADATA);
         Pair<String, File> origAndStoreFileName = _uploadService.createUniqueUserStoreFile(_user, "accept.png");
 
-        Media media = _uploadService.handleUploadStream(_user, origAndStoreFileName.getSecond(), inputStream, 0);
+        Media media = _uploadService.handleUploadStream(_user, origAndStoreFileName.getSecond(), inputStream);
 
         assertThat(media).isNotNull();
         assertThat(new File(mc.getBaseUploadPath(), "user_000123/accept.png")).hasSameContentAs(TEST_MEDIA_NO_METADATA);

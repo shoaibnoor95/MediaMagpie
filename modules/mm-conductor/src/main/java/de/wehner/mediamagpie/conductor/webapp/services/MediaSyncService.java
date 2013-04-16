@@ -1,9 +1,7 @@
 package de.wehner.mediamagpie.conductor.webapp.services;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URI;
@@ -21,7 +19,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.io.IOUtils;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -43,7 +40,6 @@ import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfigurat
 import de.wehner.mediamagpie.conductor.media.PhotoMetadataExtractor;
 import de.wehner.mediamagpie.conductor.metadata.CameraMetaData;
 import de.wehner.mediamagpie.core.concurrent.SingleThreadedController;
-import de.wehner.mediamagpie.core.util.DigestUtil;
 import de.wehner.mediamagpie.core.util.ExceptionUtil;
 import de.wehner.mediamagpie.persistence.TransactionHandler;
 
@@ -280,16 +276,17 @@ public class MediaSyncService extends SingleThreadedController {
         PhotoMetadataExtractor metadataExtractor = new PhotoMetadataExtractor(mediaFileUri);
         Date creationDate = resolveCreationDateOfMedia(metadataExtractor, mediaFileUri);
         Orientation orientation = metadataExtractor.resolveOrientation();
-        Media newMedia = new Media(user, null, mediaFileUri, creationDate);
+        Media newMedia = Media.createWithHashValue(user, null, mediaFileUri, creationDate);
+        // Media newMedia = new Media(user, null, mediaFileUri, creationDate);
         newMedia.setOrientation(orientation);
         addCameraMetaDataToMedia(metadataExtractor, newMedia);
-        InputStream is = null;
-        try {
-            is = new FileInputStream(new File(mediaFileUri));
-            newMedia.setHashValue(DigestUtil.computeSha1AsHexString(is));
-        } finally {
-            IOUtils.closeQuietly(is);
-        }
+        // InputStream is = null;
+        // try {
+        // is = new FileInputStream(new File(mediaFileUri));
+        // newMedia.setHashValue(DigestUtil.computeSha1AsHexString(is));
+        // } finally {
+        // IOUtils.closeQuietly(is);
+        // }
         return newMedia;
     }
 

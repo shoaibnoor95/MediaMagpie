@@ -17,10 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import de.wehner.mediamagpie.common.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.common.persistence.dao.UserDao;
 import de.wehner.mediamagpie.common.persistence.entity.User;
-import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
+import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
 import de.wehner.mediamagpie.conductor.webapp.controller.AbstractConfigurationSupportController;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.UserConfigurationCommand;
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
@@ -39,8 +38,8 @@ public class UserConfiguratonControllerS1 extends AbstractConfigurationSupportCo
     public static final String VIEW_USERCONFIG_EDIT_S1 = "config/user/edit_userconfigurationS1";
 
     @Autowired
-    public UserConfiguratonControllerS1(UserConfigurationDao userConfigurationDao, UserDao userDao, ImageService imageService) {
-        super(null, userConfigurationDao, userDao);
+    public UserConfiguratonControllerS1(ConfigurationProvider configurationProvider, UserDao userDao, ImageService imageService) {
+        super(configurationProvider, userDao);
     }
 
     @InitBinder
@@ -51,7 +50,7 @@ public class UserConfiguratonControllerS1 extends AbstractConfigurationSupportCo
     @RequestMapping(method = RequestMethod.GET, value = URL_USERCONFIG)
     public String showUserConfiguration(Model model, @RequestParam(value = "userId", required = false) Long userId, HttpSession session) {
         User user = getValidatedRelevantUser(userId);
-        model.addAttribute("conf", _userConfigurationDao.getConfiguration(user, UserConfiguration.class));
+        model.addAttribute("conf", _configurationProvider.getUserConfiguration(user));
         model.addAttribute("user", user);
         session.removeAttribute("userConfigurationCommand");
         return VIEW_USERCONFIG;
@@ -61,9 +60,8 @@ public class UserConfiguratonControllerS1 extends AbstractConfigurationSupportCo
     public String showEditUserConfiguration(Model model, @RequestParam(value = "userId", required = false) Long userId) {
         User user = getValidatedRelevantUser(userId);
         boolean hasCommand = model.asMap().containsKey("userConfigurationCommand");
-        UserConfigurationCommand command = (!hasCommand) ? UserConfigurationCommand.createCommand(user,
-                _userConfigurationDao.getConfiguration(user, UserConfiguration.class)) : (UserConfigurationCommand) model.asMap().get(
-                "userConfigurationCommand");
+        UserConfigurationCommand command = (!hasCommand) ? UserConfigurationCommand.createCommand(user, _configurationProvider.getUserConfiguration(user))
+                : (UserConfigurationCommand) model.asMap().get("userConfigurationCommand");
         model.addAttribute(command);
         return VIEW_USERCONFIG_EDIT_S1;
     }

@@ -1,8 +1,14 @@
 package de.wehner.mediamagpie.conductor.performingjob;
 
+import static org.fest.assertions.Assertions.*;
+
+import static org.mockito.Matchers.*;
+
 import static org.mockito.Mockito.*;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Date;
@@ -11,6 +17,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -21,7 +28,10 @@ import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.common.persistence.entity.LifecyleStatus;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.User;
-import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
+import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
+import de.wehner.mediamagpie.conductor.webapp.services.UploadService;
+import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
+import de.wehner.mediamagpie.core.util.Pair;
 import de.wehner.mediamagpie.persistence.TransactionHandler;
 import de.wehner.mediamagpie.persistence.TransactionHandlerMock;
 
@@ -34,50 +44,118 @@ public class S3SyncJobTest {
     private final Media m2;
     private final Media m3;
 
+    private TestEnvironment _testEnvironment = new TestEnvironment(getClass());
+
     private S3SyncJob _job;
+
     @Mock
     private S3MediaExportRepository _s3MediaExportRepository;
     @Mock
-    private User _user;
+    private UploadService _uploadService;
+
     @Mock
-    private UserConfiguration _userConfiguration;
+    private ConfigurationProvider _configurationProvider;
+
+    @Mock
+    private User _user;
 
     private TransactionHandler _transactionHandler = new TransactionHandlerMock();
+
     @Mock
     private MediaDao _mediaDao;
 
     private JobCallable _prepare;
+
+    /**
+     * contains m1 and m2
+     */
     private List<Media> _livingMedias;
 
-    public S3SyncJobTest() {
-        m1 = new Media(_user, "ralf", IMAGE_RALF, new Date());
-        m2 = new Media(_user, "image-13", IMAGE_13, new Date());
-        m3 = new Media(_user, "image-14", IMAGE_14, new Date());
+    public S3SyncJobTest() throws FileNotFoundException {
+        m1 = Media.createWithHashValue(_user, "ralf", IMAGE_RALF, new Date());
+        m2 = Media.createWithHashValue(_user, "image-13", IMAGE_13, new Date());
+        m3 = Media.createWithHashValue(_user, "image-14", IMAGE_14, new Date());
     }
 
     @Before
-    @SuppressWarnings("unchecked")
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+
+        _testEnvironment.cleanWorkingDir();
 
         when(_user.getName()).thenReturn("bob");
 
         _livingMedias = Arrays.asList(m1, m2);
         when(_mediaDao.getAllOfUser(_user, LifecyleStatus.Living)).thenReturn(_livingMedias);
-
-        _job = new S3SyncJob(_s3MediaExportRepository, _user, _userConfiguration, _transactionHandler, _mediaDao);
+        when(_uploadService.createUniqueUserStoreFile(eq(_user), any(String.class))).thenReturn(
+                new Pair<String, File>("origFile.jpg", new File(_testEnvironment.getWorkingDir(), "mediax.jpg")));
+        _job = new S3SyncJob(_s3MediaExportRepository, _uploadService, _user, _configurationProvider, _transactionHandler, _mediaDao);
         _prepare = _job.prepare();
-
-        MediaExportFactory mediaExportFactory = new MediaExportFactory();
-
-        Iterator<MediaExport> iteratorPhotos = mock(Iterator.class);
-        when(iteratorPhotos.hasNext()).thenReturn(true, true, false);
-        when(iteratorPhotos.next()).thenReturn(mediaExportFactory.create(m1), mediaExportFactory.create(m3), null);
-        when(_s3MediaExportRepository.iteratorPhotos(_user.getName())).thenReturn(iteratorPhotos);
     }
 
     @Test
-    public void test() throws Exception {
+    @SuppressWarnings("unchecked")
+    public void testMediaWillBePushed() throws Exception {
+        MediaExportFactory mediaExportFactory = new MediaExportFactory();
+        Iterator<MediaExport> iteratorPhotos = mock(Iterator.class);
+        when(iteratorPhotos.hasNext()).thenReturn(true, false);
+        when(iteratorPhotos.next()).thenReturn(mediaExportFactory.create(m1), (MediaExport) null);
+        when(_s3MediaExportRepository.iteratorPhotos(_user.getName())).thenReturn(iteratorPhotos);
+
         _prepare.call();
+
+        // verify, media will be pushed
+        ArgumentCaptor<String> ownerNameCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<MediaExport> mediaExportCaptor = ArgumentCaptor.forClass(MediaExport.class);
+        verify(_s3MediaExportRepository).addMedia(ownerNameCaptor.capture(), mediaExportCaptor.capture());
+        assertThat(mediaExportCaptor.getValue().getName()).isEqualTo(m2.getName());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testMediaWillBePulledAndPersisted() throws Exception {
+        MediaExportFactory mediaExportFactory = new MediaExportFactory();
+        Iterator<MediaExport> iteratorPhotos = mock(Iterator.class);
+        when(iteratorPhotos.hasNext()).thenReturn(true, true, true, false);
+        when(iteratorPhotos.next()).thenReturn(mediaExportFactory.create(m1), mediaExportFactory.create(m2), mediaExportFactory.create(m3), null);
+        when(_s3MediaExportRepository.iteratorPhotos(_user.getName())).thenReturn(iteratorPhotos);
+        when(_uploadService.handleUploadStream(any(User.class), any(File.class), any(InputStream.class))).thenReturn(
+                new Media(_user, m3.getName(), null, null));
+
+        _prepare.call();
+
+        // verfiy one will be pulled (persisted)
+        ArgumentCaptor<Media> mediaCaptor = ArgumentCaptor.forClass(Media.class);
+        verify(_mediaDao).makePersistent(mediaCaptor.capture());
+        assertThat(mediaCaptor.getValue().getName()).isEqualTo(m3.getName());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testMediaWillBePushedAndPulled() throws Exception {
+        MediaExportFactory mediaExportFactory = new MediaExportFactory();
+        Iterator<MediaExport> iteratorPhotos = mock(Iterator.class);
+        when(iteratorPhotos.hasNext()).thenReturn(true, true, false);
+        when(iteratorPhotos.next()).thenReturn(mediaExportFactory.create(m2), mediaExportFactory.create(m3), null);
+        when(_s3MediaExportRepository.iteratorPhotos(_user.getName())).thenReturn(iteratorPhotos);
+        when(_uploadService.handleUploadStream(any(User.class), any(File.class), any(InputStream.class))).thenReturn(
+                new Media(_user, m3.getName(), null, null));
+
+        _prepare.call();
+
+        // verfiy one was pushed and one was pulled
+        verify(_s3MediaExportRepository).addMedia(eq(_user.getName()), any(MediaExport.class));
+        verify(_mediaDao).makePersistent(any(Media.class));
+
+        // verify pushed media
+        ArgumentCaptor<String> ownerNameCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<MediaExport> mediaExportCaptor = ArgumentCaptor.forClass(MediaExport.class);
+        verify(_s3MediaExportRepository).addMedia(ownerNameCaptor.capture(), mediaExportCaptor.capture());
+        assertThat(mediaExportCaptor.getValue().getName()).isEqualTo(m1.getName());
+
+        // verify the pulled media
+        ArgumentCaptor<Media> mediaCaptor = ArgumentCaptor.forClass(Media.class);
+        verify(_mediaDao).makePersistent(mediaCaptor.capture());
+        assertThat(mediaCaptor.getValue().getName()).isEqualTo(m3.getName());
     }
 }

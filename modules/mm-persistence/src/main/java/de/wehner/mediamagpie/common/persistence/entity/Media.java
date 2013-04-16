@@ -1,6 +1,9 @@
 package de.wehner.mediamagpie.common.persistence.entity;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,6 +23,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.hibernate.search.annotations.Analyze;
@@ -129,6 +133,29 @@ public class Media extends CreationDateBase {
             _path = fileMedia.getParent();
             _uri = uri.toString();
         }
+    }
+
+    /**
+     * Creates a new Media and reads the media's binary content to compute the SHA-1 hash value.
+     * 
+     * @param owner
+     * @param name
+     *            Can be <code>null</code>
+     * @param mediaFileUri
+     * @param creationDate
+     * @return The new Media instance
+     * @throws FileNotFoundException
+     */
+    public static Media createWithHashValue(User owner, String name, URI mediaFileUri, Date creationDate) throws FileNotFoundException {
+        Media newMedia = new Media(owner, name, mediaFileUri, creationDate);
+        InputStream is = null;
+        try {
+            is = new FileInputStream(new File(mediaFileUri));
+            newMedia.setHashValue(DigestUtil.computeSha1AsHexString(is));
+        } finally {
+            IOUtils.closeQuietly(is);
+        }
+        return newMedia;
     }
 
     public String getName() {

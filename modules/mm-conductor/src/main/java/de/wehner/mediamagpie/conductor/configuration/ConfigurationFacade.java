@@ -6,12 +6,19 @@ import java.util.List;
 import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
 import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
 
-public class ConfigurationHelper {
+/**
+ * A facade to retrieve configuration information which is build from main and user's configuration. Use this class in combination with
+ * {@linkplain ConfigurationProvider}.
+ * 
+ * @author ralfwehner
+ * 
+ */
+public class ConfigurationFacade {
 
     private final MainConfiguration _mainConfiguration;
     private final UserConfiguration _userConfiguration;
 
-    public ConfigurationHelper(MainConfiguration mainConfiguration, UserConfiguration userConfiguration) {
+    public ConfigurationFacade(MainConfiguration mainConfiguration, UserConfiguration userConfiguration) {
         super();
         _mainConfiguration = mainConfiguration;
         _userConfiguration = userConfiguration;

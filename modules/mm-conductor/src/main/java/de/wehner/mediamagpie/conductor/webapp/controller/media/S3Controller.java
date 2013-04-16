@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import de.wehner.mediamagpie.aws.s3.service.S3SyncService;
 import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
-import de.wehner.mediamagpie.common.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
 import de.wehner.mediamagpie.conductor.webapp.controller.AbstractConfigurationSupportController;
@@ -30,9 +29,8 @@ public class S3Controller extends AbstractConfigurationSupportController {
     private final S3SyncService _s3SyncService;
 
     @Autowired
-    public S3Controller(MediaDao mediaDao, ConfigurationProvider configurationProvider, UserConfigurationDao userConfigurationDao,
-            S3SyncService s3SyncService) {
-        super(configurationProvider, userConfigurationDao, null);
+    public S3Controller(MediaDao mediaDao, ConfigurationProvider configurationProvider, S3SyncService s3SyncService) {
+        super(configurationProvider, null);
         _mediaDao = mediaDao;
         _s3SyncService = s3SyncService;
     }

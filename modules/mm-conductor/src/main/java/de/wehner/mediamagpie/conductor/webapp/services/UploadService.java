@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import org.apache.commons.io.FileUtils;
@@ -22,6 +23,7 @@ import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
 import de.wehner.mediamagpie.common.util.FileSystemUtil;
 import de.wehner.mediamagpie.common.util.TimeoutExecutor;
+import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
 import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.ThumbImageDao;
 import de.wehner.mediamagpie.core.util.Pair;
@@ -102,10 +104,9 @@ public class UploadService {
      * @param mediaFile
      *            The final and unique file name were the input bytes will be written into.
      * @param inputStream
-     * @param uniqueCounter
      * @return A new created and persisted <code>Media</code> object which refers to the stored file.
      */
-    public Media handleUploadStream(final User currentUser, File mediaFile, InputStream inputStream, int uniqueCounter) {
+    public Media handleUploadStream(final User currentUser, File mediaFile, InputStream inputStream) {
         if (mediaFile.exists()) {
             // we expect an empty existing file to write into
             if (mediaFile.length() > 0) {
@@ -166,6 +167,14 @@ public class UploadService {
             });
         }
         return _imageService.createLink(media, UPLOAD_PREVIEW_THUMB_LABEL, Priority.NORMAL);
+    }
+
+    public void createJobsForFreshUploadedMedias(Media newMedia, ConfigurationProvider configurationProvider) {
+
+        List<Integer> allThumbSizes = configurationProvider.createConfigurationFacade(newMedia.getOwner()).getAllThumbSizes();
+        for (Integer thumbSize : allThumbSizes) {
+            createThumbImage(newMedia, "" + thumbSize, Priority.LOW, 0);
+        }
     }
 
 }

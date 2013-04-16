@@ -21,7 +21,6 @@ import de.wehner.mediamagpie.api.MediaExportResults;
 import de.wehner.mediamagpie.aws.s3.S3MediaExportRepository;
 import de.wehner.mediamagpie.common.persistence.MediaExportFactory;
 import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
-import de.wehner.mediamagpie.common.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.common.persistence.entity.LifecyleStatus;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.User;
@@ -45,8 +44,8 @@ public class SynchronizeController extends AbstractConfigurationSupportControlle
     private final MediaDao _mediaDao;
 
     @Autowired
-    public SynchronizeController(MediaDao mediaDao, ConfigurationProvider configurationProvider, UserConfigurationDao userConfigurationDao) {
-        super(configurationProvider, userConfigurationDao, null);
+    public SynchronizeController(MediaDao mediaDao, ConfigurationProvider configurationProvider) {
+        super(configurationProvider, null);
         _mediaDao = mediaDao;
     }
 
@@ -108,7 +107,7 @@ public class SynchronizeController extends AbstractConfigurationSupportControlle
 
     private S3Configuration getCurrentUsersS3Configuration(User user) {
         if (user != null) {
-            S3Configuration userS3Configuration = _userConfigurationDao.getConfiguration(user, S3Configuration.class);
+            S3Configuration userS3Configuration = _configurationProvider.getS3Configuration(user);
             if (userS3Configuration != null && !StringUtils.isEmpty(userS3Configuration.getAccessKey())
                     && !StringUtils.isEmpty(userS3Configuration.getSecretKey())) {
                 return userS3Configuration;

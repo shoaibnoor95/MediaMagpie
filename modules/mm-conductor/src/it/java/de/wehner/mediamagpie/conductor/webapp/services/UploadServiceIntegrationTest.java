@@ -75,7 +75,7 @@ public class UploadServiceIntegrationTest {
         FileInputStream inputStream = new FileInputStream(TEST_MEDIA);
         Pair<String, File> nameAndStoreFile = _uploadService.createUniqueUserStoreFile(_user, "fileB");
 
-        _uploadService.handleUploadStream(_user, nameAndStoreFile.getSecond(), inputStream, 0);
+        _uploadService.handleUploadStream(_user, nameAndStoreFile.getSecond(), inputStream);
 
         assertThat(nameAndStoreFile.getSecond()).exists();
         assertThat(nameAndStoreFile.getSecond()).hasSameContentAs(TEST_MEDIA);
@@ -94,7 +94,7 @@ public class UploadServiceIntegrationTest {
         FileInputStream inputStream = new FileInputStream(TEST_MEDIA_NO_METADATA);
         Pair<String, File> nameAndStoreFile = _uploadService.createUniqueUserStoreFile(_user, "aceppt.png");
 
-        _uploadService.handleUploadStream(_user, nameAndStoreFile.getSecond(), inputStream, 0);
+        _uploadService.handleUploadStream(_user, nameAndStoreFile.getSecond(), inputStream);
 
         assertThat(nameAndStoreFile.getSecond()).hasSameContentAs(TEST_MEDIA_NO_METADATA);
         _persistenceService.flipTransaction();
@@ -107,9 +107,9 @@ public class UploadServiceIntegrationTest {
         }
     }
 
-//    @Test
-//    public void test_createThumbImage() {
-//        // TODO rwe:
-//
-//    }
+    // @Test
+    // public void test_createThumbImage() {
+    // // TODO rwe:
+    //
+    // }
 }

@@ -24,10 +24,10 @@ import com.amazonaws.auth.BasicAWSCredentials;
 
 import de.wehner.mediamagpie.aws.s3.S3ClientFacade;
 import de.wehner.mediamagpie.aws.s3.service.S3SyncService;
-import de.wehner.mediamagpie.common.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.common.persistence.dao.UserDao;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.properties.S3Configuration;
+import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
 import de.wehner.mediamagpie.conductor.webapp.controller.AbstractConfigurationSupportController;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.CheckResultCommand;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.config.S3ConfigurationCommand;
@@ -51,8 +51,8 @@ public class AwsConfigurationController extends AbstractConfigurationSupportCont
     private final S3SyncService _s3SyncService;
 
     @Autowired
-    public AwsConfigurationController(UserConfigurationDao userConfigurationDao, UserDao userDao, S3SyncService s3SyncService) {
-        super(null, userConfigurationDao, userDao);
+    public AwsConfigurationController(ConfigurationProvider configurationProvider, UserDao userDao, S3SyncService s3SyncService) {
+        super(configurationProvider, userDao);
         _s3SyncService = s3SyncService;
     }
 
@@ -86,7 +86,7 @@ public class AwsConfigurationController extends AbstractConfigurationSupportCont
             return VIEW_S3CONFIG;
         }
 
-        S3Configuration s3Configuration = _userConfigurationDao.getConfiguration(user, S3Configuration.class);
+        S3Configuration s3Configuration = _configurationProvider.getS3Configuration(user);
         AWSCredentials credentials = new BasicAWSCredentials(s3Configuration.getAccessKey(), s3Configuration.getSecretKey());
         S3ClientFacade s3ClientFacade = new S3ClientFacade(credentials);
         Pair<Boolean, String> result = s3ClientFacade.testConnection();
@@ -110,7 +110,7 @@ public class AwsConfigurationController extends AbstractConfigurationSupportCont
 
         // update existing configuration
         User user = getValidatedRelevantUser(userId);
-        S3Configuration existingS3Configuration = _userConfigurationDao.getConfiguration(user, S3Configuration.class);
+        S3Configuration existingS3Configuration = _configurationProvider.getS3Configuration(user);
         existingS3Configuration.setAccessKey(command.getAccessKey());
         if (!StringUtils.isEmpty(command.getSecretKey()) && !command.getSecretKey().equals(existingS3Configuration.getSecretKey())) {
             existingS3Configuration.setSecretKey(command.getSecretKey());
@@ -121,14 +121,13 @@ public class AwsConfigurationController extends AbstractConfigurationSupportCont
             _s3SyncService.syncS3Bucket(user);
         }
         existingS3Configuration.setSyncToS3(command.isSyncToS3());
-        _userConfigurationDao.saveOrUpdateConfiguration(user, existingS3Configuration);
+        _configurationProvider.saveOrUpdateS3Configuration(user, existingS3Configuration);
 
         return "redirect:" + getBaseRequestMappingUrl() + URL_S3CONFIG;
     }
 
     private S3ConfigurationCommand createS3ConfigurationCommandFromUser(Long userId) {
-        User user = getValidatedRelevantUser(userId);
-        S3Configuration s3Configuration = _userConfigurationDao.getConfiguration(user, S3Configuration.class);
+        S3Configuration s3Configuration = getCurrentUsersS3Configuration();
         S3ConfigurationCommand s3ConfigurationCommand = S3ConfigurationCommand.createCommand(s3Configuration);
         return s3ConfigurationCommand;
     }

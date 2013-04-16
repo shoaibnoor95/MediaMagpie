@@ -10,29 +10,31 @@ import com.amazonaws.auth.BasicAWSCredentials;
 
 import de.wehner.mediamagpie.aws.s3.S3MediaExportRepository;
 import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
-import de.wehner.mediamagpie.common.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.common.persistence.entity.CloudSyncJobExecution;
 import de.wehner.mediamagpie.common.persistence.entity.CloudSyncJobExecution.CloudType;
 import de.wehner.mediamagpie.common.persistence.entity.JobExecution;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.properties.S3Configuration;
-import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
+import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
 import de.wehner.mediamagpie.conductor.performingjob.AbstractJob;
 import de.wehner.mediamagpie.conductor.performingjob.S3SyncJob;
+import de.wehner.mediamagpie.conductor.webapp.services.UploadService;
 import de.wehner.mediamagpie.persistence.PersistenceService;
 import de.wehner.mediamagpie.persistence.TransactionHandler;
 
 @Component
 public class CloudSyncJobCreator extends TransactionalJobCreator<AbstractJob> {
 
-    private final UserConfigurationDao _userConfigurationDao;
+    private final ConfigurationProvider _configurationProvider;
     private final MediaDao _mediaDao;
+    private final UploadService _uploadService;
 
     @Autowired
-    public CloudSyncJobCreator(UserConfigurationDao userConfigurationDao, MediaDao mediaDao, TransactionHandler transactionHandler,
-            PersistenceService persistenceService) {
+    public CloudSyncJobCreator(ConfigurationProvider configurationProvider, UploadService uploadService, MediaDao mediaDao,
+            TransactionHandler transactionHandler, PersistenceService persistenceService) {
         super(transactionHandler, persistenceService);
-        _userConfigurationDao = userConfigurationDao;
+        _configurationProvider = configurationProvider;
+        _uploadService = uploadService;
         _mediaDao = mediaDao;
     }
 
@@ -41,10 +43,9 @@ public class CloudSyncJobCreator extends TransactionalJobCreator<AbstractJob> {
         CloudSyncJobExecution cloudSyncJobExecution = (CloudSyncJobExecution) execution;
         CloudType cloudType = cloudSyncJobExecution.getCloudType();
         User user = cloudSyncJobExecution.getUser();
-        UserConfiguration userConfiguration = _userConfigurationDao.getConfiguration(user, UserConfiguration.class);
         switch (cloudType) {
         case S3:
-            S3Configuration existingS3Configuration = _userConfigurationDao.getConfiguration(user, S3Configuration.class);
+            S3Configuration existingS3Configuration = _configurationProvider.getS3Configuration(user);
             if (!existingS3Configuration.hasToSyncToS3()) {
                 // does the configuration has changed during the time this job was queued?
                 throw new RuntimeException(
@@ -55,7 +56,7 @@ public class CloudSyncJobCreator extends TransactionalJobCreator<AbstractJob> {
             switch (cloudSyncJobExecution.getCloudType()) {
             case S3:
                 S3MediaExportRepository s3MediaExportRepository = new S3MediaExportRepository(credentials);
-                return new S3SyncJob(s3MediaExportRepository, user, userConfiguration, _transactionHandler, _mediaDao);
+                return new S3SyncJob(s3MediaExportRepository, _uploadService, user, _configurationProvider, _transactionHandler, _mediaDao);
             }
             return null;
         default:

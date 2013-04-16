@@ -33,6 +33,10 @@
 		<level value="info" />
 	</logger>
 
+    <logger name="de.wehner.mediamagpie.conductor">
+        <level value="trace" />
+    </logger>
+
 	<!-- Root Logger -->
 	<root>
 		<priority value="info" />

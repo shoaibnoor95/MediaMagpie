@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import de.wehner.mediamagpie.common.persistence.dao.AlbumDao;
-import de.wehner.mediamagpie.common.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.common.persistence.entity.Album;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.Priority;
@@ -63,9 +62,8 @@ public class PublicAlbumController extends AbstractConfigurationSupportControlle
     private final ImageService _imageSerivce;
 
     @Autowired
-    public PublicAlbumController(ConfigurationProvider configurationProvider, UserConfigurationDao userConfigurationDao, AlbumDao albumDao,
-            ImageService imageService) {
-        super(configurationProvider, userConfigurationDao, null);
+    public PublicAlbumController(ConfigurationProvider configurationProvider, AlbumDao albumDao, ImageService imageService) {
+        super(configurationProvider, null);
         _albumDao = albumDao;
         _imageSerivce = imageService;
     }
@@ -79,7 +77,7 @@ public class PublicAlbumController extends AbstractConfigurationSupportControlle
                 // AlbumCommand albumCommand = new AlbumCommand();
                 List<MediaThumbCommand> mediaThumbCommands = new ArrayList<MediaThumbCommand>();
                 User owner = album.getOwner();
-                UserConfiguration userConfiguration = _userConfigurationDao.getConfiguration(owner, UserConfiguration.class);
+                UserConfiguration userConfiguration = _configurationProvider.getUserConfiguration(owner);
                 for (Media media : album.getMedias()) {
                     mediaThumbCommands.add(_imageSerivce.createMediaThumbCommand(media, getMainConfiguration(), userConfiguration, request));
                 }

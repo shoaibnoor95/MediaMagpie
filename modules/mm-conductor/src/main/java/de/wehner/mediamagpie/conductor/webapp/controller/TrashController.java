@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
-import de.wehner.mediamagpie.common.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.common.persistence.entity.LifecyleStatus;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
@@ -38,9 +37,8 @@ public class TrashController extends AbstractConfigurationSupportController {
     private final ImageService _imageSerivce;
 
     @Autowired
-    public TrashController(MediaDao mediaDao, ImageService imageService, ConfigurationProvider configurationProvider,
-            UserConfigurationDao userConfigurationDao) {
-        super(configurationProvider, userConfigurationDao, null);
+    public TrashController(MediaDao mediaDao, ImageService imageService, ConfigurationProvider configurationProvider) {
+        super(configurationProvider, null);
         _mediaDao = mediaDao;
         _imageSerivce = imageService;
     }

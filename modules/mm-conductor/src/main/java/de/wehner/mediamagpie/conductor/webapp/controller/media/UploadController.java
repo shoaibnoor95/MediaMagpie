@@ -28,12 +28,10 @@ import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import de.wehner.mediamagpie.aws.s3.service.S3SyncService;
-import de.wehner.mediamagpie.common.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.common.persistence.entity.Priority;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.properties.S3Configuration;
-import de.wehner.mediamagpie.conductor.configuration.ConfigurationHelper;
 import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
 import de.wehner.mediamagpie.conductor.webapp.controller.AbstractConfigurationSupportController;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.FileUploadCommand;
@@ -58,15 +56,14 @@ public class UploadController extends AbstractConfigurationSupportController {
 
     public static final String URL_DELETE_FILE = "/file-delete";
 
-    private UploadService _uploadControllerService;
+    private UploadService _uploadService;
 
     private S3SyncService _s3SyncService = null;
 
     @Autowired
-    public UploadController(ConfigurationProvider configurationProvider, UserConfigurationDao userConfigurationDao, UploadService uploadControllerService,
-            S3SyncService s3SyncService) {
-        super(configurationProvider, userConfigurationDao, null);
-        _uploadControllerService = uploadControllerService;
+    public UploadController(ConfigurationProvider configurationProvider, UploadService uploadService, S3SyncService s3SyncService) {
+        super(configurationProvider, null);
+        _uploadService = uploadService;
         _s3SyncService = s3SyncService;
     }
 
@@ -94,7 +91,6 @@ public class UploadController extends AbstractConfigurationSupportController {
         Map<String, MultipartFile> fileMap = multipartRequst.getFileMap();
         Set<Entry<String, MultipartFile>> entrySet = fileMap.entrySet();
         List<JQueryUploadCommand> jQueryUploadCommands = new ArrayList<JQueryUploadCommand>();
-        int i = 0;
         for (Entry<String, MultipartFile> entry : entrySet) {
             MultipartFile multipartFile = entry.getValue();
             LOG.debug("Receive new upload file '" + multipartFile.getOriginalFilename() + "'.");
@@ -104,18 +100,23 @@ public class UploadController extends AbstractConfigurationSupportController {
 
             // upload file, create Media, Thumb, thumbimage link etc..
             User currentUser = SecurityUtil.getCurrentUser();
-            Pair<String, File> uploadFileInfo = _uploadControllerService.createUniqueUserStoreFile(currentUser, multipartFile.getOriginalFilename());
-            String contextPath = request.getContextPath();
+            Pair<String, File> uploadFileInfo = _uploadService.createUniqueUserStoreFile(currentUser, multipartFile.getOriginalFilename());
             LOG.info("Try dump upload stream '" + uploadFileInfo.getFirst() + "' into file '" + uploadFileInfo.getSecond().getPath() + "'");
-            Media newMedia = _uploadControllerService.handleUploadStream(currentUser, uploadFileInfo.getSecond(), multipartFile.getInputStream(), i++);
+            Media newMedia = _uploadService.handleUploadStream(currentUser, uploadFileInfo.getSecond(), multipartFile.getInputStream());
 
-            // create job executions for image resize or s3 uploading jobs etc.
-            createJobsForFreshUploadedMedias(newMedia);
+            // create job executions for a) image resizing and S3 Upload
+            S3Configuration userS3Configuration = getCurrentUsersS3Configuration();
+            if (_s3SyncService != null && userS3Configuration.hasToSyncToS3()) {
+                // sync media to s3 bucket
+                _s3SyncService.pushToS3(newMedia);
+            }
+            _uploadService.createJobsForFreshUploadedMedias(newMedia, _configurationProvider);
 
             // create a thumb image for the upload view
+            String contextPath = request.getContextPath();
             String thumbUrl = contextPath
-                    + _uploadControllerService.createThumbImage(newMedia,
-                            de.wehner.mediamagpie.conductor.webapp.services.UploadService.UPLOAD_PREVIEW_THUMB_LABEL, Priority.HIGH, 2000);
+                    + _uploadService.createThumbImage(newMedia, de.wehner.mediamagpie.conductor.webapp.services.UploadService.UPLOAD_PREVIEW_THUMB_LABEL,
+                            Priority.HIGH, 2000);
 
             // build propper command for respose
             JQueryUploadCommand command = new JQueryUploadCommand(multipartFile.getOriginalFilename(), (int) multipartFile.getSize(), "url", thumbUrl,
@@ -125,24 +126,9 @@ public class UploadController extends AbstractConfigurationSupportController {
         return jQueryUploadCommands;
     }
 
-    private void createJobsForFreshUploadedMedias(Media newMedia) {
-        ConfigurationHelper configurationHelper = new ConfigurationHelper(getMainConfiguration(), getCurrentUserConfiguration());
-        List<Integer> allThumbSizes = configurationHelper.getAllThumbSizes();
-
-        for (Integer thumbSize : allThumbSizes) {
-            _uploadControllerService.createThumbImage(newMedia, "" + thumbSize, Priority.LOW, 0);
-        }
-
-        S3Configuration userS3Configuration = getCurrentUserS3Configuration();
-        if (_s3SyncService != null && userS3Configuration.hasToSyncToS3()) {
-            // sync media to s3 bucket
-            _s3SyncService.pushToS3(newMedia);
-        }
-    }
-
     @RequestMapping(method = RequestMethod.DELETE, value = URL_DELETE_FILE)
     public void deleteFile(@RequestParam("file") String relStoreFile, HttpServletResponse response) {
-        _uploadControllerService.deleteFile(SecurityUtil.getCurrentUser(), relStoreFile);
+        _uploadService.deleteFile(SecurityUtil.getCurrentUser(), relStoreFile);
         response.setStatus(HttpServletResponse.SC_OK);
     }
 

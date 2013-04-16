@@ -2,7 +2,6 @@ package de.wehner.mediamagpie.conductor.webapp.controller;
 
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 
-import de.wehner.mediamagpie.common.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.common.persistence.dao.UserDao;
 import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
@@ -14,22 +13,20 @@ import de.wehner.mediamagpie.conductor.webapp.util.security.SecurityUtil;
 public class AbstractConfigurationSupportController {
 
     protected final ConfigurationProvider _configurationProvider;
-    protected final UserConfigurationDao _userConfigurationDao;
     protected final UserDao _userDao;
 
-    public AbstractConfigurationSupportController(ConfigurationProvider configurationProvider, UserConfigurationDao userConfigurationDao, UserDao userDao) {
+    public AbstractConfigurationSupportController(ConfigurationProvider configurationProvider, UserDao userDao) {
         super();
         _configurationProvider = configurationProvider;
-        _userConfigurationDao = userConfigurationDao;
         _userDao = userDao;
     }
 
     protected UserConfiguration getCurrentUserConfiguration() {
-        return _userConfigurationDao.getConfiguration(SecurityUtil.getCurrentUser(), UserConfiguration.class);
+        return _configurationProvider.getUserConfiguration(SecurityUtil.getCurrentUser());
     }
 
-    protected S3Configuration getCurrentUserS3Configuration() {
-        return _userConfigurationDao.getConfiguration(SecurityUtil.getCurrentUser(), S3Configuration.class);
+    protected S3Configuration getCurrentUsersS3Configuration() {
+        return _configurationProvider.getS3Configuration(SecurityUtil.getCurrentUser());
     }
 
     protected User getValidatedRelevantUser(Long userId) {

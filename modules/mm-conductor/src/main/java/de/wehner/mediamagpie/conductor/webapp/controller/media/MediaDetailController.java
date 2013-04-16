@@ -43,7 +43,7 @@ public class MediaDetailController extends AbstractConfigurationSupportControlle
     @Autowired
     public MediaDetailController(MediaDao mediaDao, ImageService imageService, ConfigurationProvider configurationProvider,
             UserConfigurationDao userConfigurationDao) {
-        super(configurationProvider, userConfigurationDao, null);
+        super(configurationProvider, null);
         _mediaDao = mediaDao;
         _imageSerivce = imageService;
     }
