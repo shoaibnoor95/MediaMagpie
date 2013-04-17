@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import de.wehner.mediamagpie.core.util.ExceptionUtil;
+import de.wehner.mediamagpie.persistence.entity.Base;
 
 @Service
 public class TransactionHandler {
@@ -64,5 +65,9 @@ public class TransactionHandler {
 
     public void executeInTransaction(Runnable runnable) {
         executeInTransaction(Executors.callable(runnable));
+    }
+
+    public <T extends Base> T reload(T entity) {
+        return _persistenceService.reload(entity);
     }
 }

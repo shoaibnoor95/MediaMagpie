@@ -2,7 +2,7 @@
 <%@page import="de.wehner.mediamagpie.conductor.webapp.controller.media.AlbumController"%>
 <%@page import="de.wehner.mediamagpie.conductor.webapp.controller.media.PublicAlbumController"%>
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.util.WebAppUtils" %>
-<%@ page import="de.wehner.mediamagpie.common.persistence.entity.Visibility" %>
+<%@ page import="de.wehner.mediamagpie.persistence.entity.Visibility" %>
 <%@ include file="/WEB-INF/jsp/general/taglibs.jsp"%>
 <%@ taglib uri="/WEB-INF/tlds/core.tld" prefix="core"%>
 

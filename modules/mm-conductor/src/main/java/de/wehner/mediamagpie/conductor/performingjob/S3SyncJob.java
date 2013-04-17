@@ -1,6 +1,7 @@
 package de.wehner.mediamagpie.conductor.performingjob;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +18,7 @@ import de.wehner.mediamagpie.api.MediaExport;
 import de.wehner.mediamagpie.api.MediaExportRepository;
 import de.wehner.mediamagpie.aws.s3.S3MediaExportRepository;
 import de.wehner.mediamagpie.conductor.webapp.services.UploadService;
+import de.wehner.mediamagpie.core.util.ExceptionUtil;
 import de.wehner.mediamagpie.core.util.Pair;
 import de.wehner.mediamagpie.persistence.MediaDao;
 import de.wehner.mediamagpie.persistence.MediaExportFactory;
@@ -84,9 +87,22 @@ public class S3SyncJob extends AbstractJob {
 
                 // add all unmatched medias which have to be pushed to S3
                 for (Media mediaToExport : unmatchedMedias.values()) {
-                    LOG.debug(String.format("try to push media '%s' to S3.", mediaToExport.getName()));
-                    MediaExport mediaExport = _mediaExportFactory.create(mediaToExport);
-                    _s3MediaRepositiory.addMedia(_user.getName(), mediaExport);
+                    final Media media = mediaToExport;
+                    _transactionHandler.executeInTransaction(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            LOG.debug(String.format("try to push media '%s' to S3.",
+                                    StringUtils.isEmpty(media.getName()) ? media.getPath() : media.getName()));
+                            try {
+                                Media mediaInSession = _transactionHandler.reload(media);
+                                MediaExport mediaExport = _mediaExportFactory.create(mediaInSession);
+                                _s3MediaRepositiory.addMedia(_user.getName(), mediaExport);
+                            } catch (FileNotFoundException e) {
+                                ExceptionUtil.convertToRuntimeException(e);
+                            }
+                        }
+                    });
                 }
 
                 // retrieve all unknown Medias from S3 to local DB and file system
@@ -100,6 +116,7 @@ public class S3SyncJob extends AbstractJob {
                     // create job executions for a) image resizing and S3 Upload
                     _uploadService.createJobsForFreshUploadedMedias(newMedia, _configurationProvider);
                 }
+                LOG.info("finised " + getClass().getSimpleName());
                 return null;
             }
 

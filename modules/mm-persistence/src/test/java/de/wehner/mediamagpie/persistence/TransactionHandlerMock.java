@@ -4,6 +4,7 @@ import static org.mockito.Mockito.*;
 
 import de.wehner.mediamagpie.persistence.PersistenceService;
 import de.wehner.mediamagpie.persistence.TransactionHandler;
+import de.wehner.mediamagpie.persistence.entity.Base;
 
 public class TransactionHandlerMock extends TransactionHandler {
 
@@ -21,4 +22,10 @@ public class TransactionHandlerMock extends TransactionHandler {
     public PersistenceService getPersistenceService() {
         return _persistenceService;
     }
+
+    @Override
+    public <T extends Base> T reload(T entity) {
+        return entity;
+    }
+
 }

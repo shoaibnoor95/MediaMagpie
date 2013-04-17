@@ -14,9 +14,10 @@ import de.wehner.mediamagpie.persistence.entity.Media;
 public class S3MediaExportRepositoryMock extends S3MediaExportRepository {
 
     private final List<MediaExport> _mediasInBucket = new ArrayList<MediaExport>();
+    private final List<MediaExport> _mediasPushedToS3 = new ArrayList<MediaExport>();
 
     public S3MediaExportRepositoryMock() {
-        super((S3ClientFacade)null);
+        super((S3ClientFacade) null);
     }
 
     public S3MediaExportRepositoryMock addMediaOnS3(Media media) {
@@ -29,9 +30,13 @@ public class S3MediaExportRepositoryMock extends S3MediaExportRepository {
         return this;
     }
 
+    public List<MediaExport> getMediasPushedToS3() {
+        return _mediasPushedToS3;
+    }
+
     @Override
     public MediaExportResults addMedia(String userName, MediaExport mediaExport) {
-        // TODO Auto-generated method stub
+        _mediasPushedToS3.add(mediaExport);
         return null;
     }
 
@@ -42,7 +47,6 @@ public class S3MediaExportRepositoryMock extends S3MediaExportRepository {
 
     @Override
     public Iterator<MediaExport> iteratorVideos() {
-        // TODO Auto-generated method stub
         return null;
     }
 
