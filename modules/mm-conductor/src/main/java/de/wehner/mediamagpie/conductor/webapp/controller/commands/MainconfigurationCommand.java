@@ -1,6 +1,6 @@
 package de.wehner.mediamagpie.conductor.webapp.controller.commands;
 
-import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
+import de.wehner.mediamagpie.persistence.entity.properties.MainConfiguration;
 
 public class MainconfigurationCommand extends MainConfiguration {
 

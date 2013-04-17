@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import de.wehner.mediamagpie.common.persistence.entity.JobExecution;
+import de.wehner.mediamagpie.persistence.entity.JobExecution;
 
 
 @Component

@@ -1,6 +1,6 @@
 package de.wehner.mediamagpie.conductor.webapp.controller.commands;
 
-import de.wehner.mediamagpie.common.persistence.entity.Album;
+import de.wehner.mediamagpie.persistence.entity.Album;
 
 /**
  * Used to create or edit an album.

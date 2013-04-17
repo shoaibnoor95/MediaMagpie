@@ -4,9 +4,9 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import de.wehner.mediamagpie.common.persistence.entity.Media;
-import de.wehner.mediamagpie.common.persistence.entity.Priority;
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
+import de.wehner.mediamagpie.persistence.entity.Media;
+import de.wehner.mediamagpie.persistence.entity.Priority;
 
 /**
  * @author ralfwehner

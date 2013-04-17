@@ -3,7 +3,7 @@ package de.wehner.mediamagpie.conductor.webapp.controller.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.wehner.mediamagpie.common.persistence.entity.MediaTag;
+import de.wehner.mediamagpie.persistence.entity.MediaTag;
 
 
 public class TagCollection {

@@ -17,15 +17,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
-import de.wehner.mediamagpie.common.persistence.dao.UserConfigurationDao;
-import de.wehner.mediamagpie.common.persistence.entity.Media;
-import de.wehner.mediamagpie.common.persistence.entity.MediaTag;
-import de.wehner.mediamagpie.common.persistence.entity.Priority;
-import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
 import de.wehner.mediamagpie.conductor.webapp.controller.AbstractConfigurationSupportController;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaDetailCommand;
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
+import de.wehner.mediamagpie.persistence.MediaDao;
+import de.wehner.mediamagpie.persistence.UserConfigurationDao;
+import de.wehner.mediamagpie.persistence.entity.Media;
+import de.wehner.mediamagpie.persistence.entity.MediaTag;
+import de.wehner.mediamagpie.persistence.entity.Priority;
+import de.wehner.mediamagpie.persistence.service.ConfigurationProvider;
 
 @Controller
 public class MediaDetailController extends AbstractConfigurationSupportController {

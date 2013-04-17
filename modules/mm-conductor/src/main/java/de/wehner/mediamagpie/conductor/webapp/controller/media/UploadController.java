@@ -28,17 +28,17 @@ import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import de.wehner.mediamagpie.aws.s3.service.S3SyncService;
-import de.wehner.mediamagpie.common.persistence.entity.Media;
-import de.wehner.mediamagpie.common.persistence.entity.Priority;
-import de.wehner.mediamagpie.common.persistence.entity.User;
-import de.wehner.mediamagpie.common.persistence.entity.properties.S3Configuration;
-import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
 import de.wehner.mediamagpie.conductor.webapp.controller.AbstractConfigurationSupportController;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.FileUploadCommand;
 import de.wehner.mediamagpie.conductor.webapp.controller.json.JQueryUploadCommand;
 import de.wehner.mediamagpie.conductor.webapp.services.UploadService;
 import de.wehner.mediamagpie.conductor.webapp.util.security.SecurityUtil;
 import de.wehner.mediamagpie.core.util.Pair;
+import de.wehner.mediamagpie.persistence.entity.Media;
+import de.wehner.mediamagpie.persistence.entity.Priority;
+import de.wehner.mediamagpie.persistence.entity.User;
+import de.wehner.mediamagpie.persistence.entity.properties.S3Configuration;
+import de.wehner.mediamagpie.persistence.service.ConfigurationProvider;
 
 /**
  * For more information about used jQuery Plugin, please refer to: <code>http://aquantum-demo.appspot.com/file-upload</code>

@@ -29,15 +29,15 @@ import org.mockito.internal.matchers.CapturingMatcher;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
-import de.wehner.mediamagpie.common.persistence.dao.UserConfigurationDao;
-import de.wehner.mediamagpie.common.persistence.dao.UserDao;
-import de.wehner.mediamagpie.common.persistence.entity.Media;
-import de.wehner.mediamagpie.common.persistence.entity.User;
-import de.wehner.mediamagpie.common.persistence.entity.User.Role;
-import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
 import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
+import de.wehner.mediamagpie.persistence.MediaDao;
 import de.wehner.mediamagpie.persistence.TransactionHandlerMock;
+import de.wehner.mediamagpie.persistence.UserConfigurationDao;
+import de.wehner.mediamagpie.persistence.UserDao;
+import de.wehner.mediamagpie.persistence.entity.Media;
+import de.wehner.mediamagpie.persistence.entity.User;
+import de.wehner.mediamagpie.persistence.entity.User.Role;
+import de.wehner.mediamagpie.persistence.entity.properties.UserConfiguration;
 
 public class MediaSyncServiceTest {
 

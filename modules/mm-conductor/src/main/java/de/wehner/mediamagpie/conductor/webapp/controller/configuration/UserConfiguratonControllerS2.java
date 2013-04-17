@@ -22,16 +22,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
-import de.wehner.mediamagpie.common.persistence.dao.UserConfigurationDao;
-import de.wehner.mediamagpie.common.persistence.dao.UserDao;
-import de.wehner.mediamagpie.common.persistence.entity.User;
-import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.UserConfigurationCommand;
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
 import de.wehner.mediamagpie.conductor.webapp.services.MediaSyncService;
 import de.wehner.mediamagpie.conductor.webapp.services.UserSecurityService;
 import de.wehner.mediamagpie.conductor.webapp.util.security.SecurityUtil;
 import de.wehner.mediamagpie.conductor.webapp.validator.UserConfigurationValidator;
+import de.wehner.mediamagpie.persistence.UserConfigurationDao;
+import de.wehner.mediamagpie.persistence.UserDao;
+import de.wehner.mediamagpie.persistence.entity.User;
+import de.wehner.mediamagpie.persistence.entity.properties.UserConfiguration;
 
 @Controller
 @RequestMapping("/config/user")

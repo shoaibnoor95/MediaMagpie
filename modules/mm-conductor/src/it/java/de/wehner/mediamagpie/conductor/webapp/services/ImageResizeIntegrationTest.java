@@ -7,15 +7,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import de.wehner.mediamagpie.common.persistence.dao.ImageResizeJobExecutionDao;
-import de.wehner.mediamagpie.common.persistence.entity.ImageResizeJobExecution;
-import de.wehner.mediamagpie.common.persistence.entity.JobStatus;
-import de.wehner.mediamagpie.common.persistence.entity.Media;
-import de.wehner.mediamagpie.common.persistence.testsupport.DbTestEnvironment;
-import de.wehner.mediamagpie.common.persistence.testsupport.PersistenceTestUtil;
 import de.wehner.mediamagpie.conductor.webapp.AbstractSpringContextTest;
 import de.wehner.mediamagpie.conductor.webapp.services.JobScheduler;
+import de.wehner.mediamagpie.persistence.ImageResizeJobExecutionDao;
 import de.wehner.mediamagpie.persistence.PersistenceService;
+import de.wehner.mediamagpie.persistence.entity.ImageResizeJobExecution;
+import de.wehner.mediamagpie.persistence.entity.JobStatus;
+import de.wehner.mediamagpie.persistence.entity.Media;
+import de.wehner.mediamagpie.persistence.testsupport.DbTestEnvironment;
+import de.wehner.mediamagpie.persistence.testsupport.PersistenceTestUtil;
 
 
 public class ImageResizeIntegrationTest extends AbstractSpringContextTest {

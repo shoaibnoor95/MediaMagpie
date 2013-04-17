@@ -8,17 +8,17 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import de.wehner.mediamagpie.common.persistence.dao.UserConfigurationDao;
-import de.wehner.mediamagpie.common.persistence.dao.UserDao;
-import de.wehner.mediamagpie.common.persistence.entity.User;
-import de.wehner.mediamagpie.common.persistence.entity.User.Role;
-import de.wehner.mediamagpie.common.persistence.entity.properties.Property;
-import de.wehner.mediamagpie.common.persistence.entity.properties.S3Configuration;
-import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
-import de.wehner.mediamagpie.common.persistence.entity.properties.UserPropertyBackedConfiguration;
-import de.wehner.mediamagpie.common.persistence.testsupport.DbTestEnvironment;
-import de.wehner.mediamagpie.common.util.CipherServiceImpl;
 import de.wehner.mediamagpie.core.util.properties.PropertiesBacked;
+import de.wehner.mediamagpie.persistence.UserConfigurationDao;
+import de.wehner.mediamagpie.persistence.UserDao;
+import de.wehner.mediamagpie.persistence.entity.User;
+import de.wehner.mediamagpie.persistence.entity.User.Role;
+import de.wehner.mediamagpie.persistence.entity.properties.Property;
+import de.wehner.mediamagpie.persistence.entity.properties.S3Configuration;
+import de.wehner.mediamagpie.persistence.entity.properties.UserConfiguration;
+import de.wehner.mediamagpie.persistence.entity.properties.UserPropertyBackedConfiguration;
+import de.wehner.mediamagpie.persistence.testsupport.DbTestEnvironment;
+import de.wehner.mediamagpie.persistence.util.CipherServiceImpl;
 
 public class UserConfigurationDaoTest {
 

@@ -8,11 +8,6 @@ import java.util.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import de.wehner.mediamagpie.common.persistence.entity.Registration;
-import de.wehner.mediamagpie.common.persistence.entity.User;
-import de.wehner.mediamagpie.common.persistence.entity.User.Role;
-import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
-import de.wehner.mediamagpie.common.util.CipherServiceImpl;
 import de.wehner.mediamagpie.conductor.StartJetty;
 import de.wehner.mediamagpie.conductor.exception.RegistrationException;
 import de.wehner.mediamagpie.conductor.persistence.dao.RegistrationDao;
@@ -20,6 +15,11 @@ import de.wehner.mediamagpie.conductor.spring.deploy.impl.DynamicPropertiesConfi
 import de.wehner.mediamagpie.conductor.webapp.controller.registration.RegistrationProcessController;
 import de.wehner.mediamagpie.core.util.ExceptionUtil;
 import de.wehner.mediamagpie.core.util.properties.PropertiesUtil;
+import de.wehner.mediamagpie.persistence.entity.Registration;
+import de.wehner.mediamagpie.persistence.entity.User;
+import de.wehner.mediamagpie.persistence.entity.User.Role;
+import de.wehner.mediamagpie.persistence.entity.properties.UserConfiguration;
+import de.wehner.mediamagpie.persistence.util.CipherServiceImpl;
 
 @Service
 public class RegistrationService {

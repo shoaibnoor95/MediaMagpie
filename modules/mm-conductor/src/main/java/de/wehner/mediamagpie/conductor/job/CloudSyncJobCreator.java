@@ -9,18 +9,18 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 
 import de.wehner.mediamagpie.aws.s3.S3MediaExportRepository;
-import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
-import de.wehner.mediamagpie.common.persistence.entity.CloudSyncJobExecution;
-import de.wehner.mediamagpie.common.persistence.entity.CloudSyncJobExecution.CloudType;
-import de.wehner.mediamagpie.common.persistence.entity.JobExecution;
-import de.wehner.mediamagpie.common.persistence.entity.User;
-import de.wehner.mediamagpie.common.persistence.entity.properties.S3Configuration;
-import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
 import de.wehner.mediamagpie.conductor.performingjob.AbstractJob;
 import de.wehner.mediamagpie.conductor.performingjob.S3SyncJob;
 import de.wehner.mediamagpie.conductor.webapp.services.UploadService;
+import de.wehner.mediamagpie.persistence.MediaDao;
 import de.wehner.mediamagpie.persistence.PersistenceService;
 import de.wehner.mediamagpie.persistence.TransactionHandler;
+import de.wehner.mediamagpie.persistence.entity.CloudSyncJobExecution;
+import de.wehner.mediamagpie.persistence.entity.JobExecution;
+import de.wehner.mediamagpie.persistence.entity.User;
+import de.wehner.mediamagpie.persistence.entity.CloudSyncJobExecution.CloudType;
+import de.wehner.mediamagpie.persistence.entity.properties.S3Configuration;
+import de.wehner.mediamagpie.persistence.service.ConfigurationProvider;
 
 @Component
 public class CloudSyncJobCreator extends TransactionalJobCreator<AbstractJob> {

@@ -10,7 +10,7 @@ import de.wehner.mediamagpie.api.MediaExport;
 import de.wehner.mediamagpie.api.MediaExportMetadata;
 import de.wehner.mediamagpie.aws.s3.BaseMMTransformer;
 import de.wehner.mediamagpie.aws.s3.S3MediaExportRepository;
-import de.wehner.mediamagpie.common.util.MMTransformer;
+import de.wehner.mediamagpie.core.util.MMTransformer;
 
 /**
  * Creates a S3 <code>ObjectMetadata</code> which contains some "short" metadata of a media. This raw binary data stream of a media will be

@@ -17,9 +17,9 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import de.wehner.mediamagpie.common.persistence.entity.properties.MailServerConfiguration;
-import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
+import de.wehner.mediamagpie.persistence.ConfigurationDao;
 import de.wehner.mediamagpie.persistence.TransactionHandler;
+import de.wehner.mediamagpie.persistence.entity.properties.MailServerConfiguration;
 
 /**
  * checkout: james, greenMail and spring.mail for inline smtp server functionality?

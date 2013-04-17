@@ -6,12 +6,12 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import de.wehner.mediamagpie.common.persistence.entity.User;
-import de.wehner.mediamagpie.common.persistence.entity.User.Role;
-import de.wehner.mediamagpie.common.persistence.testsupport.PersistenceTestUtil;
 import de.wehner.mediamagpie.conductor.persistence.dao.UserDaoWithTransaction;
 import de.wehner.mediamagpie.conductor.webapp.AbstractSpringContextTest;
 import de.wehner.mediamagpie.persistence.PersistenceService;
+import de.wehner.mediamagpie.persistence.entity.User;
+import de.wehner.mediamagpie.persistence.entity.User.Role;
+import de.wehner.mediamagpie.persistence.testsupport.PersistenceTestUtil;
 
 
 /**

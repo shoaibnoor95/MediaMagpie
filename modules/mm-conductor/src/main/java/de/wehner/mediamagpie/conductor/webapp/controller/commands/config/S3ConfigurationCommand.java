@@ -4,7 +4,7 @@ import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.commons.lang3.StringUtils;
 
-import de.wehner.mediamagpie.common.persistence.entity.properties.S3Configuration;
+import de.wehner.mediamagpie.persistence.entity.properties.S3Configuration;
 
 public class S3ConfigurationCommand extends S3Configuration {
 

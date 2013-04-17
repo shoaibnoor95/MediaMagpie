@@ -4,8 +4,8 @@ import java.beans.PropertyEditorSupport;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.wehner.mediamagpie.common.persistence.dao.Dao;
-import de.wehner.mediamagpie.common.persistence.entity.Base;
+import de.wehner.mediamagpie.persistence.Dao;
+import de.wehner.mediamagpie.persistence.entity.Base;
 
 
 public class EntityCollectionEditor<T extends Base> extends PropertyEditorSupport {

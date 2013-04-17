@@ -10,15 +10,15 @@ import java.net.URI;
 import org.junit.Rule;
 import org.junit.Test;
 
-import de.wehner.mediamagpie.common.persistence.entity.JobExecution;
-import de.wehner.mediamagpie.common.persistence.entity.Orientation;
-import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
 import de.wehner.mediamagpie.common.testsupport.ItEnvironment;
 import de.wehner.mediamagpie.common.testsupport.ItEnvironment.CleanFolderInstruction;
 import de.wehner.mediamagpie.common.testsupport.LocalItEnvironment;
 import de.wehner.mediamagpie.conductor.performingjob.ImageResizeJob;
 import de.wehner.mediamagpie.conductor.performingjob.JobCallable;
 import de.wehner.mediamagpie.conductor.performingjob.JobExecutor;
+import de.wehner.mediamagpie.persistence.entity.JobExecution;
+import de.wehner.mediamagpie.persistence.entity.Orientation;
+import de.wehner.mediamagpie.persistence.entity.properties.MainConfiguration;
 
 public class ImageResizeJobIntegrationTest {
 

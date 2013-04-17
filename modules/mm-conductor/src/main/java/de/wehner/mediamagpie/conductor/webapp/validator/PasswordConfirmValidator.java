@@ -3,7 +3,7 @@ package de.wehner.mediamagpie.conductor.webapp.validator;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import de.wehner.mediamagpie.common.persistence.entity.PasswordConfiguration;
+import de.wehner.mediamagpie.persistence.entity.PasswordConfiguration;
 
 public class PasswordConfirmValidator implements Validator {
 

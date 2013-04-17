@@ -1,6 +1,6 @@
 package de.wehner.mediamagpie.conductor.webapp.controller.commands;
 
-import de.wehner.mediamagpie.common.persistence.entity.UserGroup;
+import de.wehner.mediamagpie.persistence.entity.UserGroup;
 
 public class UserGroupCommand extends UserGroup {
 

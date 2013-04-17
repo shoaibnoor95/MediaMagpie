@@ -4,6 +4,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import de.wehner.mediamagpie.persistence.util.CipherServiceImpl;
+
+
 
 public class CipherServiceTest {
 

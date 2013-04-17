@@ -15,15 +15,15 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.validation.Validator;
 
-import de.wehner.mediamagpie.common.persistence.dao.UserConfigurationDao;
-import de.wehner.mediamagpie.common.persistence.dao.UserDao;
-import de.wehner.mediamagpie.common.persistence.entity.properties.AdminConfiguration;
-import de.wehner.mediamagpie.common.persistence.entity.properties.PropertyBackedConfiguration;
-import de.wehner.mediamagpie.common.util.CipherServiceImpl;
-import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
 import de.wehner.mediamagpie.conductor.webapp.services.SetupVerificationService;
 import de.wehner.mediamagpie.core.util.properties.PropertiesUtil;
+import de.wehner.mediamagpie.persistence.ConfigurationDao;
 import de.wehner.mediamagpie.persistence.TransactionHandler;
+import de.wehner.mediamagpie.persistence.UserConfigurationDao;
+import de.wehner.mediamagpie.persistence.UserDao;
+import de.wehner.mediamagpie.persistence.entity.properties.AdminConfiguration;
+import de.wehner.mediamagpie.persistence.entity.properties.PropertyBackedConfiguration;
+import de.wehner.mediamagpie.persistence.util.CipherServiceImpl;
 
 public class SetupPropertiesInjectorTest {
 

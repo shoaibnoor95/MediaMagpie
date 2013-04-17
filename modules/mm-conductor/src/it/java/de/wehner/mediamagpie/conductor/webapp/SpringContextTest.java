@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import de.wehner.mediamagpie.common.persistence.dao.UserDao;
+import de.wehner.mediamagpie.persistence.UserDao;
 
 
 public class SpringContextTest extends AbstractSpringContextTest {

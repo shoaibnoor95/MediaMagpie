@@ -14,8 +14,8 @@ import org.hibernate.search.jpa.FullTextEntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import de.wehner.mediamagpie.common.persistence.entity.Base;
-import de.wehner.mediamagpie.common.persistence.entity.User;
+import de.wehner.mediamagpie.persistence.entity.Base;
+import de.wehner.mediamagpie.persistence.entity.User;
 
 
 @Service

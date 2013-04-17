@@ -6,8 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import de.wehner.mediamagpie.common.persistence.entity.properties.RequiredSetupTasks;
-import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
+import de.wehner.mediamagpie.persistence.entity.properties.RequiredSetupTasks;
+import de.wehner.mediamagpie.persistence.service.ConfigurationProvider;
 
 @Controller
 // @RequestMapping("/navigation")

@@ -24,15 +24,15 @@ import com.amazonaws.auth.BasicAWSCredentials;
 
 import de.wehner.mediamagpie.aws.s3.S3ClientFacade;
 import de.wehner.mediamagpie.aws.s3.service.S3SyncService;
-import de.wehner.mediamagpie.common.persistence.dao.UserDao;
-import de.wehner.mediamagpie.common.persistence.entity.User;
-import de.wehner.mediamagpie.common.persistence.entity.properties.S3Configuration;
-import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
 import de.wehner.mediamagpie.conductor.webapp.controller.AbstractConfigurationSupportController;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.CheckResultCommand;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.config.S3ConfigurationCommand;
 import de.wehner.mediamagpie.conductor.webapp.util.security.SecurityUtil;
 import de.wehner.mediamagpie.core.util.Pair;
+import de.wehner.mediamagpie.persistence.UserDao;
+import de.wehner.mediamagpie.persistence.entity.User;
+import de.wehner.mediamagpie.persistence.entity.properties.S3Configuration;
+import de.wehner.mediamagpie.persistence.service.ConfigurationProvider;
 
 @Controller
 @RequestMapping("/config/aws/s3")

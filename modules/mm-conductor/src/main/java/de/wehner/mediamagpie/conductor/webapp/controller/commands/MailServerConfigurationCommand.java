@@ -3,7 +3,7 @@ package de.wehner.mediamagpie.conductor.webapp.controller.commands;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
-import de.wehner.mediamagpie.common.persistence.entity.properties.MailServerConfiguration;
+import de.wehner.mediamagpie.persistence.entity.properties.MailServerConfiguration;
 
 public class MailServerConfigurationCommand extends MailServerConfiguration {
 

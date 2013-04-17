@@ -8,8 +8,8 @@ import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.springframework.util.CollectionUtils;
 
-import de.wehner.mediamagpie.common.persistence.entity.Album;
-import de.wehner.mediamagpie.common.persistence.entity.Media;
+import de.wehner.mediamagpie.persistence.entity.Album;
+import de.wehner.mediamagpie.persistence.entity.Media;
 
 
 public class MediaDetailCommand extends Media {

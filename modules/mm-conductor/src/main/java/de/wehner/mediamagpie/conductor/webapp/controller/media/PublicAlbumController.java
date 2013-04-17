@@ -21,15 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import de.wehner.mediamagpie.common.persistence.dao.AlbumDao;
-import de.wehner.mediamagpie.common.persistence.entity.Album;
-import de.wehner.mediamagpie.common.persistence.entity.Media;
-import de.wehner.mediamagpie.common.persistence.entity.Priority;
-import de.wehner.mediamagpie.common.persistence.entity.User;
-import de.wehner.mediamagpie.common.persistence.entity.Visibility;
-import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
-import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
-import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
 import de.wehner.mediamagpie.conductor.webapp.controller.AbstractConfigurationSupportController;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaDetailCommand;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaFeedCommand;
@@ -38,6 +29,15 @@ import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaThumbComm
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
 import de.wehner.mediamagpie.conductor.webapp.util.WebAppUtils;
 import de.wehner.mediamagpie.conductor.webapp.util.security.SecurityUtil;
+import de.wehner.mediamagpie.persistence.AlbumDao;
+import de.wehner.mediamagpie.persistence.entity.Album;
+import de.wehner.mediamagpie.persistence.entity.Media;
+import de.wehner.mediamagpie.persistence.entity.Priority;
+import de.wehner.mediamagpie.persistence.entity.User;
+import de.wehner.mediamagpie.persistence.entity.Visibility;
+import de.wehner.mediamagpie.persistence.entity.properties.MainConfiguration;
+import de.wehner.mediamagpie.persistence.entity.properties.UserConfiguration;
+import de.wehner.mediamagpie.persistence.service.ConfigurationProvider;
 
 @Controller
 @RequestMapping("/public/album")

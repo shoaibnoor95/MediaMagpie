@@ -27,22 +27,22 @@ import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.wehner.mediamagpie.common.persistence.dao.JobExecutionDao;
-import de.wehner.mediamagpie.common.persistence.entity.ImageResizeJobExecution;
-import de.wehner.mediamagpie.common.persistence.entity.JobExecution;
-import de.wehner.mediamagpie.common.persistence.entity.JobStatus;
-import de.wehner.mediamagpie.common.persistence.entity.Media;
-import de.wehner.mediamagpie.common.persistence.entity.MediaDeleteJobExecution;
-import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
-import de.wehner.mediamagpie.common.persistence.testsupport.DbTestEnvironment;
-import de.wehner.mediamagpie.common.util.CipherServiceImpl;
-import de.wehner.mediamagpie.common.util.TimeProvider;
 import de.wehner.mediamagpie.conductor.performingjob.JobCallable;
 import de.wehner.mediamagpie.conductor.performingjob.JobExecutor;
-import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
 import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
+import de.wehner.mediamagpie.persistence.ConfigurationDao;
+import de.wehner.mediamagpie.persistence.JobExecutionDao;
 import de.wehner.mediamagpie.persistence.PersistenceService;
 import de.wehner.mediamagpie.persistence.TransactionHandler;
+import de.wehner.mediamagpie.persistence.entity.ImageResizeJobExecution;
+import de.wehner.mediamagpie.persistence.entity.JobExecution;
+import de.wehner.mediamagpie.persistence.entity.JobStatus;
+import de.wehner.mediamagpie.persistence.entity.Media;
+import de.wehner.mediamagpie.persistence.entity.MediaDeleteJobExecution;
+import de.wehner.mediamagpie.persistence.entity.properties.MainConfiguration;
+import de.wehner.mediamagpie.persistence.testsupport.DbTestEnvironment;
+import de.wehner.mediamagpie.persistence.util.CipherServiceImpl;
+import de.wehner.mediamagpie.persistence.util.TimeProvider;
 
 //@RunWith(NonParallelTest.class)
 public class JobSchedulerIntegrationTest {

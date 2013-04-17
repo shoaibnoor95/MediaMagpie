@@ -6,9 +6,9 @@ import javax.validation.constraints.Min;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
-import de.wehner.mediamagpie.common.persistence.entity.PasswordConfiguration;
-import de.wehner.mediamagpie.common.persistence.entity.User;
-import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
+import de.wehner.mediamagpie.persistence.entity.PasswordConfiguration;
+import de.wehner.mediamagpie.persistence.entity.User;
+import de.wehner.mediamagpie.persistence.entity.properties.UserConfiguration;
 
 public class UserConfigurationCommand extends User implements PasswordConfiguration {
 

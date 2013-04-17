@@ -17,8 +17,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import de.wehner.mediamagpie.common.persistence.entity.User;
 import de.wehner.mediamagpie.conductor.webapp.services.UserSecurityService;
+import de.wehner.mediamagpie.persistence.entity.User;
 
 @Service
 public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {

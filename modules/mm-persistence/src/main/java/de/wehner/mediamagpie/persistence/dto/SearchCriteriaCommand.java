@@ -8,7 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
-import de.wehner.mediamagpie.common.util.MinMaxValue;
+import de.wehner.mediamagpie.core.util.MinMaxValue;
 
 public class SearchCriteriaCommand {
 

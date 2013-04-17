@@ -2,13 +2,13 @@ package de.wehner.mediamagpie.conductor.webapp.controller;
 
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 
-import de.wehner.mediamagpie.common.persistence.dao.UserDao;
-import de.wehner.mediamagpie.common.persistence.entity.User;
-import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
-import de.wehner.mediamagpie.common.persistence.entity.properties.S3Configuration;
-import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
-import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
 import de.wehner.mediamagpie.conductor.webapp.util.security.SecurityUtil;
+import de.wehner.mediamagpie.persistence.UserDao;
+import de.wehner.mediamagpie.persistence.entity.User;
+import de.wehner.mediamagpie.persistence.entity.properties.MainConfiguration;
+import de.wehner.mediamagpie.persistence.entity.properties.S3Configuration;
+import de.wehner.mediamagpie.persistence.entity.properties.UserConfiguration;
+import de.wehner.mediamagpie.persistence.service.ConfigurationProvider;
 
 public class AbstractConfigurationSupportController {
 

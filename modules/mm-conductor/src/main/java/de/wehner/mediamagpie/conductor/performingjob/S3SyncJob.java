@@ -15,15 +15,15 @@ import org.slf4j.LoggerFactory;
 import de.wehner.mediamagpie.api.MediaExport;
 import de.wehner.mediamagpie.api.MediaExportRepository;
 import de.wehner.mediamagpie.aws.s3.S3MediaExportRepository;
-import de.wehner.mediamagpie.common.persistence.MediaExportFactory;
-import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
-import de.wehner.mediamagpie.common.persistence.entity.LifecyleStatus;
-import de.wehner.mediamagpie.common.persistence.entity.Media;
-import de.wehner.mediamagpie.common.persistence.entity.User;
-import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
 import de.wehner.mediamagpie.conductor.webapp.services.UploadService;
 import de.wehner.mediamagpie.core.util.Pair;
+import de.wehner.mediamagpie.persistence.MediaDao;
+import de.wehner.mediamagpie.persistence.MediaExportFactory;
 import de.wehner.mediamagpie.persistence.TransactionHandler;
+import de.wehner.mediamagpie.persistence.entity.LifecyleStatus;
+import de.wehner.mediamagpie.persistence.entity.Media;
+import de.wehner.mediamagpie.persistence.entity.User;
+import de.wehner.mediamagpie.persistence.service.ConfigurationProvider;
 
 public class S3SyncJob extends AbstractJob {
 
@@ -95,10 +95,10 @@ public class S3SyncJob extends AbstractJob {
                     Pair<String, File> uploadFileInfo = _uploadService.createUniqueUserStoreFile(_user, mediaExport.getOriginalFileName());
                     LOG.info("Try dump upload stream '" + uploadFileInfo.getFirst() + "' into file '" + uploadFileInfo.getSecond().getPath() + "'");
                     Media newMedia = _uploadService.handleUploadStream(_user, uploadFileInfo.getSecond(), mediaExport.getInputStream());
+                    _mediaDao.makePersistent(newMedia);
 
                     // create job executions for a) image resizing and S3 Upload
                     _uploadService.createJobsForFreshUploadedMedias(newMedia, _configurationProvider);
-                    _mediaDao.makePersistent(newMedia);
                 }
                 return null;
             }

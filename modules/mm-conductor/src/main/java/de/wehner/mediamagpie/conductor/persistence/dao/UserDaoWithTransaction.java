@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import de.wehner.mediamagpie.common.persistence.entity.User;
+import de.wehner.mediamagpie.persistence.entity.User;
 
 
 @Repository

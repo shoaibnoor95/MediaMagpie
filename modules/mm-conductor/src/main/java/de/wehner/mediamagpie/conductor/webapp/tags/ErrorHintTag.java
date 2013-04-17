@@ -8,8 +8,8 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
-import de.wehner.mediamagpie.common.persistence.entity.properties.RequiredSetupTasks;
-import de.wehner.mediamagpie.common.persistence.entity.properties.SetupTask;
+import de.wehner.mediamagpie.persistence.entity.properties.RequiredSetupTasks;
+import de.wehner.mediamagpie.persistence.entity.properties.SetupTask;
 
 public class ErrorHintTag extends SimpleTagSupport {
 

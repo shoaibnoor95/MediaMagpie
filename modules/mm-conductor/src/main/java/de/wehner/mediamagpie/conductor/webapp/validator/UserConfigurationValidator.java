@@ -5,7 +5,7 @@ import java.io.File;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
+import de.wehner.mediamagpie.persistence.entity.properties.UserConfiguration;
 
 
 public class UserConfigurationValidator implements Validator {

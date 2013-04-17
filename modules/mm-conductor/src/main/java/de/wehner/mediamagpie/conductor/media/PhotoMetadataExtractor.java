@@ -27,8 +27,8 @@ import com.drew.metadata.Tag;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 
-import de.wehner.mediamagpie.common.persistence.entity.Orientation;
 import de.wehner.mediamagpie.conductor.metadata.CameraMetaData;
+import de.wehner.mediamagpie.persistence.entity.Orientation;
 
 public class PhotoMetadataExtractor {
 

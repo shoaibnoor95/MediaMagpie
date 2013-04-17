@@ -10,9 +10,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.propertyeditors.StringArrayPropertyEditor;
 
-import de.wehner.mediamagpie.common.util.CipherServiceImpl;
 import de.wehner.mediamagpie.core.util.properties.PropertiesBacked;
 import de.wehner.mediamagpie.core.util.properties.PropertiesUtil;
+import de.wehner.mediamagpie.persistence.util.CipherServiceImpl;
 
 public class PropertiesUtilTest {
 

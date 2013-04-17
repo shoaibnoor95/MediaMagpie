@@ -1,6 +1,6 @@
 package de.wehner.mediamagpie.conductor.webapp.controller.commands;
 
-import de.wehner.mediamagpie.common.persistence.entity.User;
+import de.wehner.mediamagpie.persistence.entity.User;
 
 @Deprecated
 public class UserCommand extends User {

@@ -15,19 +15,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
-import de.wehner.mediamagpie.common.persistence.entity.Media;
-import de.wehner.mediamagpie.common.persistence.entity.Priority;
-import de.wehner.mediamagpie.common.persistence.entity.ThumbImage;
-import de.wehner.mediamagpie.common.persistence.entity.User;
-import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
-import de.wehner.mediamagpie.common.util.FileSystemUtil;
-import de.wehner.mediamagpie.common.util.TimeoutExecutor;
-import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
-import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.ThumbImageDao;
+import de.wehner.mediamagpie.core.util.FileSystemUtil;
 import de.wehner.mediamagpie.core.util.Pair;
+import de.wehner.mediamagpie.core.util.TimeoutExecutor;
+import de.wehner.mediamagpie.persistence.MediaDao;
 import de.wehner.mediamagpie.persistence.PersistenceService;
+import de.wehner.mediamagpie.persistence.entity.Media;
+import de.wehner.mediamagpie.persistence.entity.Priority;
+import de.wehner.mediamagpie.persistence.entity.ThumbImage;
+import de.wehner.mediamagpie.persistence.entity.User;
+import de.wehner.mediamagpie.persistence.service.ConfigurationProvider;
 
 @Service
 public class UploadService {
@@ -36,17 +34,17 @@ public class UploadService {
 
     private static final Logger LOG = LoggerFactory.getLogger(UploadService.class);
 
-    private final ConfigurationDao _configurationDao;
+    private final ConfigurationProvider _configurationProvider;
     private final MediaDao _mediaDao;
     private final ImageService _imageService;
     private final PersistenceService _persistenceService;
     private final ThumbImageDao _thumbImageDao;
 
     @Autowired
-    public UploadService(ConfigurationDao configurationDao, MediaDao mediaDao, ImageService imageService, PersistenceService persistenceService,
+    public UploadService(ConfigurationProvider configurationProvider, MediaDao mediaDao, ImageService imageService, PersistenceService persistenceService,
             ThumbImageDao thumbImageDao) {
         super();
-        _configurationDao = configurationDao;
+        _configurationProvider = configurationProvider;
         _mediaDao = mediaDao;
         _imageService = imageService;
         _persistenceService = persistenceService;
@@ -63,7 +61,7 @@ public class UploadService {
      */
     public synchronized Pair<String, File> createUniqueUserStoreFile(User currentUser, String originalFilename) {
         File testRelFileName = buildRelativeMediaFileName(currentUser, originalFilename);
-        String baseUploadPath = _configurationDao.getConfiguration(MainConfiguration.class).getBaseUploadPath();
+        String baseUploadPath = _configurationProvider.getMainConfiguration().getBaseUploadPath();
         File tempFile = new File(baseUploadPath, testRelFileName.getPath());
         try {
             if (!tempFile.getParentFile().exists()) {
@@ -140,7 +138,7 @@ public class UploadService {
     }
 
     public void deleteFile(User user, String mediaFileName) {
-        String baseUploadPath = _configurationDao.getConfiguration(MainConfiguration.class).getBaseUploadPath();
+        String baseUploadPath = _configurationProvider.getMainConfiguration().getBaseUploadPath();
         File relativeFileName = buildRelativeMediaFileName(user, mediaFileName);
         final File mediaFile = new File(baseUploadPath, relativeFileName.getPath());
         Media media = _mediaDao.getByUri(user, mediaFile.toURI());
@@ -169,6 +167,12 @@ public class UploadService {
         return _imageService.createLink(media, UPLOAD_PREVIEW_THUMB_LABEL, Priority.NORMAL);
     }
 
+    /**
+     * Be aware: This method does call a flipTransaction() internally and detaches entities.
+     * 
+     * @param newMedia
+     * @param configurationProvider
+     */
     public void createJobsForFreshUploadedMedias(Media newMedia, ConfigurationProvider configurationProvider) {
 
         List<Integer> allThumbSizes = configurationProvider.createConfigurationFacade(newMedia.getOwner()).getAllThumbSizes();

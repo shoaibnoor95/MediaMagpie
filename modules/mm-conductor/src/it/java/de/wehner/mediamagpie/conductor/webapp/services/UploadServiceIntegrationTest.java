@@ -13,19 +13,16 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import de.wehner.mediamagpie.common.persistence.dao.ImageResizeJobExecutionDao;
-import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
-import de.wehner.mediamagpie.common.persistence.entity.Media;
-import de.wehner.mediamagpie.common.persistence.entity.User;
-import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
-import de.wehner.mediamagpie.common.persistence.testsupport.DbTestEnvironment;
-import de.wehner.mediamagpie.common.util.CipherServiceImpl;
-import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.MediaDeleteJobExecutionDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.ThumbImageDao;
 import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
 import de.wehner.mediamagpie.core.util.Pair;
+import de.wehner.mediamagpie.persistence.ImageResizeJobExecutionDao;
+import de.wehner.mediamagpie.persistence.MediaDao;
 import de.wehner.mediamagpie.persistence.PersistenceService;
+import de.wehner.mediamagpie.persistence.entity.Media;
+import de.wehner.mediamagpie.persistence.entity.User;
+import de.wehner.mediamagpie.persistence.testsupport.DbTestEnvironment;
 
 public class UploadServiceIntegrationTest {
 
@@ -34,11 +31,10 @@ public class UploadServiceIntegrationTest {
 
     @Rule
     public DbTestEnvironment _dbTestEnvironment = new DbTestEnvironment(/* "mysql-it" */);
+
     @Rule
     public TestEnvironment _testEnvironment = new TestEnvironment(getClass());
 
-    @Mock
-    private CipherServiceImpl _cipherService;
     @Mock
     private ImageResizeJobExecutionDao _imageResizeJobExecutionDao;
     @Mock
@@ -48,7 +44,6 @@ public class UploadServiceIntegrationTest {
 
     private PersistenceService _persistenceService;
     private ImageService _imageService;
-    private MainConfiguration _mc;
     private UploadService _uploadService;
     private User _user;
 
@@ -57,15 +52,12 @@ public class UploadServiceIntegrationTest {
         MockitoAnnotations.initMocks(this);
         _dbTestEnvironment.cleanDb();
         _persistenceService = _dbTestEnvironment.getPersistenceService();
-        ConfigurationDao configurationDao = new ConfigurationDao(_persistenceService, _cipherService);
         ThumbImageDao thumbImageDao = new ThumbImageDao(_persistenceService);
         _mediaDao = new MediaDao(_persistenceService);
         _imageService = new ImageService(thumbImageDao, _mediaDao, _imageResizeJobExecutionDao, _mediaDeleteJobExecutionDao);
-        _uploadService = new UploadService(configurationDao, _mediaDao, _imageService, _persistenceService, thumbImageDao);
         _persistenceService.beginTransaction();
-        _mc = new MainConfiguration();
-        _mc.setBaseUploadPath(_testEnvironment.getWorkingDir() + "/baseUploadPath");
-        configurationDao.saveConfiguration(_mc);
+        _uploadService = new UploadService(_dbTestEnvironment.createConfigurationProvider(_testEnvironment.getWorkingDir()), _mediaDao, _imageService,
+                _persistenceService, thumbImageDao);
         _user = _dbTestEnvironment.getOrCreateTestUser();
         _persistenceService.flipTransaction();
     }
@@ -107,9 +99,4 @@ public class UploadServiceIntegrationTest {
         }
     }
 
-    // @Test
-    // public void test_createThumbImage() {
-    // // TODO rwe:
-    //
-    // }
 }

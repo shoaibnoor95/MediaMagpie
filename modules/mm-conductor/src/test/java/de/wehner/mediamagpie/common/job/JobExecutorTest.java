@@ -13,13 +13,13 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import de.wehner.mediamagpie.common.persistence.entity.JobExecution;
-import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
 import de.wehner.mediamagpie.common.test.util.UnitTestEnvironment;
 import de.wehner.mediamagpie.conductor.performingjob.JobCallable;
 import de.wehner.mediamagpie.conductor.performingjob.JobExecutor;
 import de.wehner.mediamagpie.conductor.performingjob.PerformingJob;
 import de.wehner.mediamagpie.conductor.performingjob.PerformingJobContext;
+import de.wehner.mediamagpie.persistence.entity.JobExecution;
+import de.wehner.mediamagpie.persistence.entity.properties.MainConfiguration;
 
 public class JobExecutorTest {
 

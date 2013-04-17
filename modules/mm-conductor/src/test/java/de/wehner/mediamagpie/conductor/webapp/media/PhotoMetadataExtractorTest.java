@@ -12,9 +12,9 @@ import org.junit.Test;
 
 import com.drew.metadata.MetadataException;
 
-import de.wehner.mediamagpie.common.persistence.entity.Orientation;
 import de.wehner.mediamagpie.conductor.media.PhotoMetadataExtractor;
 import de.wehner.mediamagpie.conductor.metadata.CameraMetaData;
+import de.wehner.mediamagpie.persistence.entity.Orientation;
 
 public class PhotoMetadataExtractorTest {
 

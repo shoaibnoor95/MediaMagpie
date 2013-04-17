@@ -3,8 +3,8 @@ package de.wehner.mediamagpie.conductor.webapp.controller.commands;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
-import de.wehner.mediamagpie.common.persistence.entity.Media;
 import de.wehner.mediamagpie.conductor.metadata.CameraMetaData;
+import de.wehner.mediamagpie.persistence.entity.Media;
 
 public class MediaThumbCommand {
 

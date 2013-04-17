@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import de.wehner.mediamagpie.common.persistence.entity.properties.SetupTask;
-import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.MainconfigurationCommand;
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
 import de.wehner.mediamagpie.conductor.webapp.services.MediaSyncService;
 import de.wehner.mediamagpie.conductor.webapp.services.SetupVerificationService;
 import de.wehner.mediamagpie.conductor.webapp.validator.MainConfigurationValidator;
+import de.wehner.mediamagpie.persistence.entity.properties.SetupTask;
+import de.wehner.mediamagpie.persistence.service.ConfigurationProvider;
 
 @Controller
 @RequestMapping("/config/admin")

@@ -18,18 +18,18 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
-import de.wehner.mediamagpie.common.persistence.entity.Media;
-import de.wehner.mediamagpie.common.persistence.entity.ThumbImage;
-import de.wehner.mediamagpie.common.persistence.entity.User;
-import de.wehner.mediamagpie.common.persistence.entity.User.Role;
-import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
-import de.wehner.mediamagpie.common.util.FileSystemUtil;
-import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
 import de.wehner.mediamagpie.conductor.persistence.dao.ThumbImageDao;
 import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
+import de.wehner.mediamagpie.core.util.FileSystemUtil;
 import de.wehner.mediamagpie.core.util.Pair;
+import de.wehner.mediamagpie.persistence.MediaDao;
 import de.wehner.mediamagpie.persistence.PersistenceService;
+import de.wehner.mediamagpie.persistence.entity.Media;
+import de.wehner.mediamagpie.persistence.entity.ThumbImage;
+import de.wehner.mediamagpie.persistence.entity.User;
+import de.wehner.mediamagpie.persistence.entity.User.Role;
+import de.wehner.mediamagpie.persistence.entity.properties.MainConfiguration;
+import de.wehner.mediamagpie.persistence.service.ConfigurationProvider;
 
 public class UploadServiceTest {
 
@@ -45,7 +45,7 @@ public class UploadServiceTest {
 
     private MainConfiguration mc;
     @Mock
-    private ConfigurationDao _configurationDao;
+    private ConfigurationProvider _configurationProvider;
     @Mock
     private MediaDao _mediaDao;
     @Mock
@@ -58,12 +58,12 @@ public class UploadServiceTest {
     @Before
     public void setUp() throws IOException {
         MockitoAnnotations.initMocks(this);
-        _uploadService = new UploadService(_configurationDao, _mediaDao, _imageService, _persistenceService, _thumbImageDao);
+        _uploadService = new UploadService(_configurationProvider, _mediaDao, _imageService, _persistenceService, _thumbImageDao);
         _user = new User("Ralf", "rwe@localhost", Role.ADMIN);
         _user.setId(123L);
         mc = new MainConfiguration();
         mc.setBaseUploadPath(_testEnvironment.getWorkingDir() + "/baseUploadPath");
-        when(_configurationDao.getConfiguration(MainConfiguration.class)).thenReturn(mc);
+        when(_configurationProvider.getMainConfiguration()).thenReturn(mc);
         // new Media(_user, "pictureA", new File());
         ThumbImage thumbImage = new ThumbImage(null, UploadService.UPLOAD_PREVIEW_THUMB_LABEL, null);
         when(_thumbImageDao.getByMediaIdAndLabel(any(Long.class), eq(UploadService.UPLOAD_PREVIEW_THUMB_LABEL))).thenReturn(thumbImage);

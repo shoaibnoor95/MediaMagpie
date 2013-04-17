@@ -10,7 +10,7 @@ import java.util.Locale;
 
 import org.junit.Test;
 
-import de.wehner.mediamagpie.common.util.TimeUtil;
+import de.wehner.mediamagpie.core.util.TimeUtil;
 
 public class TimeUtilTest {
 

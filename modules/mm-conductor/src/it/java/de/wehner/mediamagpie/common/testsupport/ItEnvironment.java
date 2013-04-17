@@ -11,14 +11,14 @@ import org.junit.rules.ExternalResource;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import de.wehner.mediamagpie.common.persistence.entity.JobExecution;
-import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
 import de.wehner.mediamagpie.conductor.performingjob.JobExecutor;
 import de.wehner.mediamagpie.conductor.performingjob.JobFactory;
 import de.wehner.mediamagpie.conductor.performingjob.PerformingJob;
-import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
 import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
+import de.wehner.mediamagpie.persistence.ConfigurationDao;
 import de.wehner.mediamagpie.persistence.TransactionHandlerMock;
+import de.wehner.mediamagpie.persistence.entity.JobExecution;
+import de.wehner.mediamagpie.persistence.entity.properties.MainConfiguration;
 
 /**
  * Gives access to the 'environment' needed for executing a job.

@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
-import de.wehner.mediamagpie.common.persistence.entity.properties.RequiredSetupTasks;
-import de.wehner.mediamagpie.common.persistence.entity.properties.SetupTask;
-import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
-import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
+import de.wehner.mediamagpie.persistence.ConfigurationDao;
+import de.wehner.mediamagpie.persistence.entity.properties.MainConfiguration;
+import de.wehner.mediamagpie.persistence.entity.properties.RequiredSetupTasks;
+import de.wehner.mediamagpie.persistence.entity.properties.SetupTask;
+import de.wehner.mediamagpie.persistence.service.ConfigurationProvider;
 
 @Service
 public class SetupVerificationService {

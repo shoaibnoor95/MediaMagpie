@@ -22,18 +22,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import de.wehner.mediamagpie.common.persistence.dao.AlbumDao;
-import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
-import de.wehner.mediamagpie.common.persistence.entity.Album;
-import de.wehner.mediamagpie.common.persistence.entity.LifecyleStatus;
-import de.wehner.mediamagpie.common.persistence.entity.Media;
-import de.wehner.mediamagpie.common.persistence.entity.User;
-import de.wehner.mediamagpie.common.persistence.entity.properties.MainConfiguration;
-import de.wehner.mediamagpie.common.persistence.entity.properties.S3Configuration;
-import de.wehner.mediamagpie.common.persistence.entity.properties.UserConfiguration;
-import de.wehner.mediamagpie.common.util.MinMaxValue;
-import de.wehner.mediamagpie.common.util.TimeUtil;
-import de.wehner.mediamagpie.conductor.configuration.ConfigurationProvider;
 import de.wehner.mediamagpie.conductor.webapp.commands.binder.EnumBinder;
 import de.wehner.mediamagpie.conductor.webapp.commands.binder.MinMaxIntegerBinder;
 import de.wehner.mediamagpie.conductor.webapp.controller.AbstractConfigurationSupportController;
@@ -44,9 +32,21 @@ import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
 import de.wehner.mediamagpie.conductor.webapp.util.WebAppUtils;
 import de.wehner.mediamagpie.conductor.webapp.util.security.SecurityUtil;
 import de.wehner.mediamagpie.conductor.webapp.validator.SearchCriteriaCommandValidator;
+import de.wehner.mediamagpie.core.util.MinMaxValue;
+import de.wehner.mediamagpie.core.util.TimeUtil;
+import de.wehner.mediamagpie.persistence.AlbumDao;
+import de.wehner.mediamagpie.persistence.MediaDao;
 import de.wehner.mediamagpie.persistence.dto.SearchCriteriaCommand;
 import de.wehner.mediamagpie.persistence.dto.SearchCriteriaCommand.Action;
 import de.wehner.mediamagpie.persistence.dto.UiMediaSortOrder;
+import de.wehner.mediamagpie.persistence.entity.Album;
+import de.wehner.mediamagpie.persistence.entity.LifecyleStatus;
+import de.wehner.mediamagpie.persistence.entity.Media;
+import de.wehner.mediamagpie.persistence.entity.User;
+import de.wehner.mediamagpie.persistence.entity.properties.MainConfiguration;
+import de.wehner.mediamagpie.persistence.entity.properties.S3Configuration;
+import de.wehner.mediamagpie.persistence.entity.properties.UserConfiguration;
+import de.wehner.mediamagpie.persistence.service.ConfigurationProvider;
 
 @Controller
 @RequestMapping("/media")

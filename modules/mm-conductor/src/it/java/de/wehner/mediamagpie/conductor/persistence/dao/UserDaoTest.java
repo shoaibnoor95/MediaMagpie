@@ -8,12 +8,12 @@ import java.util.List;
 
 import org.junit.Test;
 
-import de.wehner.mediamagpie.common.persistence.dao.UserDao;
-import de.wehner.mediamagpie.common.persistence.entity.User;
-import de.wehner.mediamagpie.common.persistence.entity.User.Role;
-import de.wehner.mediamagpie.common.persistence.entity.UserGroup;
-import de.wehner.mediamagpie.common.persistence.entity.properties.Property;
 import de.wehner.mediamagpie.persistence.PersistenceService;
+import de.wehner.mediamagpie.persistence.UserDao;
+import de.wehner.mediamagpie.persistence.entity.User;
+import de.wehner.mediamagpie.persistence.entity.UserGroup;
+import de.wehner.mediamagpie.persistence.entity.User.Role;
+import de.wehner.mediamagpie.persistence.entity.properties.Property;
 
 public class UserDaoTest extends AbstractDaoTest<UserDao> {
 

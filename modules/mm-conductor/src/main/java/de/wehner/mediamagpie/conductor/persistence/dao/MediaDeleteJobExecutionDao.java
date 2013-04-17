@@ -7,11 +7,11 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import de.wehner.mediamagpie.common.persistence.dao.JobExecutionDao;
-import de.wehner.mediamagpie.common.persistence.entity.ImageResizeJobExecution;
-import de.wehner.mediamagpie.common.persistence.entity.Media;
-import de.wehner.mediamagpie.common.persistence.entity.MediaDeleteJobExecution;
+import de.wehner.mediamagpie.persistence.JobExecutionDao;
 import de.wehner.mediamagpie.persistence.PersistenceService;
+import de.wehner.mediamagpie.persistence.entity.ImageResizeJobExecution;
+import de.wehner.mediamagpie.persistence.entity.Media;
+import de.wehner.mediamagpie.persistence.entity.MediaDeleteJobExecution;
 
 @Repository
 public class MediaDeleteJobExecutionDao extends JobExecutionDao {

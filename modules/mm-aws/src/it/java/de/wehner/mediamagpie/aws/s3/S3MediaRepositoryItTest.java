@@ -18,7 +18,7 @@ import de.wehner.mediamagpie.api.MediaExport;
 import de.wehner.mediamagpie.api.MediaExportRepository;
 import de.wehner.mediamagpie.api.testsupport.MediaExportFixture;
 import de.wehner.mediamagpie.aws.test.util.S3TestEnvironment;
-import de.wehner.mediamagpie.common.util.OrderedJUnit4ClassRunner;
+import de.wehner.mediamagpie.core.util.OrderedJUnit4ClassRunner;
 
 @RunWith(OrderedJUnit4ClassRunner.class)
 public class S3MediaRepositoryItTest {

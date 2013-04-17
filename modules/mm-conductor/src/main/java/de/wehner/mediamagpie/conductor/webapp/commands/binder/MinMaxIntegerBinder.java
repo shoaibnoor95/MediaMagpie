@@ -4,7 +4,7 @@ import java.beans.PropertyEditorSupport;
 
 import org.apache.commons.lang.StringUtils;
 
-import de.wehner.mediamagpie.common.util.MinMaxValue;
+import de.wehner.mediamagpie.core.util.MinMaxValue;
 
 
 public class MinMaxIntegerBinder extends PropertyEditorSupport {

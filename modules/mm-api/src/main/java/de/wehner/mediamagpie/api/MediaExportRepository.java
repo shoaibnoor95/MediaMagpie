@@ -9,13 +9,13 @@ public interface MediaExportRepository {
     /**
      * Exports a <code>MediaExport</code> object
      * 
-     * @param user
+     * @param userName
      *            The user's name used for login (equivalent to <code>User.getName()</code>)
      * @param mediaExport
      *            The media to export
      * @return The result of media export
      */
-    public abstract MediaExportResults addMedia(String user, MediaExport mediaExport);
+    public abstract MediaExportResults addMedia(String userName, MediaExport mediaExport);
 
     /** import functionality */
 

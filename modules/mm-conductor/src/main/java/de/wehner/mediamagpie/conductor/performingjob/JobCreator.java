@@ -1,6 +1,6 @@
 package de.wehner.mediamagpie.conductor.performingjob;
 
-import de.wehner.mediamagpie.common.persistence.entity.JobExecution;
+import de.wehner.mediamagpie.persistence.entity.JobExecution;
 
 public interface JobCreator {
 

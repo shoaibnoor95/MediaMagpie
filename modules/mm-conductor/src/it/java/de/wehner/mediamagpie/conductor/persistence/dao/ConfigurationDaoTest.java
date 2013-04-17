@@ -7,12 +7,12 @@ import static org.mockito.Mockito.*;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import de.wehner.mediamagpie.common.persistence.entity.properties.AdminConfiguration;
-import de.wehner.mediamagpie.common.persistence.entity.properties.Property;
-import de.wehner.mediamagpie.common.util.CipherServiceImpl;
-import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
 import de.wehner.mediamagpie.core.util.properties.PropertiesUtil;
+import de.wehner.mediamagpie.persistence.ConfigurationDao;
 import de.wehner.mediamagpie.persistence.PersistenceService;
+import de.wehner.mediamagpie.persistence.entity.properties.AdminConfiguration;
+import de.wehner.mediamagpie.persistence.entity.properties.Property;
+import de.wehner.mediamagpie.persistence.util.CipherServiceImpl;
 
 
 public class ConfigurationDaoTest extends AbstractDaoTest<ConfigurationDao> {

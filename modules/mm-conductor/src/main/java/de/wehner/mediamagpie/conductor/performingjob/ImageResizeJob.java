@@ -6,13 +6,12 @@ import java.net.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.wehner.mediamagpie.common.fs.ApplicationFS;
-import de.wehner.mediamagpie.common.persistence.dao.MediaDao;
-import de.wehner.mediamagpie.common.persistence.entity.Media;
-import de.wehner.mediamagpie.common.persistence.entity.Orientation;
-import de.wehner.mediamagpie.common.persistence.entity.ThumbImage;
 import de.wehner.mediamagpie.conductor.persistence.dao.ThumbImageDao;
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
+import de.wehner.mediamagpie.persistence.MediaDao;
+import de.wehner.mediamagpie.persistence.entity.Media;
+import de.wehner.mediamagpie.persistence.entity.Orientation;
+import de.wehner.mediamagpie.persistence.entity.ThumbImage;
 
 public class ImageResizeJob extends AbstractJob {
 
@@ -47,9 +46,8 @@ public class ImageResizeJob extends AbstractJob {
                 LOG.info("create the thumb image here...");
                 try {
                     int widthOrHeight = Integer.parseInt(_widthOrHeight);
-                    ApplicationFS applicationFS = getPerformingJobContext().getApplicationFS();
-                    File resizedImage = ImageService.resizeImageInQueue(_originImage, _mediaId, applicationFS.getTempMediaPath(), widthOrHeight,
-                            widthOrHeight, _originOrientation.getNecessaryRotation());
+                    File resizedImage = ImageService.resizeImageInQueue(_originImage, _mediaId, getPerformingJobContext().getTempMediaPath(),
+                            widthOrHeight, widthOrHeight, _originOrientation.getNecessaryRotation());
                     return (resizedImage != null) ? resizedImage.toURI() : null;
                 } catch (NumberFormatException e) {
                     return null;

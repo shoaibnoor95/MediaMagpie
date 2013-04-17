@@ -4,11 +4,11 @@ import java.util.concurrent.Callable;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import de.wehner.mediamagpie.common.persistence.entity.JobExecution;
 import de.wehner.mediamagpie.conductor.performingjob.JobCreator;
 import de.wehner.mediamagpie.conductor.performingjob.PerformingJob;
 import de.wehner.mediamagpie.persistence.PersistenceService;
 import de.wehner.mediamagpie.persistence.TransactionHandler;
+import de.wehner.mediamagpie.persistence.entity.JobExecution;
 
 public abstract class TransactionalJobCreator<T extends PerformingJob> implements JobCreator {
 

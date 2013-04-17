@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import de.wehner.mediamagpie.common.persistence.entity.User;
-import de.wehner.mediamagpie.common.persistence.entity.User.Role;
-import de.wehner.mediamagpie.common.persistence.entity.properties.MailServerConfiguration;
 import de.wehner.mediamagpie.conductor.mail.MailSenderFacade;
-import de.wehner.mediamagpie.conductor.persistence.dao.ConfigurationDao;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.MailServerConfigurationCommand;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.SendTestMailCommand;
 import de.wehner.mediamagpie.conductor.webapp.services.MailerService;
 import de.wehner.mediamagpie.core.util.ExceptionUtil;
+import de.wehner.mediamagpie.persistence.ConfigurationDao;
+import de.wehner.mediamagpie.persistence.entity.User;
+import de.wehner.mediamagpie.persistence.entity.User.Role;
+import de.wehner.mediamagpie.persistence.entity.properties.MailServerConfiguration;
 
 @Controller
 @RequestMapping("/config/admin/mailserver")
