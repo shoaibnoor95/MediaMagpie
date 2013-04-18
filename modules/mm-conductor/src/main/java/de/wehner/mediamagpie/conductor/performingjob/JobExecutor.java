@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import de.wehner.mediamagpie.core.util.ExceptionUtil;
-import de.wehner.mediamagpie.persistence.TransactionHandler;
+import de.wehner.mediamagpie.persistence.dao.TransactionHandler;
 import de.wehner.mediamagpie.persistence.entity.JobExecution;
 import de.wehner.mediamagpie.persistence.entity.properties.MainConfiguration;
 

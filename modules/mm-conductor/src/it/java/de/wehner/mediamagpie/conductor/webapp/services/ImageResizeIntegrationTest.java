@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import de.wehner.mediamagpie.conductor.webapp.AbstractSpringContextTest;
 import de.wehner.mediamagpie.conductor.webapp.services.JobScheduler;
-import de.wehner.mediamagpie.persistence.ImageResizeJobExecutionDao;
-import de.wehner.mediamagpie.persistence.PersistenceService;
+import de.wehner.mediamagpie.persistence.dao.ImageResizeJobExecutionDao;
+import de.wehner.mediamagpie.persistence.dao.PersistenceService;
 import de.wehner.mediamagpie.persistence.entity.ImageResizeJobExecution;
 import de.wehner.mediamagpie.persistence.entity.JobStatus;
 import de.wehner.mediamagpie.persistence.entity.Media;

@@ -28,8 +28,8 @@ import de.wehner.mediamagpie.conductor.webapp.services.MediaSyncService;
 import de.wehner.mediamagpie.conductor.webapp.services.UserSecurityService;
 import de.wehner.mediamagpie.conductor.webapp.util.security.SecurityUtil;
 import de.wehner.mediamagpie.conductor.webapp.validator.UserConfigurationValidator;
-import de.wehner.mediamagpie.persistence.UserConfigurationDao;
-import de.wehner.mediamagpie.persistence.UserDao;
+import de.wehner.mediamagpie.persistence.dao.UserConfigurationDao;
+import de.wehner.mediamagpie.persistence.dao.UserDao;
 import de.wehner.mediamagpie.persistence.entity.User;
 import de.wehner.mediamagpie.persistence.entity.properties.UserConfiguration;
 

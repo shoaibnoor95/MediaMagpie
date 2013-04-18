@@ -1,4 +1,4 @@
-package de.wehner.mediamagpie.persistence;
+package de.wehner.mediamagpie.persistence.dao;
 
 import java.net.URI;
 import java.util.List;

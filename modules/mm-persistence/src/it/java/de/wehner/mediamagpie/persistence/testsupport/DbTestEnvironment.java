@@ -12,11 +12,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.wehner.mediamagpie.core.util.ExceptionUtil;
-import de.wehner.mediamagpie.persistence.ConfigurationDao;
-import de.wehner.mediamagpie.persistence.PersistenceService;
-import de.wehner.mediamagpie.persistence.TransactionHandler;
-import de.wehner.mediamagpie.persistence.UserConfigurationDao;
-import de.wehner.mediamagpie.persistence.UserDao;
+import de.wehner.mediamagpie.persistence.dao.ConfigurationDao;
+import de.wehner.mediamagpie.persistence.dao.PersistenceService;
+import de.wehner.mediamagpie.persistence.dao.TransactionHandler;
+import de.wehner.mediamagpie.persistence.dao.UserConfigurationDao;
+import de.wehner.mediamagpie.persistence.dao.UserDao;
 import de.wehner.mediamagpie.persistence.entity.Base;
 import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.entity.User;

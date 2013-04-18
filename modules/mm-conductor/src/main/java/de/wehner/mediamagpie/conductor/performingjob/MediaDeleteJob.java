@@ -6,7 +6,7 @@ import java.net.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.wehner.mediamagpie.persistence.MediaDao;
+import de.wehner.mediamagpie.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.persistence.entity.Media;
 
 public class MediaDeleteJob extends AbstractJob {

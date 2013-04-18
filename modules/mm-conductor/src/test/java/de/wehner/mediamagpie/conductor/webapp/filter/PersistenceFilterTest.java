@@ -20,7 +20,7 @@ import org.mockito.stubbing.Answer;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import de.wehner.mediamagpie.conductor.webapp.filter.PersistenceFilter;
-import de.wehner.mediamagpie.persistence.PersistenceService;
+import de.wehner.mediamagpie.persistence.dao.PersistenceService;
 
 
 public class PersistenceFilterTest {

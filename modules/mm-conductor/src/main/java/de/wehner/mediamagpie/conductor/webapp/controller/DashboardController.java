@@ -24,7 +24,7 @@ import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaFeedComma
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaFeedCommand.Item;
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
 import de.wehner.mediamagpie.conductor.webapp.util.WebAppUtils;
-import de.wehner.mediamagpie.persistence.MediaDao;
+import de.wehner.mediamagpie.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.persistence.dto.UiMediaSortOrder;
 import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.entity.properties.MainConfiguration;

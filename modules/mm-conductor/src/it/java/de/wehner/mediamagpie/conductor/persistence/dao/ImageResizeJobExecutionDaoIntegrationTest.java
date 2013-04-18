@@ -12,10 +12,10 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.wehner.mediamagpie.conductor.persistence.dao.ThumbImageDao;
-import de.wehner.mediamagpie.persistence.ImageResizeJobExecutionDao;
-import de.wehner.mediamagpie.persistence.MediaDao;
-import de.wehner.mediamagpie.persistence.PersistenceService;
+import de.wehner.mediamagpie.persistence.dao.ImageResizeJobExecutionDao;
+import de.wehner.mediamagpie.persistence.dao.MediaDao;
+import de.wehner.mediamagpie.persistence.dao.PersistenceService;
+import de.wehner.mediamagpie.persistence.dao.ThumbImageDao;
 import de.wehner.mediamagpie.persistence.entity.ImageResizeJobExecution;
 import de.wehner.mediamagpie.persistence.entity.JobExecution;
 import de.wehner.mediamagpie.persistence.entity.JobStatus;

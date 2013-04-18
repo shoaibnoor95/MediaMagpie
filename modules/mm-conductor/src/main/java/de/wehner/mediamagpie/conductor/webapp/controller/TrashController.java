@@ -17,7 +17,7 @@ import de.wehner.mediamagpie.conductor.webapp.controller.commands.EditCommand.Ac
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaCommand;
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
 import de.wehner.mediamagpie.conductor.webapp.util.security.SecurityUtil;
-import de.wehner.mediamagpie.persistence.MediaDao;
+import de.wehner.mediamagpie.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.persistence.dto.UiMediaSortOrder;
 import de.wehner.mediamagpie.persistence.entity.LifecyleStatus;
 import de.wehner.mediamagpie.persistence.entity.Media;

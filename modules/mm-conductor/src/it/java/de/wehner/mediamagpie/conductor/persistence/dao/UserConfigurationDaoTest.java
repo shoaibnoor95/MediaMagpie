@@ -9,8 +9,8 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import de.wehner.mediamagpie.core.util.properties.PropertiesBacked;
-import de.wehner.mediamagpie.persistence.UserConfigurationDao;
-import de.wehner.mediamagpie.persistence.UserDao;
+import de.wehner.mediamagpie.persistence.dao.UserConfigurationDao;
+import de.wehner.mediamagpie.persistence.dao.UserDao;
 import de.wehner.mediamagpie.persistence.entity.User;
 import de.wehner.mediamagpie.persistence.entity.User.Role;
 import de.wehner.mediamagpie.persistence.entity.properties.Property;

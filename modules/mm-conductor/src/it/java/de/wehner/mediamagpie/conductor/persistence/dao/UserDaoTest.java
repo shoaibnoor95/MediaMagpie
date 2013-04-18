@@ -8,8 +8,8 @@ import java.util.List;
 
 import org.junit.Test;
 
-import de.wehner.mediamagpie.persistence.PersistenceService;
-import de.wehner.mediamagpie.persistence.UserDao;
+import de.wehner.mediamagpie.persistence.dao.PersistenceService;
+import de.wehner.mediamagpie.persistence.dao.UserDao;
 import de.wehner.mediamagpie.persistence.entity.User;
 import de.wehner.mediamagpie.persistence.entity.UserGroup;
 import de.wehner.mediamagpie.persistence.entity.User.Role;

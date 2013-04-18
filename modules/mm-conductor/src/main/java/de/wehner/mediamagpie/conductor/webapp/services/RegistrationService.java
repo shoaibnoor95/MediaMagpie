@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 
 import de.wehner.mediamagpie.conductor.StartJetty;
 import de.wehner.mediamagpie.conductor.exception.RegistrationException;
-import de.wehner.mediamagpie.conductor.persistence.dao.RegistrationDao;
 import de.wehner.mediamagpie.conductor.spring.deploy.impl.DynamicPropertiesConfigurer;
 import de.wehner.mediamagpie.conductor.webapp.controller.registration.RegistrationProcessController;
 import de.wehner.mediamagpie.core.util.ExceptionUtil;
 import de.wehner.mediamagpie.core.util.properties.PropertiesUtil;
+import de.wehner.mediamagpie.persistence.dao.RegistrationDao;
 import de.wehner.mediamagpie.persistence.entity.Registration;
 import de.wehner.mediamagpie.persistence.entity.User;
 import de.wehner.mediamagpie.persistence.entity.User.Role;

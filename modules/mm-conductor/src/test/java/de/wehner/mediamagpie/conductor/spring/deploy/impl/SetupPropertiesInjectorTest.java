@@ -17,10 +17,10 @@ import org.springframework.validation.Validator;
 
 import de.wehner.mediamagpie.conductor.webapp.services.SetupVerificationService;
 import de.wehner.mediamagpie.core.util.properties.PropertiesUtil;
-import de.wehner.mediamagpie.persistence.ConfigurationDao;
-import de.wehner.mediamagpie.persistence.TransactionHandler;
-import de.wehner.mediamagpie.persistence.UserConfigurationDao;
-import de.wehner.mediamagpie.persistence.UserDao;
+import de.wehner.mediamagpie.persistence.dao.ConfigurationDao;
+import de.wehner.mediamagpie.persistence.dao.TransactionHandler;
+import de.wehner.mediamagpie.persistence.dao.UserConfigurationDao;
+import de.wehner.mediamagpie.persistence.dao.UserDao;
 import de.wehner.mediamagpie.persistence.entity.properties.AdminConfiguration;
 import de.wehner.mediamagpie.persistence.entity.properties.PropertyBackedConfiguration;
 import de.wehner.mediamagpie.persistence.util.CipherServiceImpl;

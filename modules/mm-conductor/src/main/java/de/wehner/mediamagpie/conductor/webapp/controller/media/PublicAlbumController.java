@@ -29,7 +29,7 @@ import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaThumbComm
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
 import de.wehner.mediamagpie.conductor.webapp.util.WebAppUtils;
 import de.wehner.mediamagpie.conductor.webapp.util.security.SecurityUtil;
-import de.wehner.mediamagpie.persistence.AlbumDao;
+import de.wehner.mediamagpie.persistence.dao.AlbumDao;
 import de.wehner.mediamagpie.persistence.entity.Album;
 import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.entity.Priority;

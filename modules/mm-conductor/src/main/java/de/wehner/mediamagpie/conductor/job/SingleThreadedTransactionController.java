@@ -4,7 +4,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import de.wehner.mediamagpie.core.concurrent.SingleThreadedController;
-import de.wehner.mediamagpie.persistence.TransactionHandler;
+import de.wehner.mediamagpie.persistence.dao.TransactionHandler;
 
 
 public abstract class SingleThreadedTransactionController extends SingleThreadedController {

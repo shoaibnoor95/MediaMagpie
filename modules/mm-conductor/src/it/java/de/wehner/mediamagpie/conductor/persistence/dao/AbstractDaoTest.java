@@ -5,8 +5,8 @@ import javax.persistence.EntityManagerFactory;
 import org.junit.After;
 import org.junit.Before;
 
-import de.wehner.mediamagpie.persistence.Dao;
-import de.wehner.mediamagpie.persistence.PersistenceService;
+import de.wehner.mediamagpie.persistence.dao.Dao;
+import de.wehner.mediamagpie.persistence.dao.PersistenceService;
 import de.wehner.mediamagpie.persistence.testsupport.PersistenceTestUtil;
 
 

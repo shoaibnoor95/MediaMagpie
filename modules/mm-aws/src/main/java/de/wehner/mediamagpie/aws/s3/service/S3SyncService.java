@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import de.wehner.mediamagpie.core.concurrent.SingleThreadedController;
-import de.wehner.mediamagpie.persistence.CloudSyncJobExecutionDao;
-import de.wehner.mediamagpie.persistence.S3JobExecutionDao;
-import de.wehner.mediamagpie.persistence.TransactionHandler;
+import de.wehner.mediamagpie.persistence.dao.CloudSyncJobExecutionDao;
+import de.wehner.mediamagpie.persistence.dao.S3JobExecutionDao;
+import de.wehner.mediamagpie.persistence.dao.TransactionHandler;
 import de.wehner.mediamagpie.persistence.entity.CloudSyncJobExecution;
 import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.entity.S3JobExecution;

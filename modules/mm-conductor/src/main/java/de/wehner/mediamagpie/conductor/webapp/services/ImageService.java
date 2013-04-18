@@ -32,14 +32,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 
 import de.wehner.mediamagpie.conductor.metadata.CameraMetaData;
-import de.wehner.mediamagpie.conductor.persistence.dao.MediaDeleteJobExecutionDao;
-import de.wehner.mediamagpie.conductor.persistence.dao.ThumbImageDao;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaThumbCommand;
 import de.wehner.mediamagpie.conductor.webapp.media.process.ImageProcessorImageIO;
 import de.wehner.mediamagpie.conductor.webapp.media.process.ImageProcessorJAI;
 import de.wehner.mediamagpie.core.util.ExceptionUtil;
-import de.wehner.mediamagpie.persistence.ImageResizeJobExecutionDao;
-import de.wehner.mediamagpie.persistence.MediaDao;
+import de.wehner.mediamagpie.persistence.dao.ImageResizeJobExecutionDao;
+import de.wehner.mediamagpie.persistence.dao.MediaDao;
+import de.wehner.mediamagpie.persistence.dao.MediaDeleteJobExecutionDao;
+import de.wehner.mediamagpie.persistence.dao.ThumbImageDao;
 import de.wehner.mediamagpie.persistence.entity.ImageResizeJobExecution;
 import de.wehner.mediamagpie.persistence.entity.JobStatus;
 import de.wehner.mediamagpie.persistence.entity.LifecyleStatus;

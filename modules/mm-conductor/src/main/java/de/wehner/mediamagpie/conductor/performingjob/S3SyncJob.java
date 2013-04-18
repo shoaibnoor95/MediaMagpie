@@ -1,6 +1,5 @@
 package de.wehner.mediamagpie.conductor.performingjob;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -17,12 +16,12 @@ import org.slf4j.LoggerFactory;
 import de.wehner.mediamagpie.api.MediaExport;
 import de.wehner.mediamagpie.api.MediaExportRepository;
 import de.wehner.mediamagpie.aws.s3.S3MediaExportRepository;
+import de.wehner.mediamagpie.conductor.media.MediaImportFactory;
 import de.wehner.mediamagpie.conductor.webapp.services.UploadService;
 import de.wehner.mediamagpie.core.util.ExceptionUtil;
-import de.wehner.mediamagpie.core.util.Pair;
-import de.wehner.mediamagpie.persistence.MediaDao;
 import de.wehner.mediamagpie.persistence.MediaExportFactory;
-import de.wehner.mediamagpie.persistence.TransactionHandler;
+import de.wehner.mediamagpie.persistence.dao.MediaDao;
+import de.wehner.mediamagpie.persistence.dao.TransactionHandler;
 import de.wehner.mediamagpie.persistence.entity.LifecyleStatus;
 import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.entity.User;
@@ -85,7 +84,7 @@ public class S3SyncJob extends AbstractJob {
                     }
                 }
 
-                // add all unmatched medias which have to be pushed to S3
+                // Push all unmatched medias to S3
                 for (Media mediaToExport : unmatchedMedias.values()) {
                     final Media media = mediaToExport;
                     _transactionHandler.executeInTransaction(new Runnable() {
@@ -105,16 +104,11 @@ public class S3SyncJob extends AbstractJob {
                     });
                 }
 
-                // retrieve all unknown Medias from S3 to local DB and file system
+                // Pull all unknown Medias from S3 and store in local DB and file system
                 for (MediaExport mediaExport : unkonwMediaOnS3) {
                     LOG.debug(String.format("try to import media '%s' from S3.", mediaExport.getName()));
-                    Pair<String, File> uploadFileInfo = _uploadService.createUniqueUserStoreFile(_user, mediaExport.getOriginalFileName());
-                    LOG.info("Try dump upload stream '" + uploadFileInfo.getFirst() + "' into file '" + uploadFileInfo.getSecond().getPath() + "'");
-                    Media newMedia = _uploadService.handleUploadStream(_user, uploadFileInfo.getSecond(), mediaExport.getInputStream());
-                    _mediaDao.makePersistent(newMedia);
-
-                    // create job executions for a) image resizing and S3 Upload
-                    _uploadService.createJobsForFreshUploadedMedias(newMedia, _configurationProvider);
+                    MediaImportFactory mediaImportFactory = new MediaImportFactory(_uploadService, _user, _configurationProvider, _transactionHandler);
+                    mediaImportFactory.create(mediaExport);
                 }
                 LOG.info("finised " + getClass().getSimpleName());
                 return null;

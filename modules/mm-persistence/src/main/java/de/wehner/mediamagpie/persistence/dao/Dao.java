@@ -1,4 +1,4 @@
-package de.wehner.mediamagpie.persistence;
+package de.wehner.mediamagpie.persistence.dao;
 
 import java.util.Iterator;
 import java.util.List;

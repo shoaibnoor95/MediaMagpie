@@ -2,8 +2,8 @@ package de.wehner.mediamagpie.persistence;
 
 import static org.mockito.Mockito.*;
 
-import de.wehner.mediamagpie.persistence.PersistenceService;
-import de.wehner.mediamagpie.persistence.TransactionHandler;
+import de.wehner.mediamagpie.persistence.dao.PersistenceService;
+import de.wehner.mediamagpie.persistence.dao.TransactionHandler;
 import de.wehner.mediamagpie.persistence.entity.Base;
 
 public class TransactionHandlerMock extends TransactionHandler {

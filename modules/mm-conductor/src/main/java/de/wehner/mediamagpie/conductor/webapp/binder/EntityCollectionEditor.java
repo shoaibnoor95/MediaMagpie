@@ -4,7 +4,7 @@ import java.beans.PropertyEditorSupport;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.wehner.mediamagpie.persistence.Dao;
+import de.wehner.mediamagpie.persistence.dao.Dao;
 import de.wehner.mediamagpie.persistence.entity.Base;
 
 

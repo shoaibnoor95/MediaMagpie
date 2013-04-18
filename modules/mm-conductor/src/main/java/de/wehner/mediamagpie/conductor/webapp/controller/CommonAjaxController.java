@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.wehner.mediamagpie.conductor.webapp.controller.json.TagAutocompleteCommand;
 import de.wehner.mediamagpie.conductor.webapp.util.security.SecurityUtil;
-import de.wehner.mediamagpie.persistence.MediaTagDao;
+import de.wehner.mediamagpie.persistence.dao.MediaTagDao;
 import de.wehner.mediamagpie.persistence.entity.MediaTag;
 import de.wehner.mediamagpie.persistence.entity.User;
 

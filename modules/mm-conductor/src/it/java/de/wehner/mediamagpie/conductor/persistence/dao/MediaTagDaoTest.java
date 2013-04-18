@@ -7,9 +7,9 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.wehner.mediamagpie.persistence.MediaDao;
-import de.wehner.mediamagpie.persistence.MediaTagDao;
-import de.wehner.mediamagpie.persistence.PersistenceService;
+import de.wehner.mediamagpie.persistence.dao.MediaDao;
+import de.wehner.mediamagpie.persistence.dao.MediaTagDao;
+import de.wehner.mediamagpie.persistence.dao.PersistenceService;
 import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.entity.MediaTag;
 import de.wehner.mediamagpie.persistence.testsupport.DbTestEnvironment;

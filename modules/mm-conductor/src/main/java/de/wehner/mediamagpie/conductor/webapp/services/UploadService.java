@@ -15,12 +15,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import de.wehner.mediamagpie.conductor.persistence.dao.ThumbImageDao;
 import de.wehner.mediamagpie.core.util.FileSystemUtil;
 import de.wehner.mediamagpie.core.util.Pair;
 import de.wehner.mediamagpie.core.util.TimeoutExecutor;
-import de.wehner.mediamagpie.persistence.MediaDao;
-import de.wehner.mediamagpie.persistence.PersistenceService;
+import de.wehner.mediamagpie.persistence.dao.MediaDao;
+import de.wehner.mediamagpie.persistence.dao.PersistenceService;
+import de.wehner.mediamagpie.persistence.dao.ThumbImageDao;
 import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.entity.Priority;
 import de.wehner.mediamagpie.persistence.entity.ThumbImage;
@@ -132,6 +132,8 @@ public class UploadService {
         } catch (IOException e) {
             throw new RuntimeException("Can not create new Media entity.", e);
         }
+        
+        // TODO rwe: Better solotion: move this to the caller
         _mediaDao.makePersistent(newMedia);
 
         return newMedia;
@@ -173,7 +175,7 @@ public class UploadService {
      * @param newMedia
      * @param configurationProvider
      */
-    public void createJobsForFreshUploadedMedias(Media newMedia, ConfigurationProvider configurationProvider) {
+    public void createJobsForAllThumbImages(Media newMedia, ConfigurationProvider configurationProvider) {
 
         List<Integer> allThumbSizes = configurationProvider.createConfigurationFacade(newMedia.getOwner()).getAllThumbSizes();
         for (Integer thumbSize : allThumbSizes) {

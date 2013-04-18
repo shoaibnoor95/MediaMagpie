@@ -3,7 +3,7 @@ package de.wehner.mediamagpie.conductor.webapp.controller;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 
 import de.wehner.mediamagpie.conductor.webapp.util.security.SecurityUtil;
-import de.wehner.mediamagpie.persistence.UserDao;
+import de.wehner.mediamagpie.persistence.dao.UserDao;
 import de.wehner.mediamagpie.persistence.entity.User;
 import de.wehner.mediamagpie.persistence.entity.properties.MainConfiguration;
 import de.wehner.mediamagpie.persistence.entity.properties.S3Configuration;

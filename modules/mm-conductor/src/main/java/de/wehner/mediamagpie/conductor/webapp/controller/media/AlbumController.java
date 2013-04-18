@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.AlbumCommand;
 import de.wehner.mediamagpie.conductor.webapp.util.security.SecurityUtil;
-import de.wehner.mediamagpie.persistence.AlbumDao;
+import de.wehner.mediamagpie.persistence.dao.AlbumDao;
 import de.wehner.mediamagpie.persistence.dto.CrudOperation;
 import de.wehner.mediamagpie.persistence.entity.Album;
 import de.wehner.mediamagpie.persistence.entity.User;

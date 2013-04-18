@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import de.wehner.mediamagpie.conductor.performingjob.ImageResizeJob;
-import de.wehner.mediamagpie.conductor.persistence.dao.ThumbImageDao;
-import de.wehner.mediamagpie.persistence.MediaDao;
-import de.wehner.mediamagpie.persistence.PersistenceService;
-import de.wehner.mediamagpie.persistence.TransactionHandler;
+import de.wehner.mediamagpie.persistence.dao.MediaDao;
+import de.wehner.mediamagpie.persistence.dao.PersistenceService;
+import de.wehner.mediamagpie.persistence.dao.ThumbImageDao;
+import de.wehner.mediamagpie.persistence.dao.TransactionHandler;
 import de.wehner.mediamagpie.persistence.entity.ImageResizeJobExecution;
 import de.wehner.mediamagpie.persistence.entity.JobExecution;
 import de.wehner.mediamagpie.persistence.entity.Media;

@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import de.wehner.mediamagpie.persistence.ConfigurationDao;
+import de.wehner.mediamagpie.persistence.dao.ConfigurationDao;
 import de.wehner.mediamagpie.persistence.entity.properties.MainConfiguration;
 import de.wehner.mediamagpie.persistence.entity.properties.RequiredSetupTasks;
 import de.wehner.mediamagpie.persistence.entity.properties.SetupTask;

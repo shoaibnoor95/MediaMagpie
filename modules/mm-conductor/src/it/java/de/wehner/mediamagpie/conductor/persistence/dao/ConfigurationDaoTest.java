@@ -8,8 +8,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import de.wehner.mediamagpie.core.util.properties.PropertiesUtil;
-import de.wehner.mediamagpie.persistence.ConfigurationDao;
-import de.wehner.mediamagpie.persistence.PersistenceService;
+import de.wehner.mediamagpie.persistence.dao.ConfigurationDao;
+import de.wehner.mediamagpie.persistence.dao.PersistenceService;
 import de.wehner.mediamagpie.persistence.entity.properties.AdminConfiguration;
 import de.wehner.mediamagpie.persistence.entity.properties.Property;
 import de.wehner.mediamagpie.persistence.util.CipherServiceImpl;

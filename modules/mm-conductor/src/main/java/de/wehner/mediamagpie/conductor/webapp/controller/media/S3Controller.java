@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import de.wehner.mediamagpie.aws.s3.service.S3SyncService;
 import de.wehner.mediamagpie.conductor.webapp.controller.AbstractConfigurationSupportController;
-import de.wehner.mediamagpie.persistence.MediaDao;
+import de.wehner.mediamagpie.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.service.ConfigurationProvider;
 

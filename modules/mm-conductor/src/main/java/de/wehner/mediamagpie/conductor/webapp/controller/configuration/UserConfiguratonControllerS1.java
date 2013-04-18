@@ -21,7 +21,7 @@ import de.wehner.mediamagpie.conductor.webapp.controller.AbstractConfigurationSu
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.UserConfigurationCommand;
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
 import de.wehner.mediamagpie.conductor.webapp.validator.PasswordConfirmValidator;
-import de.wehner.mediamagpie.persistence.UserDao;
+import de.wehner.mediamagpie.persistence.dao.UserDao;
 import de.wehner.mediamagpie.persistence.entity.User;
 import de.wehner.mediamagpie.persistence.service.ConfigurationProvider;
 

@@ -15,8 +15,8 @@ import de.wehner.mediamagpie.conductor.performingjob.JobExecutor;
 import de.wehner.mediamagpie.conductor.performingjob.JobFactory;
 import de.wehner.mediamagpie.conductor.performingjob.PerformingJob;
 import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
-import de.wehner.mediamagpie.persistence.ConfigurationDao;
 import de.wehner.mediamagpie.persistence.TransactionHandlerMock;
+import de.wehner.mediamagpie.persistence.dao.ConfigurationDao;
 import de.wehner.mediamagpie.persistence.entity.JobExecution;
 import de.wehner.mediamagpie.persistence.entity.properties.MainConfiguration;
 

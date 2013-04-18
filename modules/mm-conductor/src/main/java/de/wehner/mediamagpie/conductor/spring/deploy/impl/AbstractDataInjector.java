@@ -1,7 +1,7 @@
 package de.wehner.mediamagpie.conductor.spring.deploy.impl;
 
 import de.wehner.mediamagpie.conductor.spring.deploy.DataInjector;
-import de.wehner.mediamagpie.persistence.TransactionHandler;
+import de.wehner.mediamagpie.persistence.dao.TransactionHandler;
 
 public abstract class AbstractDataInjector implements DataInjector {
 

@@ -30,10 +30,10 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
-import de.wehner.mediamagpie.persistence.MediaDao;
 import de.wehner.mediamagpie.persistence.TransactionHandlerMock;
-import de.wehner.mediamagpie.persistence.UserConfigurationDao;
-import de.wehner.mediamagpie.persistence.UserDao;
+import de.wehner.mediamagpie.persistence.dao.MediaDao;
+import de.wehner.mediamagpie.persistence.dao.UserConfigurationDao;
+import de.wehner.mediamagpie.persistence.dao.UserDao;
 import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.entity.User;
 import de.wehner.mediamagpie.persistence.entity.User.Role;

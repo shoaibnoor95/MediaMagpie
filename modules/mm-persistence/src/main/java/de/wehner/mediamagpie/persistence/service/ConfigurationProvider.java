@@ -12,8 +12,8 @@ import com.google.common.cache.CacheBuilder;
 
 import de.wehner.mediamagpie.core.util.ExceptionUtil;
 import de.wehner.mediamagpie.core.util.Holder;
-import de.wehner.mediamagpie.persistence.ConfigurationDao;
-import de.wehner.mediamagpie.persistence.UserConfigurationDao;
+import de.wehner.mediamagpie.persistence.dao.ConfigurationDao;
+import de.wehner.mediamagpie.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.persistence.entity.User;
 import de.wehner.mediamagpie.persistence.entity.properties.MainConfiguration;
 import de.wehner.mediamagpie.persistence.entity.properties.RequiredSetupTasks;

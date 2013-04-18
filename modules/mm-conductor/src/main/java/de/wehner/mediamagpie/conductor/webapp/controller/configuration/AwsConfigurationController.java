@@ -29,7 +29,7 @@ import de.wehner.mediamagpie.conductor.webapp.controller.commands.CheckResultCom
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.config.S3ConfigurationCommand;
 import de.wehner.mediamagpie.conductor.webapp.util.security.SecurityUtil;
 import de.wehner.mediamagpie.core.util.Pair;
-import de.wehner.mediamagpie.persistence.UserDao;
+import de.wehner.mediamagpie.persistence.dao.UserDao;
 import de.wehner.mediamagpie.persistence.entity.User;
 import de.wehner.mediamagpie.persistence.entity.properties.S3Configuration;
 import de.wehner.mediamagpie.persistence.service.ConfigurationProvider;

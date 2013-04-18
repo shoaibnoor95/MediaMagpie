@@ -9,13 +9,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import de.wehner.mediamagpie.conductor.persistence.dao.UserGroupDao;
 import de.wehner.mediamagpie.conductor.spring.deploy.PopulateDb;
 import de.wehner.mediamagpie.conductor.webapp.services.UserSecurityService;
 import de.wehner.mediamagpie.core.util.ExceptionUtil;
-import de.wehner.mediamagpie.persistence.PersistenceService;
-import de.wehner.mediamagpie.persistence.TransactionHandler;
-import de.wehner.mediamagpie.persistence.UserDao;
+import de.wehner.mediamagpie.persistence.dao.PersistenceService;
+import de.wehner.mediamagpie.persistence.dao.TransactionHandler;
+import de.wehner.mediamagpie.persistence.dao.UserDao;
+import de.wehner.mediamagpie.persistence.dao.UserGroupDao;
 import de.wehner.mediamagpie.persistence.entity.ImageResizeJobExecution;
 import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.entity.MediaTag;

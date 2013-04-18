@@ -6,8 +6,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import de.wehner.mediamagpie.persistence.CloudSyncJobExecutionDao;
-import de.wehner.mediamagpie.persistence.UserConfigurationDao;
 import de.wehner.mediamagpie.persistence.entity.CloudSyncJobExecution;
 import de.wehner.mediamagpie.persistence.entity.User;
 import de.wehner.mediamagpie.persistence.entity.CloudSyncJobExecution.CloudType;

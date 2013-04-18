@@ -110,7 +110,7 @@ public class UploadController extends AbstractConfigurationSupportController {
                 // sync media to s3 bucket
                 _s3SyncService.pushToS3(newMedia);
             }
-            _uploadService.createJobsForFreshUploadedMedias(newMedia, _configurationProvider);
+            _uploadService.createJobsForAllThumbImages(newMedia, _configurationProvider);
 
             // create a thumb image for the upload view
             String contextPath = request.getContextPath();

@@ -20,7 +20,7 @@ import de.wehner.mediamagpie.conductor.webapp.controller.commands.MailServerConf
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.SendTestMailCommand;
 import de.wehner.mediamagpie.conductor.webapp.services.MailerService;
 import de.wehner.mediamagpie.core.util.ExceptionUtil;
-import de.wehner.mediamagpie.persistence.ConfigurationDao;
+import de.wehner.mediamagpie.persistence.dao.ConfigurationDao;
 import de.wehner.mediamagpie.persistence.entity.User;
 import de.wehner.mediamagpie.persistence.entity.User.Role;
 import de.wehner.mediamagpie.persistence.entity.properties.MailServerConfiguration;

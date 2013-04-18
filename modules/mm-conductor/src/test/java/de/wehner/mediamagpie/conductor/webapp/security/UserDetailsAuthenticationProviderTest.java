@@ -20,7 +20,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import de.wehner.mediamagpie.conductor.webapp.services.UserSecurityService;
 import de.wehner.mediamagpie.persistence.TransactionHandlerMock;
-import de.wehner.mediamagpie.persistence.UserDao;
+import de.wehner.mediamagpie.persistence.dao.UserDao;
 import de.wehner.mediamagpie.persistence.entity.User;
 import de.wehner.mediamagpie.persistence.entity.User.Role;
 
