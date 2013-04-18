@@ -96,6 +96,8 @@ public class UploadServiceTest {
         Media media = _uploadService.saveInputStreamToFileSystemAndCreateMedia(_user, origAndStoreFileName.getSecond(), inputStream);
 
         assertThat(media).isNotNull();
+        assertThat(media.getName()).isNull();
+        assertThat(media.getFileFromUri().getAbsolutePath()).isEqualTo(origAndStoreFileName.getSecond().getAbsolutePath());
         assertThat(new File(mc.getBaseUploadPath(), "user_000123/fileB")).exists();
         assertThat(new File(mc.getBaseUploadPath(), "user_000123/fileB")).hasSameContentAs(TEST_MEDIA);
     }

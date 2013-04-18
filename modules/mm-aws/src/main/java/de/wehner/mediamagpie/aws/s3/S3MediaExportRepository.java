@@ -46,6 +46,10 @@ public class S3MediaExportRepository implements MediaExportRepository {
     public static final String META_HASH_OF_DATA = "hash-of-data";
     public static final String META_NAME = "name";
     public static final String META_CREATION_DATE = "creation-date";
+    /**
+     * @deprecated: use a separate object now
+     */
+    public static final String META_ORIGINAL_FILE_NAME = "original-file-name";
     public static final String META_MEDIA_TYPE = "media-type";
 
     private final S3ClientFacade _s3Facade;

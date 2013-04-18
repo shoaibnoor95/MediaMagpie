@@ -81,6 +81,11 @@ public class S3ObjectTuple2MediaExportTransformer implements MMTransformer<S3Obj
             mediaExport.setOriginalFileName(exportMetadata.getOriginalFileName());
             mediaExport.setDescription(exportMetadata.getDescription());
             mediaExport.setTags(exportMetadata.getTags());
+        } else {
+            // try to get information from old metadata solution
+            if (!StringUtils.isEmpty(userMetadata.get(S3MediaExportRepository.META_ORIGINAL_FILE_NAME))) {
+                mediaExport.setOriginalFileName(userMetadata.get(S3MediaExportRepository.META_ORIGINAL_FILE_NAME));
+            }
         }
         return mediaExport;
     }

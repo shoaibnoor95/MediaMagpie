@@ -2,6 +2,7 @@ package de.wehner.mediamagpie.conductor.media;
 
 import java.io.File;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +40,16 @@ public class MediaImportFactory {
     }
 
     public Media create(MediaExport mediaExport) {
-        Pair<String, File> uploadFileInfo = _uploadService.createUniqueUserStoreFile(_user, mediaExport.getOriginalFileName());
+        String originalFileName = mediaExport.getOriginalFileName();
+        if (StringUtils.isEmpty(originalFileName)) {
+            LOG.warn("Can not find original file name from mediaExport '" + mediaExport + "'. Use file name");
+            originalFileName = "";
+            if (!StringUtils.isEmpty(mediaExport.getName())) {
+                originalFileName = mediaExport.getName();
+            }
+            originalFileName += mediaExport.getMediaId();
+        }
+        Pair<String, File> uploadFileInfo = _uploadService.createUniqueUserStoreFile(_user, originalFileName);
 
         LOG.info("Try dump upload stream '" + uploadFileInfo.getFirst() + "' into file '" + uploadFileInfo.getSecond().getPath() + "'");
         Media newMedia = _uploadService.saveInputStreamToFileSystemAndCreateMedia(_user, uploadFileInfo.getSecond(), mediaExport.getInputStream());
