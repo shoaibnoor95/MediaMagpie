@@ -2,6 +2,8 @@ package de.wehner.mediamagpie.persistence.dao;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.slf4j.Logger;
@@ -11,7 +13,6 @@ import org.springframework.stereotype.Repository;
 
 import de.wehner.mediamagpie.persistence.entity.MediaTag;
 
-
 @Repository
 public class MediaTagDao extends Dao<MediaTag> {
 
@@ -20,6 +21,12 @@ public class MediaTagDao extends Dao<MediaTag> {
     @Autowired
     public MediaTagDao(PersistenceService persistenceService) {
         super(MediaTag.class, persistenceService);
+    }
+
+    public MediaTag getByName(String name) {
+        Criteria criteria = createCriteria();
+        criteria.add(Restrictions.eq("_name", name));
+        return (MediaTag) criteria.uniqueResult();
     }
 
     public List<MediaTag> luceneSearchForName(String buzzword) {

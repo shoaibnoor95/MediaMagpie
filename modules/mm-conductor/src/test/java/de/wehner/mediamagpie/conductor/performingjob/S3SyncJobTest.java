@@ -120,7 +120,7 @@ public class S3SyncJobTest {
         when(iteratorPhotos.hasNext()).thenReturn(true, true, true, false);
         when(iteratorPhotos.next()).thenReturn(mediaExportFactory.create(m1), mediaExportFactory.create(m2), mediaExportFactory.create(m3), null);
         when(_s3MediaExportRepository.iteratorPhotos(_user.getName())).thenReturn(iteratorPhotos);
-        when(_uploadService.handleUploadStream(any(User.class), any(File.class), any(InputStream.class))).thenReturn(
+        when(_uploadService.saveInputStreamToFileSystemAndCreateMedia(any(User.class), any(File.class), any(InputStream.class))).thenReturn(
                 new Media(_user, m3.getName(), null, null));
 
         _prepare.call();
@@ -139,7 +139,7 @@ public class S3SyncJobTest {
         when(iteratorPhotos.hasNext()).thenReturn(true, true, false);
         when(iteratorPhotos.next()).thenReturn(mediaExportFactory.create(m2), mediaExportFactory.create(m3), null);
         when(_s3MediaExportRepository.iteratorPhotos(_user.getName())).thenReturn(iteratorPhotos);
-        when(_uploadService.handleUploadStream(any(User.class), any(File.class), any(InputStream.class))).thenReturn(
+        when(_uploadService.saveInputStreamToFileSystemAndCreateMedia(any(User.class), any(File.class), any(InputStream.class))).thenReturn(
                 new Media(_user, m3.getName(), null, null));
 
         _prepare.call();

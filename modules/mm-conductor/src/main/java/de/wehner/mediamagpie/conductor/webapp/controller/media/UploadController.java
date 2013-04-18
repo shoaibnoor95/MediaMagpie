@@ -34,6 +34,8 @@ import de.wehner.mediamagpie.conductor.webapp.controller.json.JQueryUploadComman
 import de.wehner.mediamagpie.conductor.webapp.services.UploadService;
 import de.wehner.mediamagpie.conductor.webapp.util.security.SecurityUtil;
 import de.wehner.mediamagpie.core.util.Pair;
+import de.wehner.mediamagpie.persistence.dao.MediaDao;
+import de.wehner.mediamagpie.persistence.dao.PersistenceService;
 import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.entity.Priority;
 import de.wehner.mediamagpie.persistence.entity.User;
@@ -56,15 +58,18 @@ public class UploadController extends AbstractConfigurationSupportController {
 
     public static final String URL_DELETE_FILE = "/file-delete";
 
-    private UploadService _uploadService;
+    private final UploadService _uploadService;
 
-    private S3SyncService _s3SyncService = null;
+    private final S3SyncService _s3SyncService;
+
+    private final PersistenceService _persistenceService;
 
     @Autowired
-    public UploadController(ConfigurationProvider configurationProvider, UploadService uploadService, S3SyncService s3SyncService) {
+    public UploadController(ConfigurationProvider configurationProvider, UploadService uploadService, S3SyncService s3SyncService, PersistenceService persistenceService) {
         super(configurationProvider, null);
         _uploadService = uploadService;
         _s3SyncService = s3SyncService;
+        _persistenceService = persistenceService;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = URL_UPLOAD)
@@ -102,7 +107,9 @@ public class UploadController extends AbstractConfigurationSupportController {
             User currentUser = SecurityUtil.getCurrentUser();
             Pair<String, File> uploadFileInfo = _uploadService.createUniqueUserStoreFile(currentUser, multipartFile.getOriginalFilename());
             LOG.info("Try dump upload stream '" + uploadFileInfo.getFirst() + "' into file '" + uploadFileInfo.getSecond().getPath() + "'");
-            Media newMedia = _uploadService.handleUploadStream(currentUser, uploadFileInfo.getSecond(), multipartFile.getInputStream());
+            Media newMedia = _uploadService.saveInputStreamToFileSystemAndCreateMedia(currentUser, uploadFileInfo.getSecond(),
+                    multipartFile.getInputStream());
+            _persistenceService.persist(newMedia);
 
             // create job executions for a) image resizing and S3 Upload
             S3Configuration userS3Configuration = getCurrentUsersS3Configuration();

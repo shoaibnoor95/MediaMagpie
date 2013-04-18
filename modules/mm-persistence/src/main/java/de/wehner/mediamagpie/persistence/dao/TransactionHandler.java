@@ -70,4 +70,8 @@ public class TransactionHandler {
     public <T extends Base> T reload(T entity) {
         return _persistenceService.reload(entity);
     }
+
+    public PersistenceService getPersistenceService() {
+        return _persistenceService;
+    }
 }

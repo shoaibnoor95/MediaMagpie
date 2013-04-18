@@ -15,12 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import de.wehner.mediamagpie.persistence.entity.Base;
-import de.wehner.mediamagpie.persistence.entity.User;
-
 
 @Service
 public class PersistenceService {
-    
+
     private final EntityManagerFactory _entityManagerFactory;
     private final ThreadLocal<EntityManager> _threadLocal = new ThreadLocal<EntityManager>();
 
@@ -45,6 +43,15 @@ public class PersistenceService {
         if (!transaction.isActive()) {
             transaction.begin();
         }
+    }
+
+    public boolean isTransactionActive() {
+        EntityManager entityManager = getEntityManager(false);
+        if (entityManager == null) {
+            return false;
+        }
+
+        return true;
     }
 
     protected EntityManager getOrCreateEntityManager() {
@@ -102,11 +109,6 @@ public class PersistenceService {
         return entityManager;
     }
 
-    public void persist(Object object) {
-        EntityManager entityManager = getEntityManagerWithActiveTransaction();
-        entityManager.persist(object);
-    }
-
     public EntityManager getEntityManagerWithActiveTransaction() {
         return getEntityManager(true);
     }
@@ -147,23 +149,19 @@ public class PersistenceService {
         entityManager.flush();
     }
 
+    public void persist(Object object) {
+        EntityManager entityManager = getEntityManagerWithActiveTransaction();
+        entityManager.persist(object);
+    }
+
     public <T> T getById(Class<T> clazz, Serializable id) {
         EntityManager entityManager = getEntityManagerWithActiveTransaction();
         return entityManager.find(clazz, id);
     }
 
-    public User merge(User user) {
+    public <T> T merge(T user) {
         EntityManager entityManager = getEntityManagerWithActiveTransaction();
         return entityManager.merge(user);
-    }
-
-    public boolean isTransactionActive() {
-        EntityManager entityManager = getEntityManager(false);
-        if (entityManager == null) {
-            return false;
-        }
-
-        return true;
     }
 
     @SuppressWarnings("unchecked")

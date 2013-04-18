@@ -3,11 +3,10 @@ package de.wehner.mediamagpie.persistence.entity;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
-
 @MappedSuperclass
 public class UniqueBaseName extends Base {
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     protected String _name;
 
     public UniqueBaseName() {

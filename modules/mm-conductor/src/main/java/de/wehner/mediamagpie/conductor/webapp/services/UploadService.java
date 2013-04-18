@@ -96,7 +96,7 @@ public class UploadService {
     }
 
     /**
-     * The <code>inputStream</code> is just written to file system using the user's baseUploadPath and given mediaFile name.
+     * The <code>inputStream</code> will be written to file system using the user's baseUploadPath and given mediaFile name.
      * 
      * @param currentUser
      * @param mediaFile
@@ -104,7 +104,7 @@ public class UploadService {
      * @param inputStream
      * @return A new created and persisted <code>Media</code> object which refers to the stored file.
      */
-    public Media handleUploadStream(final User currentUser, File mediaFile, InputStream inputStream) {
+    public Media saveInputStreamToFileSystemAndCreateMedia(final User currentUser, File mediaFile, InputStream inputStream) {
         if (mediaFile.exists()) {
             // we expect an empty existing file to write into
             if (mediaFile.length() > 0) {
@@ -125,7 +125,7 @@ public class UploadService {
             IOUtils.closeQuietly(inputStream);
         }
 
-        // create a Media entity, add to db and create a ThumbImage as well
+        // create a Media entity, with hash value and camera meta data
         Media newMedia;
         try {
             newMedia = MediaSyncService.createMediaFromMediaFile(currentUser, mediaFile.toURI());
@@ -133,9 +133,6 @@ public class UploadService {
             throw new RuntimeException("Can not create new Media entity.", e);
         }
         
-        // TODO rwe: Better solotion: move this to the caller
-        _mediaDao.makePersistent(newMedia);
-
         return newMedia;
     }
 
