@@ -1,4 +1,4 @@
-package de.wehner.mediamagpie.common.util;
+package de.wehner.mediamagpie.core.util;
 
 import static org.junit.Assert.*;
 
