@@ -77,6 +77,21 @@ public class MediaExportFactoryTest {
         assertThat(mediaExport.getDescription()).isEqualTo(_media.getDescription());
         assertThat(mediaExport.getCreationDate()).isEqualTo(CREATION_DATE);
         assertThat(mediaExport.getMediaId()).isEqualTo(_media.getId() + "");
+        assertThat(mediaExport.getOriginalFileName()).isEqualTo(_media.getFileFromUri().getName());
+    }
+
+    @Test
+    public void testCreate_VerifyUndefinedValuesWillBeUndefinedInMediaExport() throws IOException {
+        _media.setName(null);
+        _media.setDescription(null);
+        
+        MediaExport mediaExport = _factory.create(_media);
+
+        assertThat(mediaExport.getName()).isNullOrEmpty();
+        assertThat(mediaExport.getDescription()).isNullOrEmpty();
+        assertThat(mediaExport.getCreationDate()).isEqualTo(CREATION_DATE);
+        assertThat(mediaExport.getMediaId()).isEqualTo(_media.getId() + "");
+        assertThat(mediaExport.getOriginalFileName()).isEqualTo(_media.getFileFromUri().getName());
     }
 
     @Test

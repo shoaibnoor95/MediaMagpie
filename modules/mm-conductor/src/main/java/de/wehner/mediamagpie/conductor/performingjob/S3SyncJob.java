@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,8 +90,7 @@ public class S3SyncJob extends AbstractJob {
 
                         @Override
                         public void run() {
-                            LOG.debug(String.format("try to push media '%s' to S3.",
-                                    StringUtils.isEmpty(media.getName()) ? media.getPath() : media.getName()));
+                            LOG.debug("Try to push media with id " + media.getId() + " to S3.");
                             try {
                                 Media mediaInSession = _transactionHandler.reload(media);
                                 MediaExport mediaExport = _mediaExportFactory.create(mediaInSession);
@@ -105,10 +103,18 @@ public class S3SyncJob extends AbstractJob {
                 }
 
                 // Pull all unknown Medias from S3 and store in local DB and file system
-                for (MediaExport mediaExport : unkonwMediaOnS3) {
+                final MediaImportFactory mediaImportFactory = new MediaImportFactory(_uploadService, _user, _configurationProvider, _transactionHandler,
+                        _mediaDao);
+                for (final MediaExport mediaExport : unkonwMediaOnS3) {
                     LOG.debug(String.format("try to import media '%s' from S3.", mediaExport.getName()));
-                    MediaImportFactory mediaImportFactory = new MediaImportFactory(_uploadService, _user, _configurationProvider, _transactionHandler, _mediaDao);
-                    mediaImportFactory.create(mediaExport);
+                    _transactionHandler.executeInTransaction(new Callable<Boolean>() {
+
+                        @Override
+                        public Boolean call() throws Exception {
+                            mediaImportFactory.create(mediaExport);
+                            return null;
+                        }
+                    });
                 }
                 LOG.info("finised " + getClass().getSimpleName());
                 return null;

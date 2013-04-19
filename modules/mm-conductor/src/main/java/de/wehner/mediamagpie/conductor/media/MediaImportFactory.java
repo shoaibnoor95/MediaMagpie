@@ -24,7 +24,6 @@ public class MediaImportFactory {
     private final UploadService _uploadService;
     private final User _user;
     private final ConfigurationProvider _configurationProvider;
-    private final TransactionHandler _transactionHandler;
     private final MediaDao _mediaDao;
     private final MediaTagDao _mediaTagDao;
 
@@ -34,11 +33,19 @@ public class MediaImportFactory {
         _uploadService = uploadService;
         _user = user;
         _configurationProvider = configurationProvider;
-        _transactionHandler = transactionHandler;
         _mediaDao = mediaDao;
         _mediaTagDao = new MediaTagDao(transactionHandler.getPersistenceService());
     }
 
+    /**
+     * Creates a new Media and stores the binary media content into the local file system.
+     * <p>
+     * <b>Beware: </b>The methods needs to be called within an open transaction.
+     * </p>
+     * 
+     * @param mediaExport
+     * @return
+     */
     public Media create(MediaExport mediaExport) {
         String originalFileName = mediaExport.getOriginalFileName();
         if (StringUtils.isEmpty(originalFileName)) {

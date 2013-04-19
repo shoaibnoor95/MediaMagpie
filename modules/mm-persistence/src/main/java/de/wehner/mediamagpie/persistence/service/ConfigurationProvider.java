@@ -38,7 +38,6 @@ public class ConfigurationProvider {
 
     private final Holder<MainConfiguration> _mainConfigurationHolder = new Holder<MainConfiguration>();
 
-    // TODO rwe: cache this attribute
     private final Holder<RequiredSetupTasks> _requiredSetupTasksHolder = new Holder<RequiredSetupTasks>();
 
     private final Cache<String, UserConfiguration> _userName2UserConfiguration;
@@ -50,21 +49,10 @@ public class ConfigurationProvider {
         super();
         _configurationDao = configurationDao;
         _userConfigurationDao = userConfigurationDao;
-        _userName2UserConfiguration = CacheBuilder.newBuilder().concurrencyLevel(4).maximumSize(10000).expireAfterWrite(10, TimeUnit.MINUTES)
-                .build();
-        _userName2S3Configuration = CacheBuilder.newBuilder().concurrencyLevel(4).maximumSize(10000).expireAfterWrite(10, TimeUnit.MINUTES)
-                .build();
+        _userName2UserConfiguration = CacheBuilder.newBuilder().concurrencyLevel(4).maximumSize(10000).expireAfterWrite(10, TimeUnit.MINUTES).build();
+        _userName2S3Configuration = CacheBuilder.newBuilder().concurrencyLevel(4).maximumSize(10000).expireAfterWrite(10, TimeUnit.MINUTES).build();
     }
 
-//    public MainconfigurationCommand getMainConfiguration() {
-//        synchronized (_mainConfigurationHolder) {
-//            if (_mainConfigurationHolder.get() == null) {
-//                _mainConfigurationHolder.set(_configurationDao.getConfiguration(MainconfigurationCommand.class));
-//            }
-//            return _mainConfigurationHolder.get();
-//        }
-//    }
-//
     public MainConfiguration getMainConfiguration() {
         synchronized (_mainConfigurationHolder) {
             if (_mainConfigurationHolder.get() == null) {

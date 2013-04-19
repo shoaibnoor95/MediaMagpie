@@ -77,19 +77,19 @@ public class S3SyncJobIntTest {
         UploadService uploadService = new UploadService(_configurationProvider, _mediaDao, imageService, _dbTestEnvironment.getPersistenceService(), null);
         _job = new S3SyncJob(_s3MediaExportRepository, uploadService, _user, _configurationProvider, _dbTestEnvironment.createTransactionHandler(),
                 _mediaDao);
-        _dbTestEnvironment.flipTransaction();
+
+        // commit the transaction (close), because the S3SyncJob will be started without a transaction
+        _dbTestEnvironment.commitTransaction();
     }
 
     @Test
     public void testPullFromS3() throws Exception {
         _s3MediaExportRepository.addMediaOnS3(_m1);
 
-        _dbTestEnvironment.beginTransaction();
-
         JobCallable prepare = _job.prepare();
         prepare.call();
 
-        _dbTestEnvironment.flipTransaction();
+        _dbTestEnvironment.beginTransaction();
         List<Media> allMedias = _mediaDao.getAll();
         assertThat(allMedias).hasSize(1);
         Media mediaBasedFromS3 = allMedias.get(0);
@@ -112,11 +112,11 @@ public class S3SyncJobIntTest {
     public void testPushToS3() throws Exception {
         _dbTestEnvironment.beginTransaction();
         _mediaDao.makePersistent(_m2);
+        _dbTestEnvironment.commitTransaction();
 
         JobCallable prepare = _job.prepare();
         prepare.call();
 
-        _dbTestEnvironment.commitTransaction();
         List<MediaExport> mediasPushedToS3 = _s3MediaExportRepository.getMediasPushedToS3();
         assertThat(mediasPushedToS3).hasSize(1);
     }

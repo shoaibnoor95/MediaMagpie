@@ -60,10 +60,10 @@ public class S3SyncService extends SingleThreadedController {
      */
     public boolean syncS3Bucket(User user) {
 
-        if (_cloudSyncJobExecutionDao.getJobIfPresent(user) != null) {
-            LOG.info("A sync job for requested user is currently running.");
-            return false;
-        }
+//        if (_cloudSyncJobExecutionDao.getJobIfPresent(user) != null) {
+//            LOG.info("A sync job for requested user is currently running.");
+//            return false;
+//        }
 
         // add sync job for user
         CloudSyncJobExecution syncJobExecution = new CloudSyncJobExecution(user, CloudSyncJobExecution.CloudType.S3);
