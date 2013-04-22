@@ -16,8 +16,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.wehner.mediamagpie.api.MediaExport;
+import de.wehner.mediamagpie.api.util.DigestUtil;
 import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
-import de.wehner.mediamagpie.core.util.DigestUtil;
 import de.wehner.mediamagpie.persistence.MediaExportFactory;
 import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.entity.MediaTag;

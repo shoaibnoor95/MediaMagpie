@@ -19,8 +19,8 @@ import de.wehner.mediamagpie.conductor.webapp.controller.commands.UserCommand;
 import de.wehner.mediamagpie.persistence.dao.UserDao;
 import de.wehner.mediamagpie.persistence.dao.UserGroupDao;
 import de.wehner.mediamagpie.persistence.entity.User;
-import de.wehner.mediamagpie.persistence.entity.UserGroup;
 import de.wehner.mediamagpie.persistence.entity.User.Role;
+import de.wehner.mediamagpie.persistence.entity.UserGroup;
 
 
 

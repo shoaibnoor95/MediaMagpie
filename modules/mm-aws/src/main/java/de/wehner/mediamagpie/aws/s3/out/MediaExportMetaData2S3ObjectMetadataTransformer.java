@@ -8,9 +8,9 @@ import org.apache.commons.io.IOUtils;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 
 import de.wehner.mediamagpie.api.MediaExportMetadata;
+import de.wehner.mediamagpie.api.util.DigestUtil;
 import de.wehner.mediamagpie.aws.s3.BaseMMTransformer;
 import de.wehner.mediamagpie.aws.s3.S3MediaExportRepository;
-import de.wehner.mediamagpie.core.util.DigestUtil;
 import de.wehner.mediamagpie.core.util.ExceptionUtil;
 import de.wehner.mediamagpie.core.util.MMTransformer;
 

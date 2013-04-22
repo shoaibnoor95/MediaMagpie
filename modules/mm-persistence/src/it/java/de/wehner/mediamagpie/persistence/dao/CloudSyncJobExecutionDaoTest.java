@@ -7,8 +7,8 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import de.wehner.mediamagpie.persistence.entity.CloudSyncJobExecution;
-import de.wehner.mediamagpie.persistence.entity.User;
 import de.wehner.mediamagpie.persistence.entity.CloudSyncJobExecution.CloudType;
+import de.wehner.mediamagpie.persistence.entity.User;
 import de.wehner.mediamagpie.persistence.entity.properties.UserConfiguration;
 import de.wehner.mediamagpie.persistence.testsupport.DbTestEnvironment;
 

@@ -16,9 +16,9 @@ import de.wehner.mediamagpie.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.persistence.dao.PersistenceService;
 import de.wehner.mediamagpie.persistence.dao.TransactionHandler;
 import de.wehner.mediamagpie.persistence.entity.CloudSyncJobExecution;
+import de.wehner.mediamagpie.persistence.entity.CloudSyncJobExecution.CloudType;
 import de.wehner.mediamagpie.persistence.entity.JobExecution;
 import de.wehner.mediamagpie.persistence.entity.User;
-import de.wehner.mediamagpie.persistence.entity.CloudSyncJobExecution.CloudType;
 import de.wehner.mediamagpie.persistence.entity.properties.S3Configuration;
 import de.wehner.mediamagpie.persistence.service.ConfigurationProvider;
 

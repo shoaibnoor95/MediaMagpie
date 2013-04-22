@@ -1,7 +1,6 @@
 package de.wehner.mediamagpie.conductor.spring.deploy.impl;
 
 import java.io.IOException;
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

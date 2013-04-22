@@ -25,13 +25,13 @@ import de.wehner.mediamagpie.api.MediaExportResult;
 import de.wehner.mediamagpie.api.MediaExportResult.ExportStatus;
 import de.wehner.mediamagpie.api.MediaExportResults;
 import de.wehner.mediamagpie.api.MediaType;
+import de.wehner.mediamagpie.api.util.DigestUtil;
 import de.wehner.mediamagpie.aws.s3.S3ClientFacade.FileNameInfo;
 import de.wehner.mediamagpie.aws.s3.in.S3ObjectIterator;
 import de.wehner.mediamagpie.aws.s3.in.S3ObjectTuple2MediaExportTransformer;
 import de.wehner.mediamagpie.aws.s3.in.S3ObjectTupleIterator;
 import de.wehner.mediamagpie.aws.s3.out.MediaExport2S3ObjectMetadataTransformer;
 import de.wehner.mediamagpie.aws.s3.out.MediaExportMetaData2S3ObjectMetadataTransformer;
-import de.wehner.mediamagpie.core.util.DigestUtil;
 import de.wehner.mediamagpie.core.util.ExceptionUtil;
 
 public class S3MediaExportRepository implements MediaExportRepository {

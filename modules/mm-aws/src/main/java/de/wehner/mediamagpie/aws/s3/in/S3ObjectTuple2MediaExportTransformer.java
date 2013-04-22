@@ -70,6 +70,7 @@ public class S3ObjectTuple2MediaExportTransformer implements MMTransformer<S3Obj
             mediaExport.setType(MediaType.valueOf(userMetadata.get(S3MediaExportRepository.META_MEDIA_TYPE)));
         }
         // content
+        // TODO rwe: vielleicht müssen wir hier uns merken, wie die datei im bucket genau heißt und erst beim Zugriff auf den InputStream neu laden?
         mediaExport.setInputStream(s3objectData.getObjectContent());
 
         // b) try to read the meta data part of object

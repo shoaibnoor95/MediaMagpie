@@ -1,4 +1,4 @@
-package de.wehner.mediamagpie.core.util;
+package de.wehner.mediamagpie.api.util;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,7 +24,7 @@ public class DigestUtil {
             inputStream = new FileInputStream(inputFile);
             return computeSha1AsHexString(inputStream);
         } catch (IOException e) {
-            throw ExceptionUtil.convertToRuntimeException(e);
+            throw new RuntimeException(e);
         } finally {
             IOUtils.closeQuietly(inputStream);
         }
@@ -35,7 +35,7 @@ public class DigestUtil {
             InputStream inputStream = IOUtils.toInputStream(input, "ISO8859-15");
             return computeSha1AsHexString(inputStream);
         } catch (IOException e) {
-            throw ExceptionUtil.convertToRuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -43,7 +43,7 @@ public class DigestUtil {
         try {
             return computeHashAsHexString(inputStream, MessageDigest.getInstance("SHA1"));
         } catch (NoSuchAlgorithmException e) {
-            throw ExceptionUtil.convertToRuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -52,7 +52,7 @@ public class DigestUtil {
             InputStream inputStream = IOUtils.toInputStream(input, "ISO8859-15");
             return computeMd5AsHexString(inputStream);
         } catch (IOException e) {
-            throw ExceptionUtil.convertToRuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -61,7 +61,7 @@ public class DigestUtil {
         try {
             return computeHashAsHexString(inputStream, MessageDigest.getInstance("MD5"));
         } catch (NoSuchAlgorithmException e) {
-            throw ExceptionUtil.convertToRuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -139,7 +139,7 @@ public class DigestUtil {
         try {
             return MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e) {
-            throw ExceptionUtil.convertToRuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -148,7 +148,7 @@ public class DigestUtil {
         try {
             return MessageDigest.getInstance("SHA1");
         } catch (NoSuchAlgorithmException e) {
-            throw ExceptionUtil.convertToRuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 }

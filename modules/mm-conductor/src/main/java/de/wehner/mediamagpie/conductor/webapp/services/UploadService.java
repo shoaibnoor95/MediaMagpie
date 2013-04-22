@@ -117,7 +117,8 @@ public class UploadService {
         OutputStream outputStream = null;
         try {
             outputStream = new FileOutputStream(mediaFile);
-            IOUtils.copy(inputStream, outputStream);
+            int bytesCopied = IOUtils.copy(inputStream, outputStream);
+            LOG.trace("copied " + bytesCopied + " bytes to output stream.");
         } catch (IOException e) {
             LOG.warn("Can not write upload file to disk.", e);
         } finally {
@@ -132,7 +133,7 @@ public class UploadService {
         } catch (IOException e) {
             throw new RuntimeException("Can not create new Media entity.", e);
         }
-        
+
         return newMedia;
     }
 

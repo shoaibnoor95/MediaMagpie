@@ -58,7 +58,8 @@ public class MediaImportFactory {
         }
         Pair<String, File> uploadFileInfo = _uploadService.createUniqueUserStoreFile(_user, originalFileName);
 
-        LOG.info("Try dump upload stream '" + uploadFileInfo.getFirst() + "' into file '" + uploadFileInfo.getSecond().getPath() + "'");
+        LOG.info("Try dump upload stream '" + uploadFileInfo.getFirst() + "' into file '" + uploadFileInfo.getSecond().getPath() + "' for media id: "
+                + mediaExport.getMediaId() + ", hash: " + mediaExport.getHashValue());
         Media newMedia = _uploadService.saveInputStreamToFileSystemAndCreateMedia(_user, uploadFileInfo.getSecond(), mediaExport.getInputStream());
 
         // add meta informations from mediaExport to new media entity

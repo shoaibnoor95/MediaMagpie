@@ -33,7 +33,7 @@ import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.Store;
 
-import de.wehner.mediamagpie.core.util.DigestUtil;
+import de.wehner.mediamagpie.api.util.DigestUtil;
 import de.wehner.mediamagpie.persistence.realms.AlbumMediaRelation;
 
 // select * from (select uri, count(*) as N from media group by uri order by N desc) as uris where N > 1

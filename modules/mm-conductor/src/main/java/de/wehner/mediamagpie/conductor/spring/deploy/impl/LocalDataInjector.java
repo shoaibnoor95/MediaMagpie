@@ -20,8 +20,8 @@ import de.wehner.mediamagpie.persistence.entity.ImageResizeJobExecution;
 import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.entity.MediaTag;
 import de.wehner.mediamagpie.persistence.entity.User;
-import de.wehner.mediamagpie.persistence.entity.UserGroup;
 import de.wehner.mediamagpie.persistence.entity.User.Role;
+import de.wehner.mediamagpie.persistence.entity.UserGroup;
 
 @PopulateDb
 @Component
