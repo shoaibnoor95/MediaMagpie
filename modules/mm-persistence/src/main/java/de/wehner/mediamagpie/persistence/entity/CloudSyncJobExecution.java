@@ -1,7 +1,5 @@
 package de.wehner.mediamagpie.persistence.entity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
@@ -32,6 +30,14 @@ public class CloudSyncJobExecution extends AbstractCloudJobExecution {
      */
     public CloudSyncJobExecution(User user, CloudType cloudType) {
         this(JobStatus.QUEUED, user, cloudType);
+        switch (cloudType) {
+        case S3:
+            setDescription("S3 media sync job");
+            break;
+
+        default:
+            break;
+        }
     }
 
     public CloudSyncJobExecution(JobStatus status, User user, CloudType cloudType) {

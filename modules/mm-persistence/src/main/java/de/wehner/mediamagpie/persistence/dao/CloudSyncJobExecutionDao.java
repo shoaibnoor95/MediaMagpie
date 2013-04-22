@@ -3,6 +3,7 @@ package de.wehner.mediamagpie.persistence.dao;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -20,14 +21,16 @@ public class CloudSyncJobExecutionDao extends JobExecutionDao {
     }
 
     @SuppressWarnings("unchecked")
-    public CloudSyncJobExecution getJobIfPresent(User user) {
+    public CloudSyncJobExecution findS3Job(User user, JobStatus... jobStatus) {
         final Criteria crit = _persistenceService.createCriteria(CloudSyncJobExecution.class);
 
         crit.add(Restrictions.eq("_user", user));
         crit.add(Restrictions.eq("_cloudType", CloudSyncJobExecution.CloudType.S3));
-        crit.add(Restrictions.not(Restrictions.in("_jobStatus", new JobStatus[] { JobStatus.TERMINATED_WITH_ERROR, JobStatus.COMPLETED_WITH_WARNINGS })));
-        // crit.addOrder(Order.desc("_priority"));
-        // crit.addOrder(Order.asc("_id"));
+        if (jobStatus != null && jobStatus.length > 0) {
+            crit.add(Restrictions.in("_jobStatus", jobStatus));
+        }
+        crit.addOrder(Order.desc("_priority"));
+        crit.addOrder(Order.asc("_id"));
         crit.setMaxResults(1);
         List<CloudSyncJobExecution> jobs = crit.list();
         if (jobs != null && jobs.size() > 0) {

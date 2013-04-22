@@ -51,4 +51,16 @@
 			</button>
 		</dd>
 	</dl>
+	
+	<!-- trigger synchronisation -->
+    <c:if test="${conf.configurationComplete}">
+    <form:form action="synchronize">
+        <button id="syncWithS3" type="button" class="default"
+            onclick="$('form input[type=hidden][name=submitSelect]').val('start');document.forms[0].submit();">
+            <span>Start Synchronization</span>
+        </button>
+        <input type="hidden" name="submitSelect" />
+    </form:form>
+    </c:if>
+    	
 </div>

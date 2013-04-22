@@ -48,6 +48,8 @@ public class AwsConfigurationController extends AbstractConfigurationSupportCont
 
     public static final String URL_TEST_SETTINGS = "/test";
 
+    public static final String URL_SYNC_S3 = "synchronize";
+
     private final S3SyncService _s3SyncService;
 
     @Autowired
@@ -124,6 +126,23 @@ public class AwsConfigurationController extends AbstractConfigurationSupportCont
         _configurationProvider.saveOrUpdateS3Configuration(user, existingS3Configuration);
 
         return "redirect:" + getBaseRequestMappingUrl() + URL_S3CONFIG;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = URL_SYNC_S3, params = { "submitSelect=start" })
+    public String syncAgainstS3(Model model, @RequestParam(value = "userId", required = false) Long userId) {
+        addConfigurationIntoModel(model, userId);
+        User user = getValidatedRelevantUser(userId);
+        S3Configuration existingS3Configuration = _configurationProvider.getS3Configuration(user);
+        if (existingS3Configuration.isConfigurationComplete()) {
+            if (_s3SyncService.syncS3Bucket(user)) {
+                // a new job was created and queued
+                model.addAttribute(new CheckResultCommand(true, "awsConfigurationController.synch.new"));
+            } else {
+                // a existing job is still present
+                model.addAttribute(new CheckResultCommand(true, "awsConfigurationController.synch.existingjob"));
+            }
+        }
+        return VIEW_S3CONFIG;
     }
 
     private S3ConfigurationCommand createS3ConfigurationCommandFromUser(Long userId) {

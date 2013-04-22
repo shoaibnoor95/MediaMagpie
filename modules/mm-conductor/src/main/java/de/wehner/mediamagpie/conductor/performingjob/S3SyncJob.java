@@ -75,10 +75,12 @@ public class S3SyncJob extends AbstractJob {
                     MediaExport mediaExport = iteratorPhotos.next();
                     if (unmatchedMedias.containsKey(mediaExport.getHashValue())) {
                         // we have found an Media on S3 which matches to a local one
-                        LOG.trace("Found media '" + mediaExport.getName() + "' on S3 with same hash value than a local media has.");
+                        LOG.trace("Found media '" + mediaExport.getName() + "' (" + mediaExport.getHashValue()
+                                + ") on S3 with same hash value than a local media has.");
                         unmatchedMedias.remove(mediaExport.getHashValue());
                     } else {
-                        LOG.trace("Found media '" + mediaExport.getName() + "' on S3 with a hash value that is unknown local.");
+                        LOG.trace("Found media '" + mediaExport.getName() + "' (" + mediaExport.getHashValue()
+                                + ") on S3 with a hash value that is unknown on local side.");
                         unkonwMediaOnS3.add(mediaExport);
                     }
                 }
