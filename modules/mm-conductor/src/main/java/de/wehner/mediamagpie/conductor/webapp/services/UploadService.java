@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import de.wehner.mediamagpie.core.util.FileSystemUtil;
 import de.wehner.mediamagpie.core.util.Pair;
+import de.wehner.mediamagpie.core.util.StringUtil;
 import de.wehner.mediamagpie.core.util.TimeoutExecutor;
 import de.wehner.mediamagpie.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.persistence.dao.PersistenceService;
@@ -118,7 +119,7 @@ public class UploadService {
         try {
             outputStream = new FileOutputStream(mediaFile);
             int bytesCopied = IOUtils.copy(inputStream, outputStream);
-            LOG.trace("copied " + bytesCopied + " bytes to output stream.");
+            LOG.trace("copied " + bytesCopied + " bytes (" + StringUtil.formatBytesToHumanReadableRepresentation(bytesCopied) + ") to output stream.");
         } catch (IOException e) {
             LOG.warn("Can not write upload file to disk.", e);
         } finally {

@@ -62,7 +62,6 @@ public class S3ObjectSummary2MediaExportTransformerTest {
         ObjectMetadata objectMetadata_Data = s3DataObject.getObjectMetadata();
         Map<String, String> map = objectMetadata_Data.getUserMetadata();
         map.put(S3MediaExportRepository.META_MEDIA_ID, MEDIA_ID);
-        map.put(S3MediaExportRepository.META_NAME, MimeUtility.encodeText(MEDIA_NAME));
         map.put(S3MediaExportRepository.META_CREATION_DATE, "" + CREATION_DATE.getTime());
         String random = RandomStringUtils.random(128);
         _contentS3DataObject = random.getBytes();

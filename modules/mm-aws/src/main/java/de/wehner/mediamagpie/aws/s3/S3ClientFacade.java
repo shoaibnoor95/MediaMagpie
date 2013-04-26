@@ -23,6 +23,7 @@ import com.amazonaws.services.s3.transfer.Upload;
 
 import de.wehner.mediamagpie.aws.s3.in.S3ObjectIterator;
 import de.wehner.mediamagpie.core.util.Pair;
+import de.wehner.mediamagpie.core.util.StringUtil;
 
 /**
  * This class provides some convenient methods to use the aws API.
@@ -36,6 +37,9 @@ public class S3ClientFacade {
 
     public static final String HASH_OF_DATA = "hash-of-data";
 
+    /**
+     * encapsulates the file name of media file and media's metadata file.
+     */
     public static class FileNameInfo {
 
         private final String _nameObject;
@@ -89,9 +93,22 @@ public class S3ClientFacade {
 
     public PutObjectResult putObject(String existingBucketName, String keyName, InputStream is, ObjectMetadata metadata) {
         // metadata.setContentEncoding("UTF8");
+        if (metadata.getContentLength() < 0) {
+            throw new IllegalArgumentException("The content length must be specified.");
+        }
         final PutObjectRequest putObjectRequest = new PutObjectRequest(existingBucketName, keyName, is, metadata);
         PutObjectResult putObject = _s3.putObject(putObjectRequest);
-        LOG.debug("uploaded object '" + existingBucketName + "'#'" + keyName + "' to S3");
+        LOG.debug(String.format("Uploaded object '%s/%s' with size %s to S3.", existingBucketName, keyName,
+                StringUtil.formatBytesToHumanReadableRepresentation(metadata.getContentLength())));
+        LOG.debug("Upload finished. eTag for '" + existingBucketName + "/" + keyName + "': " + putObject.getETag());
+
+        // verify the length of uploaded media
+        ObjectMetadata objectMetadataFromUpload = _s3.getObjectMetadata(existingBucketName, keyName);
+        if (objectMetadataFromUpload.getContentLength() != metadata.getContentLength()) {
+            LOG.warn("Upload of %s/%s failed because the length of uploaded content %d is not the expected length of original one %l .",
+                    existingBucketName, keyName, objectMetadataFromUpload.getContentLength(), metadata.getContentLength());
+            return null;
+        }
         return putObject;
     }
 

@@ -3,6 +3,7 @@ package de.wehner.mediamagpie.aws.s3;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.mail.internet.MimeUtility;
 
@@ -33,5 +34,18 @@ public abstract class BaseMMTransformer {
             }
             objectMetadata.addUserMetadata(key, encodedValue);
         }
+    }
+
+    protected String getValueFromUserMetadata(String key, ObjectMetadata objectMetadata) {
+        Map<String, String> userMetadata = objectMetadata.getUserMetadata();
+        String value = userMetadata.get(key);
+        if (!StringUtils.isEmpty(value)) {
+            try {
+                return MimeUtility.decodeText(value);
+            } catch (UnsupportedEncodingException e) {
+                ExceptionUtil.convertToRuntimeException(e);
+            }
+        }
+        return null;
     }
 }

@@ -43,7 +43,7 @@ public class ImageResizeJob extends AbstractJob {
 
             @Override
             public URI call() throws Exception {
-                LOG.info("create the thumb image here...");
+                LOG.debug("create the thumb image here...");
                 try {
                     int widthOrHeight = Integer.parseInt(_widthOrHeight);
                     File resizedImage = ImageService.resizeImageInQueue(_originImage, _mediaId, getPerformingJobContext().getTempMediaPath(),

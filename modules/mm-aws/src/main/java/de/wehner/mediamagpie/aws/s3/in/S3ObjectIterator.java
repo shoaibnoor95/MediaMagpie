@@ -61,7 +61,7 @@ public class S3ObjectIterator implements Iterator<S3ObjectSummary> {
             /* .withDelimiter(S3MediaRepository.KEY_DELIMITER) */.withMaxKeys(MAX_OBJECTS_PER_READ);
             _lastObjectListing = _s3.listObjects(listObjectsRequest);
             filterZeroLengthObjects();
-            LOG.info("list objects in '" + _bucketName + "'#'" + _prefix + "' and got " + _lastObjectListing.getObjectSummaries().size() + " items.");
+            LOG.debug("list objects in '" + _bucketName + "'#'" + _prefix + "' and got " + _lastObjectListing.getObjectSummaries().size() + " items.");
             return;
         }
 
@@ -69,7 +69,7 @@ public class S3ObjectIterator implements Iterator<S3ObjectSummary> {
         if (_lastObjectListing.isTruncated()) {
             // list next ObjectListing
             _lastObjectListing = _s3.listNextBatchOfObjects(_lastObjectListing);
-            LOG.info("list next buch of objects in '" + _bucketName + "', '" + _prefix + "'.");
+            LOG.debug("list next buch of objects in '" + _bucketName + "', '" + _prefix + "'.");
             _objectSummaryIndex = 0;
         }
     }
@@ -77,7 +77,7 @@ public class S3ObjectIterator implements Iterator<S3ObjectSummary> {
     private void filterZeroLengthObjects() {
         for (int i = _lastObjectListing.getObjectSummaries().size() - 1; i >= 0; i--) {
             if (_lastObjectListing.getObjectSummaries().get(i).getSize() == 0) {
-                LOG.info("remove zero length object '" + _lastObjectListing.getObjectSummaries().get(i).getKey() + "' from ObjectListing.");
+                LOG.debug("remove zero length object '" + _lastObjectListing.getObjectSummaries().get(i).getKey() + "' from ObjectListing.");
                 _lastObjectListing.getObjectSummaries().remove(i);
             }
         }

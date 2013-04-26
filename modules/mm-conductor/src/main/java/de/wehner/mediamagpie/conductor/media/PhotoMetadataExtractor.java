@@ -123,6 +123,10 @@ public class PhotoMetadataExtractor {
     public Orientation resolveOrientation() {
         if (_metadata != null) {
             ExifIFD0Directory directory = _metadata.getDirectory(ExifIFD0Directory.class);
+            if (directory == null) {
+                return Orientation.UNKNOWN;
+            }
+
             Integer orientationAsInt = directory.getInteger(ExifIFD0Directory.TAG_ORIENTATION);
             // String description = directory.getDescription(ExifIFD0Directory.TAG_ORIENTATION);
             if (orientationAsInt != null) {

@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import de.wehner.mediamagpie.api.MediaExport;
 import de.wehner.mediamagpie.api.MediaExportRepository;
+import de.wehner.mediamagpie.api.MediaExportResults;
 import de.wehner.mediamagpie.aws.s3.S3MediaExportRepository;
 import de.wehner.mediamagpie.conductor.media.MediaImportFactory;
 import de.wehner.mediamagpie.conductor.webapp.services.UploadService;
@@ -75,17 +76,15 @@ public class S3SyncJob extends AbstractJob {
                     MediaExport mediaExport = iteratorPhotos.next();
                     if (unmatchedMedias.containsKey(mediaExport.getHashValue())) {
                         // we have found an Media on S3 which matches to a local one
-                        LOG.trace("Found media '" + mediaExport.getName() + "' (" + mediaExport.getHashValue()
-                                + ") on S3 with same hash value than a local media has.");
+                        LOG.trace("Media '" + mediaExport.getName() + "' on S3 has same hash value than a local one.");
                         unmatchedMedias.remove(mediaExport.getHashValue());
                     } else {
-                        LOG.trace("Found media '" + mediaExport.getName() + "' (" + mediaExport.getHashValue()
-                                + ") on S3 with a hash value that is unknown on local side.");
+                        LOG.trace("Media '" + mediaExport.getName() + "' on S3 is unknown on local side.");
                         unkonwMediaOnS3.add(mediaExport);
                     }
                 }
 
-                // Push all unmatched medias to S3
+                // --> Push all unmatched medias to S3
                 for (Media mediaToExport : unmatchedMedias.values()) {
                     final Media media = mediaToExport;
                     _transactionHandler.executeInTransaction(new Runnable() {
@@ -96,7 +95,8 @@ public class S3SyncJob extends AbstractJob {
                             try {
                                 Media mediaInSession = _transactionHandler.reload(media);
                                 MediaExport mediaExport = _mediaExportFactory.create(mediaInSession);
-                                _s3MediaRepositiory.addMedia(_user.getName(), mediaExport);
+                                MediaExportResults mediaExportResults = _s3MediaRepositiory.addMedia(_user.getName(), mediaExport);
+                                // TODO : implement an error-handling when one or more objects can not be uploaded sucessfully
                             } catch (FileNotFoundException e) {
                                 ExceptionUtil.convertToRuntimeException(e);
                             }
@@ -104,16 +104,19 @@ public class S3SyncJob extends AbstractJob {
                     });
                 }
 
-                // Pull all unknown Medias from S3 and store in local DB and file system
+                // <-- Pull all unknown Medias from S3 and store in local DB and file system
                 final MediaImportFactory mediaImportFactory = new MediaImportFactory(_uploadService, _user, _configurationProvider, _transactionHandler,
                         _mediaDao);
                 for (final MediaExport mediaExport : unkonwMediaOnS3) {
-                    LOG.debug(String.format("try to import media '%s' from S3.", mediaExport.getName()));
+                    LOG.debug(String.format("try to import object '%s' from S3.", mediaExport.getName()));
                     _transactionHandler.executeInTransaction(new Callable<Boolean>() {
 
                         @Override
                         public Boolean call() throws Exception {
-                            mediaImportFactory.create(mediaExport);
+                            Media newMedia = mediaImportFactory.create(mediaExport);
+                            newMedia = _mediaDao.getPersistenceService().reload(newMedia);
+                            newMedia.setExportedToS3(true);
+                            _mediaDao.makePersistent(newMedia);
                             return null;
                         }
                     });

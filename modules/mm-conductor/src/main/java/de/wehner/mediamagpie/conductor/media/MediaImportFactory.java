@@ -58,10 +58,15 @@ public class MediaImportFactory {
         }
         Pair<String, File> uploadFileInfo = _uploadService.createUniqueUserStoreFile(_user, originalFileName);
 
-        LOG.info("Try dump upload stream '" + uploadFileInfo.getFirst() + "' into file '" + uploadFileInfo.getSecond().getPath() + "' for media id: "
+        LOG.info("Try download stream '" + uploadFileInfo.getFirst() + "' into file '" + uploadFileInfo.getSecond().getPath() + "' for media id: "
                 + mediaExport.getMediaId() + ", hash: " + mediaExport.getHashValue());
         Media newMedia = _uploadService.saveInputStreamToFileSystemAndCreateMedia(_user, uploadFileInfo.getSecond(), mediaExport.getInputStream());
 
+        // check hash value of new created Media against the incomming MediaExport
+        if (!newMedia.getHashValue().equals(mediaExport.getHashValue())) {
+            LOG.warn(String.format("Hashvalue of new created media is not equal to incomming one (%s/%s). MediaExport.name=%s, local file=%s",
+                    newMedia.getHashValue(), mediaExport.getHashValue(), (mediaExport.getName() + ""), newMedia.getFileFromUri().getPath()));
+        }
         // add meta informations from mediaExport to new media entity
         if (mediaExport.getCreationDate() != null) {
             newMedia.setCreationDate(mediaExport.getCreationDate());

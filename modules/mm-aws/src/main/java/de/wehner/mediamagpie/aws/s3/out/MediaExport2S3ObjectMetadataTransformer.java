@@ -32,8 +32,6 @@ public class MediaExport2S3ObjectMetadataTransformer extends BaseMMTransformer i
         }
         // id
         objectMetadata.addUserMetadata(S3MediaExportRepository.META_MEDIA_ID, mediaExport.getMediaId());
-        // name
-        addStringIntoUserMetadata(S3MediaExportRepository.META_NAME, mediaExport.getName(), objectMetadata);
         // creation date
         addStringIntoUserMetadata(S3MediaExportRepository.META_CREATION_DATE, mediaExport.getCreationDate(), objectMetadata);
         // hash

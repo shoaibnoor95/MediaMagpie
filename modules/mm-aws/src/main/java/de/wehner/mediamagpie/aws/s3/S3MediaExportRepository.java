@@ -42,14 +42,9 @@ public class S3MediaExportRepository implements MediaExportRepository {
 
     public static final String KEY_DELIMITER = "/";
 
-    public static final String META_MEDIA_ID = "id";
+    public static final String META_MEDIA_ID = "media-id";
     public static final String META_HASH_OF_DATA = "hash-of-data";
-    public static final String META_NAME = "name";
     public static final String META_CREATION_DATE = "creation-date";
-    /**
-     * @deprecated: use a separate object now
-     */
-    public static final String META_ORIGINAL_FILE_NAME = "original-file-name";
     public static final String META_MEDIA_TYPE = "media-type";
 
     private final S3ClientFacade _s3Facade;
@@ -72,22 +67,24 @@ public class S3MediaExportRepository implements MediaExportRepository {
     public MediaExportResults addMedia(String user, MediaExport mediaExport) {
         // build file name and bucket name
         FileNameInfo fileNameInfo = getKeyNames(user, mediaExport);
-        String bucketName = getBucketName(mediaExport.getType());
+        String bucketName = getBucketTypeName(mediaExport.getType());
         List<MediaExportResult> result = new ArrayList<MediaExportResult>();
 
         _s3Facade.createBucketIfNotExists(bucketName);
 
         // 1) Does we need to upload the media file?
         if (!isUploadNecessary(bucketName, fileNameInfo.getNameObject(), mediaExport.getHashValue())) {
-            LOG.debug("Media with key '" + fileNameInfo + "' will not uploaded to S3, because this object already exists and doesn't changed.");
+            LOG.trace("Media with key '" + fileNameInfo + "' will not uploaded to S3, because this object already exists and doesn't changed.");
             result.add(createMediaExportResult(MediaExportResult.ExportStatus.ALREADY_EXPORTED, bucketName, fileNameInfo.getNameObject()));
         } else {
             // upload the raw data and its meta data to s3
             MediaExport2S3ObjectMetadataTransformer metadataTransformer = new MediaExport2S3ObjectMetadataTransformer();
             ObjectMetadata objectMetadata = metadataTransformer.transform(mediaExport);
             PutObjectResult putObjectResult = _s3Facade.putObject(bucketName, fileNameInfo.getNameObject(), mediaExport.getInputStream(), objectMetadata);
-            LOG.debug("eTag for '" + fileNameInfo.getNameObject() + "': " + putObjectResult.getETag());
-            result.add(createMediaExportResult(MediaExportResult.ExportStatus.SUCCESS, bucketName, fileNameInfo.getNameObject()));
+
+            result.add(createMediaExportResult(
+                    (putObjectResult != null) ? MediaExportResult.ExportStatus.SUCCESS : MediaExportResult.ExportStatus.FAILURE, bucketName,
+                    fileNameInfo.getNameObject()));
         }
 
         // 2) Does we need to upload the media metadata file?
@@ -95,7 +92,7 @@ public class S3MediaExportRepository implements MediaExportRepository {
         InputStream is = mediaExportMetaData.createInputStream();
         String hashValueMetaData = DigestUtil.computeSha1AsHexString(is);
         if (!isUploadNecessary(bucketName, fileNameInfo.getNameMetadata(), hashValueMetaData)) {
-            LOG.debug("Metadata with key '" + fileNameInfo + "' will not uploaded to S3, because this object already exists and doesn't changed.");
+            LOG.trace("Metadata with key '" + fileNameInfo + "' will not uploaded to S3, because this object already exists and doesn't changed.");
             result.add(createMediaExportResult(MediaExportResult.ExportStatus.ALREADY_EXPORTED, bucketName, fileNameInfo.getNameMetadata()));
         } else {
             // upload media's meta data file to s3
@@ -103,8 +100,9 @@ public class S3MediaExportRepository implements MediaExportRepository {
             ObjectMetadata objectMetadata = metadataTransformer.transform(mediaExportMetaData);
             PutObjectResult putObjectResult = _s3Facade.putObject(bucketName, fileNameInfo.getNameMetadata(), mediaExportMetaData.createInputStream(),
                     objectMetadata);
-            LOG.debug("eTag for '" + fileNameInfo.getNameMetadata() + "': " + putObjectResult.getETag());
-            result.add(createMediaExportResult(MediaExportResult.ExportStatus.SUCCESS, bucketName, fileNameInfo.getNameMetadata()));
+            result.add(createMediaExportResult(
+                    (putObjectResult != null) ? MediaExportResult.ExportStatus.SUCCESS : MediaExportResult.ExportStatus.FAILURE, bucketName,
+                    fileNameInfo.getNameMetadata()));
         }
 
         return new MediaExportResults(result);
@@ -120,7 +118,7 @@ public class S3MediaExportRepository implements MediaExportRepository {
             // Map<String, Object> rawMetadata = metadata.getRawMetadata();
             Map<String, String> userMetadata = metadata.getUserMetadata();
 
-            LOG.debug("Content-Type for '" + fileName + "': " + object.getObjectMetadata().getContentType());
+            LOG.trace("Content-Type for '" + fileName + "': " + object.getObjectMetadata().getContentType());
             hashValueInS3 = userMetadata.get(META_HASH_OF_DATA);
         }
         // does we need to overwrite?
@@ -150,7 +148,7 @@ public class S3MediaExportRepository implements MediaExportRepository {
         String prefix = getKeyNamePrefixForUserAndType(user, MediaType.PHOTO).toString();
 
         // get iterator for S3ObjectSummary objects
-        S3ObjectIterator iterator = _s3Facade.iterator(getBucketName(MediaType.PHOTO), prefix);
+        S3ObjectIterator iterator = _s3Facade.iterator(getBucketTypeName(MediaType.PHOTO), prefix);
 
         // wrap iterator to retrieve a tuple of data and meta data S3ObjectSummary objects
         final S3ObjectTupleIterator s3ObjectTupleIterator = new S3ObjectTupleIterator(iterator);
@@ -190,7 +188,7 @@ public class S3MediaExportRepository implements MediaExportRepository {
         return null;
     }
 
-    private String getBucketName(MediaType type) {
+    private String getBucketTypeName(MediaType type) {
         switch (type) {
         case PHOTO:
             return "mediamagpie-photo";
@@ -216,7 +214,7 @@ public class S3MediaExportRepository implements MediaExportRepository {
      */
     private FileNameInfo getKeyNames(String user, MediaExport mediaExport) {
         StringBuilder builder = getKeyNamePrefixForUserAndType(user, mediaExport.getType());
-        builder.append("ID").append(mediaExport.getMediaId()).append(KEY_DELIMITER);
+        builder.append("MD5-").append(mediaExport.getHashValue()).append(KEY_DELIMITER);
         if (!StringUtils.isEmpty(mediaExport.getOriginalFileName())) {
             builder.append(mediaExport.getOriginalFileName());
         } else {

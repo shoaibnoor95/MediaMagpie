@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class MediaExportResult {
 
     public static enum ExportStatus {
-        UNDEFINED, SUCCESS, ALREADY_EXPORTED, EXPORTED_BUT_DIFFERENT
+        UNDEFINED, SUCCESS, ALREADY_EXPORTED, FAILURE
     };
 
     private final ExportStatus _exportStatus;

@@ -46,7 +46,7 @@ public class ImageController {
     public void streamImageContent(@PathVariable final Long mediaId, @PathVariable final String label,
             @RequestParam(required = false, value = "priority") String priority, OutputStream outputStream, HttpServletResponse response)
             throws IOException {
-        LOG.debug("streaming image id: " + mediaId + " with label '" + label + "'...");
+        LOG.trace("streaming image id: " + mediaId + " with label '" + label + "'...");
         if (label.equals("original")) {
             Media media = _mediaDao.getById(mediaId);
             if (media != null) {
