@@ -3,6 +3,8 @@ package de.wehner.mediamagpie.aws.s3;
 import java.io.InputStream;
 import java.util.Date;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,6 +64,11 @@ public class S3ClientFacade {
 
         public void setNameMetadata(String nameMetadata) {
             _nameMetadata = nameMetadata;
+        }
+
+        @Override
+        public String toString() {
+            return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
         }
     }
 

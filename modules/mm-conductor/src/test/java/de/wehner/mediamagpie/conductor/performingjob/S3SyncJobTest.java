@@ -29,6 +29,7 @@ import de.wehner.mediamagpie.core.util.Pair;
 import de.wehner.mediamagpie.persistence.MediaExportFactory;
 import de.wehner.mediamagpie.persistence.TransactionHandlerMock;
 import de.wehner.mediamagpie.persistence.dao.MediaDao;
+import de.wehner.mediamagpie.persistence.dao.PersistenceServiceMock;
 import de.wehner.mediamagpie.persistence.dao.TransactionHandler;
 import de.wehner.mediamagpie.persistence.entity.LifecyleStatus;
 import de.wehner.mediamagpie.persistence.entity.Media;
@@ -50,7 +51,7 @@ public class S3SyncJobTest {
 
     @Mock
     private S3MediaExportRepository _s3MediaExportRepository;
-    
+
     @Mock
     private UploadService _uploadService;
 
@@ -88,6 +89,7 @@ public class S3SyncJobTest {
 
         _livingMedias = Arrays.asList(m1, m2);
         when(_mediaDao.getAllOfUser(_user, LifecyleStatus.Living)).thenReturn(_livingMedias);
+        when(_mediaDao.getPersistenceService()).thenReturn(new PersistenceServiceMock());
         when(_uploadService.createUniqueUserStoreFile(eq(_user), any(String.class))).thenReturn(
                 new Pair<String, File>("origFile.jpg", new File(_testEnvironment.getWorkingDir(), "mediax.jpg")));
         _job = new S3SyncJob(_s3MediaExportRepository, _uploadService, _user, _configurationProvider, _transactionHandler, _mediaDao);
@@ -121,13 +123,13 @@ public class S3SyncJobTest {
         when(iteratorPhotos.next()).thenReturn(mediaExportFactory.create(m1), mediaExportFactory.create(m2), mediaExportFactory.create(m3), null);
         when(_s3MediaExportRepository.iteratorPhotos(_user.getName())).thenReturn(iteratorPhotos);
         when(_uploadService.saveInputStreamToFileSystemAndCreateMedia(any(User.class), any(File.class), any(InputStream.class))).thenReturn(
-                new Media(_user, m3.getName(), null, null));
+                Media.createWithHashValue(_user, m3.getName(), URI.create(m3.getUri()), null));
 
         _prepare.call();
 
         // verfiy one will be pulled (persisted)
         ArgumentCaptor<Media> mediaCaptor = ArgumentCaptor.forClass(Media.class);
-        verify(_mediaDao).makePersistent(mediaCaptor.capture());
+        verify(_mediaDao, times(2)).makePersistent(mediaCaptor.capture());
         assertThat(mediaCaptor.getValue().getName()).isEqualTo(m3.getName());
     }
 
@@ -140,13 +142,13 @@ public class S3SyncJobTest {
         when(iteratorPhotos.next()).thenReturn(mediaExportFactory.create(m2), mediaExportFactory.create(m3), null);
         when(_s3MediaExportRepository.iteratorPhotos(_user.getName())).thenReturn(iteratorPhotos);
         when(_uploadService.saveInputStreamToFileSystemAndCreateMedia(any(User.class), any(File.class), any(InputStream.class))).thenReturn(
-                new Media(_user, m3.getName(), null, null));
+                Media.createWithHashValue(_user, m3.getName(), URI.create(m3.getUri()), null));
 
         _prepare.call();
 
         // verfiy one was pushed and one was pulled
         verify(_s3MediaExportRepository).addMedia(eq(_user.getName()), any(MediaExport.class));
-        verify(_mediaDao).makePersistent(any(Media.class));
+        verify(_mediaDao, times(2)).makePersistent(any(Media.class));
 
         // verify pushed media
         ArgumentCaptor<String> ownerNameCaptor = ArgumentCaptor.forClass(String.class);
@@ -156,7 +158,7 @@ public class S3SyncJobTest {
 
         // verify the pulled media
         ArgumentCaptor<Media> mediaCaptor = ArgumentCaptor.forClass(Media.class);
-        verify(_mediaDao).makePersistent(mediaCaptor.capture());
+        verify(_mediaDao, times(2)).makePersistent(mediaCaptor.capture());
         assertThat(mediaCaptor.getValue().getName()).isEqualTo(m3.getName());
     }
 }

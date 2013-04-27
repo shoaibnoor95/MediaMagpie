@@ -111,6 +111,7 @@ public class Media extends CreationDateBase {
         _description = media._description;
         _path = media._path;
         _uri = media._uri;
+        _hashValue = media._hashValue;
         _id = media._id;
         _tags = media._tags;
     }

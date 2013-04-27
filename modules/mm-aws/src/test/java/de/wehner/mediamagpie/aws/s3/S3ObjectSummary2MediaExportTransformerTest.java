@@ -102,7 +102,7 @@ public class S3ObjectSummary2MediaExportTransformerTest {
 
         MediaExport mediaExport = _transformer.transform(s3ObjectTuple);
 
-        assertThat(mediaExport.getName()).isEqualTo(MEDIA_NAME);
+        assertThat(mediaExport.getName()).isNull();
         assertThat(mediaExport.getMediaId()).isEqualTo(MEDIA_ID);
         assertThat(mediaExport.getCreationDate()).isEqualTo(CREATION_DATE);
 

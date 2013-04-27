@@ -214,7 +214,7 @@ public class S3MediaExportRepository implements MediaExportRepository {
      */
     private FileNameInfo getKeyNames(String user, MediaExport mediaExport) {
         StringBuilder builder = getKeyNamePrefixForUserAndType(user, mediaExport.getType());
-        builder.append("MD5-").append(mediaExport.getHashValue()).append(KEY_DELIMITER);
+        builder.append("SHA1-").append(mediaExport.getHashValue()).append(KEY_DELIMITER);
         if (!StringUtils.isEmpty(mediaExport.getOriginalFileName())) {
             builder.append(mediaExport.getOriginalFileName());
         } else {
