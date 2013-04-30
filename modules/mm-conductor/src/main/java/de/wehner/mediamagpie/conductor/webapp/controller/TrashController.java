@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.EditCommand;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.EditCommand.Action;
-import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaCommand;
+import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaThumbCommand;
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
 import de.wehner.mediamagpie.conductor.webapp.util.security.SecurityUtil;
 import de.wehner.mediamagpie.persistence.dao.MediaDao;
@@ -46,11 +46,11 @@ public class TrashController extends AbstractConfigurationSupportController {
     @RequestMapping(method = RequestMethod.GET, value = URL_TRASH)
     public String setupView(Model model, @RequestParam(value = "start", required = false) Integer start) {
         model.addAttribute(new EditCommand());
-        return searchMediaAndPutIntoModel(model, start);
+        return searchMediasAndPutIntoModel(model, start);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = URL_TRASH)
-    public String submitEditCommand(Model model, EditCommand searchCriteria, @RequestParam(value = "start", required = false) Integer start) {
+    public String submit(Model model, EditCommand searchCriteria, @RequestParam(value = "start", required = false) Integer start) {
         if (searchCriteria.getAction() == Action.DELETE) {
             _imageSerivce.deleteMediaCompletely(_mediaDao.getById(searchCriteria.getId()));
         } else if (searchCriteria.getAction() == Action.UNDO) {
@@ -58,20 +58,20 @@ public class TrashController extends AbstractConfigurationSupportController {
             media.setLifeCycleStatus(LifecyleStatus.Living);
             _mediaDao.makePersistent(media);
         }
-        return searchMediaAndPutIntoModel(model, start);
+        return searchMediasAndPutIntoModel(model, start);
     }
 
-    private String searchMediaAndPutIntoModel(Model model, Integer start) {
+    private String searchMediasAndPutIntoModel(Model model, Integer start) {
         int startIndex = (start != null) ? start : 0;
-        List<MediaCommand> pictures = new ArrayList<MediaCommand>();
+        List<MediaThumbCommand> pictures = new ArrayList<MediaThumbCommand>();
         final int hitsPerPage = getMainConfiguration().getHitsPerPage();
         List<Media> allPictures = _mediaDao.getAllOrderedByCreationDate(SecurityUtil.getCurrentUser(), startIndex, hitsPerPage, UiMediaSortOrder.DATE,
                 true, LifecyleStatus.MovedToTrashCan);
         int hits = _mediaDao.getAllBySearchCriteriasCount(SecurityUtil.getCurrentUser(), null, LifecyleStatus.MovedToTrashCan);
         for (Media media : allPictures) {
-            MediaCommand pictureCommand = new MediaCommand(media);
+            MediaThumbCommand pictureCommand = new MediaThumbCommand(media);
             String imageUrl = _imageSerivce.getOrCreateImageUrl(media, getCurrentUserConfiguration().getThumbImageSizeTable());
-            pictureCommand.setThumbImageLink(imageUrl);
+            pictureCommand.setUrlThumbImage(imageUrl);
             pictures.add(pictureCommand);
         }
 

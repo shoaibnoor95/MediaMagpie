@@ -11,7 +11,6 @@
 			<div id="content">
                 <h1>Trash</h1>
                 
-                
 <script type="text/javascript">
 	function executeCommand(action, id) {
 		$("#input_action").attr("value", action);
@@ -42,21 +41,12 @@
                         	<c:set var="tdClass" value="alt"/>
                         </c:if>
                         <tr class="${tdClass}">
-                            <td><a href="<%=request.getContextPath()+MediaDetailController.URL_BASE_DETAIL_PICTURE_EDIT%>${picture.id}"><img src="<%=request.getContextPath()%>${picture.thumbImageLink}"/></a></td>
+                            <td><a href="<%=request.getContextPath()+MediaDetailController.URL_BASE_DETAIL_PICTURE_EDIT%>${picture.id}"><img src="<%=request.getContextPath()%>${picture.urlThumbImage}"/></a></td>
+                            <td>${picture.media.name}</td>
+                            <td>${picture.media.creationDate}</td>
                             <td>
-                            	<c:choose>
-	                            	<c:when test="${not empty picture.name}">
-    	                        		<c:out value="${picture.name}" />
-        	                    	</c:when>
-            	                	<c:otherwise>
-	            	                	${picture.uri}
-                    	        	</c:otherwise>
-                    	        </c:choose>
-                            </td>
-                            <td>${picture.creationDate}</td>
-                            <td>
-                                <img class="image-action" alt="delete" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/accept.png" onclick="javascript:executeCommand('UNDO', '${picture.id}');"> 
-                                <img class="image-action" alt="delete" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/delete.png" onclick="javascript:executeCommand('DELETE', '${picture.id}');"> 
+                                <img class="image-action" alt="delete" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/accept.png" onclick="javascript:executeCommand('UNDO', '${picture.media.id}');"> 
+                                <img class="image-action" alt="delete" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/delete.png" onclick="javascript:executeCommand('DELETE', '${picture.media.id}');"> 
                             </td>
                         </tr>
                         </c:forEach>

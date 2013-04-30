@@ -40,6 +40,7 @@ import de.wehner.mediamagpie.persistence.dao.ImageResizeJobExecutionDao;
 import de.wehner.mediamagpie.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.persistence.dao.MediaDeleteJobExecutionDao;
 import de.wehner.mediamagpie.persistence.dao.ThumbImageDao;
+import de.wehner.mediamagpie.persistence.entity.CloudMediaDeleteJobExecution;
 import de.wehner.mediamagpie.persistence.entity.ImageResizeJobExecution;
 import de.wehner.mediamagpie.persistence.entity.JobStatus;
 import de.wehner.mediamagpie.persistence.entity.LifecyleStatus;
@@ -242,10 +243,16 @@ public class ImageService {
             }
 
             // add new delete job for this media
-            MediaDeleteJobExecution jobExecution = new MediaDeleteJobExecution(media);
-            jobExecution.setPriority(Priority.LOW);
-            _mediaDeleteJobExecutionDao.makePersistent(jobExecution);
-            LOG.info("Delete job for media '" + media.getId() + "' added with priority '" + jobExecution.getPriority() + "'.");
+            MediaDeleteJobExecution mediaDeleteJobExecution = new MediaDeleteJobExecution(media);
+            mediaDeleteJobExecution.setPriority(Priority.LOW);
+//rwe:            _mediaDeleteJobExecutionDao.makePersistent(mediaDeleteJobExecution);
+            LOG.debug("Delete job for media '" + media.getId() + "' added with priority '" + mediaDeleteJobExecution.getPriority() + "'.");
+
+            // delete media from cloud (s3)
+            CloudMediaDeleteJobExecution cloudMediaDeleteJobExecution = new CloudMediaDeleteJobExecution(media);
+            cloudMediaDeleteJobExecution.setPriority(Priority.LOW);
+            _mediaDeleteJobExecutionDao.makePersistent(cloudMediaDeleteJobExecution);
+            LOG.debug("Cloud delete job for media '" + media.getId() + "' added with priority '" + cloudMediaDeleteJobExecution.getPriority() + "'.");
             return true;
         }
         return false;

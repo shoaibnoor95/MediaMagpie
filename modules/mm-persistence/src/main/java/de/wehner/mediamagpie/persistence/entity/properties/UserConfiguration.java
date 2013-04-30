@@ -50,14 +50,12 @@ public class UserConfiguration implements UserPropertyBackedConfiguration {
         _thumbImageSize = thumbImageSize;
     }
 
-    @Deprecated
     @Max(value = 500)
     @Min(value = 10)
     public Integer getThumbImageSizeTable() {
         return _thumbImageSizeTable;
     }
 
-    @Deprecated
     public void setThumbImageSizeTable(Integer thumbImageSizeTable) {
         _thumbImageSizeTable = thumbImageSizeTable;
     }
