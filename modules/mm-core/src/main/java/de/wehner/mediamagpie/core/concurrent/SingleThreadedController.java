@@ -64,6 +64,8 @@ public abstract class SingleThreadedController {
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+            LOG.info("received InterruptedException and canceled sleep in loop() method in " + getClass().getSimpleName()
+                    + ". Probably this was caused due to call of stop() method.");
         }
         LOG.info("Controller thread terminating.");
     }

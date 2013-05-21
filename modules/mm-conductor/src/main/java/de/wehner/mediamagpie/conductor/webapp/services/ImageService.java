@@ -31,6 +31,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 
+import de.wehner.mediamagpie.api.MediaType;
+import de.wehner.mediamagpie.aws.s3.S3ClientFacade;
+import de.wehner.mediamagpie.aws.s3.S3MediaExportRepository;
 import de.wehner.mediamagpie.conductor.metadata.CameraMetaData;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaThumbCommand;
 import de.wehner.mediamagpie.conductor.webapp.media.process.ImageProcessorImageIO;
@@ -41,6 +44,7 @@ import de.wehner.mediamagpie.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.persistence.dao.MediaDeleteJobExecutionDao;
 import de.wehner.mediamagpie.persistence.dao.ThumbImageDao;
 import de.wehner.mediamagpie.persistence.entity.CloudMediaDeleteJobExecution;
+import de.wehner.mediamagpie.persistence.entity.CloudSyncJobExecution.CloudType;
 import de.wehner.mediamagpie.persistence.entity.ImageResizeJobExecution;
 import de.wehner.mediamagpie.persistence.entity.JobStatus;
 import de.wehner.mediamagpie.persistence.entity.LifecyleStatus;
@@ -245,14 +249,18 @@ public class ImageService {
             // add new delete job for this media
             MediaDeleteJobExecution mediaDeleteJobExecution = new MediaDeleteJobExecution(media);
             mediaDeleteJobExecution.setPriority(Priority.LOW);
-//rwe:            _mediaDeleteJobExecutionDao.makePersistent(mediaDeleteJobExecution);
+            // rwe: _mediaDeleteJobExecutionDao.makePersistent(mediaDeleteJobExecution);
             LOG.debug("Delete job for media '" + media.getId() + "' added with priority '" + mediaDeleteJobExecution.getPriority() + "'.");
 
             // delete media from cloud (s3)
-            CloudMediaDeleteJobExecution cloudMediaDeleteJobExecution = new CloudMediaDeleteJobExecution(media);
+            S3MediaExportRepository s3MediaExportRepository = new S3MediaExportRepository((S3ClientFacade) null);
+            String externalStoragePath = s3MediaExportRepository.buildMediaStoragePath(media.getOwner().getName(), MediaType.PHOTO, media.getHashValue());
+            String bucketName = s3MediaExportRepository.buildBucketTypeName(MediaType.PHOTO);
+            CloudMediaDeleteJobExecution cloudMediaDeleteJobExecution = new CloudMediaDeleteJobExecution(bucketName, externalStoragePath, CloudType.S3,
+                    media.getOwner());
             cloudMediaDeleteJobExecution.setPriority(Priority.LOW);
             _mediaDeleteJobExecutionDao.makePersistent(cloudMediaDeleteJobExecution);
-            LOG.debug("Cloud delete job for media '" + media.getId() + "' added with priority '" + cloudMediaDeleteJobExecution.getPriority() + "'.");
+            LOG.debug("Added cloud delete job for media '" + media.getId() + "' with priority '" + cloudMediaDeleteJobExecution.getPriority() + "'.");
             return true;
         }
         return false;
@@ -276,8 +284,8 @@ public class ImageService {
         for (Media media : medias) {
             LOG.debug("Mark media '" + media + "' with uri '" + media.getUri() + "' for removal from database.");
             media.setLifeCycleStatus(LifecyleStatus.MarkedForErasure);
-            _mediaDao.makePersistent(media);
             addDeleteJobIfNecessary(media);
+            _mediaDao.makePersistent(media);
         }
     }
 

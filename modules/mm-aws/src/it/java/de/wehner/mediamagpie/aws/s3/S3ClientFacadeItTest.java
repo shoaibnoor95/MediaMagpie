@@ -7,7 +7,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -36,8 +35,6 @@ public class S3ClientFacadeItTest {
     private static final String JUNIT_BUCKET_NAME = "junitbuckettest";
 
     private static final String JUNIT_KEY_NAME = "junit/key/name";
-
-    private static final Date CREATION_DATE = new Date(123456);
 
     private static final File SRC_TEST_JPG = new File("../mm-conductor/src/test/resources/images/accept.png");
 
@@ -159,5 +156,27 @@ public class S3ClientFacadeItTest {
             counter++;
         }
         assertThat(counter).isEqualTo(3);
+    }
+
+    @Test
+    public void test_deletePath() throws IOException {
+        org.junit.Assume.assumeTrue(_s3TestEnvironment.getS3Credentials() != null);
+
+        // put test files into s3
+        File fileA = new File(_testEnvironment.getWorkingDir(), "a.txt");
+        File fileB = new File(_testEnvironment.getWorkingDir(), "a2.txt");
+        File fileC = new File(_testEnvironment.getWorkingDir(), "b.txt");
+        FileUtils.writeStringToFile(fileA, "File A contains some text.");
+        FileUtils.writeStringToFile(fileB, "File A contains some text.");
+        FileUtils.writeStringToFile(fileC, "File B contains some text, too.");
+        s3ClientFacade.getS3().putObject(JUNIT_BUCKET_NAME, "junit/testdeleteObjects/a", fileA);
+        s3ClientFacade.getS3().putObject(JUNIT_BUCKET_NAME, "junit/testdeleteObjects/b", fileB);
+        s3ClientFacade.getS3().putObject(JUNIT_BUCKET_NAME, "junit/testdeleteObjects/sub/c", fileC);
+
+        assertThat(s3ClientFacade.getS3().listObjects(JUNIT_BUCKET_NAME, "junit/testdeleteObjects/").getObjectSummaries()).hasSize(3);
+        int deletedObjects = s3ClientFacade.deletePath(JUNIT_BUCKET_NAME, "junit/testdeleteObjects");
+        assertThat(deletedObjects).isEqualTo(3);
+        assertThat(s3ClientFacade.getS3().listObjects(JUNIT_BUCKET_NAME, "junit/testdeleteObjects/").getObjectSummaries()).hasSize(0);
+
     }
 }

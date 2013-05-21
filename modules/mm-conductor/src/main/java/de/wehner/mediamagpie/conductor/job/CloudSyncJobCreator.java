@@ -53,12 +53,8 @@ public class CloudSyncJobCreator extends TransactionalJobCreator<AbstractJob> {
             }
 
             AWSCredentials credentials = new BasicAWSCredentials(existingS3Configuration.getAccessKey(), existingS3Configuration.getSecretKey());
-            switch (cloudSyncJobExecution.getCloudType()) {
-            case S3:
-                S3MediaExportRepository s3MediaExportRepository = new S3MediaExportRepository(credentials);
-                return new S3SyncJob(s3MediaExportRepository, _uploadService, user, _configurationProvider, _transactionHandler, _mediaDao);
-            }
-            return null;
+            S3MediaExportRepository s3MediaExportRepository = new S3MediaExportRepository(credentials);
+            return new S3SyncJob(s3MediaExportRepository, _uploadService, user, _configurationProvider, _transactionHandler, _mediaDao);
         default:
             throw new RuntimeException("Unkown cloud Type: " + cloudType);
         }

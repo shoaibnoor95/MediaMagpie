@@ -15,11 +15,14 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ListObjectsRequest;
+import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.Owner;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
 
@@ -157,6 +160,19 @@ public class S3ClientFacade {
 
     S3ObjectIterator iterator(String bucketName, String prefix) {
         return new S3ObjectIterator(_s3, bucketName, prefix);
+    }
+
+    public int deletePath(String bucketName, String mediaStoragePath) {
+        ListObjectsRequest listObjectsRequest = new ListObjectsRequest().withBucketName(bucketName).withPrefix(mediaStoragePath)
+        /* .withDelimiter(S3MediaRepository.KEY_DELIMITER) */.withMaxKeys(10);
+        ObjectListing listObjects = _s3.listObjects(listObjectsRequest);
+        int deletedObjects = 0;
+        for (S3ObjectSummary objectSummary : listObjects.getObjectSummaries()) {
+            LOG.debug("delete " + bucketName + "/" + objectSummary.getKey());
+            _s3.deleteObject(bucketName, objectSummary.getKey());
+            deletedObjects++;
+        }
+        return deletedObjects;
     }
 
     public Pair<Boolean, String> testConnection() {

@@ -60,14 +60,13 @@ public class S3MediaExportRepository implements MediaExportRepository {
     /*
      * (non-Javadoc)
      * 
-     * @see de.wehner.mediamagpie.aws.s3.MediaExportRepository#addMedia(java.lang.String, de.wehner.mediamagpie.api.MediaExport)
+     * @see de.wehner.mediamagpie.api.MediaExportRepository#addMedia(java.lang.String, de.wehner.mediamagpie.api.MediaExport)
      */
-
     @Override
     public MediaExportResults addMedia(String user, MediaExport mediaExport) {
         // build file name and bucket name
-        FileNameInfo fileNameInfo = getKeyNames(user, mediaExport);
-        String bucketName = getBucketTypeName(mediaExport.getType());
+        FileNameInfo fileNameInfo = getKeyNames(user, mediaExport.getType(), mediaExport.getHashValue(), mediaExport.getOriginalFileName());
+        String bucketName = buildBucketTypeName(mediaExport.getType());
         List<MediaExportResult> result = new ArrayList<MediaExportResult>();
 
         _s3Facade.createBucketIfNotExists(bucketName);
@@ -108,33 +107,19 @@ public class S3MediaExportRepository implements MediaExportRepository {
         return new MediaExportResults(result);
     }
 
-    private boolean isUploadNecessary(String bucketName, String fileName, String hashValue) {
-        // a) test object file already exists in bucket
-        S3Object object = _s3Facade.getObjectIfExists(bucketName, fileName);
-
-        String hashValueInS3 = null;
-        if (object != null) {
-            ObjectMetadata metadata = object.getObjectMetadata();
-            // Map<String, Object> rawMetadata = metadata.getRawMetadata();
-            Map<String, String> userMetadata = metadata.getUserMetadata();
-
-            LOG.trace("Content-Type for '" + fileName + "': " + object.getObjectMetadata().getContentType());
-            hashValueInS3 = userMetadata.get(META_HASH_OF_DATA);
-        }
-        // does we need to overwrite?
-        return ((hashValueInS3 == null) || !hashValueInS3.equals(hashValue));
-    }
-
-    private MediaExportResult createMediaExportResult(ExportStatus exportStatus, String bucketName, String fileName) {
-        try {
-            URL url = new URL("https", "s3.amazonaws.com", bucketName + "/" + fileName);
-            return new MediaExportResult(exportStatus, url.toURI());
-        } catch (MalformedURLException e) {
-            ExceptionUtil.convertToRuntimeException(e);
-        } catch (URISyntaxException e) {
-            ExceptionUtil.convertToRuntimeException(e);
-        }
-        return null;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.wehner.mediamagpie.api.MediaExportRepository#buildMediaStoragePath(java.lang.String, de.wehner.mediamagpie.api.MediaType,
+     * java.lang.String, java.lang.String)
+     */
+    @Override
+    public String buildMediaStoragePath(String userLoginId, MediaType mediaType, String sha1Hash) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(userLoginId).append(KEY_DELIMITER);
+        builder.append(mediaType).append(KEY_DELIMITER);
+        builder.append("SHA1-").append(sha1Hash).append(KEY_DELIMITER);
+        return builder.toString();
     }
 
     /*
@@ -144,11 +129,16 @@ public class S3MediaExportRepository implements MediaExportRepository {
      */
 
     @Override
+    public void deleteMediaStoragePath(String bucketName,String mediaStoragePath) {
+        _s3Facade.deletePath(bucketName, mediaStoragePath);
+    }
+
+    @Override
     public Iterator<MediaExport> iteratorPhotos(String user) {
         String prefix = getKeyNamePrefixForUserAndType(user, MediaType.PHOTO).toString();
 
         // get iterator for S3ObjectSummary objects
-        S3ObjectIterator iterator = _s3Facade.iterator(getBucketTypeName(MediaType.PHOTO), prefix);
+        S3ObjectIterator iterator = _s3Facade.iterator(buildBucketTypeName(MediaType.PHOTO), prefix);
 
         // wrap iterator to retrieve a tuple of data and meta data S3ObjectSummary objects
         final S3ObjectTupleIterator s3ObjectTupleIterator = new S3ObjectTupleIterator(iterator);
@@ -188,7 +178,36 @@ public class S3MediaExportRepository implements MediaExportRepository {
         return null;
     }
 
-    private String getBucketTypeName(MediaType type) {
+    private boolean isUploadNecessary(String bucketName, String fileName, String hashValue) {
+        // a) test object file already exists in bucket
+        S3Object object = _s3Facade.getObjectIfExists(bucketName, fileName);
+
+        String hashValueInS3 = null;
+        if (object != null) {
+            ObjectMetadata metadata = object.getObjectMetadata();
+            // Map<String, Object> rawMetadata = metadata.getRawMetadata();
+            Map<String, String> userMetadata = metadata.getUserMetadata();
+
+            LOG.trace("Content-Type for '" + fileName + "': " + object.getObjectMetadata().getContentType());
+            hashValueInS3 = userMetadata.get(META_HASH_OF_DATA);
+        }
+        // does we need to overwrite?
+        return ((hashValueInS3 == null) || !hashValueInS3.equals(hashValue));
+    }
+
+    private MediaExportResult createMediaExportResult(ExportStatus exportStatus, String bucketName, String fileName) {
+        try {
+            URL url = new URL("https", "s3.amazonaws.com", bucketName + "/" + fileName);
+            return new MediaExportResult(exportStatus, url.toURI());
+        } catch (MalformedURLException e) {
+            ExceptionUtil.convertToRuntimeException(e);
+        } catch (URISyntaxException e) {
+            ExceptionUtil.convertToRuntimeException(e);
+        }
+        return null;
+    }
+
+    public String buildBucketTypeName(MediaType type) {
         switch (type) {
         case PHOTO:
             return "mediamagpie-photo";
@@ -208,18 +227,22 @@ public class S3MediaExportRepository implements MediaExportRepository {
      * EG: <code>rwe/PHOTO/ID17/IMG_1795.JPG.METADATA</code></li>
      * </ul>
      * 
-     * @param user
+     * @param userLoginId
      * @param mediaExport
      * @return an object containing both names
      */
-    private FileNameInfo getKeyNames(String user, MediaExport mediaExport) {
-        StringBuilder builder = getKeyNamePrefixForUserAndType(user, mediaExport.getType());
-        builder.append("SHA1-").append(mediaExport.getHashValue()).append(KEY_DELIMITER);
-        if (!StringUtils.isEmpty(mediaExport.getOriginalFileName())) {
-            builder.append(mediaExport.getOriginalFileName());
+    private FileNameInfo getKeyNames(String userLoginId, MediaType mediaType, String hashValue, String originalFileName) {
+        // build path
+        StringBuilder builder = new StringBuilder(buildMediaStoragePath(userLoginId, mediaType, hashValue));
+
+        // build path for media
+        if (!StringUtils.isEmpty(originalFileName)) {
+            builder.append(originalFileName);
         } else {
             builder.append("media.data");
         }
+
+        // build path for media metadata and add to return object
         return new FileNameInfo(builder.toString(), builder.append(METADATA_FILE_EXTENSION).toString());
     }
 
