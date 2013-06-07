@@ -32,6 +32,9 @@
 	<logger name="org.mortbay">
 		<level value="info" />
 	</logger>
+    <logger name="org.eclipse.jetty.io">
+        <level value="debug" />
+    </logger>
 
     <logger name="de.wehner.mediamagpie.conductor">
         <level value="trace" />

@@ -24,7 +24,6 @@ import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.mortbay.log.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +83,7 @@ public class ImageService {
     @Deprecated
     public static File resizeImage(File originImage, long id, File destPath, int width, int height) {
         try {
-            Log.info("Begin resizing image '" + originImage.getPath() + "' to " + width + " x " + height + "...");
+            LOG.info("Begin resizing image '" + originImage.getPath() + "' to " + width + " x " + height + "...");
             BufferedImage originBitmap = ImageIO.read(originImage);
 
             if (originBitmap == null) {
@@ -113,19 +112,19 @@ public class ImageService {
                 graphics2D.drawRenderedImage(originBitmap, AffineTransform.getScaleInstance(minRatio, minRatio));
                 File thumbImagePath = buildThumbImagePath(originImage, id, destPath, thumbWidth, thumbHeight);
                 ImageIO.write(resizedBitmap, FilenameUtils.getExtension(thumbImagePath.getPath()), thumbImagePath);
-                Log.info("Begin resizing image... finished. Resized image into file '" + thumbImagePath.getPath() + "'.");
+                LOG.info("Begin resizing image... finished. Resized image into file '" + thumbImagePath.getPath() + "'.");
                 return thumbImagePath;
             } finally {
                 graphics2D.dispose();
             }
         } catch (Throwable e) {
-            Log.warn("Exception arised during image resizing.", e);
+            LOG.warn("Exception arised during image resizing.", e);
             throw new RuntimeException(e);
         }
     }
 
     public static File resizeImageInQueue(File originImage, long id, File destPath, int width, int height, int necessaryRotation) {
-        Log.info("Begin resizing image '" + originImage.getPath() + "' to " + width + " x " + height + " with rotation " + necessaryRotation + "...");
+        LOG.info("Begin resizing image '" + originImage.getPath() + "' to " + width + " x " + height + " with rotation " + necessaryRotation + "...");
         StopWatch stopWatch = new StopWatch();
         try {
             // scale image
@@ -141,11 +140,11 @@ public class ImageService {
             File thumbImagePath = buildThumbImagePath(originImage, id, destPath, resizedImage.getWidth(), resizedImage.getHeight());
             ImageIO.write(resizedImage, FilenameUtils.getExtension(thumbImagePath.getPath()), thumbImagePath);
             stopWatch.stop();
-            Log.info("Begin resizing image... finished. Resized image into file '" + thumbImagePath.getPath() + "'.");
+            LOG.info("Begin resizing image... finished. Resized image into file '" + thumbImagePath.getPath() + "'.");
             return thumbImagePath;
         } catch (Throwable e) {
             stopWatch.stop();
-            Log.debug("Exception arised during image resizing. Try JAI library for processing...", e);
+            LOG.debug("Exception arised during image resizing. Try JAI library for processing...", e);
 
             try {
                 stopWatch.start("resize JAI (" + width + "/" + height + ")");
@@ -167,7 +166,7 @@ public class ImageService {
                     FileUtils.writeByteArrayToFile(thumbImagePath, resizedImage.toByteArray());
                 }
                 stopWatch.stop();
-                Log.info("Begin resizing image... finished. Resized image into file '" + thumbImagePath.getPath() + "'.");
+                LOG.info("Begin resizing image... finished. Resized image into file '" + thumbImagePath.getPath() + "'.");
                 return thumbImagePath;
             } catch (Throwable e2) {
                 throw new RuntimeException(e2);

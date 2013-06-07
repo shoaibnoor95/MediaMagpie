@@ -110,3 +110,19 @@ I've found a very good installation guide here: http://livingtao.blogspot.de/201
   $ ln -s /usr/java/default/jre /usr/lib/jvm/jre
   $ ln -s /usr/share/java /usr/lib/jvm-exports/jre
   
+
+# Generating self-signed Certificate and keystore
+-------------------------------------------------
+
+  $ #openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout jetty.key -out jetty.crt
+  $ openssl req \
+    -x509 -nodes -days 3650 \
+    -subj '/C=DE/ST=NRW/L=Bonn/CN=www.mediamagpie.org/O=Ralf Wehner/emailAddress=ralf.fred@gmail.com' \
+    -newkey rsa:1024 -keyout jetty.pem -out jetty.crt
+  $ openssl x509 -text -in jetty.crt
+  
+  $ keytool -keystore keystore -import -alias jetty -file jetty.crt -trustcacerts 
+  
+  
+  
+  

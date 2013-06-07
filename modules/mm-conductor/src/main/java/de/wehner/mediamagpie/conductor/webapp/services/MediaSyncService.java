@@ -23,7 +23,6 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.hibernate.criterion.Order;
-import org.mortbay.log.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -153,7 +152,7 @@ public class MediaSyncService extends SingleThreadedController {
                     String uriAsString = media.getUri();
                     URI uri = new URI(uriAsString);
                     File fileToTest = new File(uri);
-                    Log.debug("test existence of file '" + fileToTest.getAbsolutePath() + "'.");
+                    LOG.debug("test existence of file '" + fileToTest.getAbsolutePath() + "'.");
                     if (!fileToTest.exists() && (media.getLifeCycleStatus() != LifecyleStatus.MarkedForErasure)) {
                         mediasToPurge.add(media);
                     }

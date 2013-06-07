@@ -37,11 +37,11 @@
 			<artifactId>mm-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>mm-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>mm-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>mm-persistence</artifactId>
@@ -198,6 +198,28 @@
 
 		<!-- jetty -->
 		<dependency>
+        <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-webapp</artifactId>
+            <version>9.0.3.v20130506</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-jsp</artifactId>
+            <version>9.0.3.v20130506</version>
+        </dependency>
+        <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-deploy</artifactId>
+            <version>9.0.3.v20130506</version>
+    </dependency>
+     <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-jmx</artifactId>
+      <version>9.0.3.v20130506</version>
+    </dependency>
+    
+        
+<!-- 		<dependency>
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>jetty</artifactId>
 		</dependency>
@@ -213,20 +235,20 @@
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>jetty-java5-threadpool</artifactId>
 			<scope>test</scope>
-		</dependency>
+		</dependency>-->
 
 		<!-- VMWare Cloud Foundry -->
 		<!-- <dependency> <groupId>org.cloudfoundry</groupId> <artifactId>cloudfoundry-runtime</artifactId> 
 			<version>0.8.1</version> </dependency> -->
 
 		<!-- Test -->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>mm-aws</artifactId>
-            <version>${project.version}</version>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>mm-aws</artifactId>
+			<version>${project.version}</version>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
@@ -261,10 +283,8 @@
 					the MANIFEST.FM which contains some version information (ManifestMetaData.java) -->
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<configuration>
-					<!-- <wtpversion>2.0</wtpversion>
-					<wtpmanifest>true</wtpmanifest>
-					<wtpapplicationxml>true</wtpapplicationxml>
-					<manifest>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifest>-->
+					<!-- <wtpversion>2.0</wtpversion> <wtpmanifest>true</wtpmanifest> <wtpapplicationxml>true</wtpapplicationxml> 
+						<manifest>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifest> -->
 					<downloadSources>true</downloadSources>
 					<downloadJavadocs>true</downloadJavadocs>
 					<!-- <projectNameTemplate>[artifactId]-[version]</projectNameTemplate> -->
