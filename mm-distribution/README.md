@@ -123,6 +123,25 @@ I've found a very good installation guide here: http://livingtao.blogspot.de/201
   
   $ keytool -keystore keystore -import -alias jetty -file jetty.crt -trustcacerts 
   
+  selfsigned crt and keystore
+  $ keytool -genkey -alias MyPlugins -keyalg RSA -keystore keystore.ks  -validity 10000
+  $ keytool -list -keystore keystore.ks
+  $ mv keystore.ks modules/mm-conductor/src/main/resources/ssl/ 
+  
+  
+# keytool
+---------
+  1. java keystore you will first create the .jks file that will initially only contain the private key
+  2. then generate a CSR and have a certificate generated from it
+  3. Then you will import the certificate to the keystore including any root certificates - See more at: http://www.lmhproductions.com/37/common-java-keytool-commands/#sthash.cQFR6sFv.dpuf
+  
+  Lösung: (keystore pw: 'hAmster123')
+  $ keytool -keystore keystore.jks -genkeypair -alias mediamagpie -keyalg RSA -keysize 2048 -dname 'C=DE,ST=NRW,L=Bonn,CN=www.mediamagpie.org,O=Ralf Wehner,emailAddress=ralf.fred@gmail.com' -validity 3650
+  $ #keytool -list -keystore keystore.jks -v -storepass "hAmster123"
+  $ #keytool -keystore keystore.jks -exportcert -alias mediamagpie -storepass "hAmster123" | openssl x509 -inform der -text
+  $ mv keystore.jks modules/mm-conductor/src/main/resources/ssl/keystore.jks
+  
+  
   
   
   
