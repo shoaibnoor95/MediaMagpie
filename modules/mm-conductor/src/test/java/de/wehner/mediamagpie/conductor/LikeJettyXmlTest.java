@@ -41,6 +41,12 @@ import org.junit.Test;
 
 import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
 
+/**
+ * This test is based on the jetty's source code example <code>org.eclipse.jetty.embedded.LikeJettyXml</code>.
+ * 
+ * @author ralfwehner
+ * 
+ */
 public class LikeJettyXmlTest {
 
     public static class HelloHandler extends AbstractHandler {

@@ -141,6 +141,7 @@ I've found a very good installation guide here: http://livingtao.blogspot.de/201
   $ #keytool -keystore keystore.jks -exportcert -alias mediamagpie -storepass "hAmster123" | openssl x509 -inform der -text
   $ mv keystore.jks modules/mm-conductor/src/main/resources/ssl/keystore.jks
   
+  --> Create a shell script ?
   
   
   

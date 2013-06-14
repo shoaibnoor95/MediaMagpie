@@ -9,7 +9,6 @@
 		http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<global-method-security secured-annotations="enabled" />
-
 	<!--
 		for more security topics, read:
 		http://www.codercorp.com/blog/spring/security-spring/custom-authenticationprocessingfilter-for-spring-security-to-perform-actions-on-login.html
@@ -17,10 +16,10 @@
 	<http auto-config="true">
 		<!-- <intercept-url pattern="/static/**" filters="none" />
  		<intercept-url pattern="/public/**" filters="none" />-->
-		<intercept-url pattern="/login*" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<intercept-url pattern="/login*" access="IS_AUTHENTICATED_ANONYMOUSLY" requires-channel="https"/>
 		<intercept-url pattern="/config/admin/**" access="ROLE_ADMIN" />
 		<intercept-url pattern="/config/**" access="ROLE_ADMIN,ROLE_USER" />
-        <intercept-url pattern="/s3/**" access="ROLE_ADMIN,ROLE_USER" requires-channel="https"/>
+        <intercept-url pattern="/s3/**" access="ROLE_ADMIN,ROLE_USER" />
 		<intercept-url pattern="/media/**" access="ROLE_USER,ROLE_ADMIN,ROLE_GUEST"  />
 		<intercept-url pattern="/upload/**" access="ROLE_USER,ROLE_ADMIN,ROLE_GUEST"  />
 		
