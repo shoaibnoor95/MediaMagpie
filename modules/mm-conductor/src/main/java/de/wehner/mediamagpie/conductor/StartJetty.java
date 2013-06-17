@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import de.wehner.mediamagpie.conductor.spring.deploy.impl.DynamicPropertiesConfigurer;
 import de.wehner.mediamagpie.core.util.Holder;
 
+// TODO rwe: no longer supported. See StartJetty9
+@Deprecated
 public class StartJetty {
 
     private static Logger LOG = LoggerFactory.getLogger(StartJetty.class);
@@ -45,46 +47,46 @@ public class StartJetty {
             }
         });
 
-        Server server = new Server();
-        SocketConnector connector = new SocketConnector();
-
-        // Set some timeout options to make debugging easier.
-        connector.setMaxIdleTime(1000 * 60 * 60);
-        connector.setSoLingerTime(-1);
-        connector.setPort(Integer.parseInt(properties.getProperty(WEB_APP_PORT)));
-        server.setConnectors(new Connector[] { connector });
-
-        WebAppContext webAppContext = new WebAppContext();
-        webAppContext.setServer(server);
-        String contextPath = properties.getProperty(WEB_APP_CONTEXTPATH);
-        LOG.info("Using context path '" + contextPath + "'.");
-        webAppContext.setContextPath(contextPath);
-        webAppContext.setWar("src/main/webapp");
-
-        server.addHandler(webAppContext);
-        try {
-            LOG.info(">>> STARTING EMBEDDED JETTY SERVER");
-            server.start();
-            try {
-                while (!terminate.get()) {
-                    Thread.sleep(500);
-                }
-            } catch (InterruptedException e) {
-                LOG.info("Got InterruptedException.");
-                terminate.set(true);
-            }
-            LOG.info(">>> STOPPING EMBEDDED JETTY SERVER");
-            server.stop();
-            server.join();
-            serverIsDown.countDown();
-        } catch (Exception e) {
-            e.printStackTrace();
-            LOG.error("unexpected shutdown", e);
-            serverIsDown.countDown();
-            System.exit(100);
-        } finally {
-            LOG.info(">>> JETTY SERVER IS DOWN");
-        }
+//        Server server = new Server();
+//        SocketConnector connector = new SocketConnector();
+//
+//        // Set some timeout options to make debugging easier.
+//        connector.setMaxIdleTime(1000 * 60 * 60);
+//        connector.setSoLingerTime(-1);
+//        connector.setPort(Integer.parseInt(properties.getProperty(WEB_APP_PORT)));
+//        server.setConnectors(new Connector[] { connector });
+//
+//        WebAppContext webAppContext = new WebAppContext();
+//        webAppContext.setServer(server);
+//        String contextPath = properties.getProperty(WEB_APP_CONTEXTPATH);
+//        LOG.info("Using context path '" + contextPath + "'.");
+//        webAppContext.setContextPath(contextPath);
+//        webAppContext.setWar("src/main/webapp");
+//
+//        server.addHandler(webAppContext);
+//        try {
+//            LOG.info(">>> STARTING EMBEDDED JETTY SERVER");
+//            server.start();
+//            try {
+//                while (!terminate.get()) {
+//                    Thread.sleep(500);
+//                }
+//            } catch (InterruptedException e) {
+//                LOG.info("Got InterruptedException.");
+//                terminate.set(true);
+//            }
+//            LOG.info(">>> STOPPING EMBEDDED JETTY SERVER");
+//            server.stop();
+//            server.join();
+//            serverIsDown.countDown();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            LOG.error("unexpected shutdown", e);
+//            serverIsDown.countDown();
+//            System.exit(100);
+//        } finally {
+//            LOG.info(">>> JETTY SERVER IS DOWN");
+//        }
     }
 
     private static void setJettySecificConfigurationIntoSystemProperties(Properties properties) {

@@ -28,7 +28,8 @@ import de.wehner.mediamagpie.core.util.ClassPathUtil;
 public class StartJetty9 {
 
     private static Logger LOG = LoggerFactory.getLogger(StartJetty9.class);
-    public static final String WEB_APP_PORT = "webapp.port";
+    public static final String WEB_APP_PORT_HTTP = "webapp.port.http";
+    public static final String WEB_APP_PORT_HTTPS = "webapp.port.https";
     public static final String WEB_APP_CONTEXTPATH = "webapp.context.path";
 
     public static void main(String[] args) throws Exception {
@@ -54,7 +55,7 @@ public class StartJetty9 {
         // HTTP Configuration
         HttpConfiguration tlsHttpConfiguration = new HttpConfiguration();
         tlsHttpConfiguration.setSecureScheme("https");
-        tlsHttpConfiguration.setSecurePort(8443);
+        tlsHttpConfiguration.setSecurePort(Integer.parseInt(properties.getProperty(WEB_APP_PORT_HTTPS)));
         tlsHttpConfiguration.setOutputBufferSize(32768);
         tlsHttpConfiguration.setRequestHeaderSize(8192);
         tlsHttpConfiguration.setResponseHeaderSize(8192);
@@ -87,7 +88,7 @@ public class StartJetty9 {
 
         // === jetty-http.xml ===
         ServerConnector http = new ServerConnector(server, new HttpConnectionFactory(tlsHttpConfiguration));
-        http.setPort(Integer.parseInt(properties.getProperty(WEB_APP_PORT)));
+        http.setPort(Integer.parseInt(properties.getProperty(WEB_APP_PORT_HTTP)));
         http.setIdleTimeout(30000);
         server.addConnector(http);
 
@@ -109,7 +110,7 @@ public class StartJetty9 {
         // SSL Connector
         ServerConnector sslConnector = new ServerConnector(server, new SslConnectionFactory(sslContextFactory, "http/1.1"), new HttpConnectionFactory(
                 https_config));
-        sslConnector.setPort(8443);
+        sslConnector.setPort(Integer.parseInt(properties.getProperty(WEB_APP_PORT_HTTPS)));
         server.addConnector(sslConnector);
 
         // === jetty-stats.xml ===
@@ -153,8 +154,11 @@ public class StartJetty9 {
     }
 
     private static void setJettySecificConfigurationIntoSystemProperties(Properties properties) {
-        if (properties.getProperty(WEB_APP_PORT) == null) {
-            properties.setProperty(WEB_APP_PORT, "8088");
+        if (properties.getProperty(WEB_APP_PORT_HTTP) == null) {
+            properties.setProperty(WEB_APP_PORT_HTTP, "8088");
+        }
+        if (properties.getProperty(WEB_APP_PORT_HTTPS) == null) {
+            properties.setProperty(WEB_APP_PORT_HTTPS, "8443");
         }
         if (properties.getProperty(WEB_APP_CONTEXTPATH) == null) {
             properties.setProperty(WEB_APP_CONTEXTPATH, "/");

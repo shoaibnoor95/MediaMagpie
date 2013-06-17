@@ -17,7 +17,7 @@ MGR_DEPLOY_MODE=live
 #ADDITIONAL_PARAMETERS="-XX:+HeapDumpOnOutOfMemoryError -XX:ErrorFile=./hs_err_pid<pid>.log"
 #########################
 
-CLASS=de.wehner.mediamagpie.conductor.StartJetty
+CLASS=de.wehner.mediamagpie.conductor.StartJetty9
 MGR_BIN=$(cd `dirname $0` && pwd)
 MGR_HOME=`dirname $MGR_BIN`
 cd $MGR_HOME

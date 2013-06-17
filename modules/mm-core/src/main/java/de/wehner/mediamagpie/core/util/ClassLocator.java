@@ -46,7 +46,7 @@ public class ClassLocator {
         _packageNames.addAll(Arrays.asList(packageNames));
     }
 
-    public void setAnnotations(Class<? extends Annotation>... annotations) {
+    public void setAnnotations(@SuppressWarnings("unchecked") Class<? extends Annotation>... annotations) {
         _annotations.addAll(Arrays.asList(annotations));
     }
 
