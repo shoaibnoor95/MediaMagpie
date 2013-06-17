@@ -9,18 +9,20 @@ Features
 Here is a list of some features:
 - Supports different file formats like png, jpeg, gif etc.
 - MediaMagpie can crawl 0..n local directories to register medias
-- Media files can be uploaded via web frontend
+- Media files can be uploaded via web frontend (drag & drop)
 - You can set meta information to medias like 'name' or 'tags'
 - You can arrange medias within albums
 - "View Modes" can be set to Albums used to hide or publish an album to other users or visitors
 - Supports drag & drop of media files
 - Preview images files will be resized automatically only when needed
-- The user can specify preview/ thumb image sizes
+- The user can specify the size of preview/ thumb image
+- The application supports SSL to protect your credentials and medias
+- Optionally, you can store your medias on an amazon S3 system
 
 Prerequisites
 -------------
 ### JAVA
-MediaMagpie runs on each unix-/Mac platforms which have JAVA 1.6 JRE installed. The project contains a shell start script that starts the integrated jetty server and deploys the applications.
+MediaMagpie runs on each unix-/Mac platforms which have JAVA 1.7 JRE installed. The project contains a shell start script that starts the integrated jetty server and deploys the applications. The installation process is very simple.
 ### Databases
 All RDBMS can be used which are supported by Hibernate. For a first test, a very simple solution is the internal HSQL database, that will be delivered within the MediaMagpie distribution.
 
@@ -31,7 +33,7 @@ MediaMagpie is a project based on maven build system. To create the dsitrition s
 
 Links
 -----
-* Bug Tracking System: Go to [JIRA](http://ralfwehner.dyndns.org:8082/secure/Dashboard.jspa).
+* Bug Tracking System: https://github.com/rwe17/MediaMagpie/issues?state=open (former: [JIRA] http://ralfwehner.dyndns.org:8082/secure/Dashboard.jspa).
 
 Licenses from 3rd Party libs
 ----------------------------
@@ -46,7 +48,6 @@ See modules/mm-distritubion/README.md for more information.
 ### You can start the application from command line using the internal jetty browser
   $ cd modules/mm-conductor/
   $ mvn -DskipTests=true jetty:run
-  (--> Sorry, currently a start via maven plugin doesn't work any more due to some compilation errors in tests paths. I will try to fix it when the file abstraction layer will be removed next.)
 
 ### Start from eclipse ide
 Create a 'Java Application' Run Target with properties:
