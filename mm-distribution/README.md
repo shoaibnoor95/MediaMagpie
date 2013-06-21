@@ -15,7 +15,7 @@ How to build?
     mvn clean
     mvn compile
     mvn test
-    mvn package [-P warFile]
+    mvn package -DskipTests [-P warFile]
 ```
 
 
@@ -111,7 +111,7 @@ I've found a very good installation guide here: http://livingtao.blogspot.de/201
   $ ln -s /usr/share/java /usr/lib/jvm-exports/jre
   
 
-# Generating self-signed Certificate and keystore
+# Generating self-signed Certificate and keystore (TODO rwe: obsolete?)
 -------------------------------------------------
 
   $ #openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout jetty.key -out jetty.crt
@@ -143,6 +143,17 @@ I've found a very good installation guide here: http://livingtao.blogspot.de/201
   
   --> Create a shell script ?
   
+# Vagrant
+---------
+## startup vagrant box
+  $ cd mediamapgie
+  $ vagrant up
   
+## Run puppet inside vagrant box:
+  $ vagrant ssh
+  $ sudo puppet apply /vagrant/puppet/manifests/base.pp  
+  
+## run your application
+  $ sudo /vagrant/mm-distribution/target/mm-distribution-0.1-SNAPSHOT-distribution/mm-distribution-0.1-SNAPSHOT/bin/mediamagpie.sh start  
   
   
