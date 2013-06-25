@@ -1,18 +1,14 @@
 package de.wehner.mediamagpie.conductor.mail;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.fest.assertions.Assertions.*;
+
+import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
 import java.util.List;
 
 import javax.mail.internet.InternetAddress;
 
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -40,8 +36,9 @@ public class MailSenderFacadeTest {
 
     @BeforeClass()
     public static void init() {
-        Logger.getRootLogger().setLevel(Level.DEBUG);
-        Logger.getRootLogger().addAppender(new ConsoleAppender(new PatternLayout("%-5p [%x] %c#%M (line %L) - %m%n")));
+        // Log4j Stuff:
+        // Logger.getRootLogger().setLevel(Level.DEBUG);
+        // Logger.getRootLogger().addAppender(new ConsoleAppender(new PatternLayout("%-5p [%x] %c#%M (line %L) - %m%n")));
     }
 
     @Before

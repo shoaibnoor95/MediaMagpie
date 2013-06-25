@@ -108,8 +108,8 @@
 
 		<!-- spring web service stuff -->
 		<!-- <dependency> <groupId>org.springframework.ws</groupId> <artifactId>spring-ws</artifactId> <classifier>all</classifier> 
-			</dependency> <dependency> <groupId>wsdl4j</groupId> <artifactId>wsdl4j</artifactId> </dependency> <dependency> 
-			<groupId>org.springframework</groupId> <artifactId>spring-oxm</artifactId> </dependency> -->
+			</dependency> <dependency> <groupId>wsdl4j</groupId> <artifactId>wsdl4j</artifactId> </dependency> <dependency> <groupId>org.springframework</groupId> 
+			<artifactId>spring-oxm</artifactId> </dependency> -->
 
 		<!-- Jackson JSON Mapper (for marshall/unmarshall JSON objects) -->
 		<dependency>
@@ -127,7 +127,7 @@
 			<artifactId>metadata-extractor</artifactId>
 		</dependency>
 
-		<!-- rwe: checkout JAI as alternative for image processing -->
+		<!-- JAI as alternative for image processing -->
 		<dependency>
 			<groupId>javax.media.jai</groupId>
 			<artifactId>com.springsource.javax.media.jai.core</artifactId>
@@ -142,8 +142,8 @@
 		</dependency>
 
 		<!-- Hibernate/JPA -->
-		<!-- <dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-search</artifactId> </dependency> 
-			<dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-entitymanager</artifactId> </dependency> -->
+		<!-- <dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-search</artifactId> </dependency> <dependency> 
+			<groupId>org.hibernate</groupId> <artifactId>hibernate-entitymanager</artifactId> </dependency> -->
 
 		<!-- JSR 303 with Hibernate Validator, see http://www.roseindia.net/tutorial/spring/spring3/web/spring-3-mvc-validation-example.html -->
 		<dependency>
@@ -153,24 +153,6 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
-		</dependency>
-
-		<!-- Logging for slf4j see also: http://blog.frankel.ch/thoughts-on-java-logging-and-slf4j -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<scope>runtime</scope>
-			<!-- rwe: runtime needed for Slf4JLoggerTest, that needs the Log4j Logger directly -->
-			<!-- <scope>provided</scope> -->
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-			<scope>runtime</scope>
 		</dependency>
 
 		<!-- Servlet -->
@@ -198,48 +180,25 @@
 
 		<!-- jetty -->
 		<dependency>
-        <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-webapp</artifactId>
-            <version>9.0.3.v20130506</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-jsp</artifactId>
-            <version>9.0.3.v20130506</version>
-        </dependency>
-        <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-deploy</artifactId>
-            <version>9.0.3.v20130506</version>
-    </dependency>
-     <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-jmx</artifactId>
-      <version>9.0.3.v20130506</version>
-    </dependency>
-    
-        
-<!-- 		<dependency>
-			<groupId>org.mortbay.jetty</groupId>
-			<artifactId>jetty</artifactId>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-webapp</artifactId>
+			<version>9.0.3.v20130506</version>
 		</dependency>
 		<dependency>
-			<groupId>org.mortbay.jetty</groupId>
-			<artifactId>jsp-api-2.1</artifactId>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-jsp</artifactId>
+			<version>9.0.3.v20130506</version>
 		</dependency>
 		<dependency>
-			<groupId>org.mortbay.jetty</groupId>
-			<artifactId>jsp-2.1</artifactId>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-deploy</artifactId>
+			<version>9.0.3.v20130506</version>
 		</dependency>
 		<dependency>
-			<groupId>org.mortbay.jetty</groupId>
-			<artifactId>jetty-java5-threadpool</artifactId>
-			<scope>test</scope>
-		</dependency>-->
-
-		<!-- VMWare Cloud Foundry -->
-		<!-- <dependency> <groupId>org.cloudfoundry</groupId> <artifactId>cloudfoundry-runtime</artifactId> 
-			<version>0.8.1</version> </dependency> -->
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-jmx</artifactId>
+			<version>9.0.3.v20130506</version>
+		</dependency>
 
 		<!-- Test -->
 		<dependency>
@@ -279,12 +238,11 @@
 	<build>
 		<plugins>
 			<plugin>
-				<!-- be careful when modifying the wtp/manifest entries, because this will have effect when creation 
-					the MANIFEST.FM which contains some version information (ManifestMetaData.java) -->
+				<!-- be careful when modifying the wtp/manifest entries, because this will have effect when creation the MANIFEST.FM 
+					which contains some version information (ManifestMetaData.java) -->
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<configuration>
-					<!-- <wtpversion>2.0</wtpversion> <wtpmanifest>true</wtpmanifest> <wtpapplicationxml>true</wtpapplicationxml> 
-						<manifest>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifest> -->
+					<!-- <wtpversion>2.0</wtpversion> <wtpmanifest>true</wtpmanifest> <wtpapplicationxml>true</wtpapplicationxml> <manifest>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifest> -->
 					<downloadSources>true</downloadSources>
 					<downloadJavadocs>true</downloadJavadocs>
 					<!-- <projectNameTemplate>[artifactId]-[version]</projectNameTemplate> -->
@@ -404,8 +362,8 @@
 			</plugin>
 
 			<plugin>
-				<!-- NOTE: We don't need a groupId specification because the group is org.apache.maven.plugins ...which 
-					is assumed by default. -->
+				<!-- NOTE: We don't need a groupId specification because the group is org.apache.maven.plugins ...which is assumed by 
+					default. -->
 				<artifactId>maven-assembly-plugin</artifactId>
 				<!-- <version>2.2.1</version> -->
 				<configuration>

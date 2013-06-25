@@ -12,11 +12,12 @@ import java.security.NoSuchAlgorithmException;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DigestUtil {
 
-    private static final Logger LOG = Logger.getLogger(DigestUtil.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DigestUtil.class);
 
     public static String computeSha1AsHexString(File inputFile) {
         FileInputStream inputStream = null;

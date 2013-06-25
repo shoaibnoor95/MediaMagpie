@@ -9,7 +9,7 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 	<artifactId>mm-core</artifactId>
-	<name>MediaMagpie Common classes</name>
+	<name>MediaMagpie Core classes</name>
 	<description>Some commen classes which will be used in other modules</description>
 	<packaging>jar</packaging>
 

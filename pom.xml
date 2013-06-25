@@ -40,7 +40,7 @@
 		<!-- Database access -->
 		<commons-dbcp.version>1.4</commons-dbcp.version>
 		<ehcache.version>2.6.5</ehcache.version>
-		<!--<hsqldb.version>2.2.9</hsqldb.version>-->
+		<!--<hsqldb.version>2.2.9</hsqldb.version> -->
 		<hsqldb.version>SNAPSHOT</hsqldb.version>
 
 		<!-- etc... -->
@@ -74,8 +74,7 @@
 		<!--<module>modules/mm-filesystem</module> -->
 		<module>mm-distribution</module>
 	</modules>
-	<!--<scm> <connection>scm:svn:http://jamwiki.svn.sourceforge.net/svnroot/jamwiki/wiki/trunk</connection> 
-		<developerConnection>scm:svn:https://jamwiki.svn.sourceforge.net/svnroot/jamwiki/wiki/trunk</developerConnection> 
+	<!--<scm> <connection>scm:svn:http://jamwiki.svn.sourceforge.net/svnroot/jamwiki/wiki/trunk</connection> <developerConnection>scm:svn:https://jamwiki.svn.sourceforge.net/svnroot/jamwiki/wiki/trunk</developerConnection> 
 		<url>http://jamwiki.svn.sourceforge.net/viewvc/jamwiki/wiki/trunk</url> </scm> -->
 	<issueManagement>
 		<system>JIRA</system>
@@ -90,8 +89,8 @@
 	</licenses>
 
 	<dependencies>
-		<!-- <dependency> <groupId>commons-collections</groupId> <artifactId>commons-collections</artifactId> 
-			<version>3.2.1</version> </dependency> -->
+		<!-- <dependency> <groupId>commons-collections</groupId> <artifactId>commons-collections</artifactId> <version>3.2.1</version> 
+			</dependency> -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
@@ -103,22 +102,19 @@
 			<version>2.4</version>
 		</dependency>
 
-		<!-- Logging for slf4j see also: http://blog.frankel.ch/thoughts-on-java-logging-and-slf4j -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<!-- <scope>runtime</scope> -->
-			<!-- rwe: runtime needed for Slf4JLoggerTest, that needs the Log4j Logger directly -->
-			<scope>provided</scope>
-		</dependency>
+		<!-- logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
-			<scope>runtime</scope>
+			<version>${org.slf4j.version}</version>
+		</dependency>
+		<dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${org.slf4j.version}</version>
+			<!-- <groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.0.13</version>-->
 		</dependency>
 
 		<!-- Test -->
@@ -142,8 +138,7 @@
 	<dependencyManagement>
 		<dependencies>
 			<!-- Some useful stuff -->
-			<!-- <dependency> <groupId>commons-lang</groupId> <artifactId>commons-lang</artifactId> <version>2.6</version> 
-				</dependency> -->
+			<!-- <dependency> <groupId>commons-lang</groupId> <artifactId>commons-lang</artifactId> <version>2.6</version> </dependency> -->
 			<dependency>
 				<groupId>commons-codec</groupId>
 				<artifactId>commons-codec</artifactId>
@@ -165,7 +160,7 @@
 				<version>1.4.6</version>
 			</dependency>
 
-			<!-- Logging for slf4j see also: http://blog.frankel.ch/thoughts-on-java-logging-and-slf4j -->
+			<!-- SLF4J -->
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
@@ -173,12 +168,12 @@
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-log4j12</artifactId>
+				<artifactId>jcl104-over-slf4j</artifactId>
 				<version>${org.slf4j.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
-				<artifactId>jcl-over-slf4j</artifactId>
+				<artifactId>log4j-over-slf4j</artifactId>
 				<version>${org.slf4j.version}</version>
 			</dependency>
 
@@ -193,9 +188,8 @@
 				<artifactId>spring-context</artifactId>
 				<version>${spring-framework.version}</version>
 			</dependency>
-			<!-- <dependency> <groupId>org.springframework</groupId> <artifactId>spring-context-support</artifactId> 
-				<version>${spring-framework.version}</version> <exclusions> <exclusion> <groupId>quartz</groupId> <artifactId>quartz</artifactId> 
-				</exclusion> </exclusions> </dependency> -->
+			<!-- <dependency> <groupId>org.springframework</groupId> <artifactId>spring-context-support</artifactId> <version>${spring-framework.version}</version> 
+				<exclusions> <exclusion> <groupId>quartz</groupId> <artifactId>quartz</artifactId> </exclusion> </exclusions> </dependency> -->
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-core</artifactId>
@@ -303,9 +297,9 @@
 
 			<!-- spring web service stuff -->
 			<!-- <dependency> <groupId>org.springframework.ws</groupId> <artifactId>spring-ws</artifactId> <classifier>all</classifier> 
-				<version>${org.springframework.ws.version}</version> </dependency> <dependency> <groupId>wsdl4j</groupId> 
-				<artifactId>wsdl4j</artifactId> <version>1.6.2</version> </dependency> <dependency> <groupId>org.springframework</groupId> 
-				<artifactId>spring-oxm</artifactId> <version>${org.springframework.version}</version> </dependency> -->
+				<version>${org.springframework.ws.version}</version> </dependency> <dependency> <groupId>wsdl4j</groupId> <artifactId>wsdl4j</artifactId> 
+				<version>1.6.2</version> </dependency> <dependency> <groupId>org.springframework</groupId> <artifactId>spring-oxm</artifactId> 
+				<version>${org.springframework.version}</version> </dependency> -->
 
 			<!-- Jackson JSON Mapper (for marshall/unmarshall JSON objects) -->
 			<dependency>
@@ -328,8 +322,8 @@
 
 			<!-- Hibernate/JPA -->
 			<!--<dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-search</artifactId> <version>3.4.0.Final</version> 
-				</dependency> <dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-entitymanager</artifactId> 
-				<version>3.6.3.Final</version> </dependency> -->
+				</dependency> <dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-entitymanager</artifactId> <version>3.6.3.Final</version> 
+				</dependency> -->
 			<!-- HIBERNATE -->
 			<dependency>
 				<groupId>org.hibernate</groupId>
@@ -366,18 +360,18 @@
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-search</artifactId>
 				<version>${hibernate.version}</version>
-                <exclusions>
-                    <exclusion>
-				        <groupId>commons-io</groupId>
-				        <artifactId>commons-io</artifactId>
-                    </exclusion>
-                </exclusions>
+				<exclusions>
+					<exclusion>
+						<groupId>commons-io</groupId>
+						<artifactId>commons-io</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 
 			<!-- JSR 303 with Hibernate Validator, see http://www.roseindia.net/tutorial/spring/spring3/web/spring-3-mvc-validation-example.html -->
 			<!-- <dependency> <groupId>javax.validation</groupId> <artifactId>validation-api</artifactId> <version>1.1.0.Beta3</version> 
-				</dependency> <dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-validator</artifactId> 
-				<version>4.2.0.Final</version> </dependency> -->
+				</dependency> <dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-validator</artifactId> <version>4.2.0.Final</version> 
+				</dependency> -->
 
 			<!-- Servlet -->
 			<dependency>
@@ -453,10 +447,10 @@
 				<artifactId>jetty-java5-threadpool</artifactId>
 				<version>${jetty.version}</version>
 			</dependency>
-			<!-- see: http://mvnrepository.com/artifact/org.eclipse.jetty <dependency> <groupId>org.eclipse.jetty</groupId> 
-				<artifactId>jetty-server</artifactId> <version>8.1.0.RC5</version> </dependency> <dependency> <groupId>org.eclipse.jetty</groupId> 
-				<artifactId>jetty-webapp</artifactId> <version>8.1.0.RC5</version> </dependency> <dependency> <groupId>org.eclipse.jetty</groupId> 
-				<artifactId>jetty-jsp-2.1</artifactId> <version>7.5.0.RC2</version> </dependency> -->
+			<!-- see: http://mvnrepository.com/artifact/org.eclipse.jetty <dependency> <groupId>org.eclipse.jetty</groupId> <artifactId>jetty-server</artifactId> 
+				<version>8.1.0.RC5</version> </dependency> <dependency> <groupId>org.eclipse.jetty</groupId> <artifactId>jetty-webapp</artifactId> 
+				<version>8.1.0.RC5</version> </dependency> <dependency> <groupId>org.eclipse.jetty</groupId> <artifactId>jetty-jsp-2.1</artifactId> 
+				<version>7.5.0.RC2</version> </dependency> -->
 
 			<!-- Amazon AWS -->
 			<dependency>
@@ -532,44 +526,25 @@
 	<contributors>
 	</contributors>
 	<repositories>
-		<!-- For JSR 303 and Hibernate Validator only - Encourage JBoss to publish these artifacts to Maven 
-			Central! -->
-		<!--<repository>
-			<id>jboss-public-repository-group</id>
-			<name>JBoss Public Maven Repository Group</name>
-			<url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
-			<layout>default</layout>
-			<releases>
-				<enabled>true</enabled>
-				<updatePolicy>never</updatePolicy>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>never</updatePolicy>
-			</snapshots>
-		</repository>-->
-		<!--<repository>
-			<id>org.springframework.maven.milestone</id>
-			<name>Spring Framework Maven Milestone Repository</name>
-			<url>http://maven.springframework.org/milestone</url>
-		</repository>-->
-        <repository>
-            <id>com.springsource.repository.bundles.external</id>
-            <name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
-            <url>http://repository.springsource.com/maven/bundles/external</url>
-        </repository>
-        <!-- needed to get the latest version of HSQLDB (>= 3.0) -->
-        <repository>
-            <id>hsqldb.org.repos</id>
-            <name>HSQL-Project Repository</name>
-            <url>http://www.hsqldb.org/repos</url>
-        </repository>
+		<!-- For JSR 303 and Hibernate Validator only - Encourage JBoss to publish these artifacts to Maven Central! -->
+		<!--<repository> <id>jboss-public-repository-group</id> <name>JBoss Public Maven Repository Group</name> <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url> 
+			<layout>default</layout> <releases> <enabled>true</enabled> <updatePolicy>never</updatePolicy> </releases> <snapshots> <enabled>true</enabled> 
+			<updatePolicy>never</updatePolicy> </snapshots> </repository> -->
+		<!--<repository> <id>org.springframework.maven.milestone</id> <name>Spring Framework Maven Milestone Repository</name> 
+			<url>http://maven.springframework.org/milestone</url> </repository> -->
+		<repository>
+			<id>com.springsource.repository.bundles.external</id>
+			<name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/external</url>
+		</repository>
+		<!-- needed to get the latest version of HSQLDB (>= 3.0) -->
+		<repository>
+			<id>hsqldb.org.repos</id>
+			<name>HSQL-Project Repository</name>
+			<url>http://www.hsqldb.org/repos</url>
+		</repository>
 		<!-- only necessary for jets3t (aws) -->
-		<!--<repository>
-			<name>jets3t</name>
-			<id>jets3t</id>
-			<url>http://www.jets3t.org/maven2</url>
-		</repository>-->
+		<!--<repository> <name>jets3t</name> <id>jets3t</id> <url>http://www.jets3t.org/maven2</url> </repository> -->
 	</repositories>
 
 	<!-- For maven-jaxb2-plugin -->
@@ -678,8 +653,7 @@
 				</configuration>
 			</plugin>
 
-			<!-- Eclipse plugin enforces download of source and JavaDoc jars and usage of xml-files in source 
-				folders -->
+			<!-- Eclipse plugin enforces download of source and JavaDoc jars and usage of xml-files in source folders -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
@@ -716,10 +690,10 @@
 				<artifactId>build-helper-maven-plugin</artifactId>
 				<version>1.7</version>
 				<executions>
-					<!-- Remove project's artifacts from local repository. Useful to keep only one copy of large local 
-						snapshot, for example: installer, for disk space optimization purpose. (http://mojo.codehaus.org/build-helper-maven-plugin/remove-project-artifact-mojo.html) -->
-					<!--<execution> <id>remove-old-installers</id> <goals> <goal>remove-project-artifact</goal> </goals> 
-						<configuration> <removeAll>true</removeAll> </configuration> </execution> -->
+					<!-- Remove project's artifacts from local repository. Useful to keep only one copy of large local snapshot, for example: 
+						installer, for disk space optimization purpose. (http://mojo.codehaus.org/build-helper-maven-plugin/remove-project-artifact-mojo.html) -->
+					<!--<execution> <id>remove-old-installers</id> <goals> <goal>remove-project-artifact</goal> </goals> <configuration> 
+						<removeAll>true</removeAll> </configuration> </execution> -->
 					<execution>
 						<id>add-test-source</id>
 						<phase>generate-test-sources</phase>
@@ -758,9 +732,8 @@
 						<id>enforce</id>
 						<configuration>
 							<rules>
-<!-- TODO rwe: clean up this section so only the necessary stuff will remain -->
-								<!--<DependencyConvergence />-->
-								<!--<bannedDependencies>
+								<!-- <DependencyConvergence />-->
+								<!-- <bannedDependencies>
 									<excludes>
 										<exclude>commons-logging</exclude>
 									</excludes>
@@ -773,11 +746,8 @@
 								</requireMavenVersion>
 								<!-- If the JCE is installed, the key length is 2147483647 instead of 128 -->
 								<!-- Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files not installed -->
-								<!--<evaluateBeanshell>
-									<condition>javax.crypto.Cipher.getMaxAllowedKeyLength("AES") &gt; 128;
-										// JCE not installed
-									</condition>
-								</evaluateBeanshell>-->
+								<!--<evaluateBeanshell> <condition>javax.crypto.Cipher.getMaxAllowedKeyLength("AES") &gt; 128; // JCE not installed 
+									</condition> </evaluateBeanshell> -->
 							</rules>
 						</configuration>
 						<goals>
