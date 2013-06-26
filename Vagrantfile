@@ -19,16 +19,10 @@ Vagrant.configure("2") do |config|
         mm.vm.hostname = 'mediamagpie-01.local.localdomain'
         
         #mm.vm.network :hostonly, "192.168.100.10"
-        mm.vm.network :forwarded_port, guest: 80, host: 8080, auto_correct: true
-        mm.vm.network :forwarded_port, guest: 5000, host: 8000, auto_correct: true
-        mm.vm.network :private_network, ip: "192.168.254.201"
+        #mm.vm.network :forwarded_port, guest: 80, host: 8080, auto_correct: true
+        #mm.vm.network :forwarded_port, guest: 5000, host: 8000, auto_correct: true
+        mm.vm.network :private_network, ip: "192.168.254.101"
 
-        mm.vm.provision :shell, :inline => "echo Hello, World"
-        #mm.vm.provision :shell, :path => 'billing-deploy/vagrant/update_puppet3.sh'
-        #mm.vm.provision :shell do |shell|
-         #   shell.path = 'billing-deploy/vagrant/puppet_apply.sh'
-          #  shell.args = 'local'
-        #end
         mm.vm.provision :puppet do |puppet|
             puppet.manifests_path = "puppet/manifests"
             puppet.manifest_file = "base.pp"
