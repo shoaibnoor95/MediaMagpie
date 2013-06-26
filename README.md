@@ -22,7 +22,7 @@ Here is a list of some features:
 Prerequisites
 -------------
 ### JAVA
-MediaMagpie runs on each unix-/Mac platforms which have JAVA 1.7 JRE installed. The project contains a shell start script that starts the integrated jetty server and deploys the applications. The installation process is very simple.
+MediaMagpie runs on each unix-/Mac platforms which have JAVA 1.7 JRE installed. The project contains a shell start script that starts the integrated jetty9  server and deploys the applications. The installation process is very simple.
 ### Databases
 All RDBMS can be used which are supported by Hibernate. For a first test, a very simple solution is the internal HSQL database, that will be delivered within the MediaMagpie distribution.
 
