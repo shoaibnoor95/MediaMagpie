@@ -7,7 +7,6 @@
 #
 #############################################################################
 
-
 class sayHello {
     exec { 'blah':
     path    => '/bin:/usr/bin',
@@ -38,7 +37,7 @@ class repository {
   }
 }
  
-# Definition of stages which will be executed in this order: 
+# Define stages which will be executed in order: 
 #   first -> main -> last
 stage { 'first': before => Stage['main'] }
 stage { 'last': require => Stage['main'] }

@@ -12,8 +12,6 @@ Vagrant.configure("2") do |config|
     # see: http://www.vagrantbox.es/
     config.vm.box = "CentOS 6.3 x86_64 minimal"
     config.vm.box_url = "https://dl.dropbox.com/u/7225008/Vagrant/CentOS-6.3-x86_64-minimal.box"
-    #config.vm.box = "CentOS 6.4 x86_64 Minimal (VirtualBox Guest Additions 4.2.12, Chef 11.4.4, Puppet 3.1.1)"
-    #config.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20130427.box"
     
     config.vm.define :mm do |mm|
         mm.vm.hostname = 'mediamagpie-01.local.localdomain'

@@ -1,13 +1,15 @@
 Running puppet in vagrant
 =========================
 
-# puppet apply
+# Test vagrant provisioning whith vagrant
+
+## apply puppet
 $ sudo puppet apply -v /vagrant/puppet/manifests/base.pp 
 
-# noop
+## only test puppet
 $ sudo puppet apply -v /vagrant/puppet/manifests/base.pp --noop
 
-# get graph
+## get graph of dependencies
 open the '.dot' files in OmniGraffle or GraphViz
 
 $ sudo puppet apply --graph --noop /vagrant/puppet/manifests/base.pp
