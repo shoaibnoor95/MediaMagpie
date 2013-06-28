@@ -1,52 +1,45 @@
 HOWTO
 =====
 
-What for software you need?
+Which software do you need?
 ---------------------------
-
-+ git
-+ apache ant 1.7.1
-+ sun java 6
++ sun java 7
++ apache maven 3
++ optional a database like mysql
 
 How to build?
 -------------
- 
 ```bash
-    mvn clean
-    mvn compile
-    mvn test
-    mvn package -DskipTests [-P warFile]
+mvn clean
+mvn compile
+mvn test
+mvn package -DskipTests [-P warFile]
 ```
-
-
-How to import project files into Eclipse?
------------------------------------------
-
-    mv eclipse:eclipse
-
-Import all project below MediaMagpie/ folder into eclipse
 
 
 How to start jetty?
 -------------------
-
-Extract the distribution file mm-distribution-<Version>.jar into an arbitrary folder.
-Go into this folder's /bin subdirectory and run
+Extract the distribution file mm-distribution-<Version>.tar into an arbitrary folder.
+Run the mediamagpie.sh script to start/stop the webapplication with embedded jetty9 server.
  
-    mediamagpie.sh start
+```bash
+bin/mediamagpie.sh start
+# Change the deploy mode to use other ports/db settings
+vi bin/mediamagpie.sh 
+```
 
 open your browser [localhost port 8088](http://127.0.0.1:8088/)
 
 Using different server context path / port
 ------------------------------------------
-When using jetty try to set the system properties
+When using jetty change some system properties as set in start script mediamagpie.sh .
 + -Dwebapp.port=<port> , eg: -Dwebapp.port=8087  
 + -Dwebapp.context.path=<context path> , eg: -Dwebapp.context.path=/rwe
  
 When using a different context path copy the file domain.xml into your ROOT webapp directory of tomcat.
 
-Deploy to tomcat
-----------------
+Run application in tomcat
+-------------------------
 + Setup tomcat/conf/tomcat-users.xml:
   <tomcat-users>
     <role rolename="manager"/>
@@ -65,13 +58,14 @@ Deploy to tomcat
     $ cd module/mm-conductor
     $ mvn tomcat:deploy -DskipTests=true -P warFile
 
-# Maven
+
+## Maven
 Some useful command lines:
    $ mvn versions:display-dependency-updates
    $ mvn build-helper:remove-project-artifact -> see http://mojo.codehaus.org/build-helper-maven-plugin/remove-project-artifact-mojo.html
 
 
-# MongoDB
+## MongoDB (currently no longer used)
 Download MongoDB to your computer
 
     $ $ curl http://downloads.mongodb.org/osx/mongodb-osx-x86_64-2.0.2 > ~/programs/mongo.tgz
@@ -94,10 +88,8 @@ or with non-default data directory:
 Hint for md-formatting: See https://github.com/SpringSource/cloudfoundry-samples/blob/master/stocks/README.md
 
 
-# EC2 Instances
----------------
-
-## Update the standard open-jdk version with oracles java 1.6:
+## EC2 Instances
+### Update the standard open-jdk version with oracles java 1.6:
 The open-jdk installation on the ec2 instances seems to have many issues, so i've got the effect that mediamagpie crashes after a while (e.g. less than one minute of usage). By this experience i decided to install the oracle java implementation.
 I've found a very good installation guide here: http://livingtao.blogspot.de/2012/01/few-easy-steps-to-install-sunoracle-jdk.html
 
@@ -110,9 +102,7 @@ I've found a very good installation guide here: http://livingtao.blogspot.de/201
   $ ln -s /usr/java/default/jre /usr/lib/jvm/jre
   $ ln -s /usr/share/java /usr/lib/jvm-exports/jre
   
-
-# Generating self-signed Certificate and keystore (TODO rwe: obsolete?)
--------------------------------------------------
+## Generating self-signed Certificate and keystore (TODO rwe: obsolete?)
 
   $ #openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout jetty.key -out jetty.crt
   $ openssl req \
@@ -129,8 +119,7 @@ I've found a very good installation guide here: http://livingtao.blogspot.de/201
   $ mv keystore.ks modules/mm-conductor/src/main/resources/ssl/ 
   
   
-# keytool
----------
+## keytool
   1. java keystore you will first create the .jks file that will initially only contain the private key
   2. then generate a CSR and have a certificate generated from it
   3. Then you will import the certificate to the keystore including any root certificates - See more at: http://www.lmhproductions.com/37/common-java-keytool-commands/#sthash.cQFR6sFv.dpuf
@@ -143,17 +132,16 @@ I've found a very good installation guide here: http://livingtao.blogspot.de/201
   
   --> Create a shell script ?
   
-# Vagrant
----------
-## startup vagrant box
+## Vagrant
+### startup vagrant box
   $ cd mediamapgie
   $ vagrant up
   
-## Run puppet inside vagrant box:
+### Run puppet inside vagrant box:
   $ vagrant ssh
   $ sudo puppet apply /vagrant/puppet/manifests/base.pp  
   
-## run your application
+### run your application
   $ sudo /vagrant/mm-distribution/target/mm-distribution-0.1-SNAPSHOT-distribution/mm-distribution-0.1-SNAPSHOT/bin/mediamagpie.sh start  
   
   

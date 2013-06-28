@@ -1,6 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby
 
+## update to java7 version
 class portal::install {
 
   exec { "refresh cache":
