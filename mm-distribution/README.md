@@ -144,4 +144,6 @@ I've found a very good installation guide here: http://livingtao.blogspot.de/201
 ### run your application
   $ sudo /vagrant/mm-distribution/target/mm-distribution-0.1-SNAPSHOT-distribution/mm-distribution-0.1-SNAPSHOT/bin/mediamagpie.sh start  
   
-  
+### export your provisioned box
+This will create a new package.box file containing the actual state of your box.
+  $ vagrant package

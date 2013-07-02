@@ -60,7 +60,7 @@
 	</fileSets>
 	<files>
 		<file>
-			<source>log4j-console.xml</source>
+			<source>log4j-deploy.xml</source>
 			<lineEnding>unix</lineEnding>
 			<destName>log4j.xml</destName>
 			<outputDirectory>conf</outputDirectory>

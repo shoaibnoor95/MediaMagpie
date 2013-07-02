@@ -5,6 +5,7 @@ Vagrant.configure("2") do |config|
 
     config.vm.provider :virtualbox do |v|
       v.gui = false
+      v.customize ["modifyvm", :id, "--memory", 615]
     end
 
     #config.vm.box = "precise64"
@@ -16,13 +17,14 @@ Vagrant.configure("2") do |config|
     config.vm.define :mm do |mm|
         mm.vm.hostname = 'mediamagpie-01.local.localdomain'
         
-        #mm.vm.network :hostonly, "192.168.100.10"
+        #mm.vm.network :hostonly, "192.168.2.102"
         #mm.vm.network :forwarded_port, guest: 80, host: 8080, auto_correct: true
+        #mm.vm.network :forwarded_port, guest: 443, host: 8443, auto_correct: true
         #mm.vm.network :forwarded_port, guest: 5000, host: 8000, auto_correct: true
-        mm.vm.network :private_network, ip: "192.168.254.101"
+        mm.vm.network :private_network, ip: "192.168.254.102"
 
         mm.vm.provision :puppet do |puppet|
-            puppet.manifests_path = "puppet/manifests"
+            puppet.manifests_path = "mm-distribution/src/main/puppet/manifests"
             puppet.manifest_file = "base.pp"
         end
     end

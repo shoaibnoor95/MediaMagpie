@@ -8,11 +8,12 @@
 		<param name="Target" value="System.out" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%-5p: %c - %m%n" />
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %5p [%t] (%F:%L) - %m%n" />
 		</layout>
 	</appender>
 	<!-- Rolling file Appender -->
-	<appender name="R" class="org.apache.log4j.RollingFileAppender">
-		<param name="File" value="ws-workshop.log" />
+	<appender name="logfile" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="portal.log" />
 		<param name="MaxFileSize" value="5MB" />
 		<param name="MaxBackupIndex" value="5" />
 		<layout class="org.apache.log4j.PatternLayout">

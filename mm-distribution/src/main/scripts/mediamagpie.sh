@@ -14,7 +14,7 @@ MGR_DEPLOY_MODE=live
 #MGR_DEPLOY_MODE=local
 #JAVA_HOME=
 #ADDITIONAL_PARAMETERS="-Dwebapp.port=8087 -Dwebapp.context.path=/mediamagpie"
-#ADDITIONAL_PARAMETERS="-XX:+HeapDumpOnOutOfMemoryError -XX:ErrorFile=./hs_err_pid<pid>.log"
+VM_ARGS="-Xmx275m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp -XX:ErrorFile=/var/log/java_hs_err_pid%p.log $ADDITIONAL_PARAMETERS"
 #########################
 
 CLASS=de.wehner.mediamagpie.conductor.StartJetty9
@@ -110,8 +110,7 @@ fi
 # This is how the server will be started
 #####################################################
 
-VM_ARGS="-Xmx350m $VM_ARGS"
-RUN_ARGS="$VM_ARGS -Ddeploy.mode=$MGR_DEPLOY_MODE -Dlog4j.configuration=conf/log4j.xml $ADDITIONAL_PARAMETERS -classpath $CLASSPATH $CLASS"
+RUN_ARGS="$VM_ARGS -Ddeploy.mode=$MGR_DEPLOY_MODE -Dlog4j.configuration=conf/log4j.xml -classpath $CLASSPATH $CLASS"
 RUN_CMD="$JAVA $RUN_ARGS"
 #debug
 #RUN_CMD="$JAVA -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=5000,server=y,suspend=n $RUN_ARGS"
