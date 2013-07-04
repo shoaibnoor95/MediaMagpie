@@ -3,19 +3,37 @@ package de.wehner.mediamagpie.conductor.webapp.media.process;
 import java.awt.Dimension;
 import java.awt.RenderingHints;
 import java.awt.image.renderable.ParameterBlock;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 import javax.media.jai.JAI;
 import javax.media.jai.OpImage;
 import javax.media.jai.RenderedOp;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+
 import com.sun.media.jai.codec.SeekableStream;
 
-// TODO rwe: add a rotate method or try to rotate image with ImageProcessingImageIO after picture was resized!
+import de.wehner.mediamagpie.core.util.ExceptionUtil;
+
 public class ImageProcessorJAI extends AbstractImageProcessor {
 
+    private InputStream is;
+
     private final RenderedOp originalImage;
+
+    private ByteArrayOutputStream processedImage;
+
+    /**
+     * Only used for rotation
+     */
+    private ImageProcessorImageIO childImageProcessor;
 
     private Dimension processedDimension = new Dimension();
 
@@ -39,7 +57,8 @@ public class ImageProcessorJAI extends AbstractImageProcessor {
      */
     private static final String JAI_ENCODE_ACTION = "encode";
 
-    public ImageProcessorJAI(FileInputStream is) {
+    public ImageProcessorJAI(File inImageFile) throws FileNotFoundException {
+        is = new FileInputStream(inImageFile);
         SeekableStream seekableImageStream = SeekableStream.wrapInputStream(is, true);
         originalImage = JAI.create(JAI_STREAM_ACTION, seekableImageStream);
     }
@@ -51,7 +70,7 @@ public class ImageProcessorJAI extends AbstractImageProcessor {
      * @param height
      * @return
      */
-    public ByteArrayOutputStream resize(int width, int height) {
+    ByteArrayOutputStream resizeInternal(int width, int height) {
         ((OpImage) originalImage.getRendering()).setTileCache(null);
         int origWidth = originalImage.getWidth();
         int origHeight = originalImage.getHeight();
@@ -86,8 +105,46 @@ public class ImageProcessorJAI extends AbstractImageProcessor {
         return originalImage.getHeight();
     }
 
-    public Dimension getProcessedDimension() {
+    @Override
+    public void resize(int width, int height) {
+        processedImage = resizeInternal(width, height);
+    }
+
+    @Override
+    public void rotateImage(int angle) {
+        try {
+            ByteArrayInputStream is = new ByteArrayInputStream(processedImage.toByteArray());
+            childImageProcessor = new ImageProcessorImageIO(is);
+            IOUtils.closeQuietly(is);
+        } catch (IOException e) {
+            throw ExceptionUtil.convertToRuntimeException(e);
+        }
+        childImageProcessor.rotateImage(angle);
+    }
+
+    @Override
+    public void write(File thumbImagePath) throws IOException {
+        if (childImageProcessor != null) {
+            childImageProcessor.write(thumbImagePath);
+        } else {
+            FileUtils.writeByteArrayToFile(thumbImagePath, processedImage.toByteArray());
+        }
+    }
+
+    @Override
+    public Dimension getProcessedImageDimension() {
+        if (childImageProcessor != null) {
+            return childImageProcessor.getProcessedImageDimension();
+        }
         return processedDimension;
+    }
+
+    @Override
+    public void close() throws IOException {
+        if (childImageProcessor != null) {
+            childImageProcessor.close();
+        }
+        IOUtils.closeQuietly(is);
     }
 
 }

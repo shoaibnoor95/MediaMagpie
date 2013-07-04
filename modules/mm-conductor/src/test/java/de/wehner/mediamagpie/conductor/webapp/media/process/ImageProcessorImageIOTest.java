@@ -11,6 +11,7 @@ import javax.imageio.ImageIO;
 import org.apache.commons.io.FilenameUtils;
 import org.junit.Rule;
 import org.junit.Test;
+import org.springframework.util.StopWatch;
 
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
 import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
@@ -23,11 +24,12 @@ public class ImageProcessorImageIOTest {
     static final int RESIZE_H = 600;
 
     private final int LOOP_COUNT = 20;
+
     @Rule
     public TestEnvironment _testEnvironment = new TestEnvironment(ImageProcessorImageIOTest.class);
 
     @Test
-    public void testResizeAndRotateImageNTimes() throws IOException {
+    public void test_resizeImageWithAffineTransform_NTimes() throws IOException {
         File originMediaFile = new File(SRC_IMAGE_UPRIGHT);
         File resizedImageFile = new File(_testEnvironment.getWorkingDir(), "resizedrotated_6.jpg");
 
@@ -43,12 +45,31 @@ public class ImageProcessorImageIOTest {
     }
 
     @Test
-    public void testRotateImage() throws IOException {
+    public void test_rotateImage_270degree() throws IOException {
         File originMediaFile = new File(SRC_IMAGE_UPRIGHT);
         File rotatedImageFile = new File(_testEnvironment.getWorkingDir(), "rotated.jpg");
 
         BufferedImage originBitmap = ImageIO.read(originMediaFile);
         BufferedImage destImage = ImageProcessorImageIO.rotateImage(originBitmap, 270.0);
         assertThat(ImageIO.write(destImage, FilenameUtils.getExtension(rotatedImageFile.getPath()), rotatedImageFile)).isTrue();
+    }
+
+    @Test
+    public void test_rotateImage_NTimes() throws IOException {
+        File originMediaFile = new File(SRC_IMAGE_UPRIGHT);
+        File resizedImageFile = new File(_testEnvironment.getWorkingDir(), "resizedrotated_6.jpg");
+        StopWatch stopWatch = new StopWatch();
+
+        ImageProcessorImageIO processor = new ImageProcessorImageIO(originMediaFile);
+
+        for (int i = 0; i < LOOP_COUNT; i++) {
+            stopWatch.start((i + 1) + ". rotate 90 degrees");
+            processor.rotateImage(90);
+            stopWatch.stop();
+        }
+        System.out.println(stopWatch.prettyPrint());
+        processor.write(resizedImageFile);
+        processor.close();
+        assertThat(resizedImageFile).exists();
     }
 }

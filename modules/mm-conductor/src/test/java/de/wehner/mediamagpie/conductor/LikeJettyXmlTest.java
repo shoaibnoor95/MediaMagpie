@@ -37,6 +37,7 @@ import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.eclipse.jetty.util.thread.ScheduledExecutorScheduler;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
@@ -47,6 +48,7 @@ import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
  * @author ralfwehner
  * 
  */
+@Ignore("Not really a test")
 public class LikeJettyXmlTest {
 
     public static class HelloHandler extends AbstractHandler {

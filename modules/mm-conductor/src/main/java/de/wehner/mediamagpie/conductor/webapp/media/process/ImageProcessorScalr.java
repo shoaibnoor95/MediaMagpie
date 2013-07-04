@@ -11,6 +11,13 @@ import org.imgscalr.Scalr;
 import org.imgscalr.Scalr.Method;
 import org.imgscalr.Scalr.Mode;
 
+/**
+ * Currently not supported.
+ * 
+ * @author ralfwehner
+ * 
+ */
+@Deprecated
 public class ImageProcessorScalr extends AbstractImageProcessor {
 
     private BufferedImage originBitmap;
@@ -29,11 +36,41 @@ public class ImageProcessorScalr extends AbstractImageProcessor {
         return originBitmap.getHeight();
     }
 
-    public BufferedImage resize(int width, int height) {
+    public BufferedImage resizeInternal(int width, int height) {
         int origWidth = originBitmap.getWidth();
         int origHeight = originBitmap.getHeight();
         Dimension newDimension = computeNewDimension(origWidth, origHeight, width, height);
         BufferedImage newImageScalr = Scalr.resize(originBitmap, Method.AUTOMATIC, Mode.AUTOMATIC, newDimension.width, newDimension.height);
         return newImageScalr;
+    }
+
+    @Override
+    public void rotateImage(int angle) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void write(File thumbImagePath) throws IOException {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public Dimension getProcessedImageDimension() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void close() throws IOException {
+        // TODO Auto-generated method stub
+        
     }
 }

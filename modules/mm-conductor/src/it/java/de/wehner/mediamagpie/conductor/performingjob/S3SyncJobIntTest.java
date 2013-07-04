@@ -4,6 +4,7 @@ import static org.fest.assertions.Assertions.*;
 
 import java.io.File;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -15,6 +16,11 @@ import org.mockito.MockitoAnnotations;
 
 import de.wehner.mediamagpie.api.MediaExport;
 import de.wehner.mediamagpie.aws.s3.S3MediaExportRepositoryMock;
+import de.wehner.mediamagpie.common.testsupport.ItEnvironment.CleanFolderInstruction;
+import de.wehner.mediamagpie.common.testsupport.LocalItEnvironment;
+import de.wehner.mediamagpie.conductor.webapp.media.process.ImageProcessorFactory;
+import de.wehner.mediamagpie.conductor.webapp.media.process.ImageProcessorImageIOFactory;
+import de.wehner.mediamagpie.conductor.webapp.media.process.ImageProcessorJAIFactory;
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
 import de.wehner.mediamagpie.conductor.webapp.services.MediaSyncService;
 import de.wehner.mediamagpie.conductor.webapp.services.UploadService;
@@ -32,6 +38,9 @@ public class S3SyncJobIntTest {
 
     @Rule
     public DbTestEnvironment _dbTestEnvironment = new DbTestEnvironment();
+
+    @Rule
+    public LocalItEnvironment _localItEnvironment = new LocalItEnvironment(CleanFolderInstruction.BEFORE);
 
     private TestEnvironment _testEnvironment = new TestEnvironment(getClass());
 
@@ -73,7 +82,9 @@ public class S3SyncJobIntTest {
         _m2.setName("image-14");
         _m2.addTag(new MediaTag("family"));
         _configurationProvider = _dbTestEnvironment.createConfigurationProvider(_testEnvironment.getWorkingDir());
-        ImageService imageService = new ImageService(null, _mediaDao, new ImageResizeJobExecutionDao(_dbTestEnvironment.getPersistenceService()), null);
+        List<ImageProcessorFactory> imageProcessorFactories = Arrays.asList(new ImageProcessorImageIOFactory(), new ImageProcessorJAIFactory());
+        ImageService imageService = new ImageService(null, _mediaDao, new ImageResizeJobExecutionDao(_dbTestEnvironment.getPersistenceService()), null,
+                imageProcessorFactories);
         UploadService uploadService = new UploadService(_configurationProvider, _mediaDao, imageService, _dbTestEnvironment.getPersistenceService(), null);
         _job = new S3SyncJob(_s3MediaExportRepository, uploadService, _user, _configurationProvider, _dbTestEnvironment.createTransactionHandler(),
                 _mediaDao);

@@ -31,9 +31,6 @@ public abstract class ItEnvironment extends ExternalResource {
     @Mock
     private ConfigurationDao _configurationDao;
 
-    // @Mock
-    // private UserConfiguration _userConfiguration;
-
     public enum CleanFolderInstruction {
         BEFORE_CLASS, BEFORE;
     }
@@ -43,6 +40,7 @@ public abstract class ItEnvironment extends ExternalResource {
     }
 
     private final CleanFolderInstruction _cleanInstruction;
+
     protected final File _rootTmpDirectory;
     private final JobFactory _jobFactory;
     private final JobExecutor _jobExecutor;
@@ -50,6 +48,12 @@ public abstract class ItEnvironment extends ExternalResource {
     @Override
     protected void before() throws Throwable {
         MockitoAnnotations.initMocks(this);
+        if (_cleanInstruction == CleanFolderInstruction.BEFORE) {
+            try {
+                TestEnvironment.cleanDir(_rootTmpDirectory);
+            } catch (IOException e) {
+            }
+        }
     };
 
     public ItEnvironment(CleanFolderInstruction cleanInstruction) {
@@ -58,7 +62,7 @@ public abstract class ItEnvironment extends ExternalResource {
         _rootTmpDirectory.mkdirs();
         _jobFactory = mock(JobFactory.class);
         _jobExecutor = new JobExecutor(_jobFactory, new TransactionHandlerMock());
-        if (cleanInstruction == CleanFolderInstruction.BEFORE_CLASS) {
+        if (_cleanInstruction == CleanFolderInstruction.BEFORE_CLASS) {
             try {
                 TestEnvironment.cleanDir(_rootTmpDirectory);
             } catch (IOException e) {

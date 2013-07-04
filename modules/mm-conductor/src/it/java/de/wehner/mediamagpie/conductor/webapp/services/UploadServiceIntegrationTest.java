@@ -5,6 +5,7 @@ import static org.fest.assertions.Assertions.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
@@ -13,6 +14,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import de.wehner.mediamagpie.conductor.webapp.media.process.ImageProcessorFactory;
+import de.wehner.mediamagpie.conductor.webapp.media.process.ImageProcessorImageIOFactory;
+import de.wehner.mediamagpie.conductor.webapp.media.process.ImageProcessorJAIFactory;
 import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
 import de.wehner.mediamagpie.core.util.Pair;
 import de.wehner.mediamagpie.persistence.dao.ImageResizeJobExecutionDao;
@@ -54,7 +58,8 @@ public class UploadServiceIntegrationTest {
         _persistenceService = _dbTestEnvironment.getPersistenceService();
         ThumbImageDao thumbImageDao = new ThumbImageDao(_persistenceService);
         _mediaDao = new MediaDao(_persistenceService);
-        _imageService = new ImageService(thumbImageDao, _mediaDao, _imageResizeJobExecutionDao, _mediaDeleteJobExecutionDao);
+        List<ImageProcessorFactory> imageProcessorFactories = Arrays.asList(new ImageProcessorImageIOFactory(), new ImageProcessorJAIFactory());
+        _imageService = new ImageService(thumbImageDao, _mediaDao, _imageResizeJobExecutionDao, _mediaDeleteJobExecutionDao, imageProcessorFactories);
         _persistenceService.beginTransaction();
         _uploadService = new UploadService(_dbTestEnvironment.createConfigurationProvider(_testEnvironment.getWorkingDir()), _mediaDao, _imageService,
                 _persistenceService, thumbImageDao);

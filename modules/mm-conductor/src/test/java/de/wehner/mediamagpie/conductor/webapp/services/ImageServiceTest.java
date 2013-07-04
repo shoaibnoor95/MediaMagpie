@@ -9,6 +9,7 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Date;
 
 import org.junit.Before;
@@ -17,6 +18,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import de.wehner.mediamagpie.conductor.webapp.media.process.ImageProcessorImageIOFactory;
+import de.wehner.mediamagpie.conductor.webapp.media.process.ImageProcessorJAIFactory;
 import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
 import de.wehner.mediamagpie.persistence.dao.ImageResizeJobExecutionDao;
 import de.wehner.mediamagpie.persistence.dao.MediaDao;
@@ -51,11 +54,12 @@ public class ImageServiceTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        _imageService = new ImageService(_thumbImageDao, _mediaDao, _imageResizeJobExecutionDao, _mediaDeleteJobExecutionDao);
+        _imageService = new ImageService(_thumbImageDao, _mediaDao, _imageResizeJobExecutionDao, _mediaDeleteJobExecutionDao, Arrays.asList(
+                new ImageProcessorImageIOFactory(), new ImageProcessorJAIFactory()));
     }
 
     @Test
-    public void testGetOrCreateImageUrl_newImageResizeJob_wasCreated() {
+    public void test_getOrCreateImageUrl_newImageResizeJob_wasCreated() {
         Media media = new Media(null, "name", new File("src/test/resources/images/1600x4.jpg").toURI(), new Date());
         media.setId(1L);
         _imageService.getOrCreateImageUrl(media, 300);
@@ -64,35 +68,44 @@ public class ImageServiceTest {
     }
 
     @Test
-    public void testResizeImage() {
+    public void test_resizeImageWithImageIO() {
         File originMediaFile = new File("src/test/resources/images/IMG_0013.JPG");
-        File resizedImageFile = ImageService.resizeImage(originMediaFile, 1L, _testEnvironment.getWorkingDir(), 2000, 2000);
+        File resizedImageFile = ImageService.resizeImageWithImageIO(originMediaFile, 1L, _testEnvironment.getWorkingDir(), 2000, 2000);
 
         assertThat(resizedImageFile).exists();
     }
 
     @Test
-    public void test_resizeImageInQueue() {
+    public void test_resizeImage() {
         File originMediaFile = new File("src/test/resources/images/IMG_0013.JPG");
-        File resizedImageFile = ImageService.resizeImageInQueue(originMediaFile, 1L, _testEnvironment.getWorkingDir(), 2000, 2000,
+        File resizedImageFile = _imageService.resizeImage(originMediaFile, 1L, _testEnvironment.getWorkingDir(), 2000, 2000,
+                Orientation.UNKNOWN.getNecessaryRotation());
+
+        assertThat(resizedImageFile).exists();
+    }
+
+    @Test
+    public void test_resizeImage_withRotation() {
+        File originMediaFile = new File("src/test/resources/images/IMG_0013.JPG");
+        File resizedImageFile = _imageService.resizeImage(originMediaFile, 1L, _testEnvironment.getWorkingDir(), 2000, 2000,
                 Orientation.LEFT_SIDE_TOP.getNecessaryRotation());
 
         assertThat(resizedImageFile).exists();
     }
 
     @Test
-    public void test_resizeImageInQueue_ButImageIoFails() {
+    public void test_resizeImage_ButImageIoFails() {
         File originMediaFile = new File(SRC_BAD_IMAGE_IO_IMAGE);
-        File resizedImageFile = ImageService.resizeImageInQueue(originMediaFile, 1L, _testEnvironment.getWorkingDir(), 2000, 2000,
+        File resizedImageFile = _imageService.resizeImage(originMediaFile, 1L, _testEnvironment.getWorkingDir(), 2000, 2000,
                 Orientation.TOP_LEFT_SIDE.getNecessaryRotation());
 
         assertThat(resizedImageFile).exists();
     }
 
     @Test
-    public void test_resizeImageInQueue_WithRotation_ButImageIoFails() {
+    public void test_resizeImage_withRotation_ButImageIoFails() {
         File originMediaFile = new File(SRC_BAD_IMAGE_IO_IMAGE);
-        File resizedImageFile = ImageService.resizeImageInQueue(originMediaFile, 1L, _testEnvironment.getWorkingDir(), 2000, 2000,
+        File resizedImageFile = _imageService.resizeImage(originMediaFile, 1L, _testEnvironment.getWorkingDir(), 2000, 2000,
                 Orientation.LEFT_SIDE_TOP.getNecessaryRotation());
 
         assertThat(resizedImageFile).exists();

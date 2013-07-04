@@ -6,15 +6,27 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ImageProcessorImageIO extends AbstractImageProcessor {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ImageProcessorImageIO.class);
+
     private BufferedImage originBitmap;
+    private BufferedImage processedImage;
 
     public ImageProcessorImageIO(File originImage) throws IOException {
         originBitmap = ImageIO.read(originImage);
+    }
+
+    public ImageProcessorImageIO(InputStream is) throws IOException {
+        originBitmap = ImageIO.read(is);
     }
 
     @Override
@@ -27,12 +39,34 @@ public class ImageProcessorImageIO extends AbstractImageProcessor {
         return originBitmap.getHeight();
     }
 
-    public BufferedImage resize(int width, int height) {
+    public void resize(int width, int height) {
         int origWidth = originBitmap.getWidth();
         int origHeight = originBitmap.getHeight();
         Dimension newDimension = computeNewDimension(origWidth, origHeight, width, height);
-        BufferedImage newImage = resizeImageWithAffineTransform(originBitmap, newDimension);
-        return newImage;
+        processedImage = resizeImageWithAffineTransform(getImageToProcess(), newDimension);
+    }
+
+    @Override
+    public void rotateImage(int angle) {
+        processedImage = rotateImage(getImageToProcess(), angle);
+    }
+
+    @Override
+    public Dimension getProcessedImageDimension() {
+        return new Dimension(processedImage.getWidth(), processedImage.getHeight());
+    }
+
+    @Override
+    public void write(File destFile) throws IOException {
+        boolean write = ImageIO.write(processedImage, FilenameUtils.getExtension(destFile.getPath()), destFile);
+        if (!write) {
+            LOG.error("Can not write image into file '" + destFile.getPath() + "'.");
+        }
+    }
+
+    @Override
+    public void close() throws IOException {
+        // nothing to do here
     }
 
     /**
@@ -81,5 +115,11 @@ public class ImageProcessorImageIO extends AbstractImageProcessor {
         return result;
     }
 
+    private BufferedImage getImageToProcess() {
+        if (processedImage != null) {
+            return processedImage;
+        }
+        return originBitmap;
+    }
 
 }

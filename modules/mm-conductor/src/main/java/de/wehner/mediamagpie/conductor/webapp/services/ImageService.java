@@ -5,13 +5,12 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -35,8 +34,8 @@ import de.wehner.mediamagpie.aws.s3.S3ClientFacade;
 import de.wehner.mediamagpie.aws.s3.S3MediaExportRepository;
 import de.wehner.mediamagpie.conductor.metadata.CameraMetaData;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaThumbCommand;
-import de.wehner.mediamagpie.conductor.webapp.media.process.ImageProcessorImageIO;
-import de.wehner.mediamagpie.conductor.webapp.media.process.ImageProcessorJAI;
+import de.wehner.mediamagpie.conductor.webapp.media.process.AbstractImageProcessor;
+import de.wehner.mediamagpie.conductor.webapp.media.process.ImageProcessorFactory;
 import de.wehner.mediamagpie.core.util.ExceptionUtil;
 import de.wehner.mediamagpie.persistence.dao.ImageResizeJobExecutionDao;
 import de.wehner.mediamagpie.persistence.dao.MediaDao;
@@ -68,20 +67,31 @@ public class ImageService {
 
     private final ObjectMapper _mapper;
 
+    private final List<ImageProcessorFactory> _imageProcessorFactories;
+
     @Autowired
     public ImageService(ThumbImageDao imageDao, MediaDao mediaDao, ImageResizeJobExecutionDao imageResizeJobDao,
-            MediaDeleteJobExecutionDao mediaDeleteJobDao) {
+            MediaDeleteJobExecutionDao mediaDeleteJobDao, List<ImageProcessorFactory> imageProcessors) {
         super();
         _thumbImageDao = imageDao;
         _mediaDao = mediaDao;
         _imageResizeJobExecutionDao = imageResizeJobDao;
         _mediaDeleteJobExecutionDao = mediaDeleteJobDao;
         _mapper = new ObjectMapper();
+        _imageProcessorFactories = new ArrayList<ImageProcessorFactory>(imageProcessors);
+        // sort processors to get the fastes first
+        Collections.sort(_imageProcessorFactories, new Comparator<ImageProcessorFactory>() {
+
+            @Override
+            public int compare(ImageProcessorFactory o1, ImageProcessorFactory o2) {
+                return (o1.getPerformanceIndex() - o2.getPerformanceIndex());
+            }
+        });
     }
 
-    // better use the resizeImageInQueue() method
+    // the original resizing algorithm
     @Deprecated
-    public static File resizeImage(File originImage, long id, File destPath, int width, int height) {
+    public static File resizeImageWithImageIO(File originImage, long id, File destPath, int width, int height) {
         try {
             LOG.info("Begin resizing image '" + originImage.getPath() + "' to " + width + " x " + height + "...");
             BufferedImage originBitmap = ImageIO.read(originImage);
@@ -123,57 +133,38 @@ public class ImageService {
         }
     }
 
-    public static File resizeImageInQueue(File originImage, long id, File destPath, int width, int height, int necessaryRotation) {
+    public File resizeImage(File originImage, long id, File destPath, int width, int height, int necessaryRotation) {
         LOG.info("Begin resizing image '" + originImage.getPath() + "' to " + width + " x " + height + " with rotation " + necessaryRotation + "...");
         StopWatch stopWatch = new StopWatch();
-        try {
-            // scale image
-            stopWatch.start("resize direct API (" + width + "/" + height + ")");
-            ImageProcessorImageIO imageResizeByImageIO = new ImageProcessorImageIO(originImage);
-            BufferedImage resizedImage = imageResizeByImageIO.resize(width, height);
-            // rotate if necessary
-            if (necessaryRotation != 0) {
-                resizedImage = ImageProcessorImageIO.rotateImage(resizedImage, necessaryRotation);
-            }
 
-            // save result to file
-            File thumbImagePath = buildThumbImagePath(originImage, id, destPath, resizedImage.getWidth(), resizedImage.getHeight());
-            ImageIO.write(resizedImage, FilenameUtils.getExtension(thumbImagePath.getPath()), thumbImagePath);
-            stopWatch.stop();
-            LOG.info("Begin resizing image... finished. Resized image into file '" + thumbImagePath.getPath() + "'.");
-            return thumbImagePath;
-        } catch (Throwable e) {
-            stopWatch.stop();
-            LOG.debug("Exception arised during image resizing. Try JAI library for processing...", e);
-
+        for (ImageProcessorFactory imageProcessorFactory : _imageProcessorFactories) {
+            AbstractImageProcessor imageProcessor = null;
             try {
-                stopWatch.start("resize JAI (" + width + "/" + height + ")");
-                FileInputStream is = new FileInputStream(originImage);
-                ImageProcessorJAI imageProcessorJAI = new ImageProcessorJAI(is);
-                ByteArrayOutputStream resizedImage = imageProcessorJAI.resize(width, height);
+                // scale image
+                stopWatch.start(imageProcessorFactory.getClass().getSimpleName() + ": resize direct API (" + width + "/" + height + ")");
+                imageProcessor = imageProcessorFactory.createProcessor(originImage);
+                imageProcessor.resize(width, height);
                 // rotate if necessary
-                File thumbImagePath;
                 if (necessaryRotation != 0) {
-                    LOG.warn("Ratation is currently not supported");
-                    InputStream isResized = new ByteArrayInputStream(resizedImage.toByteArray());
-                    BufferedImage rotateImage = ImageProcessorImageIO.rotateImage(ImageIO.read(isResized), necessaryRotation);
-                    thumbImagePath = buildThumbImagePath(originImage, id, destPath, rotateImage.getWidth(), rotateImage.getHeight());
-                    ImageIO.write(rotateImage, FilenameUtils.getExtension(thumbImagePath.getPath()), thumbImagePath);
-                } else {
-                    thumbImagePath = buildThumbImagePath(originImage, id, destPath, imageProcessorJAI.getProcessedDimension().width,
-                            imageProcessorJAI.getProcessedDimension().height);
-                    IOUtils.closeQuietly(is);
-                    FileUtils.writeByteArrayToFile(thumbImagePath, resizedImage.toByteArray());
+                    imageProcessor.rotateImage(necessaryRotation);
                 }
+
+                // save result to file
+                Dimension imageDimension = imageProcessor.getProcessedImageDimension();
+                File thumbImagePath = buildThumbImagePath(originImage, id, destPath, imageDimension.width, imageDimension.height);
+                imageProcessor.write(thumbImagePath);
                 stopWatch.stop();
                 LOG.info("Begin resizing image... finished. Resized image into file '" + thumbImagePath.getPath() + "'.");
                 return thumbImagePath;
-            } catch (Throwable e2) {
-                throw new RuntimeException(e2);
+            } catch (Throwable e) {
+                stopWatch.stop();
+                LOG.debug("Exception arised during image resizing. Try next image processor...", e);
+            } finally {
+                // System.out.println(stopWatch.prettyPrint());
+                IOUtils.closeQuietly(imageProcessor);
             }
-        } finally {
-            // System.out.println(stopWatch.prettyPrint());
         }
+        throw new RuntimeException("No image processor can resize an image with original file '" + originImage.getPath() + "'.");
     }
 
     public static Dimension computeNewDimension(int origWidth, int origHeight, int width, int height) {

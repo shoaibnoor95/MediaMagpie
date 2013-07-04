@@ -19,15 +19,17 @@ public class ImageResizeJob extends AbstractJob {
 
     private final MediaDao _mediaDao;
     private final ThumbImageDao _thumbImageDao;
+    private final ImageService _imageService;
     private final File _originImage;
     private final long _mediaId;
     private final String _widthOrHeight;
     private final Orientation _originOrientation;
 
-    public ImageResizeJob(MediaDao mediaDao, ThumbImageDao thumbImageDao, File originImage, long mediaId, String widthOrHeight,
+    public ImageResizeJob(MediaDao mediaDao, ThumbImageDao thumbImageDao, ImageService imageService, File originImage, long mediaId, String widthOrHeight,
             Orientation originOrientation) {
         _mediaDao = mediaDao;
         _thumbImageDao = thumbImageDao;
+        _imageService = imageService;
         _originImage = originImage;
         _mediaId = mediaId;
         if (widthOrHeight == null) {
@@ -46,8 +48,8 @@ public class ImageResizeJob extends AbstractJob {
                 LOG.debug("create the thumb image here...");
                 try {
                     int widthOrHeight = Integer.parseInt(_widthOrHeight);
-                    File resizedImage = ImageService.resizeImageInQueue(_originImage, _mediaId, getPerformingJobContext().getTempMediaPath(),
-                            widthOrHeight, widthOrHeight, _originOrientation.getNecessaryRotation());
+                    File resizedImage = _imageService.resizeImage(_originImage, _mediaId, getPerformingJobContext().getTempMediaPath(), widthOrHeight,
+                            widthOrHeight, _originOrientation.getNecessaryRotation());
                     return (resizedImage != null) ? resizedImage.toURI() : null;
                 } catch (NumberFormatException e) {
                     return null;

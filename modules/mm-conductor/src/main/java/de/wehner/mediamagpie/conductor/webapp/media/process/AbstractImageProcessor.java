@@ -1,13 +1,29 @@
 package de.wehner.mediamagpie.conductor.webapp.media.process;
 
 import java.awt.Dimension;
+import java.io.Closeable;
+import java.io.File;
+import java.io.IOException;
 
-public abstract class AbstractImageProcessor {
+public abstract class AbstractImageProcessor implements Closeable {
 
     public abstract int getOriginalWidth();
+
     public abstract int getOriginalHeight();
-    
-    public Dimension computeNewDimension(int origWidth, int origHeight, int width, int height) {
+
+    public abstract void resize(int width, int height);
+
+    public abstract void rotateImage(int angle);
+
+    public abstract void write(File thumbImagePath) throws IOException;
+
+    public abstract Dimension getProcessedImageDimension();
+
+    public AbstractImageProcessor() {
+        super();
+    }
+
+    protected Dimension computeNewDimension(int origWidth, int origHeight, int width, int height) {
         float minRatio = 1.0f;
         if (origWidth >= width || origHeight >= height) {
             float ratioX = (float) width / origWidth;
@@ -17,10 +33,6 @@ public abstract class AbstractImageProcessor {
             origHeight = (int) Math.max(1, origHeight * minRatio);
         }
         return new Dimension(origWidth, origHeight);
-    }
-
-    public AbstractImageProcessor() {
-        super();
     }
 
 }
