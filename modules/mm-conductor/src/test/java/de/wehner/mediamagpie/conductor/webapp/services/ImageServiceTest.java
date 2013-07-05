@@ -18,8 +18,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import de.wehner.mediamagpie.conductor.webapp.media.process.ImageProcessorImageIOFactory;
-import de.wehner.mediamagpie.conductor.webapp.media.process.ImageProcessorJAIFactory;
+import de.wehner.mediamagpie.conductor.webapp.processor.ImageProcessorImageIOFactory;
+import de.wehner.mediamagpie.conductor.webapp.processor.ImageProcessorJAIFactory;
 import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
 import de.wehner.mediamagpie.persistence.dao.ImageResizeJobExecutionDao;
 import de.wehner.mediamagpie.persistence.dao.MediaDao;

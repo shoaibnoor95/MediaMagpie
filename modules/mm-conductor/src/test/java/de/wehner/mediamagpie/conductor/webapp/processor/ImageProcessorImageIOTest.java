@@ -1,4 +1,4 @@
-package de.wehner.mediamagpie.conductor.webapp.media.process;
+package de.wehner.mediamagpie.conductor.webapp.processor;
 
 import static org.fest.assertions.Assertions.*;
 
@@ -13,6 +13,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.util.StopWatch;
 
+import de.wehner.mediamagpie.conductor.webapp.processor.ImageProcessorImageIO;
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
 import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
 

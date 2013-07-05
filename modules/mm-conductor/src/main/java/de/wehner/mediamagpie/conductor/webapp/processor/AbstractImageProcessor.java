@@ -1,4 +1,4 @@
-package de.wehner.mediamagpie.conductor.webapp.media.process;
+package de.wehner.mediamagpie.conductor.webapp.processor;
 
 import java.awt.Dimension;
 import java.io.Closeable;
