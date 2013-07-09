@@ -45,7 +45,6 @@
 
 		<!-- etc... -->
 		<mongodb.version>1.1.0.RC1</mongodb.version>
-		<org.slf4j.version>1.7.2</org.slf4j.version>
 		<jetty.version>6.1.26</jetty.version>
 		<!--<jetty.version>7.0.0.pre5</jetty.version> -->
 		<jetty.jsp.version>7.0.0pre2</jetty.jsp.version>
@@ -103,16 +102,12 @@
 		</dependency>
 
 		<!-- logging -->
+		<!-- <dependency> <groupId>org.slf4j</groupId> <artifactId>jcl-over-slf4j</artifactId> <version>${org.slf4j.version}</version> 
+			</dependency> <dependency> <groupId>org.slf4j</groupId> <artifactId>slf4j-log4j12</artifactId> <version>${org.slf4j.version}</version> 
+			</dependency> -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-			<version>${org.slf4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${org.slf4j.version}</version>
-			<!-- <groupId>ch.qos.logback</groupId> <artifactId>logback-classic</artifactId> <version>1.0.13</version> -->
+			<artifactId>slf4j-api</artifactId>
 		</dependency>
 
 		<!-- Test -->
@@ -162,17 +157,22 @@
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
-				<version>${org.slf4j.version}</version>
+				<version>1.7.2</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
-				<artifactId>jcl104-over-slf4j</artifactId>
-				<version>${org.slf4j.version}</version>
+				<artifactId>slf4j-ext</artifactId>
+				<version>1.7.2</version>
 			</dependency>
 			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>log4j-over-slf4j</artifactId>
-				<version>${org.slf4j.version}</version>
+				<groupId>org.apache.logging.log4j.adapters</groupId>
+				<artifactId>log4j-slf4j-impl</artifactId>
+				<version>2.0-beta4</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-core</artifactId>
+				<version>2.0-beta4</version>
 			</dependency>
 
 			<!-- Spring -->
@@ -599,11 +599,7 @@
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.15</version>
-					<!-- <configuration>
-                        <parallel>classes</parallel>
-                        <threadCount>10</threadCount>
-                        <reuseForks>true</reuseForks>
-					</configuration>-->
+					<!-- <configuration> <parallel>classes</parallel> <threadCount>10</threadCount> <reuseForks>true</reuseForks> </configuration> -->
 				</plugin>
 				<plugin>
 					<artifactId>maven-jar-plugin</artifactId>

@@ -72,6 +72,23 @@
 			<artifactId>guava</artifactId>
 		</dependency>
 
+		<!-- slf4j -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-ext</artifactId>
+			<!-- <scope>runtime</scope> -->
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j.adapters</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<!-- <scope>runtime</scope> -->
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<!-- <scope>runtime</scope> -->
+		</dependency>
+
 		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -378,16 +395,10 @@
 			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
-				<excludes>
-					<exclude>**/keystore.jks</exclude>
-				</excludes>
 			</resource>
 			<resource>
-				<directory>src/main/resources</directory>
+				<directory>src/main/binresources</directory>
 				<filtering>false</filtering>
-				<includes>
-					<include>**/keystore.jks</include>
-				</includes>
 			</resource>
 		</resources>
 

@@ -92,12 +92,6 @@
             <artifactId>hsqldb</artifactId>
         </dependency>
 
-		<!-- Logging for slf4j see also: http://blog.frankel.ch/thoughts-on-java-logging-and-slf4j -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
-
 		<!-- Test -->
         <dependency>
             <groupId>${project.groupId}</groupId>

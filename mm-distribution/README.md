@@ -145,5 +145,9 @@ I've found a very good installation guide here: http://livingtao.blogspot.de/201
   $ sudo /vagrant/mm-distribution/target/mm-distribution-0.1-SNAPSHOT-distribution/mm-distribution-0.1-SNAPSHOT/bin/mediamagpie.sh start  
   
 ### export your provisioned box
+Before we create the new image from current box, we have to delte /etc/udev/rules.d/70-persistent-net.rules. (see: https://github.com/mitchellh/vagrant/issues/997)
+  $ vagrant ssh
+  $ [sudo] rm -f /etc/udev/rules.d/70-persistent-net.rules
+
 This will create a new package.box file containing the actual state of your box.
   $ vagrant package
