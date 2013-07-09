@@ -3,8 +3,7 @@
 
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-<!-- 			<pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>-->
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %5p [%t] (%F:%L) - %m%n</pattern>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} \(%F:%L\) - %msg%n</pattern>
 		</encoder>
 	</appender>
 
@@ -18,7 +17,7 @@
 		</rollingPolicy>
 
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %5p [%t] (%F:%L) - %m%n</pattern>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} \(%F:%L\) - %msg%n</pattern>
 		</encoder>
 	</appender>
 
@@ -38,10 +37,10 @@
 	<logger name="rg.springframework.web">
 		<level value="info" />
 	</logger>
-	<logger name="org.hibernate.engine.jdbc.spi">
+	<logger name="org.hibernate">
 		<level value="info" />
 	</logger>
-	<logger name="rg.apache.http.impl.conn">
+	<logger name="org.eclipse.jetty.webapp">
 		<level value="info" />
 	</logger>
 
