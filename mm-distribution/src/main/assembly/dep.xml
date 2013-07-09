@@ -60,9 +60,9 @@
 	</fileSets>
 	<files>
 		<file>
-			<source>log4j2-deploy.xml</source>
+			<source>logback-deploy.xml</source>
 			<lineEnding>unix</lineEnding>
-			<destName>log4j2.xml</destName>
+			<destName>logback.xml</destName>
 			<outputDirectory>conf</outputDirectory>
 		</file>
 		<file>
