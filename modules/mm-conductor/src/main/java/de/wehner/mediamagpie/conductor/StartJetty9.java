@@ -34,6 +34,11 @@ public class StartJetty9 {
 
     public static void main(String[] args) throws Exception {
 
+        // setup Systemproperties for apache's common logging framework used in HttpClient
+        System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
+        System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
+        System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "info");
+        
         // setup jetty specific properties
         LOG.info("Using DynamicPropertiesConfigurer to preload properties for jetty start.");
         DynamicPropertiesConfigurer.setupDeployModeAndSpringProfile();

@@ -184,8 +184,8 @@ public class JobScheduler extends SingleThreadedTransactionController {
             jobExecution.setRetryCount(jobExecution.getRetryCount() + 1);
             jobExecution.setStartTime(new Date(_timeProvider.getTime() + retryWaitingTime));
             jobExecution.setJobStatus(JobStatus.QUEUED);
-            LOG.info("requeueing '" + jobExecution + "' with new status '" + jobExecution.getJobStatus() + "' and waitingTime '"
-                    + retryWaitingTime + "'(ms).");
+            LOG.info("requeueing '" + jobExecution + "' with new status '" + jobExecution.getJobStatus() + "' and waitingTime '" + retryWaitingTime
+                    + "'(ms).");
         } else {
             LOG.warn("Set job '" + jobExecution + "' to new status '" + JobStatus.TERMINATED_WITH_ERROR + "' caused by multiple errors.");
             jobExecution.setLog(throwable.getMessage());
