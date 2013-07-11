@@ -1,7 +1,7 @@
 TODO
 ====
-- Add image resize job immediately the image is uploaded
-- Add a synch-mode to S3 containing all images (use local file system only as cache)
+- Add button in trash view used to clean the rubbish can with one click
+- Add image resize job immediately when image is uploaded
 - add mail support on ec2
 
 DONE

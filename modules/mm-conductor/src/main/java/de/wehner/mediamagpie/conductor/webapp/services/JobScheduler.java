@@ -19,11 +19,13 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import de.wehner.mediamagpie.conductor.job.SingleThreadedTransactionController;
 import de.wehner.mediamagpie.conductor.performingjob.JobCallable;
 import de.wehner.mediamagpie.conductor.performingjob.JobExecutor;
+import de.wehner.mediamagpie.conductor.util.SystemInformationProvider;
 import de.wehner.mediamagpie.core.util.ExceptionUtil;
 import de.wehner.mediamagpie.persistence.dao.ConfigurationDao;
 import de.wehner.mediamagpie.persistence.dao.JobExecutionDao;
@@ -48,8 +50,25 @@ public class JobScheduler extends SingleThreadedTransactionController {
 
     @Autowired
     public JobScheduler(TransactionHandler transactionHandler, JobExecutionDao jobExecutionDao, ConfigurationDao configurationDao,
-            JobExecutor jobExecutor, TimeProvider timeProvider) {
-        this(transactionHandler, jobExecutionDao, configurationDao, jobExecutor, timeProvider, Executors.newFixedThreadPool(4));
+            JobExecutor jobExecutor, TimeProvider timeProvider, @Qualifier(value = "jobScheduler.theadPoolSize") Integer threadPoolSize,
+            SystemInformationProvider systemInformationProvider) {
+        this(transactionHandler, jobExecutionDao, configurationDao, jobExecutor, timeProvider, Executors.newFixedThreadPool(findOutBestTheadPoolSize(
+                threadPoolSize, systemInformationProvider)));
+    }
+
+    private static int findOutBestTheadPoolSize(int threadPoolSize, SystemInformationProvider systemInformationProvider) {
+        final int MAXSIZE = 16;
+        final int MBPERTHREAD = 250;
+        if (threadPoolSize > 0 && threadPoolSize <= MAXSIZE) {
+            LOG.info("Set scheduler's threadPoolSize to {} based on startup configuration.", threadPoolSize);
+            return threadPoolSize;
+        }
+        int mBytes = systemInformationProvider.getMaxMemory();
+        int size = (mBytes / MBPERTHREAD);
+        size = Math.max(1, size);
+        size = Math.min(size, MAXSIZE);
+        LOG.info("Set scheduler's threadPoolSize to {} due to max memory of {} MB.", size, mBytes);
+        return size;
     }
 
     public JobScheduler(TransactionHandler transactionHandler, JobExecutionDao jobExecutionDao, ConfigurationDao configurationDao,
