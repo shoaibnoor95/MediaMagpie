@@ -10,6 +10,7 @@
 <c:set var="activeMenu" value="media" scope="request"/>
 <c:set var="activeSubMenu" value="listAlbums" scope="request"/>
 <c:set var="urlSubMenu" value="/subNaviMedia" scope="request"/>
+<c:set var="linkBase" value="<%=WebAppUtils.buildHttpRequestBasedOnServletRequest(request, pageContext)+PublicAlbumController.getBaseRequestMappingUrl()%>" />
 <script type="text/javascript" src="<%=request.getContextPath()%>/static/js/pages/album_edit.js"></script>
 			
 			<div id="content">
@@ -40,10 +41,10 @@
 						<label>Public Link:</label>
 					</dt>
 					<dd>
+					   <c:set var="link" value="${linkBase}/${albumCommand.uid}/view" />
 						<img src="<%=request.getContextPath()%>/static/images/famfamfam_silk/paste_plain.png" 
-							onclick="window.prompt ('Copy to clipboard: Ctrl+C, Enter', '<%=WebAppUtils.getRequestUrlUpToContextPath(request)+PublicAlbumController.getBaseRequestMappingUrl()%>/${albumCommand.uid}/view');"/>
-						<a href="<%=request.getContextPath()+PublicAlbumController.getBaseRequestMappingUrl()%>/${albumCommand.uid}/view" >
-							<%=WebAppUtils.getRequestUrlUpToContextPath(request)+PublicAlbumController.getBaseRequestMappingUrl()%>/${albumCommand.uid}/view</a>
+							onclick="window.prompt ('Copy to clipboard: Ctrl+C, Enter', '${link}');"/>
+						<a href="${link}" >${link}</a>
 					</dd>	
 				</dl>
 				<dl>

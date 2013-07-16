@@ -1,12 +1,18 @@
 package de.wehner.mediamagpie.conductor.webapp.util;
 
+import java.util.Enumeration;
 import java.util.Locale;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.PageContext;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.support.RequestContextUtils;
+
+import de.wehner.mediamagpie.conductor.ApplicationConstants;
 
 public class WebAppUtils {
 
@@ -20,7 +26,7 @@ public class WebAppUtils {
     }
 
     /**
-     * Extracts the protocoll, server name with port and the context path from a client request. The result is something like
+     * Extracts the protocol, server name with port and the context path from a client request. The result is something like
      * 'http://localhost:8087/mediamagpie'.
      * 
      * @param request
@@ -29,8 +35,18 @@ public class WebAppUtils {
      */
     public static String getRequestUrlUpToContextPath(HttpServletRequest request) {
         String scheme = request.getScheme();
-        String serverName = request.getServerName();
         int serverPort = request.getServerPort();
+        return buildRequestBasedOnServletRequest(request, scheme, serverPort);
+    }
+
+    public static String buildHttpRequestBasedOnServletRequest(HttpServletRequest request, PageContext pc) {
+        Integer httpPort = (Integer) pc.getAttribute(ApplicationConstants.WEB_APP_PORT_HTTP, PageContext.APPLICATION_SCOPE);
+        
+        return buildRequestBasedOnServletRequest(request, "http", httpPort);
+    }
+
+    static String buildRequestBasedOnServletRequest(HttpServletRequest request, String scheme, int serverPort) {
+        String serverName = request.getServerName();
         String contextPath = request.getContextPath();
         StringBuilder builder = new StringBuilder();
         builder.append(scheme).append("://");

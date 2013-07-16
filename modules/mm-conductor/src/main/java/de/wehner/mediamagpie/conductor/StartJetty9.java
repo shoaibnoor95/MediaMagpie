@@ -28,9 +28,6 @@ import de.wehner.mediamagpie.core.util.ClassPathUtil;
 public class StartJetty9 {
 
     private static Logger LOG = LoggerFactory.getLogger(StartJetty9.class);
-    public static final String WEB_APP_PORT_HTTP = "webapp.port.http";
-    public static final String WEB_APP_PORT_HTTPS = "webapp.port.https";
-    public static final String WEB_APP_CONTEXTPATH = "webapp.context.path";
 
     public static void main(String[] args) throws Exception {
 
@@ -38,7 +35,7 @@ public class StartJetty9 {
         System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
         System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
         System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "info");
-        
+
         // setup jetty specific properties
         LOG.info("Using DynamicPropertiesConfigurer to preload properties for jetty start.");
         DynamicPropertiesConfigurer.setupDeployModeAndSpringProfile();
@@ -60,7 +57,7 @@ public class StartJetty9 {
         // HTTP Configuration
         HttpConfiguration tlsHttpConfiguration = new HttpConfiguration();
         tlsHttpConfiguration.setSecureScheme("https");
-        tlsHttpConfiguration.setSecurePort(Integer.parseInt(properties.getProperty(WEB_APP_PORT_HTTPS)));
+        tlsHttpConfiguration.setSecurePort(Integer.parseInt(properties.getProperty(ApplicationConstants.WEB_APP_PORT_HTTPS)));
         tlsHttpConfiguration.setOutputBufferSize(32768);
         tlsHttpConfiguration.setRequestHeaderSize(8192);
         tlsHttpConfiguration.setResponseHeaderSize(8192);
@@ -71,7 +68,7 @@ public class StartJetty9 {
         // webapp handler
         WebAppContext webAppContext = new WebAppContext();
         webAppContext.setServer(server);
-        String contextPath = properties.getProperty(WEB_APP_CONTEXTPATH);
+        String contextPath = properties.getProperty(ApplicationConstants.WEB_APP_CONTEXTPATH);
         LOG.info("Using context path '" + contextPath + "'.");
         webAppContext.setContextPath(contextPath);
         webAppContext.setWar("src/main/webapp");
@@ -93,7 +90,7 @@ public class StartJetty9 {
 
         // === jetty-http.xml ===
         ServerConnector http = new ServerConnector(server, new HttpConnectionFactory(tlsHttpConfiguration));
-        http.setPort(Integer.parseInt(properties.getProperty(WEB_APP_PORT_HTTP)));
+        http.setPort(Integer.parseInt(properties.getProperty(ApplicationConstants.WEB_APP_PORT_HTTP)));
         http.setIdleTimeout(30000);
         server.addConnector(http);
 
@@ -115,7 +112,7 @@ public class StartJetty9 {
         // SSL Connector
         ServerConnector sslConnector = new ServerConnector(server, new SslConnectionFactory(sslContextFactory, "http/1.1"), new HttpConnectionFactory(
                 https_config));
-        sslConnector.setPort(Integer.parseInt(properties.getProperty(WEB_APP_PORT_HTTPS)));
+        sslConnector.setPort(Integer.parseInt(properties.getProperty(ApplicationConstants.WEB_APP_PORT_HTTPS)));
         server.addConnector(sslConnector);
 
         // === jetty-stats.xml ===
@@ -153,20 +150,23 @@ public class StartJetty9 {
         // login.setRefreshInterval(0);
         // server.addBean(login);
 
+        // setup some configuration information into application's pageContext 
+        webAppContext.setAttribute(ApplicationConstants.WEB_APP_PORT_HTTP, http.getPort());
+        
         // Start the server
         server.start();
         server.join();
     }
 
     private static void setJettySecificConfigurationIntoSystemProperties(Properties properties) {
-        if (properties.getProperty(WEB_APP_PORT_HTTP) == null) {
-            properties.setProperty(WEB_APP_PORT_HTTP, "8088");
+        if (properties.getProperty(ApplicationConstants.WEB_APP_PORT_HTTP) == null) {
+            properties.setProperty(ApplicationConstants.WEB_APP_PORT_HTTP, "8088");
         }
-        if (properties.getProperty(WEB_APP_PORT_HTTPS) == null) {
-            properties.setProperty(WEB_APP_PORT_HTTPS, "8443");
+        if (properties.getProperty(ApplicationConstants.WEB_APP_PORT_HTTPS) == null) {
+            properties.setProperty(ApplicationConstants.WEB_APP_PORT_HTTPS, "8443");
         }
-        if (properties.getProperty(WEB_APP_CONTEXTPATH) == null) {
-            properties.setProperty(WEB_APP_CONTEXTPATH, "/");
+        if (properties.getProperty(ApplicationConstants.WEB_APP_CONTEXTPATH) == null) {
+            properties.setProperty(ApplicationConstants.WEB_APP_CONTEXTPATH, "/");
         }
     }
 
