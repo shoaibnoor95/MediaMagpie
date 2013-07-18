@@ -81,7 +81,7 @@ public class RegistrationServiceTest {
     @Test
     public void testCreateActivationLink_RoundRobin() throws RegistrationException {
         final String PARAM = "activationlink";
-        String link = _registrationService.createActivationLink(PARAM, 1L, "rwe");
+        String link = _registrationService.createActivationLink(PARAM, 1L, "rwe", null);
         System.out.println(link);
         assertThat(link).startsWith("http://");
         assertThat(link).endsWith("/public/account/confirm?" + PARAM + "=" + _cipherService.encryptToHex("1#rwe"));

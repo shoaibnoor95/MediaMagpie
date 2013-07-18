@@ -37,7 +37,7 @@
 	               <img src="${mediaThumbCommand.urlThumbImage}" alt="${mediaThumbCommand.title}" />
 	            </a>
 	            <div class="caption">
-	                <div class="download"><a href="${mediaThumbCommand.urlDownload}">Download Original</a></div>
+	                <div class="download"><a href="${mediaThumbCommand.urlDownload}">Show Original</a></div>
 	                <div class="image-title"><c:out value="${mediaThumbCommand.title}"/></div>
 	                <div class="image-desc">
 	                   <i><c:out value="${mediaThumbCommand.description}"/></i><br/>

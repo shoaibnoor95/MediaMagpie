@@ -5,14 +5,18 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Properties;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import de.wehner.mediamagpie.conductor.StartJetty;
+import de.wehner.mediamagpie.conductor.ApplicationConstants;
 import de.wehner.mediamagpie.conductor.exception.RegistrationException;
 import de.wehner.mediamagpie.conductor.spring.deploy.impl.DynamicPropertiesConfigurer;
 import de.wehner.mediamagpie.conductor.webapp.controller.registration.RegistrationProcessController;
-import de.wehner.mediamagpie.core.util.ExceptionUtil;
 import de.wehner.mediamagpie.core.util.properties.PropertiesUtil;
 import de.wehner.mediamagpie.persistence.dao.RegistrationDao;
 import de.wehner.mediamagpie.persistence.entity.Registration;
@@ -23,6 +27,8 @@ import de.wehner.mediamagpie.persistence.util.CipherServiceImpl;
 
 @Service
 public class RegistrationService {
+
+    private static Logger LOG = LoggerFactory.getLogger(RegistrationService.class);
 
     private final CipherServiceImpl _cipherService;
     private final RegistrationDao _registrationDao;
@@ -37,21 +43,15 @@ public class RegistrationService {
         _properties = dynamicPropertiesConfigurer.getProperties();
     }
 
-    public String createActivationLink(String requestParam, long registrationId, String loginId) {
-        String computername = "localhost";
-        try {
-            InetAddress localHost = InetAddress.getLocalHost();
-            computername = localHost.getHostName();
-        } catch (UnknownHostException e) {
-            throw ExceptionUtil.convertToRuntimeException(e);
-        }
+    public String createActivationLink(String requestParam, long registrationId, String loginId, HttpServletRequest request) {
         StringBuilder builder = new StringBuilder("http://");
-        builder.append(computername);
-        if (_properties.getProperty(StartJetty.WEB_APP_PORT) != null) {
-            builder.append(':').append(_properties.getProperty(StartJetty.WEB_APP_PORT));
+        builder.append(detectPublicHostName(request));
+        if (_properties.getProperty(ApplicationConstants.WEB_APP_PORT_HTTP) != null) {
+            builder.append(':').append(_properties.getProperty(ApplicationConstants.WEB_APP_PORT_HTTP));
         }
-        if (_properties.getProperty(StartJetty.WEB_APP_CONTEXTPATH) != null && !_properties.getProperty(StartJetty.WEB_APP_CONTEXTPATH).equals("/")) {
-            builder.append(_properties.getProperty(StartJetty.WEB_APP_CONTEXTPATH));
+        if (_properties.getProperty(ApplicationConstants.WEB_APP_CONTEXTPATH) != null
+                && !_properties.getProperty(ApplicationConstants.WEB_APP_CONTEXTPATH).equals("/")) {
+            builder.append(_properties.getProperty(ApplicationConstants.WEB_APP_CONTEXTPATH));
         }
         builder.append(RegistrationProcessController.getBaseRequestMappingUrl() + RegistrationProcessController.URL_ACTIVATE);
 
@@ -60,17 +60,35 @@ public class RegistrationService {
         return builder.toString();
     }
 
+    private String detectPublicHostName(HttpServletRequest request) {
+        String publicHostName = null;
+        if (request != null) {
+            publicHostName = request.getLocalName();
+        }
+        if (!StringUtils.isEmpty(publicHostName)) {
+            return publicHostName;
+        }
+        try {
+            publicHostName = InetAddress.getLocalHost().getHostName();
+            LOG.debug("based on InetAddress.getLocalHost(), got host name: {}", publicHostName);
+        } catch (UnknownHostException e) {
+            LOG.error("Can not get HostName, so using 'localhost' instead", e);
+            publicHostName = "localhost";
+        }
+        return publicHostName;
+    }
+
     public Registration decodeRegistrationFromActivationLink(String linkParam) throws RegistrationException {
 
         String decrypt = _cipherService.decryptFromHex(linkParam);
         String[] registrationIdAndLogin = decrypt.split("#");
         if (registrationIdAndLogin.length == 1) {
-            throw new RegistrationException("Invalid registration parmater '" + decrypt + "'. Missing charchter '#'.");
+            throw new RegistrationException("Invalid registration parameter '" + decrypt + "'. Missing charchter '#'.");
         }
 
         Registration registration = _registrationDao.getById(Long.parseLong(registrationIdAndLogin[0]));
         if (registration == null) {
-            throw new RegistrationException("Invalid registration parmater '" + decrypt + "'.Can not find registration for id '"
+            throw new RegistrationException("Invalid registration parameter '" + decrypt + "'. Can not find registration for id '"
                     + registrationIdAndLogin[0] + "'.");
         }
         if (registration.getUser().equals(registrationIdAndLogin[1])) {

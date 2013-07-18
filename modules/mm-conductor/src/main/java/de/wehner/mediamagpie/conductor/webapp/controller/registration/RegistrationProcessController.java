@@ -97,7 +97,7 @@ public class RegistrationProcessController {
         Registration newRegistration = createNewRegistration(command);
         _registrationDao.makePersistent(newRegistration); // get valid id
 
-        String activationLink = _registrationService.createActivationLink("activation", newRegistration.getId(), newRegistration.getUser());
+        String activationLink = _registrationService.createActivationLink("activation", newRegistration.getId(), newRegistration.getUser(), request);
         newRegistration.setActivationLink(activationLink);
 
         // send out email
