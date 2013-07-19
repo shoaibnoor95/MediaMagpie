@@ -2,6 +2,7 @@ package de.wehner.mediamagpie.conductor.webapp.services;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.URI;
 import java.net.UnknownHostException;
 import java.util.Properties;
 
@@ -62,12 +63,18 @@ public class RegistrationService {
 
     private String detectPublicHostName(HttpServletRequest request) {
         String publicHostName = null;
+
+        // try to take name of public host name for incomming request header
         if (request != null) {
-            publicHostName = request.getLocalName();
+            String referer = request.getHeader("Referer");
+            URI refererUri = URI.create(referer);
+            publicHostName = refererUri.getHost();
         }
         if (!StringUtils.isEmpty(publicHostName)) {
             return publicHostName;
         }
+
+        // try to use the server's name as pulic host name
         try {
             publicHostName = InetAddress.getLocalHost().getHostName();
             LOG.debug("based on InetAddress.getLocalHost(), got host name: {}", publicHostName);

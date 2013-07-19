@@ -1,13 +1,10 @@
 package de.wehner.mediamagpie.conductor.webapp.util;
 
-import java.util.Enumeration;
 import java.util.Locale;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.support.RequestContextUtils;
@@ -41,7 +38,7 @@ public class WebAppUtils {
 
     public static String buildHttpRequestBasedOnServletRequest(HttpServletRequest request, PageContext pc) {
         Integer httpPort = (Integer) pc.getAttribute(ApplicationConstants.WEB_APP_PORT_HTTP, PageContext.APPLICATION_SCOPE);
-        
+
         return buildRequestBasedOnServletRequest(request, "http", httpPort);
     }
 

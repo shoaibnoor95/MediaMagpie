@@ -5,7 +5,10 @@ import static org.fest.assertions.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Properties;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -90,6 +93,20 @@ public class RegistrationServiceTest {
         String requestParam = link.substring(pos + PARAM.length() + 2);
         Registration registration2 = _registrationService.decodeRegistrationFromActivationLink(requestParam);
         assertThat(registration2).isEqualTo(_registration);
+    }
+
+    @Test
+    public void testCreateActivationLink_Verify_HostNameInLinkIsTakenFromRequestHeader() throws RegistrationException {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getHeader("Referer")).thenReturn("https://mediamagpie.org:443/foo_context/media/bar");
+        final String PARAM = "activationlink2";
+        String link = _registrationService.createActivationLink(PARAM, 1L, "rwe", request);
+        URI registrationUri = URI.create(link);
+        System.out.println(link);
+        assertThat(registrationUri.getScheme()).isEqualTo("http");
+        assertThat(registrationUri.getHost()).isEqualTo("mediamagpie.org");
+        assertThat(registrationUri.getPath()).isEqualTo("/public/account/confirm");
+        assertThat(registrationUri.getQuery()).isEqualTo(PARAM + "=" + _cipherService.encryptToHex("1#rwe"));
     }
 
     @Test
