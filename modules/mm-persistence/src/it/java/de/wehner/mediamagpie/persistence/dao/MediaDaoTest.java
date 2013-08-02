@@ -271,15 +271,21 @@ public class MediaDaoTest {
     public void test_getAllLastAddedPublicMedias() throws ParseException {
         MediaDao mediaDao = new MediaDao(_dbTestEnvironment.getPersistenceService());
         AlbumDao albumDao = new AlbumDao(_dbTestEnvironment.getPersistenceService());
-        Album album = new Album(_user, "name");
-        album.setVisibility(Visibility.PUBLIC);
-        albumDao.makePersistent(album);
+        Album album1 = new Album(_user, "name1");
+        album1.setVisibility(Visibility.PUBLIC);
+        albumDao.makePersistent(album1);
         Media m0 = new Media(_user, "Die Kinder beim Rotkohl essen.", new File("/data/picture1.jpg").toURI(), DateUtil.parseDate("2011-05-12"));
-        m0.setAlbums(Arrays.asList(album));
-        album.addMedia(m0);
+        Album album2 = new Album(_user, "name2");
+        album2.setVisibility(Visibility.PUBLIC);
+        albumDao.makePersistent(album2);
+        m0.setAlbums(Arrays.asList(album1, album2));
+        album1.addMedia(m0);
+        album2.addMedia(m0);
         mediaDao.makePersistent(m0);
         _dbTestEnvironment.flipTransaction();
+        
         List<Media> lastAddedPublicMedias = mediaDao.getAllLastAddedPublicMedias(Visibility.PUBLIC, 100);
+        
         assertThat(lastAddedPublicMedias).hasSize(1);
     }
 }

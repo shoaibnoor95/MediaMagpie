@@ -129,7 +129,7 @@ public class S3MediaExportRepository implements MediaExportRepository {
      */
 
     @Override
-    public void deleteMediaStoragePath(String bucketName,String mediaStoragePath) {
+    public void deleteMediaStoragePath(String bucketName, String mediaStoragePath) {
         _s3Facade.deletePath(bucketName, mediaStoragePath);
     }
 
