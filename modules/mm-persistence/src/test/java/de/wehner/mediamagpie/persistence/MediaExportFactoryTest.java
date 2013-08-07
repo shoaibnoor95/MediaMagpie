@@ -24,6 +24,8 @@ import de.wehner.mediamagpie.persistence.entity.MediaTag;
 
 public class MediaExportFactoryTest {
 
+    private static final String ORIGINAL_TEST_FILE_NAME = "testmedia.jpg";
+
     private static final Date CREATION_DATE = new Date(123456);
 
     private static final File SRC_TEST_PNG = new File("../mm-core/src/test/resources/images/image1.png");
@@ -38,7 +40,7 @@ public class MediaExportFactoryTest {
     public void setUp() throws IOException {
         _testEnvironment.cleanWorkingDir();
 
-        File mediaResource = new File(_testEnvironment.getWorkingDir(), "testmedia.jpg");
+        File mediaResource = new File(_testEnvironment.getWorkingDir(), ORIGINAL_TEST_FILE_NAME);
         FileUtils.copyFile(SRC_TEST_PNG, mediaResource);
         _media = new Media(null, "media name", mediaResource.toURI(), CREATION_DATE);
         _media.setTags(Arrays.asList(new MediaTag("tag 1"), new MediaTag("tag 2")));
@@ -55,7 +57,7 @@ public class MediaExportFactoryTest {
         IOUtils.copy(mediaExport.getInputStream(), byteOS);
 
         assertThat(byteOS.toByteArray()).isEqualTo(FileUtils.readFileToByteArray(SRC_TEST_PNG));
-        assertThat(mediaExport.getOriginalFileName()).isEqualTo("testmedia.jpg");
+        assertThat(mediaExport.getOriginalFileName()).isEqualTo(ORIGINAL_TEST_FILE_NAME);
         assertThat(mediaExport.getLength()).isEqualTo(SRC_TEST_PNG.length());
     }
 

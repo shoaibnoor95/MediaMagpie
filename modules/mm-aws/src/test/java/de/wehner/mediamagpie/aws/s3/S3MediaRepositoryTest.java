@@ -47,7 +47,8 @@ public class S3MediaRepositoryTest {
     @Test
     public void test_addMedia() throws IOException {
         String s3ObjectFilePath = "test-user/PHOTO/SHA1-" + _mediaExport.getHashValue();
-
+        _mediaExport.setOriginalFileName("my difficultFileNameäö.jpg");
+        
         _s3MediaRepository.addMedia("test-user", _mediaExport);
 
         verify(_s3ClientFacade, times(1)).createBucketIfNotExists("mediamagpie-photo");
@@ -64,4 +65,24 @@ public class S3MediaRepositoryTest {
         assertThat(IOUtils.contentEquals(inputStream, _mediaExport.createMediaExportMetadata().createInputStream())).isTrue();
     }
 
+    @Test
+    public void test_addMedia_Which_has_no_originalFileName() throws IOException {
+        String s3ObjectFilePath = "test-user/PHOTO/SHA1-" + _mediaExport.getHashValue();
+        _mediaExport.setOriginalFileName(null);
+        
+        _s3MediaRepository.addMedia("test-user", _mediaExport);
+
+        verify(_s3ClientFacade, times(1)).createBucketIfNotExists("mediamagpie-photo");
+        // the media data object
+        verify(_s3ClientFacade, times(1)).getObjectIfExists("mediamagpie-photo", s3ObjectFilePath + "/media.data");
+        verify(_s3ClientFacade, times(1)).putObject(eq("mediamagpie-photo"), eq(s3ObjectFilePath + "/media.data"), same(_mediaExport.getInputStream()),
+                any(ObjectMetadata.class));
+        // media's meta data
+        ArgumentCaptor<InputStream> captor = ArgumentCaptor.forClass(InputStream.class);
+        verify(_s3ClientFacade, times(1)).getObjectIfExists("mediamagpie-photo", s3ObjectFilePath + "/media.data.METADATA");
+        verify(_s3ClientFacade, times(1)).putObject(eq("mediamagpie-photo"), eq(s3ObjectFilePath + "/media.data.METADATA"), captor.capture(),
+                any(ObjectMetadata.class));
+        InputStream inputStream = captor.getValue();
+        assertThat(IOUtils.contentEquals(inputStream, _mediaExport.createMediaExportMetadata().createInputStream())).isTrue();
+    }
 }

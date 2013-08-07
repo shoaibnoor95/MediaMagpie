@@ -45,22 +45,26 @@ import de.wehner.mediamagpie.persistence.realms.AlbumMediaRelation;
         @NamedQuery(name = "getAllLastAddedPublicMedias", query = "select distinct m from Media as m inner join m._albums as a where (a._visibility <= :visibility) order by m._id desc") })
 public class Media extends CreationDateBase {
 
+    /**
+     * The name of the media. This field is optional and will be initialized with the file name as default.
+     */
     @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
     private String _name;
 
     @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
     private String _description;
 
-    /** the path in fs were the picture is located */
-    @Column(nullable = false)
-    private String _path;
+    /**
+     * This is the original file name of the media which will be defined by the generating device (eg. your camera)
+     */
+    private String _originalFileName;
 
     /** URI of the data location in the file system. */
     @Column(nullable = false, unique = true)
     private String _uri;
 
     /**
-     * The sha1 hash value of media encoded in base 64. (This string was created with
+     * The sha1 hash value of media encoded in base 64. (This string will be created with
      * {@linkplain DigestUtil#computeSha1AsHexString(java.io.InputStream)};)
      */
     private String _hashValue;
@@ -71,7 +75,6 @@ public class Media extends CreationDateBase {
     /**
      * This attribute is only present for automatic removal of assigned ImageResizeJobExecutions when a media is deleted from db.
      */
-    @SuppressWarnings("unused")
     @OneToMany(mappedBy = "_media", fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE, CascadeType.PERSIST }, orphanRemoval = true)
     private List<ImageResizeJobExecution> _imageResizeJobExecutions = new ArrayList<ImageResizeJobExecution>();
 
@@ -108,21 +111,12 @@ public class Media extends CreationDateBase {
         super(media.getCreationDate());
         _owner = media._owner;
         _name = media._name;
+        _originalFileName = media._originalFileName;
         _description = media._description;
-        _path = media._path;
         _uri = media._uri;
         _hashValue = media._hashValue;
         _id = media._id;
         _tags = media._tags;
-    }
-
-    @Deprecated
-    public Media(User owner, String name, String path, String uri, Date creationDate) {
-        super(creationDate);
-        _owner = owner;
-        _name = name;
-        _path = path;
-        _uri = uri;
     }
 
     public Media(User owner, String name, URI uri, Date creationDate) {
@@ -130,9 +124,11 @@ public class Media extends CreationDateBase {
         _owner = owner;
         _name = name;
         if (uri != null) {
-            File fileMedia = new File(uri);
-            _path = fileMedia.getParent();
             _uri = uri.toString();
+            if ("file".equals(uri.getScheme())) {
+                File file = new File(uri);
+                _originalFileName = file.getName();
+            }
         }
     }
 
@@ -175,12 +171,12 @@ public class Media extends CreationDateBase {
         _description = description;
     }
 
-    public String getPath() {
-        return _path;
+    public String getOriginalFileName() {
+        return _originalFileName;
     }
 
-    public void setPath(String path) {
-        _path = path;
+    public void setOriginalFileName(String originalFileName) {
+        this._originalFileName = originalFileName;
     }
 
     public String getUri() {

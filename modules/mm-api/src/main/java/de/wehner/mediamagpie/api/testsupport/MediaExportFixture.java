@@ -24,6 +24,7 @@ public class MediaExportFixture {
         setHashValue(mediaExport, mediaFile);
         mediaExport.setInputStream(new FileInputStream(mediaFile));
         mediaExport.setLength(mediaFile.length());
+        mediaExport.setOriginalFileName(mediaFile.getName());
         mediaExport.setTags(Arrays.asList("Tag AB C", "Schöner Knipsen", "california"));
         mediaExport.setDescription("This is a sample for a description text, \nwhich contains some extra characters like äöü #'ß4§€ and \t blah.");
         mediaExport.setCreationDate(CREATION_DATE);
@@ -35,7 +36,7 @@ public class MediaExportFixture {
         try {
             is = new FileInputStream(file);
             mediaExport.setHashValue(DigestUtil.computeSha1AsHexString(is));
-        }  finally {
+        } finally {
             IOUtils.closeQuietly(is);
         }
     }

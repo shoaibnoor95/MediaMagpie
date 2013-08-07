@@ -30,7 +30,7 @@ public class MediaExportFactory {
         // length
         mediaExport.setLength(mediaResource.length());
         // file (original name of file)
-        mediaExport.setOriginalFileName(mediaResource.getName());
+        mediaExport.setOriginalFileName(media.getOriginalFileName());
         // file (hash value)
         mediaExport.setHashValue(media.getHashValue());
         // creation date

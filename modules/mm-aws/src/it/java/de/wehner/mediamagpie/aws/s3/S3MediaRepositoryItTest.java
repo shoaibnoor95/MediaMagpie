@@ -13,7 +13,6 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -54,6 +53,27 @@ public class S3MediaRepositoryItTest {
     }
 
     @Test
+    public void test_addMedia_with_difficultFileName() throws FileNotFoundException {
+        MediaExport mediaExport = MediaExportFixture.createMediaExportTestObject(123, null, SRC_TEST_JPG);
+        final String originalFileName = "difficult fileöänameß.jpg";
+        mediaExport.setOriginalFileName(originalFileName);
+
+        _repository.addMedia(USER, mediaExport);
+
+        Iterator<MediaExport> it = _repository.iteratorPhotos(USER);
+        List<MediaExport> mediaExportsFromS3 = new ArrayList<MediaExport>();
+        while (it.hasNext()) {
+            MediaExport mediaExport2 = it.next();
+            System.out.println(" found: '" + mediaExport2.getName() + "', size: " + mediaExport2.getLength());
+            if (mediaExport2.getOriginalFileName().equals(originalFileName)) {
+                mediaExportsFromS3.add(mediaExport2);
+                break;
+            }
+        }
+        assertThat(mediaExportsFromS3).hasSize(1);
+    }
+
+    @Test
     public void test_addMedia() throws FileNotFoundException {
         MediaExport mediaExport = MediaExportFixture.createMediaExportTestObject(123, TEST_NAME, SRC_TEST_JPG);
 
@@ -74,7 +94,7 @@ public class S3MediaRepositoryItTest {
             System.out.println(" found: '" + mediaExport.getName() + "', size: " + mediaExport.getLength());
             mediaExportsFromS3.add(mediaExport);
         }
-//        assertThat(mediaExportsFromS3).hasSize(2);
+        // assertThat(mediaExportsFromS3).hasSize(2);
         MediaExport mediaExportFromS3 = mediaExportsFromS3.get(0);
         MediaExport mediaExport = MediaExportFixture.createMediaExportTestObject(123, TEST_NAME, SRC_TEST_JPG);
         assertThat(mediaExportFromS3.getCreationDate()).isEqualTo(mediaExport.getCreationDate());
