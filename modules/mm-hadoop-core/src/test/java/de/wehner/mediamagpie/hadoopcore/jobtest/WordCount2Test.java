@@ -7,10 +7,12 @@ import java.io.File;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapred.JobConf;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
 
+@Ignore
 public class WordCount2Test {
 
     private final TestEnvironment _testEnvironment = new TestEnvironment(getClass());
