@@ -1,7 +1,11 @@
 package de.wehner.mediamagpie.conductor.webapp.controller.commands;
 
+import java.io.File;
+import java.net.URI;
+
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.commons.lang3.StringUtils;
 
 import de.wehner.mediamagpie.conductor.metadata.CameraMetaData;
 import de.wehner.mediamagpie.persistence.entity.Media;
@@ -131,6 +135,22 @@ public class MediaThumbCommand {
 
     public void setS3Available(boolean s3Available) {
         _s3Available = s3Available;
+    }
+
+    public String getFileName() {
+        if (!StringUtils.isEmpty(_media.getOriginalFileName())) {
+            return _media.getOriginalFileName();
+        }
+        try {
+            URI uri = URI.create(_media.getUri());
+            if ("file".equals(uri.getScheme())) {
+                File file = new File(uri);
+                return file.getName();
+            }
+        } catch (Exception e) {
+            // do nothing here
+        }
+        return null;
     }
 
     @Override

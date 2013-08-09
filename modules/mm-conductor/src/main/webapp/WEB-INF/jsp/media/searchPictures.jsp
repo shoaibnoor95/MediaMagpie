@@ -94,7 +94,8 @@
 						</h5>
 						<p class="metadata">
 							date: <core:date date="${picture.media.creationDate}" /><br/>
-							ID: <c:out value="${picture.media.id}"/>
+							ID: <c:out value="${picture.media.id}"/><br/>
+                            file name: <c:out value="${picture.fileName}"/>
 						</p>
 						<p>
 							<c:if test="${picture.s3Available}">

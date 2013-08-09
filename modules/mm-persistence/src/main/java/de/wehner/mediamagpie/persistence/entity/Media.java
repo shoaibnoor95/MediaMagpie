@@ -54,6 +54,10 @@ public class Media extends CreationDateBase {
     @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
     private String _description;
 
+    /** The path in fs were the picture is located. This is only of interest for the path sync jobs! */
+    @Column(nullable = false)
+    private String _path;
+
     /**
      * This is the original file name of the media which will be defined by the generating device (eg. your camera)
      */
@@ -113,6 +117,7 @@ public class Media extends CreationDateBase {
         _name = media._name;
         _originalFileName = media._originalFileName;
         _description = media._description;
+        _path = media._path;
         _uri = media._uri;
         _hashValue = media._hashValue;
         _id = media._id;
@@ -128,6 +133,7 @@ public class Media extends CreationDateBase {
             if ("file".equals(uri.getScheme())) {
                 File file = new File(uri);
                 _originalFileName = file.getName();
+                _path = file.getParent();
             }
         }
     }
@@ -169,6 +175,14 @@ public class Media extends CreationDateBase {
 
     public void setDescription(String description) {
         _description = description;
+    }
+
+    public String getPath() {
+        return _path;
+    }
+
+    public void setPath(String path) {
+        _path = path;
     }
 
     public String getOriginalFileName() {

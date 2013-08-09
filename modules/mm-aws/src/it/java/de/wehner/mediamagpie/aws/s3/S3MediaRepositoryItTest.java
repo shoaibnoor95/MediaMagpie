@@ -88,25 +88,24 @@ public class S3MediaRepositoryItTest {
     public void test_iteratorPhotos_readObjectFromPreviousTest() throws IOException {
         Iterator<MediaExport> it = _repository.iteratorPhotos(USER);
 
-        List<MediaExport> mediaExportsFromS3 = new ArrayList<MediaExport>();
+        MediaExport mediaExportOrigin = MediaExportFixture.createMediaExportTestObject(123, TEST_NAME, SRC_TEST_JPG);
+        MediaExport mediaExportFromS3 = null;
         while (it.hasNext()) {
             MediaExport mediaExport = it.next();
             System.out.println(" found: '" + mediaExport.getName() + "', size: " + mediaExport.getLength());
-            mediaExportsFromS3.add(mediaExport);
+            if (mediaExport.getHashValue().equals(mediaExportOrigin.getHashValue())) {
+                mediaExportFromS3 = mediaExport;
+                break;
+            }
         }
-        // assertThat(mediaExportsFromS3).hasSize(2);
-        MediaExport mediaExportFromS3 = mediaExportsFromS3.get(0);
-        MediaExport mediaExport = MediaExportFixture.createMediaExportTestObject(123, TEST_NAME, SRC_TEST_JPG);
-        assertThat(mediaExportFromS3.getCreationDate()).isEqualTo(mediaExport.getCreationDate());
-        assertThat(mediaExportFromS3.getDescription()).isEqualTo(mediaExport.getDescription());
-        assertThat(mediaExportFromS3.getHashValue()).isEqualTo(mediaExport.getHashValue());
-        assertThat(IOUtils.toByteArray(mediaExportFromS3.getInputStream())).isEqualTo(IOUtils.toByteArray(mediaExport.getInputStream()));
+        assertThat(mediaExportFromS3.getDescription()).isEqualTo(mediaExportOrigin.getDescription());
+        assertThat(IOUtils.toByteArray(mediaExportFromS3.getInputStream())).isEqualTo(IOUtils.toByteArray(mediaExportOrigin.getInputStream()));
         assertThat(mediaExportFromS3.getLength()).isEqualTo(SRC_TEST_JPG.length());
-        assertThat(mediaExportFromS3.getName()).isEqualTo(mediaExport.getName());
-        assertThat(mediaExportFromS3.getOriginalFileName()).isEqualTo(mediaExport.getOriginalFileName());
-        assertThat(mediaExportFromS3.getType()).isEqualTo(mediaExport.getType());
-        assertThat(mediaExportFromS3.getTags()).isEqualTo(mediaExport.getTags());
-        assertThat(mediaExportFromS3.getCreationDate()).isEqualTo(MediaExportFixture.CREATION_DATE);
+        assertThat(mediaExportFromS3.getName()).isEqualTo(mediaExportOrigin.getName());
+        assertThat(mediaExportFromS3.getOriginalFileName()).isEqualTo(mediaExportOrigin.getOriginalFileName());
+        assertThat(mediaExportFromS3.getType()).isEqualTo(mediaExportOrigin.getType());
+        assertThat(mediaExportFromS3.getTags()).isEqualTo(mediaExportOrigin.getTags());
+        assertThat(mediaExportFromS3.getCreationDate()).isEqualTo(mediaExportOrigin.getCreationDate());
     }
 
     @Test

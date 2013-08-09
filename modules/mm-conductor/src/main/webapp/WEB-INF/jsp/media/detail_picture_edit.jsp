@@ -73,10 +73,6 @@
 	            		<dt>Created:</dt>
 	            		<dd>${mediaDetailCommand.creationDate}</dd>
 	            	</dl>
-                    <dl>
-                        <dt>Original File Name:</dt>
-                        <dd>${mediaDetailCommand.originalFileName}</dd>
-                    </dl>
 	            	<dl>
 	                	<dt>Name:</dt>
 	                	<dd><form:input path="name"/></dd>
