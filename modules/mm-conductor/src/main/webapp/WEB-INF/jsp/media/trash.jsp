@@ -41,12 +41,12 @@
                         	<c:set var="tdClass" value="alt"/>
                         </c:if>
                         <tr class="${tdClass}">
-                            <td><a href="<%=request.getContextPath()+MediaDetailController.URL_BASE_DETAIL_PICTURE_EDIT%>${picture.id}"><img src="<%=request.getContextPath()%>${picture.urlThumbImage}"/></a></td>
+                            <td><a href="<%=request.getContextPath()+MediaDetailController.URL_BASE_DETAIL_PICTURE_EDIT%>${picture.media.id}"><img src="<%=request.getContextPath()%>${picture.urlThumbImage}"/></a></td>
                             <td>${picture.media.name}</td>
                             <td>${picture.media.creationDate}</td>
                             <td>
-                                <img class="image-action" alt="delete" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/accept.png" onclick="javascript:executeCommand('UNDO', '${picture.media.id}');"> 
-                                <img class="image-action" alt="delete" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/delete.png" onclick="javascript:executeCommand('DELETE', '${picture.media.id}');"> 
+                                <img class="image-action" title="undo" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/arrow_undo.png" onclick="javascript:executeCommand('UNDO', '${picture.media.id}');"> 
+                                <img class="image-action" title="remove from trash" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/delete.png" onclick="javascript:executeCommand('DELETE', '${picture.media.id}');"> 
                             </td>
                         </tr>
                         </c:forEach>

@@ -6,8 +6,8 @@ fieldset {
 	margin: 0;
 	border: none;
 	padding: 0;
-	width:700px;
-	display:block; 
+	width: 700px;
+	display: block;
 }
 
 dl {
@@ -33,6 +33,22 @@ dd {
 	overflow: hidden;
 }
 
+dl.metadata {
+	width: auto;
+}
+
+dl.metadata dt {
+	width: auto;
+	padding: 2px;
+    font-size: 8px;
+}
+
+dl.metadata dd {
+	width: auto;
+    padding: 2px;
+    font-size: 8px;
+}
+
 /****************
  Forms
 ****************/
@@ -42,8 +58,8 @@ form {
 }
 
 .decorated fieldset {
-	background-color:#f2f2f2;
-	padding-left:10px
+	background-color: #f2f2f2;
+	padding-left: 10px
 }
 
 legend {
@@ -68,8 +84,8 @@ legend {
 }
 
 .decorated dd.help {
-	font-size: 10px; 
-	color: #959595; 
+	font-size: 10px;
+	color: #959595;
 	width: 220px;
 	padding: 15px 10px 10px 10px;
 	margin: 0;
@@ -81,8 +97,8 @@ legend {
 }
 
 div.ok {
-    color: green;
-    line-height: 30px;
+	color: green;
+	line-height: 30px;
 }
 
 div.focused {
@@ -110,7 +126,7 @@ input[type='text'],input[type='password'] {
 	height: 20px;
 }
 
-input[type='text']:focus,input[type='password']:focus,textarea:focus,select:focus	{
+input[type='text']:focus,input[type='password']:focus,textarea:focus,select:focus {
 	background: #FFF;
 }
 
@@ -121,6 +137,7 @@ textarea,input[type='text'],input[type='password'],select {
 	background-color: #FCFCFC;
 	padding: 0 0 0 5px;
 }
+
 select {
 	width: 210px;
 	border: 1px solid #CCC;
@@ -129,11 +146,11 @@ select {
 }
 
 div.textWrapper {
-	padding:5px;
+	padding: 5px;
 }
 
 .selectFileButton {
-	margin:-10px;
+	margin: -10px;
 }
 
 #slider-select-year {

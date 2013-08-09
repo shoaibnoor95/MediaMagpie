@@ -48,7 +48,7 @@
 			<dl>
 				<dt></dt>
 				<dd>
-					<button type="submit" class="default">
+					<button type="submit" class="default" title="find all medias for selected search criterias">
 						<span>Search</span>
 					</button>
 				</dd>
@@ -85,32 +85,36 @@
 							<a href="<%=request.getContextPath()+MediaDetailController.URL_BASE_DETAIL_PICTURE_EDIT%>${picture.id}"><img
 								src="${picture.urlThumbImage}" /></a>
 						</p>
-						<img class="image-action flipBack" alt="Information" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/information.png" />
-						<img class="image-action delete" alt="delete" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/bin_closed.png" />
+						<img class="image-action flipBack" title="get more information" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/information.png" />
+						<img class="image-action delete" title="move to trash" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/bin_closed.png" />
 					</div>
 					<div class="back">
 						<h5 class="ui-widget-header">
 							<c:out value="${picture.title}" />
 						</h5>
-						<p class="metadata">
-							date: <core:date date="${picture.media.creationDate}" /><br/>
-							ID: <c:out value="${picture.media.id}"/><br/>
-                            file name: <c:out value="${picture.fileName}"/>
-						</p>
+                        <dl class="metadata">
+							<dt>ID:</dt> <dd><c:out value="${picture.media.id}"/></dd>
+                        </dl>
+						<dl class="metadata">
+							<dt>date:</dt> <dd><core:date date="${picture.media.creationDate}"/><dd/>
+						</dl>
+                        <dl class="metadata">
+                            <dt>File:</dt> <dd><c:out value="${picture.fileName}"/></dd>
+						</dl>
 						<p>
 							<c:if test="${picture.s3Available}">
 								<c:choose>
 									<c:when test="${picture.media.exportedToS3}">
-										<button>Export to S3 (overwrite)</button>
+										<button title="copy your media to S3 bucket">Export to S3 (overwrite)</button>
 									</c:when>
 									<c:otherwise>
-										<button>Export to S3</button>
+										<button title="overwrite your media to S3 bucket">Export to S3</button>
 									</c:otherwise>
 								</c:choose>
-								<img class="in-process" alt="exporting" width="20px" src="<%=request.getContextPath()%>/static/images/loader.gif" />
+								<img class="in-process" title="exporting to S3" width="20px" src="<%=request.getContextPath()%>/static/images/loader.gif" />
 							</c:if>
 						</p>
-						<img class="image-action flipFront" alt="Picture" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/bullet_go.png" />
+						<img class="image-action flipFront" title="go back to image" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/bullet_go.png" />
 					</div>
 				</li>
 			</c:forEach>
@@ -123,7 +127,7 @@
 	<!--  album selection and droppable area -->
 	<form:form action="select_album" commandName="albumSelectionCommand">
 		select Album: <form:select path="albumId" items="${availableAlbums}" itemValue="id" itemLabel="name" multiple="false" />
-		<button type="submit">
+		<button type="submit" title="select an album">
 			<span>Select</span>
 		</button>
 		<input type="hidden" name="start" value="${start}" />

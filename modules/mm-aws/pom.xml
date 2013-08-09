@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>de.wehner.mediamagpie</groupId>
 		<artifactId>mm-base</artifactId>
-		<version>0.1-SNAPSHOT</version>
+		<version>0.2-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 	<artifactId>mm-aws</artifactId>

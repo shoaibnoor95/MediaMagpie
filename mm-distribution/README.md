@@ -62,6 +62,7 @@ Run application in tomcat
 ## Maven
 Some useful command lines:
    $ mvn versions:display-dependency-updates
+   $ mvn versions:set -DgenerateBackupPoms=false -DnewVersion=0.2-SNAPSHOT -Pall
    $ mvn build-helper:remove-project-artifact -> see http://mojo.codehaus.org/build-helper-maven-plugin/remove-project-artifact-mojo.html
 
 
