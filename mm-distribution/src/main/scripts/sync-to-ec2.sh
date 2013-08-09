@@ -14,7 +14,7 @@
 ## setup variables
 #
 PRIVATE_KEY=~/projects/wehner/aws_rwe1.pem
-VERSION="0.1"
+VERSION="0.2"
 
 DIR_SCRIPTS=$(cd `dirname $0` && pwd)
 DIR_HOME=$(cd $DIR_SCRIPTS/../../../target/mm-distribution-$VERSION-SNAPSHOT-distribution/mm-distribution-$VERSION-SNAPSHOT && pwd)
