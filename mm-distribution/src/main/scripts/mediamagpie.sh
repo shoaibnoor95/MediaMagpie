@@ -114,7 +114,7 @@ fi
 RUN_ARGS="$VM_ARGS -Ddeploy.mode=$MGR_DEPLOY_MODE -Dlogback.configurationFile=conf/logback.xml -classpath $CLASSPATH $CLASS"
 RUN_CMD="$JAVA $RUN_ARGS"
 #debug
-RUN_CMD="$JAVA -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=5000,server=y,suspend=n $RUN_ARGS"
+RUN_CMD="$JAVA -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5000 $RUN_ARGS"
 
 ##################################################
 # Do the action
