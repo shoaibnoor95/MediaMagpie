@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import de.wehner.mediamagpie.api.FileNameInfo;
 import de.wehner.mediamagpie.persistence.entity.CloudSyncJobExecution.CloudType;
 
 @javax.persistence.Entity
@@ -15,6 +16,9 @@ public class CloudMediaDeleteJobExecution extends JobExecution {
     @Column(nullable = false)
     private String _exportStoragePath;
 
+    @Column
+    private String _exportStorageMetaPath;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_fk")
     private User _cloudOwner;
@@ -24,14 +28,16 @@ public class CloudMediaDeleteJobExecution extends JobExecution {
     public CloudMediaDeleteJobExecution() {
     }
 
-    public CloudMediaDeleteJobExecution(String bucketName, String exportStoragePath, CloudType cloudType, User cloudOwner) {
-        this(JobStatus.QUEUED, bucketName, exportStoragePath, cloudType, cloudOwner);
+    public CloudMediaDeleteJobExecution(String bucketName, FileNameInfo fileNameInfo, CloudType cloudType, User cloudOwner) {
+        this(JobStatus.QUEUED, bucketName, fileNameInfo.getNameObject(), fileNameInfo.getNameMetadata(), cloudType, cloudOwner);
     }
 
-    public CloudMediaDeleteJobExecution(JobStatus status, String bucketName, String exportStoragePath, CloudType cloudType, User cloudOwner) {
+    public CloudMediaDeleteJobExecution(JobStatus status, String bucketName, String exportStoragePath, String exportStorageMetaPath, CloudType cloudType,
+            User cloudOwner) {
         setJobStatus(status);
         _bucketName = bucketName;
         _exportStoragePath = exportStoragePath;
+        _exportStorageMetaPath = exportStorageMetaPath;
         _cloudType = cloudType;
         _cloudOwner = cloudOwner;
     }
@@ -42,6 +48,14 @@ public class CloudMediaDeleteJobExecution extends JobExecution {
 
     public void setExportStoragePath(String exportStoragePath) {
         _exportStoragePath = exportStoragePath;
+    }
+
+    public String getExportStorageMetaPath() {
+        return _exportStorageMetaPath;
+    }
+
+    public void setExportStorageMetaPath(String exportStorageMetaPath) {
+        _exportStorageMetaPath = exportStorageMetaPath;
     }
 
     public User getCloudOwner() {

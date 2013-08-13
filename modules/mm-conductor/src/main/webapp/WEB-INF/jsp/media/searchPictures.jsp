@@ -101,6 +101,9 @@
                         <dl class="metadata">
                             <dt>File:</dt> <dd><c:out value="${picture.fileName}"/></dd>
 						</dl>
+                        <dl class="metadata">
+                            <dt>SHA-1:</dt> <dd><c:out value="${picture.hashValueShort}"/></dd>
+                        </dl>
 						<p>
 							<c:if test="${picture.s3Available}">
 								<c:choose>

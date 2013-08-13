@@ -18,6 +18,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 
+import de.wehner.mediamagpie.api.FileNameInfo;
 import de.wehner.mediamagpie.api.MediaExport;
 import de.wehner.mediamagpie.api.MediaExportMetadata;
 import de.wehner.mediamagpie.api.MediaExportRepository;
@@ -26,7 +27,6 @@ import de.wehner.mediamagpie.api.MediaExportResult.ExportStatus;
 import de.wehner.mediamagpie.api.MediaExportResults;
 import de.wehner.mediamagpie.api.MediaType;
 import de.wehner.mediamagpie.api.util.DigestUtil;
-import de.wehner.mediamagpie.aws.s3.S3ClientFacade.FileNameInfo;
 import de.wehner.mediamagpie.aws.s3.in.S3ObjectIterator;
 import de.wehner.mediamagpie.aws.s3.in.S3ObjectTuple2MediaExportTransformer;
 import de.wehner.mediamagpie.aws.s3.in.S3ObjectTupleIterator;
@@ -107,14 +107,17 @@ public class S3MediaExportRepository implements MediaExportRepository {
         return new MediaExportResults(result);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see de.wehner.mediamagpie.api.MediaExportRepository#buildMediaStoragePath(java.lang.String, de.wehner.mediamagpie.api.MediaType,
-     * java.lang.String, java.lang.String)
+    /**
+     * @param userLoginId
+     *            The user's name used for login (equivalent to <code>User.getName()</code>)
+     * @param mediaType
+     *            The media type (photo or video)
+     * @param sha1Hash
+     *            The media's hash value
+     * @return The path used to store the media and its metadata file on external systems. (EG:
+     *         <code>test-user/PHOTO/SHA1-14eed328269944441c66fa362eb461516e203172/</code>)
      */
-    @Override
-    public String buildMediaStoragePath(String userLoginId, MediaType mediaType, String sha1Hash) {
+    private String buildMediaStoragePath(String userLoginId, MediaType mediaType, String sha1Hash) {
         StringBuilder builder = new StringBuilder();
         builder.append(userLoginId).append(KEY_DELIMITER);
         builder.append(mediaType).append(KEY_DELIMITER);
@@ -122,11 +125,36 @@ public class S3MediaExportRepository implements MediaExportRepository {
         return builder.toString();
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Creates a specific file name for the media object and its metadata object in form of:
+     * <ul>
+     * <li> <code>&lt;user.getName()&gt;/&lt;PHOTO or MEDIA&gt;/ID&lt;media id&gt;/&lt;original file name&gt;</code><br/>
+     * EG: <code>rwe/PHOTO/ID17/IMG_1795.JPG</code></li>
+     * <li> <code>&lt;user.getName()&gt;/&lt;PHOTO or MEDIA&gt;/ID&lt;media id&gt;/&lt;original file name&gt;.METADATA</code><br/>
+     * EG: <code>rwe/PHOTO/ID17/IMG_1795.JPG.METADATA</code></li>
+     * </ul>
      * 
-     * @see de.wehner.mediamagpie.aws.s3.MediaExportRepository#iteratorPhotos(java.lang.String)
+     * @param userLoginId
+     * @param mediaType
+     * @param hashValue
+     * @param originalFileName
+     * @return an object containing the storage path of media object and its metadata object
      */
+    @Override
+    public FileNameInfo getKeyNames(String userLoginId, MediaType mediaType, String hashValue, String originalFileName) {
+        // build path
+        StringBuilder builder = new StringBuilder(buildMediaStoragePath(userLoginId, mediaType, hashValue));
+
+        // build path for media
+        if (!StringUtils.isEmpty(originalFileName)) {
+            builder.append(originalFileName);
+        } else {
+            builder.append("media.data");
+        }
+
+        // build path for media metadata and add to return object
+        return new FileNameInfo(builder.toString(), builder.append(METADATA_FILE_EXTENSION).toString());
+    }
 
     @Override
     public void deleteMediaStoragePath(String bucketName, String mediaStoragePath) {
@@ -216,34 +244,6 @@ public class S3MediaExportRepository implements MediaExportRepository {
         default:
             throw new RuntimeException("Undefined media type: " + type);
         }
-    }
-
-    /**
-     * Creates a specific file name for the media object and its metadata in form of:
-     * <ul>
-     * <li> <code>&lt;user.getName()&gt;/&lt;PHOTO or MEDIA&gt;/ID&lt;media id&gt;/&lt;original file name&gt;</code><br/>
-     * EG: <code>rwe/PHOTO/ID17/IMG_1795.JPG</code></li>
-     * <li> <code>&lt;user.getName()&gt;/&lt;PHOTO or MEDIA&gt;/ID&lt;media id&gt;/&lt;original file name&gt;.METADATA</code><br/>
-     * EG: <code>rwe/PHOTO/ID17/IMG_1795.JPG.METADATA</code></li>
-     * </ul>
-     * 
-     * @param userLoginId
-     * @param mediaExport
-     * @return an object containing both names
-     */
-    private FileNameInfo getKeyNames(String userLoginId, MediaType mediaType, String hashValue, String originalFileName) {
-        // build path
-        StringBuilder builder = new StringBuilder(buildMediaStoragePath(userLoginId, mediaType, hashValue));
-
-        // build path for media
-        if (!StringUtils.isEmpty(originalFileName)) {
-            builder.append(originalFileName);
-        } else {
-            builder.append("media.data");
-        }
-
-        // build path for media metadata and add to return object
-        return new FileNameInfo(builder.toString(), builder.append(METADATA_FILE_EXTENSION).toString());
     }
 
     private StringBuilder getKeyNamePrefixForUserAndType(String user, MediaType type) {

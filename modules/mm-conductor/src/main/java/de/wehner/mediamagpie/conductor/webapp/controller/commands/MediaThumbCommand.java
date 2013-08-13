@@ -153,6 +153,10 @@ public class MediaThumbCommand {
         return null;
     }
 
+    public String getHashValueShort() {
+        return StringUtils.abbreviateMiddle(_media.getHashValue(), "..", 22);
+    }
+
     @Override
     public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);

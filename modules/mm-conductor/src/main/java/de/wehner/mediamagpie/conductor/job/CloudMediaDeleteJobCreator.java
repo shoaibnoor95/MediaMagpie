@@ -55,8 +55,8 @@ public class CloudMediaDeleteJobCreator extends TransactionalJobCreator<Abstract
             AWSCredentials credentials = new BasicAWSCredentials(existingS3Configuration.getAccessKey(), existingS3Configuration.getSecretKey());
             S3MediaExportRepository s3MediaExportRepository = new S3MediaExportRepository(credentials);
             String bucketName = cloudJobExecution.getBucketName();
-            String exportStoragePath = cloudJobExecution.getExportStoragePath();
-            return new S3DeleteJob(bucketName, exportStoragePath, s3MediaExportRepository);
+            return new S3DeleteJob(bucketName, cloudJobExecution.getExportStoragePath(), cloudJobExecution.getExportStorageMetaPath(),
+                    s3MediaExportRepository);
         default:
             throw new RuntimeException("Unkown cloud Type: " + cloudType);
         }

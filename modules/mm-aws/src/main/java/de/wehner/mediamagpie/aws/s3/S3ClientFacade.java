@@ -42,39 +42,6 @@ public class S3ClientFacade {
 
     public static final String HASH_OF_DATA = "hash-of-data";
 
-    /**
-     * encapsulates the file name of media file and media's metadata file.
-     */
-    public static class FileNameInfo {
-
-        private final String _nameObject;
-
-        private String _nameMetadata;
-
-        public FileNameInfo(String nameObject, String nameMetadata) {
-            super();
-            _nameObject = nameObject;
-            _nameMetadata = nameMetadata;
-        }
-
-        public String getNameObject() {
-            return _nameObject;
-        }
-
-        public String getNameMetadata() {
-            return _nameMetadata;
-        }
-
-        public void setNameMetadata(String nameMetadata) {
-            _nameMetadata = nameMetadata;
-        }
-
-        @Override
-        public String toString() {
-            return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
-        }
-    }
-
     private final AmazonS3 _s3;
 
     public S3ClientFacade(AWSCredentials credentials) {

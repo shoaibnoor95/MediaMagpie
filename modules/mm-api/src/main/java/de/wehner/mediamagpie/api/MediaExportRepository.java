@@ -18,16 +18,15 @@ public interface MediaExportRepository {
     public abstract MediaExportResults addMedia(String userName, MediaExport mediaExport);
 
     /**
+     * Builds the storage path for a file. This path is relevant, if you try to delete a media from S3 bucket.
+     * 
      * @param userLoginId
-     *            The user's name used for login (equivalent to <code>User.getName()</code>)
      * @param mediaType
-     *            The media type (photo or video)
-     * @param sha1Hash
-     *            The media's hash value
-     * @return The path used to store the media and its metadata file on external systems. (EG:
-     *         <code>test-user/PHOTO/SHA1-14eed328269944441c66fa362eb461516e203172/</code>)
+     * @param hashValue
+     * @param originalFileName
+     * @return
      */
-    public abstract String buildMediaStoragePath(String userLoginId, MediaType mediaType, String sha1Hash);
+    public abstract FileNameInfo getKeyNames(String userLoginId, MediaType mediaType, String hashValue, String originalFileName);
 
     /**
      * @param bucketName
