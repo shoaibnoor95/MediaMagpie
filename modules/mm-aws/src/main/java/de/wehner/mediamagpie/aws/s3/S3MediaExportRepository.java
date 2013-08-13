@@ -18,13 +18,13 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 
-import de.wehner.mediamagpie.api.FileNameInfo;
 import de.wehner.mediamagpie.api.MediaExport;
 import de.wehner.mediamagpie.api.MediaExportMetadata;
 import de.wehner.mediamagpie.api.MediaExportRepository;
 import de.wehner.mediamagpie.api.MediaExportResult;
 import de.wehner.mediamagpie.api.MediaExportResult.ExportStatus;
 import de.wehner.mediamagpie.api.MediaExportResults;
+import de.wehner.mediamagpie.api.MediaStorageInfo;
 import de.wehner.mediamagpie.api.MediaType;
 import de.wehner.mediamagpie.api.util.DigestUtil;
 import de.wehner.mediamagpie.aws.s3.in.S3ObjectIterator;
@@ -65,7 +65,7 @@ public class S3MediaExportRepository implements MediaExportRepository {
     @Override
     public MediaExportResults addMedia(String user, MediaExport mediaExport) {
         // build file name and bucket name
-        FileNameInfo fileNameInfo = getKeyNames(user, mediaExport.getType(), mediaExport.getHashValue(), mediaExport.getOriginalFileName());
+        MediaStorageInfo fileNameInfo = getMediaStorageInfo(user, mediaExport.getType(), mediaExport.getHashValue(), mediaExport.getOriginalFileName());
         String bucketName = buildBucketTypeName(mediaExport.getType());
         List<MediaExportResult> result = new ArrayList<MediaExportResult>();
 
@@ -141,7 +141,7 @@ public class S3MediaExportRepository implements MediaExportRepository {
      * @return an object containing the storage path of media object and its metadata object
      */
     @Override
-    public FileNameInfo getKeyNames(String userLoginId, MediaType mediaType, String hashValue, String originalFileName) {
+    public MediaStorageInfo getMediaStorageInfo(String userLoginId, MediaType mediaType, String hashValue, String originalFileName) {
         // build path
         StringBuilder builder = new StringBuilder(buildMediaStoragePath(userLoginId, mediaType, hashValue));
 
@@ -153,12 +153,24 @@ public class S3MediaExportRepository implements MediaExportRepository {
         }
 
         // build path for media metadata and add to return object
-        return new FileNameInfo(builder.toString(), builder.append(METADATA_FILE_EXTENSION).toString());
+        return new MediaStorageInfo(builder.toString(), builder.append(METADATA_FILE_EXTENSION).toString());
     }
 
     @Override
-    public void deleteMediaStoragePath(String bucketName, String mediaStoragePath) {
-        _s3Facade.deletePath(bucketName, mediaStoragePath);
+    public void deleteMediaStoragePath(String bucketName, MediaStorageInfo mediaStorageInfo) {
+        // because the metadata object's name (eg: SHA1-59ef826da051c0efe681bb0906392b7cb3aebdc9/IMG_123.JPG.METADATA) begins with the same
+        // name than the object name (SHA1-59ef826da051c0efe681bb0906392b7cb3aebdc9/IMG_123.JPG), deletePath()
+        // ((SHA1-59ef826da051c0efe681bb0906392b7cb3aebdc9/IMG_123.JPG)) will remove
+        // a) the media object, b) the metadata object and c) if folder is now empty the folder itself
+        _s3Facade.deletePath(bucketName, mediaStorageInfo.getNameObject());
+
+        // // delete the complete path when it is empty now
+        // String pathToObject = mediaStorageInfo.getNameObject();
+        // String path = StringUtils.substringBeforeLast(pathToObject, "/");
+        // List<String> keysInPath = _s3Facade.listKeysInPath(bucketName, path);
+        // if (keysInPath.size() == 0) {
+        // _s3Facade.deletePath(bucketName, path);
+        // }
     }
 
     @Override

@@ -2,11 +2,11 @@ package de.wehner.mediamagpie.conductor.performingjob;
 
 import java.net.URI;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.wehner.mediamagpie.api.MediaExportRepository;
+import de.wehner.mediamagpie.api.MediaStorageInfo;
 import de.wehner.mediamagpie.aws.s3.S3MediaExportRepository;
 
 public class S3DeleteJob extends AbstractJob {
@@ -32,17 +32,8 @@ public class S3DeleteJob extends AbstractJob {
 
             @Override
             public URI call() throws Exception {
-                deleteFileOnS3(_exportStoragePath);
-                if (!StringUtils.isEmpty(_exportStorageMetaPath)) {
-                    deleteFileOnS3(_exportStorageMetaPath);
-                }
+                _s3MediaRepositiory.deleteMediaStoragePath(_bucketName, new MediaStorageInfo(_exportStoragePath, _exportStorageMetaPath));
                 return null;
-            }
-
-            private void deleteFileOnS3(String pathInBucket) {
-                LOG.debug("delete media on S3 '{}/{}'...", _bucketName, pathInBucket);
-                _s3MediaRepositiory.deleteMediaStoragePath(_bucketName, pathInBucket);
-                LOG.debug("delete media on S3 '{}/{}'...DONE", _bucketName, pathInBucket);
             }
 
             @Override

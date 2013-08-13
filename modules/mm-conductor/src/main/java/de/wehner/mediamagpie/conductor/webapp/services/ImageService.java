@@ -29,7 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 
-import de.wehner.mediamagpie.api.FileNameInfo;
+import de.wehner.mediamagpie.api.MediaStorageInfo;
 import de.wehner.mediamagpie.api.MediaType;
 import de.wehner.mediamagpie.aws.s3.S3ClientFacade;
 import de.wehner.mediamagpie.aws.s3.S3MediaExportRepository;
@@ -245,7 +245,7 @@ public class ImageService {
 
             // delete media from cloud (s3)
             S3MediaExportRepository s3MediaExportRepository = new S3MediaExportRepository((S3ClientFacade) null);
-            FileNameInfo fileNameInfo = s3MediaExportRepository.getKeyNames(media.getOwner().getName(), MediaType.PHOTO, media.getHashValue(),
+            MediaStorageInfo fileNameInfo = s3MediaExportRepository.getMediaStorageInfo(media.getOwner().getName(), MediaType.PHOTO, media.getHashValue(),
                     media.getOriginalFileName());
             String bucketName = s3MediaExportRepository.buildBucketTypeName(MediaType.PHOTO);
             CloudMediaDeleteJobExecution cloudMediaDeleteJobExecution = new CloudMediaDeleteJobExecution(bucketName, fileNameInfo, CloudType.S3,

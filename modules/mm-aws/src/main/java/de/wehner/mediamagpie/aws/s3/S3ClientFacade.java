@@ -1,10 +1,10 @@
 package de.wehner.mediamagpie.aws.s3;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -129,17 +129,37 @@ public class S3ClientFacade {
         return new S3ObjectIterator(_s3, bucketName, prefix);
     }
 
+    /**
+     * Deletes a complete path and all of its underlying objects or simple a single object.
+     * 
+     * @param bucketName
+     * @param mediaStoragePath
+     * @return The number of deleted objects.
+     */
     public int deletePath(String bucketName, String mediaStoragePath) {
         ListObjectsRequest listObjectsRequest = new ListObjectsRequest().withBucketName(bucketName).withPrefix(mediaStoragePath)
         /* .withDelimiter(S3MediaRepository.KEY_DELIMITER) */.withMaxKeys(10);
         ObjectListing listObjects = _s3.listObjects(listObjectsRequest);
         int deletedObjects = 0;
         for (S3ObjectSummary objectSummary : listObjects.getObjectSummaries()) {
-            LOG.debug("delete " + bucketName + "/" + objectSummary.getKey());
-            _s3.deleteObject(bucketName, objectSummary.getKey());
+            final String key = objectSummary.getKey();
+            LOG.debug("delete object on S3 '{}/{}'", bucketName, key);
+            _s3.deleteObject(bucketName, key);
             deletedObjects++;
         }
         return deletedObjects;
+    }
+
+    public List<String> listKeysInPath(String bucketName, String mediaStoragePath) {
+        ListObjectsRequest listObjectsRequest = new ListObjectsRequest().withBucketName(bucketName).withPrefix(mediaStoragePath)
+        /* .withDelimiter(S3MediaRepository.KEY_DELIMITER) */.withMaxKeys(10);
+        ObjectListing listObjects = _s3.listObjects(listObjectsRequest);
+        List<String> result = new ArrayList<String>();
+        for (S3ObjectSummary objectSummary : listObjects.getObjectSummaries()) {
+            final String key = objectSummary.getKey();
+            result.add(key);
+        }
+        return result;
     }
 
     public Pair<Boolean, String> testConnection() {

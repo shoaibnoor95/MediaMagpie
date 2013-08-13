@@ -4,7 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import de.wehner.mediamagpie.api.FileNameInfo;
+import de.wehner.mediamagpie.api.MediaStorageInfo;
 import de.wehner.mediamagpie.persistence.entity.CloudSyncJobExecution.CloudType;
 
 @javax.persistence.Entity
@@ -28,7 +28,7 @@ public class CloudMediaDeleteJobExecution extends JobExecution {
     public CloudMediaDeleteJobExecution() {
     }
 
-    public CloudMediaDeleteJobExecution(String bucketName, FileNameInfo fileNameInfo, CloudType cloudType, User cloudOwner) {
+    public CloudMediaDeleteJobExecution(String bucketName, MediaStorageInfo fileNameInfo, CloudType cloudType, User cloudOwner) {
         this(JobStatus.QUEUED, bucketName, fileNameInfo.getNameObject(), fileNameInfo.getNameMetadata(), cloudType, cloudOwner);
     }
 

@@ -6,13 +6,13 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 /**
  * encapsulates the file name of media file and media's metadata file.
  */
-public class FileNameInfo {
+public class MediaStorageInfo {
 
     private final String _nameObject;
 
     private String _nameMetadata;
 
-    public FileNameInfo(String nameObject, String nameMetadata) {
+    public MediaStorageInfo(String nameObject, String nameMetadata) {
         super();
         _nameObject = nameObject;
         _nameMetadata = nameMetadata;

@@ -26,7 +26,7 @@ public interface MediaExportRepository {
      * @param originalFileName
      * @return
      */
-    public abstract FileNameInfo getKeyNames(String userLoginId, MediaType mediaType, String hashValue, String originalFileName);
+    public abstract MediaStorageInfo getMediaStorageInfo(String userLoginId, MediaType mediaType, String hashValue, String originalFileName);
 
     /**
      * @param bucketName
@@ -34,7 +34,7 @@ public interface MediaExportRepository {
      * @param mediaStoragePath
      *            The path which should be deleted on the cloud
      */
-    public abstract void deleteMediaStoragePath(String bucketName, String mediaStoragePath);
+    public abstract void deleteMediaStoragePath(String bucketName, MediaStorageInfo mediaStorageInfo);
 
     /** import functionality */
 
