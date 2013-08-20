@@ -9,6 +9,7 @@
 		http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<global-method-security secured-annotations="enabled" />
+	
 	<!-- for more security topics, read: http://www.codercorp.com/blog/spring/security-spring/custom-authenticationprocessingfilter-for-spring-security-to-perform-actions-on-login.html -->
 	<http auto-config="true">
 		<!-- <intercept-url pattern="/static/**" filters="none" /> <intercept-url pattern="/public/**" filters="none" /> -->
@@ -27,6 +28,8 @@
 		<port-mappings>
 			<port-mapping http="${webapp.port.http}" https="${webapp.port.https}" />
 		</port-mappings>
+		<!-- session-fixation-protext=none will result in a JSESSIONID cookie which has NO secure flag, so it can be used booth in https and http. -->
+		<session-management session-fixation-protection="none"/>
 	</http>
 
 	<authentication-manager>
