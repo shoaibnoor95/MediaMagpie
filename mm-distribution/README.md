@@ -152,3 +152,10 @@ Before we create the new image from current box, we have to delte /etc/udev/rule
 
 This will create a new package.box file containing the actual state of your box.
   $ vagrant package
+
+### If /vagrant folder is empty within vagrant
+  $ [sudo] rm -f /etc/udev/rules.d/70-persistent-net.rules
+  $ exit
+  $ vagrant reload
+  $ vagrant ssh
+  
