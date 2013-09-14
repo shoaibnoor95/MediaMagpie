@@ -2,7 +2,7 @@ package de.wehner.mediamagpie.conductor.webapp.controller.commands;
 
 import de.wehner.mediamagpie.persistence.entity.properties.MainConfiguration;
 
-public class MainconfigurationCommand extends MainConfiguration {
+public class MainConfigurationCommand extends MainConfiguration {
 
     private boolean _createDirectories = false;
 

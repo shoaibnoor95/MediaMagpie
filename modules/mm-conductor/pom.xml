@@ -71,7 +71,11 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>ma.glasnost.orika</groupId>
+			<artifactId>orika-core</artifactId>
+			<version>1.4.2</version><!-- or latest version -->
+		</dependency>
 		<!-- slf4j -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>

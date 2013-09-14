@@ -4,6 +4,10 @@ import java.io.IOException;
 
 import javax.validation.Valid;
 
+import ma.glasnost.orika.MapperFacade;
+import ma.glasnost.orika.MapperFactory;
+import ma.glasnost.orika.impl.DefaultMapperFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +22,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import de.wehner.mediamagpie.conductor.webapp.controller.commands.MainconfigurationCommand;
+import de.wehner.mediamagpie.conductor.webapp.controller.commands.MainConfigurationCommand;
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
 import de.wehner.mediamagpie.conductor.webapp.services.MediaSyncService;
 import de.wehner.mediamagpie.conductor.webapp.services.SetupVerificationService;
@@ -40,13 +44,16 @@ public class AdministrationController {
     private final ConfigurationProvider _configurationProvider;
     private final MediaSyncService _mediaSyncService;
     private final SetupVerificationService _setupVerificationService;
+    private final MapperFactory _mapperFactory;
 
     @Autowired
-    public AdministrationController(ConfigurationProvider configurationProvider, ImageService imageService, MediaSyncService mediaSyncService, SetupVerificationService setupVerificationService) {
+    public AdministrationController(ConfigurationProvider configurationProvider, ImageService imageService, MediaSyncService mediaSyncService,
+            SetupVerificationService setupVerificationService) {
         super();
         _configurationProvider = configurationProvider;
         _mediaSyncService = mediaSyncService;
         _setupVerificationService = setupVerificationService;
+        _mapperFactory = new DefaultMapperFactory.Builder().build();
     }
 
     @InitBinder
@@ -57,18 +64,18 @@ public class AdministrationController {
 
     @RequestMapping(method = RequestMethod.GET, value = URL_MAINCONFIG)
     public String showConfiguration(Model model) {
-        model.addAttribute("conf", _configurationProvider.getMainConfiguration());
+        setMainConfigurationCommandIntoModel(model);
         return VIEW_MAINCONFIG;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = URL_MAINCONFIG_EDIT)
     public String editConfiguration(Model model) {
-        model.addAttribute("conf", _configurationProvider.getMainConfiguration());
+        setMainConfigurationCommandIntoModel(model);
         return VIEW_MAINCONFIG_EDIT;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = URL_MAINCONFIG_EDIT)
-    public String submitConfiguration(@Valid @ModelAttribute("conf") MainconfigurationCommand conf, BindingResult result, Model model) throws IOException {
+    public String submitConfiguration(@Valid @ModelAttribute("conf") MainConfigurationCommand conf, BindingResult result, Model model) throws IOException {
         if (conf.isCreateDirectories()) {
             conf.prepareDirectories(result);
         }
@@ -77,12 +84,18 @@ public class AdministrationController {
             LOG.info(result.toString());
             return VIEW_MAINCONFIG_EDIT;
         }
-        
+
         _configurationProvider.saveOrUpdateMainConfiguration(conf);
         _setupVerificationService.clearSetupTask(SetupTask.CONFIGURE_SYSTEM_DIRS);
-        
+
         _mediaSyncService.execute();
         return "redirect:" + getBaseRequestMappingUrl() + URL_MAINCONFIG;
+    }
+
+    private void setMainConfigurationCommandIntoModel(Model model) {
+        MapperFacade mapper = _mapperFactory.getMapperFacade();
+        MainConfigurationCommand mainConfigurationCommand = mapper.map(_configurationProvider.getMainConfiguration(), MainConfigurationCommand.class);
+        model.addAttribute("conf", mainConfigurationCommand);
     }
 
     public static String getBaseRequestMappingUrl() {

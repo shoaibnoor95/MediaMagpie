@@ -44,7 +44,6 @@
 					<dd>${conf.defaultDetailThumbSize}</dd>	
 				</dl>
 				<dl>
-				<dl>
 					<dt>
 						<label>&nbsp;</label>
 					</dt>
