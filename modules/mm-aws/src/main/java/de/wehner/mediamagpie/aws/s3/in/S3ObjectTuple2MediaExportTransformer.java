@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,17 +69,23 @@ public class S3ObjectTuple2MediaExportTransformer implements MMTransformer<S3Obj
     public MediaExport transform(S3ObjectTuple objectSummary) {
 
         S3ObjectSummary dataObject = objectSummary.getDataObject();
-        // a) get Data file object
+        // a) get Data file object (S3Object)
         final S3Object s3objectData = loadS3Object(dataObject);
         if (s3objectData == null) {
             return null;
         }
 
         // b) get the information from Metadata file object
-        final S3Object s3ObjectMetadata = loadS3Object(objectSummary.getMetaObject());
         MediaExportMetadata exportMetadata = null;
-        if (s3ObjectMetadata != null) {
-            exportMetadata = MediaExportMetadata.createInstance(s3ObjectMetadata.getObjectContent());
+        S3Object s3ObjectMetadata = null;
+        try {
+            s3ObjectMetadata = loadS3Object(objectSummary.getMetaObject());
+            if (s3ObjectMetadata != null) {
+                exportMetadata = MediaExportMetadata.createInstance(s3ObjectMetadata.getObjectContent());
+            }
+        } finally {
+            IOUtils.closeQuietly(s3objectData);
+            IOUtils.closeQuietly(s3ObjectMetadata);
         }
 
         // a) initialize a new MediaExport with Data file information
@@ -124,13 +131,15 @@ public class S3ObjectTuple2MediaExportTransformer implements MMTransformer<S3Obj
         if (s3ObjectSummary == null) {
             return null;
         }
-        final S3Object s3object = _s3.getObject(s3ObjectSummary.getBucketName(), s3ObjectSummary.getKey());
+        LOG.debug("Try loading S3Object for name '{}/{}' and size {}...", s3ObjectSummary.getBucketName(), s3ObjectSummary.getKey(),
+                StringUtil.formatBytesToHumanReadableRepresentation(s3ObjectSummary.getSize()));
+        S3Object s3object = _s3.getObject(s3ObjectSummary.getBucketName(), s3ObjectSummary.getKey());
+        LOG.debug("Try loading S3Object for name '{}/{}' and size {}...DONE", s3ObjectSummary.getBucketName(), s3ObjectSummary.getKey(),
+                StringUtil.formatBytesToHumanReadableRepresentation(s3ObjectSummary.getSize()));
         if (s3object == null) {
             LOG.warn("Can not load bucket '" + s3ObjectSummary.getBucketName() + "' with key '" + s3ObjectSummary.getKey() + "'.");
             return null;
         }
-        LOG.debug(String.format("Load object with name '%s' and size '%s'.", s3ObjectSummary.getBucketName(),
-                StringUtil.formatBytesToHumanReadableRepresentation(s3ObjectSummary.getSize())));
         return s3object;
     }
 

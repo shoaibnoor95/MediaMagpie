@@ -72,7 +72,7 @@ public class S3SyncJob extends AbstractJob {
 
                 Iterator<MediaExport> iteratorPhotos = _s3MediaRepositiory.iteratorPhotos(_user.getName());
                 List<MediaExport> unkonwMediaOnS3 = new ArrayList<MediaExport>();
-                while (iteratorPhotos.hasNext()) {
+                while (iteratorPhotos.hasNext()) {// TODO rwe: Handle AmazonClientException's
                     MediaExport mediaExport = iteratorPhotos.next();
                     if (unmatchedMedias.containsKey(mediaExport.getHashValue())) {
                         // we have found an Media on S3 which matches to a local one
@@ -95,6 +95,7 @@ public class S3SyncJob extends AbstractJob {
                             try {
                                 Media mediaInSession = _transactionHandler.reload(media);
                                 MediaExport mediaExport = _mediaExportFactory.create(mediaInSession);
+                                @SuppressWarnings("unused")
                                 MediaExportResults mediaExportResults = _s3MediaRepositiory.addMedia(_user.getName(), mediaExport);
                                 // TODO : implement an error-handling when one or more objects can not be uploaded sucessfully
                             } catch (FileNotFoundException e) {
