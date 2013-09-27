@@ -73,11 +73,11 @@ public class S3ObjectSummary2MediaExportTransformerTest {
         when(_s3.getObject(BUCKET_NAME, KEY_DATA)).thenReturn(s3DataObject);
 
         // setup a meta data mock S3Object
-        S3Object s3DataObjectMetadata = new S3Object();
         MediaExportMetadata mediaExportMetadata = new MediaExportMetadata(MEDIA_NAME);
         mediaExportMetadata.setDescription(MEDIA_DESC);
         mediaExportMetadata.setOriginalFileName(MEDIA_ORIG_FILE_NAME);
         mediaExportMetadata.setTags(MEDIA_TAGS);
+        S3Object s3DataObjectMetadata = new S3Object();
         s3DataObjectMetadata.setObjectContent(mediaExportMetadata.createInputStream());
 
         // link test object to S3Client
@@ -141,6 +141,42 @@ public class S3ObjectSummary2MediaExportTransformerTest {
         assertThat(mediaExport.getLength()).isEqualTo(_contentS3DataObject.length);
         assertThat(mediaExport.getMediaId()).isEqualTo(MEDIA_ID);
         assertThat(mediaExport.getOriginalFileName()).isEqualTo(MEDIA_ORIG_FILE_NAME);
+        assertThat(mediaExport.getTags()).isEqualTo(MEDIA_TAGS);
+        assertThat(mediaExport.getType()).isEqualTo(MediaType.PHOTO);
+    }
+
+    @Test
+    public void test_transform_DataObjectAndMetaDataObjectIsAvailable_ButNoOriginalFileNameIsNULL() throws IOException {
+        MediaExportMetadata mediaExportMetadata = new MediaExportMetadata(MEDIA_NAME);
+        mediaExportMetadata.setDescription(MEDIA_DESC);
+        mediaExportMetadata.setTags(MEDIA_TAGS);
+        S3Object s3DataObjectMetadata = new S3Object();
+        s3DataObjectMetadata.setObjectContent(mediaExportMetadata.createInputStream());
+        // link test object to S3Client
+        when(_s3.getObject(BUCKET_NAME, KEY_METADATA)).thenReturn(s3DataObjectMetadata);
+
+        S3ObjectSummary s3ObjectSummary = new S3ObjectSummary();
+        s3ObjectSummary.setBucketName(BUCKET_NAME);
+        s3ObjectSummary.setKey(KEY_DATA);
+        s3ObjectSummary.setSize(_contentS3DataObject.length);
+        S3ObjectSummary s3ObjectMetadataSummary = new S3ObjectSummary();
+        s3ObjectMetadataSummary.setBucketName(BUCKET_NAME);
+        s3ObjectMetadataSummary.setKey(KEY_METADATA);
+        s3ObjectMetadataSummary.setSize(0);/* not relevant for this test */
+        S3ObjectTuple s3ObjectTuple = new S3ObjectTuple(s3ObjectSummary, s3ObjectMetadataSummary);
+
+        MediaExport mediaExport = _transformer.transform(s3ObjectTuple);
+
+        assertThat(mediaExport.getName()).isEqualTo(MEDIA_NAME);
+        assertThat(mediaExport.getMediaId()).isEqualTo(MEDIA_ID);
+        assertThat(mediaExport.getCreationDate()).isEqualTo(CREATION_DATE);
+
+        assertThat(mediaExport.getDescription()).isEqualTo(MEDIA_DESC);
+        assertThat(mediaExport.getHashValue()).isEqualTo(DigestUtil.computeSha1AsHexString(new ByteArrayInputStream(_contentS3DataObject)));
+        assertThat(IOUtils.toByteArray(mediaExport.getInputStream())).isEqualTo(_contentS3DataObject);
+        assertThat(mediaExport.getLength()).isEqualTo(_contentS3DataObject.length);
+        assertThat(mediaExport.getMediaId()).isEqualTo(MEDIA_ID);
+        assertThat(mediaExport.getOriginalFileName()).isNull();
         assertThat(mediaExport.getTags()).isEqualTo(MEDIA_TAGS);
         assertThat(mediaExport.getType()).isEqualTo(MediaType.PHOTO);
     }

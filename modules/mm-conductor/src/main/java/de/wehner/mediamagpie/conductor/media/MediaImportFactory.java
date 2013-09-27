@@ -1,6 +1,7 @@
 package de.wehner.mediamagpie.conductor.media;
 
 import java.io.File;
+import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -9,13 +10,14 @@ import org.slf4j.LoggerFactory;
 import de.wehner.mediamagpie.api.MediaExport;
 import de.wehner.mediamagpie.conductor.webapp.services.UploadService;
 import de.wehner.mediamagpie.core.util.Pair;
+import de.wehner.mediamagpie.core.util.TimeUtil;
 import de.wehner.mediamagpie.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.persistence.dao.MediaTagDao;
-import de.wehner.mediamagpie.persistence.dao.TransactionHandler;
 import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.entity.MediaTag;
 import de.wehner.mediamagpie.persistence.entity.User;
 import de.wehner.mediamagpie.persistence.service.ConfigurationProvider;
+import de.wehner.mediamagpie.persistence.util.TimeProvider;
 
 public class MediaImportFactory {
 
@@ -26,15 +28,17 @@ public class MediaImportFactory {
     private final ConfigurationProvider _configurationProvider;
     private final MediaDao _mediaDao;
     private final MediaTagDao _mediaTagDao;
+    private final TimeProvider _timeProvider;
 
-    public MediaImportFactory(UploadService uploadService, User user, ConfigurationProvider configurationProvider, TransactionHandler transactionHandler,
-            MediaDao mediaDao) {
+    public MediaImportFactory(UploadService uploadService, User user, ConfigurationProvider configurationProvider, MediaDao mediaDao,
+            MediaTagDao mediaTagDao, TimeProvider timeProvider) {
         super();
         _uploadService = uploadService;
         _user = user;
         _configurationProvider = configurationProvider;
         _mediaDao = mediaDao;
-        _mediaTagDao = new MediaTagDao(transactionHandler.getPersistenceService());
+        _mediaTagDao = mediaTagDao;
+        _timeProvider = timeProvider;
     }
 
     /**
@@ -47,16 +51,13 @@ public class MediaImportFactory {
      * @return
      */
     public Media create(MediaExport mediaExport) {
-        String originalFileName = mediaExport.getOriginalFileName();
-        if (StringUtils.isEmpty(originalFileName)) {
-            LOG.warn("Can not find original file name from mediaExport '" + mediaExport + "'. Use file name");
-            originalFileName = "";
-            if (!StringUtils.isEmpty(mediaExport.getName())) {
-                originalFileName = mediaExport.getName();
-            }
-            originalFileName += mediaExport.getMediaId();
+        String newMediaFileName = mediaExport.getOriginalFileName();
+        if (StringUtils.isEmpty(newMediaFileName)) {
+            LOG.warn("Can not find original file name from mediaExport with hash vaule '{}'. Create new file name.", mediaExport.getHashValue());
+            newMediaFileName = TimeUtil.buildFileNameWithTimeStamp(new File("importedMedia_id" + mediaExport.getMediaId() + "_ts.bin"),
+                    new Date(_timeProvider.getTime()), null).getName();
         }
-        Pair<String, File> uploadFileInfo = _uploadService.createUniqueUserStoreFile(_user, originalFileName);
+        Pair<String, File> uploadFileInfo = _uploadService.createUniqueUserStoreFile(_user, newMediaFileName);
 
         LOG.info("Try download stream '" + uploadFileInfo.getFirst() + "' into file '" + uploadFileInfo.getSecond().getPath() + "' for media id: "
                 + mediaExport.getMediaId() + ", hash: " + mediaExport.getHashValue());

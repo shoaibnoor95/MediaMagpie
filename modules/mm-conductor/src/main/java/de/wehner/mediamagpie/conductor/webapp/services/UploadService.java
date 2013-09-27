@@ -53,8 +53,8 @@ public class UploadService {
     }
 
     /**
-     * Provides a pair with the original file name based on the upload file and the final destination file name were the binary data will be
-     * dumped into. The method creates all required directories to create a new file provided by its return value.
+     * Provides a pair containing the original file name based on the upload file and the finally used file name were the binary data will
+     * be written to file system. The method creates all required directories to create a new file provided by its return value.
      * 
      * @param currentUser
      * @param originalFilename

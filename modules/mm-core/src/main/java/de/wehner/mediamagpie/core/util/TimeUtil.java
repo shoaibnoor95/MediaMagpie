@@ -122,13 +122,28 @@ public class TimeUtil {
         return timestampStr;
     }
 
-    public static File buildFileNameWithTimeStamp(File xmlFile, Date date, Format formatter) {
-        File path = xmlFile.getParentFile();
-        String baseName = FilenameUtils.getBaseName(xmlFile.getName());
+    /**
+     * Extends a file name with given time. If no formatter is given the pattern <code>yyMMdd_HHmmss</code> will be used.
+     * 
+     * <pre>
+     * EG: file = 'a.txt', date = '20.05.2010 08:05:17' --> 'a100520_080517.txt'
+     * </pre>
+     * 
+     * @param file
+     *            The file name which can optionally include a path.
+     * @param date
+     *            The time that will be added into the input file.
+     * @param formatter
+     *            A formatter that will be used to convert the time into a string. Can be null.
+     * @return The new file name containing the given date formatted with given formatter.
+     */
+    public static File buildFileNameWithTimeStamp(File file, Date date, Format formatter) {
+        File path = file.getParentFile();
+        String baseName = FilenameUtils.getBaseName(file.getName());
         if (formatter == null) {
             formatter = FILE_TIMESTAMPFORMATTER;
         }
-        String newFileName = String.format("%s%s.%s", baseName, createTimeStamp(date, formatter), FilenameUtils.getExtension(xmlFile.getName()));
+        String newFileName = String.format("%s%s.%s", baseName, createTimeStamp(date, formatter), FilenameUtils.getExtension(file.getName()));
         return new File(path, newFileName);
     }
 
