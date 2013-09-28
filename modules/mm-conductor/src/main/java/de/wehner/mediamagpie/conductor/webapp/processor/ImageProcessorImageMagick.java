@@ -59,9 +59,9 @@ public class ImageProcessorImageMagick extends AbstractImageProcessor {
     }
 
     @Override
-    public void write(File thumbImagePath) throws IOException {
+    public File write(File thumbImagePath) throws IOException {
         // TODO Auto-generated method stub
-
+        return thumbImagePath;
     }
 
     @Override

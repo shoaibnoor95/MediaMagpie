@@ -51,9 +51,9 @@ public class ImageProcessorScalr extends AbstractImageProcessor {
     }
 
     @Override
-    public void write(File thumbImagePath) throws IOException {
+    public File write(File thumbImagePath) throws IOException {
         // TODO Auto-generated method stub
-
+        return thumbImagePath;
     }
 
     @Override
@@ -71,6 +71,6 @@ public class ImageProcessorScalr extends AbstractImageProcessor {
     @Override
     public void close() throws IOException {
         // TODO Auto-generated method stub
-        
+
     }
 }

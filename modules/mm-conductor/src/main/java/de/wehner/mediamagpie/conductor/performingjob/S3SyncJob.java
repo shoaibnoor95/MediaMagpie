@@ -21,11 +21,13 @@ import de.wehner.mediamagpie.conductor.webapp.services.UploadService;
 import de.wehner.mediamagpie.core.util.ExceptionUtil;
 import de.wehner.mediamagpie.persistence.MediaExportFactory;
 import de.wehner.mediamagpie.persistence.dao.MediaDao;
+import de.wehner.mediamagpie.persistence.dao.MediaTagDao;
 import de.wehner.mediamagpie.persistence.dao.TransactionHandler;
 import de.wehner.mediamagpie.persistence.entity.LifecyleStatus;
 import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.entity.User;
 import de.wehner.mediamagpie.persistence.service.ConfigurationProvider;
+import de.wehner.mediamagpie.persistence.util.TimeProvider;
 
 public class S3SyncJob extends AbstractJob {
 
@@ -38,9 +40,10 @@ public class S3SyncJob extends AbstractJob {
     private final TransactionHandler _transactionHandler;
     private final MediaExportFactory _mediaExportFactory = new MediaExportFactory();
     private final UploadService _uploadService;
+    private final TimeProvider _timeProvider;
 
     public S3SyncJob(S3MediaExportRepository s3MediaExportRepository, UploadService uploadService, User user, ConfigurationProvider configurationProvider,
-            TransactionHandler transactionHandler, MediaDao mediaDao) {
+            TransactionHandler transactionHandler, MediaDao mediaDao, TimeProvider timeProvider) {
         super();
         _s3MediaRepositiory = s3MediaExportRepository;
         _uploadService = uploadService;
@@ -48,6 +51,7 @@ public class S3SyncJob extends AbstractJob {
         _configurationProvider = configurationProvider;
         _transactionHandler = transactionHandler;
         _mediaDao = mediaDao;
+        _timeProvider = timeProvider;
     }
 
     @Override
@@ -106,8 +110,8 @@ public class S3SyncJob extends AbstractJob {
                 }
 
                 // <-- Pull all unknown Medias from S3 and store in local DB and file system
-                final MediaImportFactory mediaImportFactory = new MediaImportFactory(_uploadService, _user, _configurationProvider, _transactionHandler,
-                        _mediaDao);
+                final MediaImportFactory mediaImportFactory = new MediaImportFactory(_uploadService, _user, _configurationProvider, _mediaDao,
+                        new MediaTagDao(_transactionHandler.getPersistenceService()), _timeProvider);
                 for (final MediaExport mediaExport : unkonwMediaOnS3) {
                     LOG.debug(String.format("try to import object '%s' from S3.", mediaExport.getName()));
                     _transactionHandler.executeInTransaction(new Callable<Boolean>() {

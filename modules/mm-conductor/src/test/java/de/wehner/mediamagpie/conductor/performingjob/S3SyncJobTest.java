@@ -35,6 +35,7 @@ import de.wehner.mediamagpie.persistence.entity.LifecyleStatus;
 import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.entity.User;
 import de.wehner.mediamagpie.persistence.service.ConfigurationProvider;
+import de.wehner.mediamagpie.persistence.util.TimeProvider;
 
 public class S3SyncJobTest {
 
@@ -92,7 +93,7 @@ public class S3SyncJobTest {
         when(_mediaDao.getPersistenceService()).thenReturn(new PersistenceServiceMock());
         when(_uploadService.createUniqueUserStoreFile(eq(_user), any(String.class))).thenReturn(
                 new Pair<String, File>("origFile.jpg", new File(_testEnvironment.getWorkingDir(), "mediax.jpg")));
-        _job = new S3SyncJob(_s3MediaExportRepository, _uploadService, _user, _configurationProvider, _transactionHandler, _mediaDao);
+        _job = new S3SyncJob(_s3MediaExportRepository, _uploadService, _user, _configurationProvider, _transactionHandler, _mediaDao, new TimeProvider());
         _prepare = _job.prepare();
     }
 

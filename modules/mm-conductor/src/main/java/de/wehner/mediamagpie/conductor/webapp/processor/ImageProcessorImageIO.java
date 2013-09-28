@@ -57,11 +57,24 @@ public class ImageProcessorImageIO extends AbstractImageProcessor {
     }
 
     @Override
-    public void write(File destFile) throws IOException {
-        boolean write = ImageIO.write(processedImage, FilenameUtils.getExtension(destFile.getPath()), destFile);
-        if (!write) {
-            LOG.error("Can not write image into file '" + destFile.getPath() + "'.");
+    public File write(File destFile) throws IOException {
+
+        // try resize with given extension (which has effect in ImageIO to select a proper writer)
+        String extension = FilenameUtils.getExtension(destFile.getPath());
+        boolean write = ImageIO.write(processedImage, extension, destFile);
+
+        // if first attemped failed, try to use simple JPG format
+        if (write == false) {
+            LOG.warn("Writing resized image with extension '{}' failed. Try to use writer for file format JPG...", extension);
+            extension = "jpg";
         }
+
+        write = ImageIO.write(processedImage, "jpg", destFile);
+        if (!write) {
+            // LOG.error("Can not write image into file '" + destFile.getPath() + "'.");
+            throw new IOException("Can not write image into file '" + destFile.getPath() + "' with writer type '" + extension + "'.");
+        }
+        return destFile;
     }
 
     @Override
@@ -85,9 +98,12 @@ public class ImageProcessorImageIO extends AbstractImageProcessor {
         int h = newSize.height;
         bdest = new BufferedImage(w, h, srcBImage.getType());
         Graphics2D g = bdest.createGraphics();
-        AffineTransform at = AffineTransform.getScaleInstance((double) w / srcBImage.getWidth(), (double) h / srcBImage.getHeight());
-        g.drawRenderedImage(srcBImage, at);
-        g.dispose();
+        try {
+            AffineTransform at = AffineTransform.getScaleInstance((double) w / srcBImage.getWidth(), (double) h / srcBImage.getHeight());
+            g.drawRenderedImage(srcBImage, at);
+        } finally {
+            g.dispose();
+        }
         return bdest;
     }
 

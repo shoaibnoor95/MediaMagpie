@@ -21,6 +21,7 @@ import de.wehner.mediamagpie.persistence.entity.JobExecution;
 import de.wehner.mediamagpie.persistence.entity.User;
 import de.wehner.mediamagpie.persistence.entity.properties.S3Configuration;
 import de.wehner.mediamagpie.persistence.service.ConfigurationProvider;
+import de.wehner.mediamagpie.persistence.util.TimeProvider;
 
 @Component
 public class CloudSyncJobCreator extends TransactionalJobCreator<AbstractJob> {
@@ -28,14 +29,16 @@ public class CloudSyncJobCreator extends TransactionalJobCreator<AbstractJob> {
     private final ConfigurationProvider _configurationProvider;
     private final MediaDao _mediaDao;
     private final UploadService _uploadService;
+    private final TimeProvider _timeProvider;
 
     @Autowired
     public CloudSyncJobCreator(ConfigurationProvider configurationProvider, UploadService uploadService, MediaDao mediaDao,
-            TransactionHandler transactionHandler, PersistenceService persistenceService) {
+            TransactionHandler transactionHandler, PersistenceService persistenceService, TimeProvider timeProvider) {
         super(transactionHandler, persistenceService);
         _configurationProvider = configurationProvider;
         _uploadService = uploadService;
         _mediaDao = mediaDao;
+        _timeProvider = timeProvider;
     }
 
     @Override
@@ -54,7 +57,7 @@ public class CloudSyncJobCreator extends TransactionalJobCreator<AbstractJob> {
 
             AWSCredentials credentials = new BasicAWSCredentials(existingS3Configuration.getAccessKey(), existingS3Configuration.getSecretKey());
             S3MediaExportRepository s3MediaExportRepository = new S3MediaExportRepository(credentials);
-            return new S3SyncJob(s3MediaExportRepository, _uploadService, user, _configurationProvider, _transactionHandler, _mediaDao);
+            return new S3SyncJob(s3MediaExportRepository, _uploadService, user, _configurationProvider, _transactionHandler, _mediaDao, _timeProvider);
         default:
             throw new RuntimeException("Unkown cloud Type: " + cloudType);
         }

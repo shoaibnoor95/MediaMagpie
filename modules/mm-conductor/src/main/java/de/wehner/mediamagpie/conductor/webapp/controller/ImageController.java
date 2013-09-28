@@ -124,6 +124,8 @@ public class ImageController {
             LOG.debug("Try reading file '" + pathToContent + "'.");
             inputStream = new FileInputStream(pathToContent);
             IOUtils.copy(inputStream, outputStream);
+        } catch (IOException e) {
+            LOG.error("Can not read file '{}'.", pathToContent, e);
         } finally {
             IOUtils.closeQuietly(inputStream);
         }

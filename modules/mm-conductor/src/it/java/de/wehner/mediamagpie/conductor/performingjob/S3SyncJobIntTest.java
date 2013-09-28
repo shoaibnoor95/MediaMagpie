@@ -33,6 +33,7 @@ import de.wehner.mediamagpie.persistence.entity.MediaTag;
 import de.wehner.mediamagpie.persistence.entity.User;
 import de.wehner.mediamagpie.persistence.service.ConfigurationProvider;
 import de.wehner.mediamagpie.persistence.testsupport.DbTestEnvironment;
+import de.wehner.mediamagpie.persistence.util.TimeProvider;
 
 public class S3SyncJobIntTest {
 
@@ -87,7 +88,7 @@ public class S3SyncJobIntTest {
                 imageProcessorFactories);
         UploadService uploadService = new UploadService(_configurationProvider, _mediaDao, imageService, _dbTestEnvironment.getPersistenceService(), null);
         _job = new S3SyncJob(_s3MediaExportRepository, uploadService, _user, _configurationProvider, _dbTestEnvironment.createTransactionHandler(),
-                _mediaDao);
+                _mediaDao, new TimeProvider());
 
         // commit the transaction (close), because the S3SyncJob will be started without a transaction
         _dbTestEnvironment.commitTransaction();

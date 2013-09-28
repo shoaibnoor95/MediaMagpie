@@ -15,7 +15,7 @@ public abstract class AbstractImageProcessor implements Closeable {
 
     public abstract void rotateImage(int angle);
 
-    public abstract void write(File thumbImagePath) throws IOException;
+    public abstract File write(File suggestedThumbImagePath) throws IOException;
 
     public abstract Dimension getProcessedImageDimension();
 

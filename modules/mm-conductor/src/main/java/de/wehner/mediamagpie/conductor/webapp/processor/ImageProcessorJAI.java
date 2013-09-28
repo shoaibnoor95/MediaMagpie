@@ -123,12 +123,13 @@ public class ImageProcessorJAI extends AbstractImageProcessor {
     }
 
     @Override
-    public void write(File thumbImagePath) throws IOException {
+    public File write(File thumbImagePath) throws IOException {
         if (childImageProcessor != null) {
             childImageProcessor.write(thumbImagePath);
         } else {
             FileUtils.writeByteArrayToFile(thumbImagePath, processedImage.toByteArray());
         }
+        return thumbImagePath;
     }
 
     @Override

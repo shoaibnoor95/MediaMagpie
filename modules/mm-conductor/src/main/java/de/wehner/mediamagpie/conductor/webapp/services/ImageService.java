@@ -121,7 +121,7 @@ public class ImageService {
             try {
                 graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
                 graphics2D.drawRenderedImage(originBitmap, AffineTransform.getScaleInstance(minRatio, minRatio));
-                File thumbImagePath = buildThumbImagePath(originImage, id, destPath, thumbWidth, thumbHeight);
+                File thumbImagePath = suggestThumbImageFile(originImage, id, destPath, thumbWidth, thumbHeight);
                 ImageIO.write(resizedBitmap, FilenameUtils.getExtension(thumbImagePath.getPath()), thumbImagePath);
                 LOG.info("Begin resizing image... finished. Resized image into file '" + thumbImagePath.getPath() + "'.");
                 return thumbImagePath;
@@ -143,6 +143,10 @@ public class ImageService {
             try {
                 // scale image
                 stopWatch.start(imageProcessorFactory.getClass().getSimpleName() + ": resize direct API (" + width + "/" + height + ")");
+                String extension = originImage.getName().toUpperCase();
+                if (!extension.endsWith(".JPG")) {
+                    LOG.warn("Detected file name {} without clear image extension.", extension  );
+                }
                 imageProcessor = imageProcessorFactory.createProcessor(originImage);
                 imageProcessor.resize(width, height);
                 // rotate if necessary
@@ -152,8 +156,8 @@ public class ImageService {
 
                 // save result to file
                 Dimension imageDimension = imageProcessor.getProcessedImageDimension();
-                File thumbImagePath = buildThumbImagePath(originImage, id, destPath, imageDimension.width, imageDimension.height);
-                imageProcessor.write(thumbImagePath);
+                File thumbImagePath = suggestThumbImageFile(originImage, id, destPath, imageDimension.width, imageDimension.height);
+                thumbImagePath = imageProcessor.write(thumbImagePath);
                 stopWatch.stop();
                 LOG.info("Begin resizing image... finished. Resized image into file '" + thumbImagePath.getPath() + "'.");
                 return thumbImagePath;
@@ -180,7 +184,7 @@ public class ImageService {
         return new Dimension(origWidth, origHeight);
     }
 
-    private static File buildThumbImagePath(File originFileName, long id, File destPath, int width, int height) {
+    private static File suggestThumbImageFile(File originFileName, long id, File destPath, int width, int height) {
         String pathOriginal = originFileName.getPath();
         String thumbFileName = String.format("%s_%d_%dx%d.%s", FilenameUtils.getBaseName(pathOriginal), id, width, height,
                 FilenameUtils.getExtension(pathOriginal));

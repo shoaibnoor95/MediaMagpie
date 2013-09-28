@@ -1,5 +1,6 @@
 TODO
 ====
+- Verify, that deleting of media will still be deleted on S3 too
 - Add button in trash view used to clean the rubbish can with one click
 - Add image resize job immediately when image is uploaded
 - add mail support on ec2
