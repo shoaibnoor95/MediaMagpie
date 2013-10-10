@@ -91,7 +91,7 @@ public class PublicAlbumController extends AbstractConfigurationSupportControlle
         } else {
             model.addAttribute("error", "Sorry, your requested album does not exists.");
         }
-        model.addAttribute("start", start);
+        model.addAttribute("start", (start != null)? start : 0);
         model.addAttribute("pageSize", getMainConfiguration().getHitsPerPage());
         return VIEW_VIEW;
     }

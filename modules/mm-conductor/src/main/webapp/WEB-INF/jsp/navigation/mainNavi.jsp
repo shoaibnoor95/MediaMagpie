@@ -1,4 +1,3 @@
-<%@ taglib prefix="core" uri="/WEB-INF/tlds/core.tld" %>
 <%@ include file="/WEB-INF/jsp/general/taglibs.jsp" %>
 <div id="mainNavi">
 	<ul>

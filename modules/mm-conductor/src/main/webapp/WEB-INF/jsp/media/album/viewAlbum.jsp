@@ -3,7 +3,6 @@
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.media.PublicAlbumController"%>
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.util.WebAppUtils" %>
 <%@ include file="/WEB-INF/jsp/general/taglibs.jsp" %>
-<%@ taglib uri="/WEB-INF/tlds/core.tld" prefix="core"%>
 
 <%@ page pageEncoding="UTF-8"%>
 <%@ page session="false" %>

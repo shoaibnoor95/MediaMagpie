@@ -1,6 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ include file="/WEB-INF/jsp/general/taglibs.jsp" %>
-<%@ taglib uri="/WEB-INF/tlds/core.tld" prefix="core"%>
 
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.media.UploadController" %>
 

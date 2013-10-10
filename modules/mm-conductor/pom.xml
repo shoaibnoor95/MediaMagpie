@@ -13,6 +13,16 @@
 	<name>MediaMagpie Web</name>
 	<packaging>${packaging.type}</packaging>
 
+    <repositories>
+        <!-- only needed to get javax.media.jai:com.springsource.javax.media.jai.core:jar -->
+        <repository>
+            <id>com.springsource.repository.bundles.external</id>
+            <name>SpringSource Enterprise 
+            Bundle Repository - External Bundle Releases</name>
+            <url>http://repository.springsource.com/maven/bundles/external</url>
+        </repository>
+    </repositories>
+
 	<profiles>
 		<profile>
 			<id>jettyIntegrated</id>
@@ -74,8 +84,9 @@
 		<dependency>
 			<groupId>ma.glasnost.orika</groupId>
 			<artifactId>orika-core</artifactId>
-			<version>1.4.2</version><!-- or latest version -->
+			<version>1.4.3</version>
 		</dependency>
+		
 		<!-- slf4j -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
@@ -152,10 +163,6 @@
 			<scope>compile</scope>
 		</dependency>
 
-		<!-- Hibernate/JPA -->
-		<!-- <dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-search</artifactId> </dependency> <dependency> 
-			<groupId>org.hibernate</groupId> <artifactId>hibernate-entitymanager</artifactId> </dependency> -->
-
 		<!-- JSR 303 with Hibernate Validator, see http://www.roseindia.net/tutorial/spring/spring3/web/spring-3-mvc-validation-example.html -->
 		<dependency>
 			<groupId>javax.validation</groupId>
@@ -182,7 +189,7 @@
 		<dependency>
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
-			<version>2.3.19</version>
+			<version>2.3.20</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.mail</groupId>
@@ -193,22 +200,18 @@
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-webapp</artifactId>
-			<version>9.0.3.v20130506</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-jsp</artifactId>
-			<version>9.0.3.v20130506</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-deploy</artifactId>
-			<version>9.0.3.v20130506</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-jmx</artifactId>
-			<version>9.0.3.v20130506</version>
 		</dependency>
 
 		<!-- Test -->
