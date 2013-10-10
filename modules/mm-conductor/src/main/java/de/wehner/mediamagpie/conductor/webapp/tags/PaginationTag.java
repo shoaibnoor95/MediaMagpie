@@ -10,7 +10,7 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PaginationTag extends SimpleTagSupport {
+public class PaginationTag extends /*TagSupport*/SimpleTagSupport {
 
     private static final Logger LOG = LoggerFactory.getLogger(PaginationTag.class);
 
@@ -19,6 +19,9 @@ public class PaginationTag extends SimpleTagSupport {
     private int _pageSize;
     private String _query;
 
+    public PaginationTag() {
+    }
+    
     @Override
     public void doTag() throws JspException {
         final int DISTANCE_FROM_ACTUAL_PAGE = 10;

@@ -1,68 +1,66 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
 <taglib version="2.1" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd">
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd">
 
-    <tlibversion>1.0</tlibversion>
-    <shortname>I2p tags</shortname>
+	<tlibversion>1.0</tlibversion>
+	<shortname>MediaMagpie project tags</shortname>
+	
+	<tag>
+		<name>pagination</name>
+		<tagclass>de.wehner.mediamagpie.conductor.webapp.tags.PaginationTag</tagclass>
+		<bodycontent>empty</bodycontent>
+		<attribute>
+			<name>current</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>total</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>pageSize</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>query</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
 
-    <tag>
-        <name>pagination</name>
-        <tagclass>de.wehner.mediamagpie.conductor.webapp.tags.PaginationTag</tagclass>
-        <bodycontent>empty</bodycontent>
-        <attribute>
-            <name>current</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>total</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>pageSize</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>query</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-    </tag>
+	<tag>
+		<name>date</name>
+		<tagclass>de.wehner.mediamagpie.conductor.webapp.tags.DateTag</tagclass>
+		<description>Formats a date object.</description>
+		<bodycontent>empty</bodycontent>
+		<attribute>
+			<name>date</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
 
-    <tag>
-        <name>date</name>
-        <tagclass>de.wehner.mediamagpie.conductor.webapp.tags.DateTag</tagclass>
-        <description>Formats a date object.</description>
-        <bodycontent>empty</bodycontent>
-        <attribute>
-            <name>date</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-    </tag>
-    
-    <tag>
-        <name>ErrorHint</name>
-        <tagclass>de.wehner.mediamagpie.conductor.webapp.tags.ErrorHintTag</tagclass>
-        <description>Renders the bullet_error.png icon if relevant setup task is provided</description>
-        <bodycontent>empty</bodycontent>
-        <attribute>
-            <name>requiredSetupTasks</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>de.wehner.mediamagpie.common.persistence.entity.properties.RequiredSetupTasks</type>
-        </attribute>
-        <attribute>
-            <name>mainItemName</name>
-            <required>false</required>
-        </attribute>
-        <attribute>
-            <name>subItemName</name>
-            <required>false</required>
-        </attribute>
-    </tag>
+	<tag>
+		<name>ErrorHint</name>
+		<tagclass>de.wehner.mediamagpie.conductor.webapp.tags.ErrorHintTag</tagclass>
+		<description>Renders the bullet_error.png icon if relevant setup task is provided</description>
+		<bodycontent>empty</bodycontent>
+		<attribute>
+			<name>requiredSetupTasks</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>de.wehner.mediamagpie.common.persistence.entity.properties.RequiredSetupTasks</type>
+		</attribute>
+		<attribute>
+			<name>mainItemName</name>
+			<required>false</required>
+		</attribute>
+		<attribute>
+			<name>subItemName</name>
+			<required>false</required>
+		</attribute>
+	</tag>
 
 </taglib>

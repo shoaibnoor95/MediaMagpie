@@ -3,7 +3,7 @@ HOWTO
 
 Which software do you need?
 ---------------------------
-+ sun java 7
++ java 7
 + apache maven 3
 + optional a database like mysql
 
@@ -37,6 +37,7 @@ When using jetty change some system properties as set in start script mediamagpi
 + -Dwebapp.context.path=<context path> , eg: -Dwebapp.context.path=/rwe
  
 When using a different context path copy the file domain.xml into your ROOT webapp directory of tomcat.
+
 
 Run application in tomcat
 -------------------------
@@ -85,12 +86,11 @@ or with non-default data directory:
     $ ~/programs/mongodb/bin/mongod --dbpath ~/programs/data/mongodb/ &
     
 
-
 Hint for md-formatting: See https://github.com/SpringSource/cloudfoundry-samples/blob/master/stocks/README.md
 
 
 ## EC2 Instances
-### Update the standard open-jdk version with oracles java 1.6:
+### Update the standard open-jdk version with oracles java 1.6: (TODO rwe: obsolete)
 The open-jdk installation on the ec2 instances seems to have many issues, so i've got the effect that mediamagpie crashes after a while (e.g. less than one minute of usage). By this experience i decided to install the oracle java implementation.
 I've found a very good installation guide here: http://livingtao.blogspot.de/2012/01/few-easy-steps-to-install-sunoracle-jdk.html
 
@@ -102,7 +102,35 @@ I've found a very good installation guide here: http://livingtao.blogspot.de/201
   $ update-alternatives --config java
   $ ln -s /usr/java/default/jre /usr/lib/jvm/jre
   $ ln -s /usr/share/java /usr/lib/jvm-exports/jre
-  
+
+### Install openjdk 7:
+```bash
+  $ sudo yum update
+  $ yum --enablerepo="*" list available | grep openjdk
+  $ sudo yum install java-1.7.0-openjdk-devel
+  $ sudo alternatives --config java
+  $ sudo yum clean all
+´´´
+
+### Create swap partition to avoid 'java invoked oom-killer':
+See also article http://serverfault.com/questions/268288/most-long-running-commands-instantly-killed-on-amazon-ec2-ubuntu-10-04.
+```bash
+  $ sudo dd if=/dev/zero of=/swap bs=1M count=500
+  $ sudo mkswap /swap
+  $ sudo swapon /swap
+´´´
+
+
+### Reduce memory usage of mysql DB
+Add some settings in /etc/my.cnf
+```bash
+  ...
+  max_connections=10
+  key_buffer_size=32M
+  query_cache_size=32M
+  ...
+´´´
+
 ## Generating self-signed Certificate and keystore (TODO rwe: obsolete?)
 
   $ #openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout jetty.key -out jetty.crt

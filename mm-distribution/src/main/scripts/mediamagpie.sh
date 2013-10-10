@@ -14,9 +14,8 @@ MGR_DEPLOY_MODE=live
 #MGR_DEPLOY_MODE=local
 #JAVA_HOME=
 #ADDITIONAL_PARAMETERS="-Dpersistent.unit=mysql"
-#ADDITIONAL_PARAMETERS="-Dwebapp.port=8087 -Dwebapp.context.path=/mediamagpie"
-#-Xms256m -Xmx1024m -XX:MaxPermSize=256m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp
-VM_ARGS="-Xmx256m -XX:MaxPermSize=128m -XX:+CMSClassUnloadingEnabled -XX:HeapDumpPath=/tmp -XX:ErrorFile=/var/log/java_hs_err_pid%p.log $ADDITIONAL_PARAMETERS"
+#ADDITIONAL_PARAMETERS="-Dwebapp.port.http=8080 -Dwebapp.port.https=9191 -Dwebapp.context.path=/mediamagpie"
+VM_ARGS="-Xmx200m -XX:MaxPermSize=120m -XX:+CMSClassUnloadingEnabled $ADDITIONAL_PARAMETERS"
 #########################
 
 CLASS=de.wehner.mediamagpie.conductor.StartJetty9

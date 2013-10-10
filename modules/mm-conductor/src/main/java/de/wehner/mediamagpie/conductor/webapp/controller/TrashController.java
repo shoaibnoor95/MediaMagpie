@@ -76,7 +76,7 @@ public class TrashController extends AbstractConfigurationSupportController {
         }
 
         model.addAttribute("pictures", pictures);
-        model.addAttribute("start", start);
+        model.addAttribute("start", startIndex);
         model.addAttribute("pageSize", getMainConfiguration().getHitsPerPage());
         model.addAttribute("totalHits", hits);
         return VIEW_TRASH;

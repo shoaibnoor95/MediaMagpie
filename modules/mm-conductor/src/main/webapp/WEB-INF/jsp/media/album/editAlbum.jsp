@@ -2,7 +2,6 @@
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.media.AlbumController"%>
 <%@ page import="de.wehner.mediamagpie.persistence.entity.Visibility" %>
 <%@ include file="/WEB-INF/jsp/general/taglibs.jsp" %>
-<%@ taglib uri="/WEB-INF/tlds/core.tld" prefix="core"%>
 
 <c:choose>
 	<c:when test="${album.isNew}">

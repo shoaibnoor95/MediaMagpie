@@ -4,7 +4,6 @@
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.util.WebAppUtils" %>
 <%@ page import="de.wehner.mediamagpie.persistence.entity.Visibility" %>
 <%@ include file="/WEB-INF/jsp/general/taglibs.jsp"%>
-<%@ taglib uri="/WEB-INF/tlds/core.tld" prefix="core"%>
 
 <c:set var="title" value="Albums" scope="request" />
 <c:set var="activeMenu" value="media" scope="request" />

@@ -206,7 +206,7 @@ public class SearchController extends AbstractConfigurationSupportController {
         }
 
         model.addAttribute("pictures", mediaThumbCommands);
-        model.addAttribute("start", start);
+        model.addAttribute("start", startIndex);
         model.addAttribute("pageSize", hitsPerPage);
         model.addAttribute("totalHits", hits);
         if (searchCriteria.getYearStartFromInputField() != null) {
