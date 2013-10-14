@@ -69,7 +69,7 @@
 	</form:form>
 
 	<br />
-	<core:pagination current="${start}" pageSize="${pageSize}" total="${totalHits}" query="<%=request.getContextPath()%>" />
+	<core:pagination current="${start}" pageSize="${pageSize}" total="${totalHits}" path="" />
 
 	<div class="ui-widget ui-helper-clearfix">
 		<ul id="gallery" class="gallery ui-helper-reset ui-helper-clearfix">
@@ -123,7 +123,7 @@
 		</ul>
 	</div>
 
-	<core:pagination current="${start}" pageSize="${pageSize}" total="${totalHits}" query="<%=request.getContextPath()%>" />
+    <core:pagination current="${start}" pageSize="${pageSize}" total="${totalHits}" path="search_pictures" />
 	<br />
 
 	<!--  album selection and droppable area -->

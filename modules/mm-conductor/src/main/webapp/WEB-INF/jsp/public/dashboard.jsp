@@ -11,7 +11,7 @@
                 <h2>Last ${totalHits} medias added to MediaMagpie</h2>
                 
                 <div id="pictures">
-				<core:pagination current="${start}" pageSize="${pageSize}" total="${totalHits}" query="<%=request.getContextPath()%>" />
+				<core:pagination current="${start}" pageSize="${pageSize}" total="${totalHits}" path="" />
                 <table id="pictureMarkup">
                     <thead>
                         <tr>
@@ -43,6 +43,6 @@
                         </c:forEach>
                     </tbody>
                 </table>
-				<core:pagination current="${start}" pageSize="${pageSize}" total="${totalHits}" query="<%=request.getContextPath()%>" />
+				<core:pagination current="${start}" pageSize="${pageSize}" total="${totalHits}" path="" />
 				</div>
 			</div>

@@ -23,7 +23,7 @@
 					<input id="input_id" type="hidden" value="" name="id">
 				</form:form>
 				<br/>
-				<core:pagination current="${start}" pageSize="${pageSize}" total="${totalHits}" query="<%=request.getContextPath()%>" />
+				<core:pagination current="${start}" pageSize="${pageSize}" total="${totalHits}" />
                 <table id="pictureMarkup" >
                     <thead>
                         <tr>
@@ -51,5 +51,5 @@
                         </c:forEach>
                     </tbody>
                 </table>
-				<core:pagination current="${start}" pageSize="${pageSize}" total="${totalHits}" query="<%=request.getContextPath()%>" />
+                <core:pagination current="${start}" pageSize="${pageSize}" total="${totalHits}" />
 			</div>
