@@ -25,7 +25,7 @@
 		<c:otherwise>
 			<h2>${albumCommand.name}</h2>
 				
-			<core:pagination current="${start}" pageSize="2" total="${totalHits}" path="" />
+            <core:pagination current="${start}" pageSize="${pageSize}" total="${totalHits}" path="" />
 
 			<div class="ui-widget ui-helper-clearfix">
 				<ul id="gallery" class="gallery ui-helper-reset ui-helper-clearfix">

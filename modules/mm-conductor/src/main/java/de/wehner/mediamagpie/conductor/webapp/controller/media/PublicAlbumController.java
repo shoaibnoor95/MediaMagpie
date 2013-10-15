@@ -70,7 +70,11 @@ public class PublicAlbumController extends AbstractConfigurationSupportControlle
 
     @RequestMapping(method = RequestMethod.GET, value = URL_VIEW)
     public String view(Model model, @PathVariable String uuid, @RequestParam(value = "start", required = false) Integer start, HttpServletRequest request) {
+        start = (start != null) ? start : 0;
         Album album = _albumDao.getByUuid(uuid);
+        MainConfiguration mainConfiguration = getMainConfiguration();
+        model.addAttribute("start", start);
+        model.addAttribute("pageSize", mainConfiguration.getHitsPerPage());
         if (album != null) {
             String errorMsg = doVisibilityValidation(album);
             if (errorMsg == null) {
@@ -78,21 +82,25 @@ public class PublicAlbumController extends AbstractConfigurationSupportControlle
                 List<MediaThumbCommand> mediaThumbCommands = new ArrayList<MediaThumbCommand>();
                 User owner = album.getOwner();
                 UserConfiguration userConfiguration = _configurationProvider.getUserConfiguration(owner);
-                for (Media media : album.getMedias()) {
-                    mediaThumbCommands.add(_imageSerivce.createMediaThumbCommand(media, getMainConfiguration(), userConfiguration, request));
+                final List<Media> mediasInAlbum = album.getMedias();
+                int end = Math.min((start + mainConfiguration.getHitsPerPage()), mediasInAlbum.size()-1);
+                for (int i = start; i < end; i++) {
+                    Media media = mediasInAlbum.get(i);
+                    mediaThumbCommands.add(_imageSerivce.createMediaThumbCommand(media, mainConfiguration, userConfiguration, request));
                 }
+                // for (Media media : mediasInAlbum) {
+                // mediaThumbCommands.add(_imageSerivce.createMediaThumbCommand(media, mainConfiguration, userConfiguration, request));
+                // }
                 // albumCommand.init(album, _imageSerivce, userConfiguration.getThumbImageSize());
                 model.addAttribute("albumCommand", album);
                 model.addAttribute(mediaThumbCommands);
-                model.addAttribute("totalHits", album.getMedias().size());
+                model.addAttribute("totalHits", mediasInAlbum.size());
             } else {
                 model.addAttribute("error", errorMsg);
             }
         } else {
             model.addAttribute("error", "Sorry, your requested album does not exists.");
         }
-        model.addAttribute("start", (start != null)? start : 0);
-        model.addAttribute("pageSize", getMainConfiguration().getHitsPerPage());
         return VIEW_VIEW;
     }
 
