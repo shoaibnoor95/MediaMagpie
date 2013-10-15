@@ -10,6 +10,7 @@ Which software do you need?
 How to build?
 -------------
 ```bash
+export MAVEN_OPTS="-Xmx200m -XX:MaxPermSize=120m"
 mvn clean
 mvn compile
 mvn test
