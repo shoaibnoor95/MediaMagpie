@@ -4,7 +4,7 @@
 <%@ include file="/WEB-INF/jsp/general/taglibs.jsp" %>
 
 <c:choose>
-	<c:when test="${album.isNew}">
+	<c:when test="${albumCommand.isNew}">
 		<c:set var="title" value="New Album"  scope="request"/>
 	</c:when>
 	<c:otherwise>
