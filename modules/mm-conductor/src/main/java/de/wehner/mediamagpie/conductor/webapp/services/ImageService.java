@@ -219,6 +219,14 @@ public class ImageService {
             if (priority != null) {
                 resizeImageJob.setPriority(priority);
             }
+
+            
+            // rwe: try to find out mystery org.hibernate.exception.ConstraintViolationException when persiting the resize job
+            if(resizeImageJob.getMedia().getId() == null){
+                LOG.error("Media {} has no ID!", media.toString());
+            }
+            
+            
             _imageResizeJobExecutionDao.makePersistent(resizeImageJob);
             LOG.info("Resize job for media '" + media.getId() + "' added with priority '" + resizeImageJob.getPriority() + "'.");
             return true;

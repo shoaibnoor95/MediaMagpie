@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mobile.device.Device;
+import org.springframework.mobile.device.DeviceUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,15 +70,17 @@ public class WelcomeController {
     }
 
     @RequestMapping("/env")
-    public void env(HttpServletResponse response) throws IOException {
+    public void env(HttpServletResponse response, HttpServletRequest servletRequest) throws IOException {
+        Device device = DeviceUtils.getCurrentDevice(servletRequest);
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
         out.println("System Environment:");
+        out.println("device: " + device);
         for (Map.Entry<String, String> envvar : System.getenv().entrySet()) {
             out.println(envvar.getKey() + ": " + envvar.getValue());
         }
     }
-    
+
     private String nextRequiredSetupLink(HttpServletRequest request) {
         Set<SetupTask> setupTasks = _configurationProvider.getRequiredSetupTasks().getSetupTasks();
         if (setupTasks.contains(SetupTask.CONFIGURE_SYSTEM_DIRS)) {
