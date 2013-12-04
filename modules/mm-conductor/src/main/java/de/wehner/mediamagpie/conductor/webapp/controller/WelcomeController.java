@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mobile.device.Device;
 import org.springframework.mobile.device.DeviceUtils;
@@ -33,6 +35,8 @@ import de.wehner.mediamagpie.persistence.service.ConfigurationProvider;
 @Controller
 public class WelcomeController {
 
+    private static final Logger LOG = LoggerFactory.getLogger(WelcomeController.class);
+
     public static final String WELCOME_URL = "/welcome";
     public static final String WELCOME_VIEW = "public/welcome";
     public static final String MOCK_URL = "/mock";
@@ -51,7 +55,9 @@ public class WelcomeController {
     }
 
     @RequestMapping(method = { RequestMethod.GET, RequestMethod.HEAD }, value = WELCOME_URL)
-    public String welcome(ModelMap model, @RequestParam(value = "start", required = false) Integer start, HttpServletRequest request) {
+    public String welcome(Device device, ModelMap model, @RequestParam(value = "start", required = false) Integer start, HttpServletRequest request) {
+
+        LOG.info("Detected device {}", device);
 
         String redirectUrl = nextRequiredSetupLink(request);
         if (!StringUtils.isEmpty(redirectUrl)) {
