@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -62,12 +64,23 @@ public class TestEnvironment extends ExternalResource {
      */
     private File _workingDir;
 
+    /**
+     * A name of the associated test class which is normally the simple class name of test
+     */
+    private final String _testName;
+
+    /**
+     * A set used to store each cleaned working directory
+     */
+    private static final Set<String> cleanedWorkingDir = new HashSet<String>();
+
     public TestEnvironment(Class<?> testClass) {
         this(testClass.getSimpleName());
     }
 
     public TestEnvironment(String testName) {
         _workingDir = new File("target/junit", testName);
+        _testName = testName;
     }
 
     @Override
@@ -104,6 +117,16 @@ public class TestEnvironment extends ExternalResource {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void cleanWorkingDirOnlyOnce() {
+        synchronized (cleanedWorkingDir) {
+            if (cleanedWorkingDir.contains(_testName)) {
+                return;
+            }
+            cleanedWorkingDir.add(_testName);
+        }
+        cleanWorkingDir();
     }
 
     public void copyFilesIntoWorkingDir(File... testFiles) throws IOException {
