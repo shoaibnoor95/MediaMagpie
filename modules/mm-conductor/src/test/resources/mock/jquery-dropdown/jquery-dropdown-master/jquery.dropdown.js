@@ -32,43 +32,6 @@ if (jQuery) (function ($) {
         }
     });
 
-    function showRwe(event, object) {
-
-        var trigger = event ? $(this) : object,
-			dropdown = $(trigger.attr('data-dropdown')),
-			isOpen = trigger.hasClass('dropdown-open');
-
-        // In some cases we don't want to show it
-        if (event) {
-            if ($(event.target).hasClass('dropdown-ignore')) return;
-
-            event.preventDefault();
-            event.stopPropagation();
-        } else {
-            if (trigger !== object.target && $(object.target).hasClass('dropdown-ignore')) return;
-        }
-//        hide();
-
-        if (isOpen || trigger.hasClass('dropdown-disabled')) return;
-
-        // Show it
-        trigger.addClass('dropdown-open');
-        dropdown
-			.data('dropdown-trigger', trigger)
-			.show();
-
-        // Position it
-        position();
-
-        // Trigger the show callback
-        dropdown
-			.trigger('show', {
-				dropdown: dropdown,
-				trigger: trigger
-			});
-
-    }
-
     function show(event, object) {
 
         var trigger = event ? $(this) : object,
@@ -77,16 +40,24 @@ if (jQuery) (function ($) {
 
         // In some cases we don't want to show it
         if (event) {
-            if ($(event.target).hasClass('dropdown-ignore')) return;
-
+            if ($(event.target).hasClass('dropdown-ignore')) {
+            	return;
+            }
             event.preventDefault();
             event.stopPropagation();
         } else {
-            if (trigger !== object.target && $(object.target).hasClass('dropdown-ignore')) return;
+            if (trigger !== object.target && $(object.target).hasClass('dropdown-ignore')) {
+            	return;
+            }
         }
-        hide();
+        var type = event.type;
+        if(type != 'mouseenter' && type != 'mouseleave'){
+        	hide();
+        }
 
-        if (isOpen || trigger.hasClass('dropdown-disabled')) return;
+        if (isOpen || trigger.hasClass('dropdown-disabled')) {
+        	return;
+        }
 
         // Show it
         trigger.addClass('dropdown-open');
@@ -103,7 +74,60 @@ if (jQuery) (function ($) {
 				dropdown: dropdown,
 				trigger: trigger
 			});
+    }
 
+    function mouseLeaveDropDownLink(event) {
+        var trigger = event ? $(event.target) : null;
+//        var targetGroup = event ? $(event.target).parents().addBack() : null;
+  
+        //var x = event.pageX - this.offsetLeft;
+        var y = event.pageY - this.offsetTop - this.offsetHeight;
+        //trigger.html("X: " + x + " Y: " + y);
+        
+        if(y > 0) {
+        	// mouse leaves the link to the bottom
+        	return;
+        }
+        hideDropDowns();
+        
+/*        // Does we moved from dropDown link into a dropdown-menue?
+        var openDropDownMenues = $(document).find('.dropdown:visible');
+        openDropDownMenues.each(function () {
+            var dropdown = $(this);
+            
+            
+            var x = event.pageX - this.offsetLeft;
+            var y = event.pageY - this.offsetTop;
+            trigger.html("X: " + x + " Y: " + y); 
+            
+//            dropdown
+//				.hide()
+//				.removeData('dropdown-trigger')
+//				.trigger('hide', { dropdown: dropdown });
+        });
+        if(openDropDownMenues != null) {
+        	return;
+        }*/
+    }
+    
+    function mouseLeaveDropDown(event) {
+//    	setTimeout( function() {  hide(event); }, 1000);
+//    	hide(event);
+//        var targetGroup = event ? $(event.target).parents().addBack() : null;
+        var targetOfEvent = event ? $(event.target) : null;
+        var targetGroup = event ? $(event.target).parents().addBack() : null;
+  
+        // Are we moving anywhere in a dropdown?
+        if (targetGroup && targetGroup.is('.dropdown')) {
+            // Is it a dropdown menu?
+            if (targetGroup.is('.dropdown-menu')) {
+                // Did we leave on an option? If so close it.
+            	hideDropDowns();
+            } else {
+                // Nope, it's a panel. Leave it open.
+                return;
+            }
+        }
     }
 
     function hide(event) {
@@ -116,13 +140,17 @@ if (jQuery) (function ($) {
             // Is it a dropdown menu?
             if (targetGroup.is('.dropdown-menu')) {
                 // Did we click on an option? If so close it.
-                if (!targetGroup.is('A')) return;
+                if (!targetGroup.is('A')) 
+                	return;
             } else {
                 // Nope, it's a panel. Leave it open.
                 return;
             }
         }
+        hideDropDowns();
+    }
 
+    function hideDropDowns() {
         // Hide any dropdown that may be showing
         $(document).find('.dropdown:visible').each(function () {
             var dropdown = $(this);
@@ -134,9 +162,8 @@ if (jQuery) (function ($) {
 
         // Remove all dropdown-open classes
         $(document).find('.dropdown-open').removeClass('dropdown-open');
-
     }
-
+    
     function position() {
 
         var dropdown = $('.dropdown:visible').eq(0),
@@ -164,8 +191,10 @@ if (jQuery) (function ($) {
         }
     }
 
-    $(document).on('hover.dropdown', '[data-dropdown]', showRwe);
-    $(document).on('click.dropdown', '[data-dropdown]', show);
+    $(document).on('hover.dropdown', '[data-dropdown]', show);
+    $(document).on('mouseleave.dropdown', '[data-dropdown]', mouseLeaveDropDownLink);
+    $(document).on('mouseleave.dropdown', '.dropdown', mouseLeaveDropDown);
+//    $(document).on('click.dropdown', '[data-dropdown]', show);
     $(document).on('click.dropdown', hide);
     $(window).on('resize', position);
 
