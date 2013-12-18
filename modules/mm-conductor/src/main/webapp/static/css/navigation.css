@@ -16,8 +16,8 @@
 #mainNavi li {
 	float: left;
 	margin: 0 1px 0 1px;
-	padding: 0 30px 0 30px;
-	height: 36px;
+	padding: 4px 30px 0 30px;
+	height: 32px;
 	background: -moz-linear-gradient(center top, #f0f0f0, #cccccc) repeat scroll 0 0 transparent;
 	background: -webkit-gradient(linear, left top, left bottom, from(#f0f0f0), to(#cccccc) );
 	border: 1px solid #cccccc;
@@ -26,7 +26,7 @@
 }
 
 #mainNavi a {
-	display: block;
+/*	display: block;*/
 	font-weight: bold;
 	font-size: 12px;
 	line-height: 28px;
@@ -34,13 +34,14 @@
 }
 
 #mainNavi ul li a {
-	padding-top: 4px;
+/*	padding-top: 4px;*/
 }
 
 #mainNavi li.current {
 	margin: -4px 0 0 0;
-	padding-top: 2px;
-	height: 39px;
+	padding-top: 6px;
+    padding-bottom: 4px;
+	height: 31px;
 	background: #fff;
 	box-shadow: inset 0px 0px 0px #ffffff;
 	border-bottom: 0px;
@@ -51,7 +52,7 @@
 }
 
 #mainNavi ul li.current a {
-	padding-top: 4px;
+/*	padding-top: 4px;*/
 	font-size: 13px; //
 	text-decoration: underline;
 	color: #0191D0;

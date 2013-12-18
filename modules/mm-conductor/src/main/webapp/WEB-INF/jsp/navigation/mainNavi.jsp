@@ -6,6 +6,7 @@
 		</li>
 		<li <c:if test="${activeMenu == 'media'}">class="current"</c:if>>
 			<a href="<%=request.getContextPath()%>/media/search_pictures">Media</a>
+            <img data-dropdown="#dropdown-media" src="/static/images/famfamfam_silk/bullet_arrow_down.png">
 		</li>
 		<li <c:if test="${activeMenu == 'config'}">class="current"</c:if>>
 			<a href="<%=request.getContextPath()%>/config/user/">Configuration
