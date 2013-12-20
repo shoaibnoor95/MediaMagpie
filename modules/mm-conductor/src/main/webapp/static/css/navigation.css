@@ -13,7 +13,7 @@
 	top: 32px;
 }
 
-#mainNavi li {
+#mainNavi ul li.top_navi {
 	float: left;
 	margin: 0 1px 0 1px;
 	padding: 4px 30px 0 30px;

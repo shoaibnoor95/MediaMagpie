@@ -7,12 +7,18 @@
 	    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
 	    <meta http-equiv="expires" content="0"/>
 	    <title>${title}</title>
+	    
 	    <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/styles-all.css"/>" />
         <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/effects.css"/>" />
 	    <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/ui-lightness/jquery-ui-1.8.13.custom.css"/>" />
-		<!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>-->
-		<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery-1.6.4.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/jquery.dropdown.css"/>" />
+        
+        <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>-->
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+		<!--<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery-1.6.4.min.js"></script>-->
+        <!--<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery-1.10.2.min.js"></script>-->
 		<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery-ui-1.8.13.custom.min.js"></script>
+        <script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery.dropdown.js" ></script>
 		<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/utils.js" ></script>
 		<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/prefixfree.min.js"></script>
 		<script type="text/javascript">
@@ -32,7 +38,7 @@
 		</script>
 	    <decorator:head />
 	</head>
-	<body onload="focusFirstEnabledField()">
+	<body >
 	    <div id="page"> 
 	        <div id="page_top">
 	            <div id="logo">

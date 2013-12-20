@@ -197,7 +197,7 @@ if (jQuery) (function ($) {
     $(document).on('mouseleave.dropdown', '[data-dropdown]', mouseLeaveDropDownLink);
     $(document).on('mouseleave.dropdown', '.dropdown', mouseLeaveDropDown);
 //    $(document).on('click.dropdown', '[data-dropdown]', show);
-    $(document).on('click.dropdown', hide);
-    $(window).on('resize', position);
+//rwe    $(document).on('click.dropdown', hide);
+//rwe    $(window).on('resize', position);
 
 })(jQuery);
