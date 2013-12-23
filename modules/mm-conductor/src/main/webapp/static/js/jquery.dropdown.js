@@ -80,13 +80,19 @@ if (jQuery) (function ($) {
 
     function mouseLeaveDropDownLink(event) {
         var trigger = event ? $(event.target) : null;
-//        var targetGroup = event ? $(event.target).parents().addBack() : null;
-  
-        //var x = event.pageX - this.offsetLeft;
-        var y = event.pageY - this.offsetTop - this.offsetHeight;
-        //trigger.html("X: " + x + " Y: " + y);
-        
-        if(y > 0) {
+
+/*        var parentOffset = $(this).parent().offset(); 
+/        var relX = event.pageX - parentOffset.left;
+        var relY = event.pageY - parentOffset.top;
+        trigger.html("rel pos within parent element: X: " + relX + " Y: " + relY);
+*/
+        var myOffset = $(this).offset(); 
+        var height = $(this).height();
+        var relX = event.pageX - myOffset.left;
+        var relY = event.pageY - myOffset.top;
+        //trigger.html("rel pos within this element: X: " + relX + " Y: " + relY+", height: "+height);
+
+        if((relY - height) >= 0) {
         	// mouse leaves the link to the bottom
         	return;
         }
