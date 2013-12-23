@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ include file="/WEB-INF/jsp/general/taglibs.jsp" %>
-<ul>
+<div id="dropdown-media" class="dropdown dropdown-relative dropdown-tip">
+<ul class="dropdown-menu">
 	<li class="<c:if test="${activeSubMenu == 'mediaSearch'}">current</c:if>">
 		<a href="<%=request.getContextPath()%>/media/search_pictures">Medias</a>
 	</li>
@@ -14,3 +15,4 @@
 		<a href="<%=request.getContextPath()%>/trash/content">Trash</a>
 	</li>
 </ul>
+</div>

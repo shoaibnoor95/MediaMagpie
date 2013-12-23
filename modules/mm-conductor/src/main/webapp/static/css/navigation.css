@@ -68,62 +68,6 @@
 	font-weight: bold;
 }
 
-#subNavi {
-	margin-top: 20px;
-	margin-left: 25px;
-}
-
-#subNavi ul {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
-#subNavi li {
-	margin: 1px 0 1px 0;
-	padding: 0; //
-	width: 190px;
-	height: 33px; //
-	background: #dfdfdf;
-	background: -moz-linear-gradient(center top, #f0f0f0, #cccccc) repeat scroll 0 0 transparent;
-	background: -webkit-gradient(linear, left top, left bottom, from(#f0f0f0), to(#cccccc) );
-	border: 1px solid #CCCCCC;
-	border-left: 0;
-	border-radius: 8px 0 0 8px;
-	box-shadow: 2px 8px 10px #DFDFDF inset;
-}
-
-#subNavi li a {
-	text-decoration: none;
-	font-size: 12px;
-	line-height: 33px;
-	margin-left: 20px;
-	font-weight: bold;
-}
-
-#subNavi li.current { //
-	margin: -4px 0 0 0; //
-	padding-top: 2px; //
-	height: 39px;
-	background: white;
-	box-shadow: inset 0px 0px 0px #ffffff;
-	border-right: 0px;
-}
-
-#subNavi ul li.current a {
-	padding-top: 4px;
-	padding-left: 8px; //
-	font-size: 13px; //
-	text-decoration: underline;
-	color: #0191D0;
-}
-
-#subNavi li:hover {
-	background: #CCCCCC; //
-	background: -moz-linear-gradient(center top, #F0F0F0, #CCCCCC) repeat scroll 0 0 transparent; //
-	box-shadow: 2px 8px 10px #DFDFDF inset;
-}
-
 .error_hint {
     float: right;
     padding: 0 0 0 10px;	

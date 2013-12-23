@@ -15,24 +15,18 @@
 	background-color: #7a7a7a;
 }
 
-#sub_navi { //
-	display: block;
-	float: left;
-	width: 210px;
-}
-
 #content {
 	background: white;
 	padding: 30px;
-	margin-left: 210px;
-	min-height: 600px; //
-	border-left: 1px solid rgb(204, 204, 204);
-	border-left: 1px solid #CCCCCC;
+	margin: 0 20px;
+	min-height: 600px;
+/*	border-left: 1px solid rgb(204, 204, 204);
+	border-left: 1px solid #CCCCCC;*/
 }
 
 #page_bottom { 
-	/*background-color: #7A7A7A;*/
-	background: none repeat scroll 0 0 #dfdfdf;
+    background-color: #7a7a7a;
+	/*background: none repeat scroll 0 0 #dfdfdf;*/
 	/*border-top: 1px solid #CDCDCD;*/
 	clear: both;
 	color: #999999;

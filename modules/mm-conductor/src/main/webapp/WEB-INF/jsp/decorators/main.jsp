@@ -13,10 +13,8 @@
 	    <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/ui-lightness/jquery-ui-1.8.13.custom.css"/>" />
         <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/jquery.dropdown.css"/>" />
         
-        <!-- TODO rwe: better load jquery directly from own server to avoid https -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 		<!--<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery-1.6.4.min.js"></script>-->
-        <!--<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery-1.10.2.min.js"></script>-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 		<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery-ui-1.8.13.custom.min.js"></script>
         <script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery.dropdown.js" ></script>
 		<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/utils.js" ></script>
@@ -55,18 +53,6 @@
 	            </div>
 	        </div>
 	        <div id="page_middle">
-	            <div id="sub_navi">
-	                <div id="subNavi">
-	                    <c:choose>
-	                        <c:when test="${not empty urlSubMenu}">
-	                            <c:import url="${urlSubMenu}"/>
-	                        </c:when>
-	                        <c:otherwise>
-	                        &nbsp;
-	                        </c:otherwise>
-	                    </c:choose>
-	                </div>
-	            </div>
                 <decorator:body />
             </div>
 	        <div id="page_bottom">

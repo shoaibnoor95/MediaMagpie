@@ -4,7 +4,8 @@
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.configuration.AdministrationController"%>
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.configuration.MailServerController"%>
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.configuration.AwsConfigurationController"%>
-<ul>
+<div id="dropdown-config" class="dropdown dropdown-relative dropdown-tip">
+<ul class="dropdown-menu">
 	<li class="<c:if test="${activeSubMenu == 'user_config'}">current</c:if>">
 		<a href="<%=request.getContextPath()+UserConfiguratonControllerS1.getBaseRequestMappingUrl()+UserConfiguratonControllerS1.URL_USERCONFIG%>${currentUserId}">User Configuration</a>
         <core:ErrorHint requiredSetupTasks="${requiredSetupTasks}" subItemName="user_config"/>
@@ -22,3 +23,4 @@
         <core:ErrorHint requiredSetupTasks="${requiredSetupTasks}" subItemName="mail_config"/>
 	</li>
 </ul>
+</div>
