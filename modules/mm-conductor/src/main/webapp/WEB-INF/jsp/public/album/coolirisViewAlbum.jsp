@@ -11,7 +11,7 @@
 <c:set var="activeSubMenu" value="listAlbums" scope="request"/>
 <c:set var="urlSubMenu" value="/subNaviMedia" scope="request"/>
 <script type="text/javascript" src="<%=request.getContextPath()%>/static/js/pages/album_coolirisViewAlbum.js"></script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
     	
 <script type="text/javascript">
 $(document).ready(function() {
@@ -20,7 +20,6 @@ $(document).ready(function() {
 </script>		
 
 <div id="content">
-
     <div class='navigation'>
 		<a href="<%=request.getContextPath()+AlbumController.getBaseRequestMappingUrl()+AlbumController.URL_LIST%>">Album</a> &raquo; 
 		<a href="<%=PublicAlbumController.getBaseRequestMappingUrl()%>/${mediaDetailCommand.album.uid}/view">${mediaDetailCommand.album.name}</a> 
@@ -28,3 +27,4 @@ $(document).ready(function() {
 	<h1>${title}</h1>
 
  	<div id="wall"><!-- 3D Wall Goes Here --></div>
+</div>

@@ -80,3 +80,4 @@
 		</dt>
 		<dd><core:date date="${mediaDetailCommand.creationDate}" /></dd>	
 	</dl>
+</div>
