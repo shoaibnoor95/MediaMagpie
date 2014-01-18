@@ -1,14 +1,18 @@
-<%@ page contentType="text/html;charset=UTF-8"%>
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.media.AlbumController"%>
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.media.PublicAlbumController"%>
-<%@ include file="/WEB-INF/jsp/general/taglibs.jsp" %>
-
 <%@ page session="false" %>
+<%@ include file="/WEB-INF/jsp/general/taglibs.jsp" %>
 <c:set var="title" value="Album"  scope="request"/>
 <c:set var="activeMenu" value="media" scope="request"/>
 <c:set var="activeSubMenu" value="listAlbums" scope="request"/>
 <c:set var="urlSubMenu" value="/subNaviMedia" scope="request"/>
-			
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
 <div id="content">
 
     <div class='navigation'>
@@ -62,3 +66,5 @@
 		</c:otherwise>
 	</c:choose>				                
 </div>
+</body>
+</html>

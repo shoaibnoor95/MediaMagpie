@@ -1,19 +1,24 @@
-<%@ page session="false" %>
 <%@ include file="/WEB-INF/jsp/general/taglibs.jsp" %>
+<%@ page session="false" %>
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.DashboardController" %>
-
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <c:set var="title" value="Welcome to MediaMagpie" scope="request"/>
 <c:set var="activeMenu" value="welcome" scope="request"/>
-<link rel="stylesheet" type="text/css" href="<c:url value="/static/css/galleriffic.css"/>" />
-<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery.galleriffic.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery.opacityrollover.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery.history.js"></script>
-<script type="text/javascript"><%@ include file="../../../static/js/pages/welcome.js" %></script>
-<!-- We only want the thunbnails to display when javascript is disabled -->
-<script type="text/javascript">
-	document.write('<style>.noscript { display: none; }</style>');
-</script>
- 			
+<head>
+	<link rel="stylesheet" type="text/css" href="<c:url value="/static/css/galleriffic.css"/>" />
+	<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery.galleriffic.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery.opacityrollover.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery.history.js"></script>
+	<script type="text/javascript"><%@ include file="../../../static/js/pages/welcome.js" %></script>
+	<!-- We only want the thunbnails to display when javascript is disabled -->
+	<script type="text/javascript">
+		document.write('<style>.noscript { display: none; }</style>');
+	</script>
+</head>
+<body>
 <div id="content">
 	<h1>${title}</h1>
 	<h2>What is <fmt:message key="main.name"/>?</h2>
@@ -87,3 +92,5 @@
 		<%}%>
     </div>
 </div>
+</body>
+</html>

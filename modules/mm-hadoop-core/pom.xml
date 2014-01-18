@@ -117,6 +117,27 @@
 			<scope>provided</scope>
 		</dependency>
 
+
+        <!--  rwe: only for some internal tests. Remove this later. -->
+        <!-- <dependency>
+            <groupId>org.apache.gora</groupId>
+            <artifactId>gora-hbase</artifactId>
+            <version>0.3</version>
+            <scope>provided</scope>
+        </dependency>-->
+
+        <!-- <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+            <version>3.4.5</version>
+            <scope>provided</scope>
+            <exclusions>
+            </exclusions>
+        </dependency>-->
+
+
+
+
 	</dependencies>
 	<build>
 		<plugins>

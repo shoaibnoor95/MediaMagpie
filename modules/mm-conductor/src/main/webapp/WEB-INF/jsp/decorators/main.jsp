@@ -6,6 +6,7 @@
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
 	    <meta http-equiv="expires" content="0"/>
+	    <!-- TODO rwe: remove variable and simple add a head/title tag in each body jsp file. -->
 	    <title>${title}</title>
 	    
 	    <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/styles-all.css"/>" />

@@ -8,7 +8,7 @@ function openCoolirisWall(feedUrl, startPos){
              allowFullScreen: "true",
              allowscriptaccess: "always"
     };
-    swfobject.embedSWF("http://apps.cooliris.com/embed/cooliris.swf?t=1307582197",
+    swfobject.embedSWF("https://apps.cooliris.com/embed/cooliris.swf?t=1307582197",
     	"wall", "800", "450", "9.0.0", "",
         flashvars, params);
 }
