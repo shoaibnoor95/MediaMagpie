@@ -198,11 +198,12 @@ if (jQuery) (function ($) {
             });
         }
     }
-
-    $(document).on('hover.dropdown', '[data-dropdown]', show);
+    
+    <!-- rwe: for a timer based solution i've found this example: http://jsfiddle.net/i_like_robots/6JbtX/ -->
+    $(document).on('mouseover', '[data-dropdown]', show);
     $(document).on('mouseleave.dropdown', '[data-dropdown]', mouseLeaveDropDownLink);
     $(document).on('mouseleave.dropdown', '.dropdown', mouseLeaveDropDown);
-//    $(document).on('click.dropdown', '[data-dropdown]', show);
+    $(document).on('click.dropdown', '[data-dropdown]', show);
     $(document).on('click.dropdown', hide);
     $(window).on('resize', position);
 

@@ -1,19 +1,18 @@
-<%@ page contentType="text/html; charset=UTF-8"%>
-<%@ include file="/WEB-INF/jsp/general/taglibs.jsp"%>
-
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/jsp/general/taglibs.jsp" %>
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.media.SearchController"%>
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.media.MediaDetailController"%>
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.media.S3Controller"%>
-
 <c:set var="title" value="Media Pool" scope="request" />
 <c:set var="activeMenu" value="media" scope="request" />
 <c:set var="activeSubMenu" value="mediaSearch" scope="request" />
 <c:set var="urlSubMenu" value="/subNaviMedia" scope="request" />
-
-<!-- <script type="text/javascript" src="<%=request.getContextPath()%>/static/js/pages/searchMedias.js"></script>*/%>-->
-<script type="text/javascript">
-    <%@ include file="../../../static/js/pages/searchMedias.js" %>
-</script>
+<html>
+    <head>
+        <!-- <script type="text/javascript" src="<%=request.getContextPath()%>/static/js/pages/searchMedias.js"></script>-->
+        <script type="text/javascript"><%@ include file="../../../static/js/pages/searchMedias.js" %></script>
+    </head>
+    <body>
 <div id="content">
 	<h1>${title}</h1>
 
@@ -139,3 +138,5 @@
 		<%@ include file="album-media-template.jsp"%>
 	</div>
 </div>
+    </body>
+</html>
