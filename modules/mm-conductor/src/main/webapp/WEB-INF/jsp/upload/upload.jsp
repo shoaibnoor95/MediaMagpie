@@ -7,37 +7,17 @@
 <c:set var="activeMenu" value="media" scope="request"/>
 <c:set var="activeSubMenu" value="upload" scope="request"/>
 <c:set var="urlSubMenu" value="/subNaviMedia" scope="request"/>
-
-<script src="<%=request.getContextPath()%>/static/js/jquery.tmpl.min.js"></script>
-<script src="<%=request.getContextPath()%>/static/js/jquery.fileupload.js"></script>
-<script src="<%=request.getContextPath()%>/static/js/jquery.fileupload-ui.js"></script>
-<script type="text/javascript"><%@ include file="../../../static/js/pages/upload_jqueryfileupload.js" %></script>
-
-<link type="text/css" href="<%=request.getContextPath()%>/static/css/ui-lightness/jquery-ui-1.8.13.custom.css" rel="stylesheet" />
-<!-- css for upload area: -->
-<link rel="stylesheet" href="<%=request.getContextPath()%>/static/css/jquery.fileupload-ui.css">
-
-			<div id="content">
-                <h1>${title}</h1>
-	
-
-<div id="fileupload" style="border: dotted;">
-    <form action="<%=request.getContextPath()+UploadController.getUploadUrl()%>" method="POST" enctype="multipart/form-data">
-        <div class="fileupload-buttonbar">
-            <label class="fileinput-button">
-                <span>Add files...</span>
-                <input type="file" name="files[]" multiple>
-            </label>
-            <button type="submit" class="start">Start upload</button>
-            <button type="reset" class="cancel">Cancel upload</button>
-            <button type="button" class="delete">Delete files</button>
-        </div>
-    </form>
-    <div class="fileupload-content">
-        <table class="files"></table>
-        <div class="fileupload-progressbar"></div>
-    </div>
-</div>
+<html>
+    <head>
+        <!-- css for upload area: -->
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/static/css/jquery.fileupload-ui.css">
+        <!-- <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/ui-lightness/jquery-ui-1.8.13.custom.css" />
+        <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/ui-lightness/jquery-ui-1.8.13.custom.css"/>" />-->
+        
+		<script src="<%=request.getContextPath()%>/static/js/jquery.tmpl.min.js"></script>
+		<script src="<%=request.getContextPath()%>/static/js/jquery.fileupload.js"></script>
+		<script src="<%=request.getContextPath()%>/static/js/jquery.fileupload-ui.js"></script>
+		<script type="text/javascript"><%@ include file="../../../static/js/pages/upload_jqueryfileupload.js" %></script>
 <script id="template-upload" type="text/x-jquery-tmpl">
     <tr class="template-upload{{if error}} ui-state-error{{/if}}">
         <td class="preview"></td>
@@ -99,4 +79,27 @@
         </td>
     </tr>
 </script>
+    </head>
+    <body>
+        <div id="content">
+            <h1>${title}</h1>
+			<div id="fileupload" style="border: dotted;">
+			    <form action="<%=request.getContextPath()+UploadController.getUploadUrl()%>" method="POST" enctype="multipart/form-data">
+			        <div class="fileupload-buttonbar">
+			            <label class="fileinput-button">
+			                <span>Add files...</span>
+			                <input type="file" name="files[]" multiple>
+			            </label>
+			            <button type="submit" class="start">Start upload</button>
+			            <button type="reset" class="cancel">Cancel upload</button>
+			            <button type="button" class="delete">Delete files</button>
+			        </div>
+			    </form>
+			    <div class="fileupload-content">
+			        <table class="files"></table>
+			        <div class="fileupload-progressbar"></div>
+			    </div>
 			</div>
+		</div>
+    </body>
+</html>

@@ -2,6 +2,7 @@ $(function() {
 	'use strict';
 
 	// Initialize the jQuery File Upload widget:
+	var fileUploadDiv = $('#fileupload');
 	$('#fileupload').fileupload();
 	/*$('#fileupload').fileupload({
 		dataType : 'json',
