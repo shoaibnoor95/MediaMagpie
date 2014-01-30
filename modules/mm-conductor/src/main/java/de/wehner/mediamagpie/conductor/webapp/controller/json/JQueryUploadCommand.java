@@ -1,5 +1,7 @@
 package de.wehner.mediamagpie.conductor.webapp.controller.json;
 
+import java.io.Serializable;
+
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
@@ -9,63 +11,105 @@ import org.apache.commons.lang.builder.ToStringStyle;
  * @author ralfwehner
  * 
  */
-public class JQueryUploadCommand {
+public class JQueryUploadCommand implements Serializable {
 
-    private final String _name;
-    private final int _size;
-    private String _url;
-    private String _thumbnail_url;
-    private String _delete_url;
-    private final String _delete_type;
+    private static final long serialVersionUID = 1L;
+    
+    private String name;
+    private Long size;
+    private String url;
+    private String thumbnailUrl;
+    private String deleteUrl;
+    private String deleteType;
 
-    public JQueryUploadCommand(String name, int size, String url, String thumbnailUrl, String deleteUrl, String deleteType) {
-        super();
-        _name = name;
-        _size = size;
-        _url = url;
-        _thumbnail_url = thumbnailUrl;
-        _delete_url = deleteUrl;
-        _delete_type = deleteType;
-    }
-
+    /**
+     * @return the name
+     */
     public String getName() {
-        return _name;
+        return name;
     }
 
-    public int getSize() {
-        return _size;
+    /**
+     * @param name
+     *            the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
+    /**
+     * @return the size
+     */
+    public Long getSize() {
+        return size;
+    }
+
+    /**
+     * @param size
+     *            the size to set
+     */
+    public void setSize(Long size) {
+        this.size = size;
+    }
+
+    /**
+     * @return the url
+     */
     public String getUrl() {
-        return _url;
+        return url;
     }
 
-    public String getThumbnail_Url() {
-        return _thumbnail_url;
-    }
-
-    public String getDelete_url() {
-        return _delete_url;
-    }
-
-    public String getDelete_type() {
-        return _delete_type;
-    }
-
-    public String getThumbnail_url() {
-        return _thumbnail_url;
-    }
-
-    public void setThumbnail_url(String thumbnail_url) {
-        _thumbnail_url = thumbnail_url;
-    }
-
+    /**
+     * @param url
+     *            the url to set
+     */
     public void setUrl(String url) {
-        _url = url;
+        this.url = url;
     }
 
-    public void setDelete_url(String delete_url) {
-        _delete_url = delete_url;
+    /**
+     * @return the thumbnailUrl
+     */
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    /**
+     * @param thumbnailUrl
+     *            the thumbnailUrl to set
+     */
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
+    }
+
+    /**
+     * @return the deleteUrl
+     */
+    public String getDeleteUrl() {
+        return deleteUrl;
+    }
+
+    /**
+     * @param deleteUrl
+     *            the deleteUrl to set
+     */
+    public void setDeleteUrl(String deleteUrl) {
+        this.deleteUrl = deleteUrl;
+    }
+
+    /**
+     * @return the deleteType
+     */
+    public String getDeleteType() {
+        return deleteType;
+    }
+
+    /**
+     * @param deleteType
+     *            the deleteType to set
+     */
+    public void setDeleteType(String deleteType) {
+        this.deleteType = deleteType;
     }
 
     @Override

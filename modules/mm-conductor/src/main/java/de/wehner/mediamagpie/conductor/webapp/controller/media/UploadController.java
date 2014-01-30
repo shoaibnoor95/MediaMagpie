@@ -3,6 +3,7 @@ package de.wehner.mediamagpie.conductor.webapp.controller.media;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -64,7 +65,8 @@ public class UploadController extends AbstractConfigurationSupportController {
     private final PersistenceService _persistenceService;
 
     @Autowired
-    public UploadController(ConfigurationProvider configurationProvider, UploadService uploadService, S3SyncService s3SyncService, PersistenceService persistenceService) {
+    public UploadController(ConfigurationProvider configurationProvider, UploadService uploadService, S3SyncService s3SyncService,
+            PersistenceService persistenceService) {
         super(configurationProvider, null);
         _uploadService = uploadService;
         _s3SyncService = s3SyncService;
@@ -86,7 +88,7 @@ public class UploadController extends AbstractConfigurationSupportController {
      */
     @RequestMapping(method = RequestMethod.POST, value = URL_UPLOAD)
     public @ResponseBody
-    List<JQueryUploadCommand> doPost(HttpServletRequest request) throws ServletException, IOException {
+    Map<String, List<JQueryUploadCommand>> doPost(HttpServletRequest request) throws ServletException, IOException {
         if (!ServletFileUpload.isMultipartContent(request)) {
             throw new IllegalArgumentException("Request is not multipart, please 'multipart/form-data' enctype for your form.");
         }
@@ -97,7 +99,7 @@ public class UploadController extends AbstractConfigurationSupportController {
         List<JQueryUploadCommand> jQueryUploadCommands = new ArrayList<JQueryUploadCommand>();
         for (Entry<String, MultipartFile> entry : entrySet) {
             MultipartFile multipartFile = entry.getValue();
-            LOG.debug("Receive new upload file '" + multipartFile.getOriginalFilename() + "'.");
+            LOG.debug("Receive new upload file '{}'.", multipartFile.getOriginalFilename());
             if (StringUtils.isEmpty(multipartFile.getOriginalFilename())) {
                 throw new RuntimeException("Internal error: No file name given");
             }
@@ -125,11 +127,18 @@ public class UploadController extends AbstractConfigurationSupportController {
                             Priority.HIGH, 2000);
 
             // build propper command for respose
-            JQueryUploadCommand command = new JQueryUploadCommand(multipartFile.getOriginalFilename(), (int) multipartFile.getSize(), "url", thumbUrl,
-                    contextPath + getDeleteUrl(uploadFileInfo.getSecond().getName()), "DELETE");
+            JQueryUploadCommand command = new JQueryUploadCommand();
+            command.setName(multipartFile.getOriginalFilename());
+            command.setSize(multipartFile.getSize());
+            command.setUrl("url");
+            command.setThumbnailUrl(thumbUrl);
+            command.setDeleteUrl(contextPath + getDeleteUrl(uploadFileInfo.getSecond().getName()));
+            command.setDeleteType("DELETE");
             jQueryUploadCommands.add(command);
         }
-        return jQueryUploadCommands;
+        HashMap<String, List<JQueryUploadCommand>> jsonResult = new HashMap<String, List<JQueryUploadCommand>>();
+        jsonResult.put("files", jQueryUploadCommands);
+        return jsonResult;
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = URL_DELETE_FILE)

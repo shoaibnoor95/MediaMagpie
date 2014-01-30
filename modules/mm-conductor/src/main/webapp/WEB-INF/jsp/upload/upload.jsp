@@ -9,97 +9,207 @@
 <c:set var="urlSubMenu" value="/subNaviMedia" scope="request"/>
 <html>
     <head>
+        <!-- Bootstrap styles -->
+        <!-- TODO rwe: remove this css  
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">-->
         <!-- css for upload area: -->
         <link rel="stylesheet" href="<%=request.getContextPath()%>/static/css/jquery.fileupload-ui.css">
-        <!-- <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/ui-lightness/jquery-ui-1.8.13.custom.css" />
-        <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/ui-lightness/jquery-ui-1.8.13.custom.css"/>" />-->
-        
-		<script src="<%=request.getContextPath()%>/static/js/jquery.tmpl.min.js"></script>
-		<script src="<%=request.getContextPath()%>/static/js/jquery.fileupload.js"></script>
-		<script src="<%=request.getContextPath()%>/static/js/jquery.fileupload-ui.js"></script>
-		<script type="text/javascript"><%@ include file="../../../static/js/pages/upload_jqueryfileupload.js" %></script>
-<script id="template-upload" type="text/x-jquery-tmpl">
-    <tr class="template-upload{{if error}} ui-state-error{{/if}}">
-        <td class="preview"></td>
-        <td class="name">\${name}</td>
-        <td class="size">\${size}</td>
-        {{if error}}
-            <td class="error" colspan="2">Error:
-                {{if error === 'maxFileSize'}}File is too big
-                {{else error === 'minFileSize'}}File is too small
-                {{else error === 'acceptFileTypes'}}Filetype not allowed
-                {{else error === 'maxNumberOfFiles'}}Max number of files exceeded
-                {{else}}\${error}
-                {{/if}}
-            </td>
-        {{else}}
-            <td class="progress"><div></div></td>
-            <td class="start"><button>Start</button></td>
-        {{/if}}
-        <td class="cancel"><button>Cancel</button></td>
-    </tr>
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/static/css/jquery.fileupload.css">
+          
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script src="<%=request.getContextPath()%>/static/js/fileupload/vendor/jquery.ui.widget.js"></script>
+<!-- The Templates plugin is included to render the upload/download listings -->
+<script src="<%=request.getContextPath()%>/static/js/tmpl.min.js"></script>
+<!-- The Load Image plugin is included for the preview images and image resizing functionality -->  
+<script src="<%=request.getContextPath()%>/static/js/load-image.min.js"></script>
+<!-- The Canvas to Blob plugin is included for image resizing functionality --> 
+<!-- rwe: really necessary? 
+<script src="https://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>-->
+<!-- Bootstrap JS is not required, but included for the responsive demo navigation -->
+<!-- rwe: really necessary? 
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>-->
+<!-- blueimp Gallery script -->
+<!-- rwe: really necessary? 
+<script src="https://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>-->
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="<%=request.getContextPath()%>/static/js/fileupload/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="<%=request.getContextPath()%>/static/js/fileupload/jquery.fileupload.js"></script>
+<!-- The File Upload processing plugin -->
+<script src="<%=request.getContextPath()%>/static/js/fileupload/jquery.fileupload-process.js"></script>
+<!-- The File Upload image preview & resize plugin -->
+<script src="<%=request.getContextPath()%>/static/js/fileupload/jquery.fileupload-image.js"></script>
+<!-- The File Upload audio preview plugin -->
+<script src="<%=request.getContextPath()%>/static/js/fileupload/jquery.fileupload-audio.js"></script>
+<!-- The File Upload video preview plugin -->
+<script src="<%=request.getContextPath()%>/static/js/fileupload/jquery.fileupload-video.js"></script>
+<!-- The File Upload validation plugin -->
+<script src="<%=request.getContextPath()%>/static/js/fileupload/jquery.fileupload-validate.js"></script>
+<!-- The File Upload user interface plugin -->
+<script src="<%=request.getContextPath()%>/static/js/fileupload/jquery.fileupload-ui.js"></script>
+<!-- The XDomainRequest Transport is included for cross-domain file deletion for IE 8 and IE 9 -->
+<!--[if (gte IE 8)&(lt IE 10)]>
+<script src="<%=request.getContextPath()%>/static/js/fileupload/cors/jquery.xdr-transport.js"></script>
+<![endif]-->
+<script type="text/javascript">
+$(function () {
+    'use strict';
+
+    // Initialize the jQuery File Upload widget:
+    $('#fileupload').fileupload({
+    });
+
+
+        $('#fileupload').fileupload('option', {
+            // Enable image resizing, except for Android and Opera,
+            // which actually support image resizing, but fail to
+            // send Blob objects via XHR requests:
+            disableImageResize: /Android(?!.*Chrome)|Opera/
+                .test(window.navigator.userAgent),
+            maxFileSize: 5000000,
+            imageMaxWidth: 800,
+            imageMaxHeight: 800,
+            imageCrop: true, // Force cropped images
+            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+            dataType: 'json',
+            done: function (e, data) {
+                $.each(data.result.files, function (index, file) {
+                	var fu = $('#fileupload');
+                	$('<p/>').text(" received file: "+ file.name + " with size " + file.size + " bytes").appendTo(fu);
+                    //$('<p/>').text(file.name).appendTo(document.body);
+                });
+            }
+        });
+
+});
 </script>
-<script id="template-download" type="text/x-jquery-tmpl">
-    <tr class="template-download{{if error}} ui-state-error{{/if}}">
-        {{if error}}
-            <td></td>
-            <td class="name">\${name}</td>
-            <td class="size">\${size}</td>
-            <td class="error" colspan="2">Error:
-                {{if error === 1}}File exceeds upload_max_filesize (php.ini directive)
-                {{else error === 2}}File exceeds MAX_FILE_SIZE (HTML form directive)
-                {{else error === 3}}File was only partially uploaded
-                {{else error === 4}}No File was uploaded
-                {{else error === 5}}Missing a temporary folder
-                {{else error === 6}}Failed to write file to disk
-                {{else error === 7}}File upload stopped by extension
-                {{else error === 'maxFileSize'}}File is too big
-                {{else error === 'minFileSize'}}File is too small
-                {{else error === 'acceptFileTypes'}}Filetype not allowed
-                {{else error === 'maxNumberOfFiles'}}Max number of files exceeded
-                {{else error === 'uploadedBytes'}}Uploaded bytes exceed file size
-                {{else error === 'emptyResult'}}Empty file upload result
-                {{else}}${error}
-                {{/if}}
-            </td>
-        {{else}}
-            <td class="preview">
-                {{if thumbnail_url}}
-                    <a href="\${url}" target="_blank"><img src="\${thumbnail_url}"></a>
-                {{/if}}
-            </td>
-            <td class="name">
-                <a href="\${url}"{{if thumbnail_url}} target="_blank"{{/if}}>\${name}</a>
-            </td>
-            <td class="size">${size}</td>
-            <td colspan="2"></td>
-        {{/if}}
-        <td class="delete">
-            <button data-type="\${delete_type}" data-url="\${delete_url}">Delete</button>
-        </td>
-    </tr>
-</script>
+
     </head>
     <body>
         <div id="content">
             <h1>${title}</h1>
-			<div id="fileupload" style="border: dotted;">
-			    <form action="<%=request.getContextPath()+UploadController.getUploadUrl()%>" method="POST" enctype="multipart/form-data">
-			        <div class="fileupload-buttonbar">
-			            <label class="fileinput-button">
-			                <span>Add files...</span>
-			                <input type="file" name="files[]" multiple>
-			            </label>
-			            <button type="submit" class="start">Start upload</button>
-			            <button type="reset" class="cancel">Cancel upload</button>
-			            <button type="button" class="delete">Delete files</button>
+			<div style="border: dotted;">
+			    <form id="fileupload" action="<%=request.getContextPath()+UploadController.getUploadUrl()%>" method="POST" enctype="multipart/form-data">
+			        <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+			        <div class="row fileupload-buttonbar">
+			            <div class="col-lg-7">
+			                <!-- The fileinput-button span is used to style the file input field as button -->
+			                <span class="btn btn-success fileinput-button">
+			                    <i class="glyphicon glyphicon-plus"></i>
+			                    <span>Add files...</span>
+			                    <input type="file" name="files[]" multiple="">
+			                </span>
+			                <button type="submit" class="btn btn-primary start">
+			                    <i class="glyphicon glyphicon-upload"></i>
+			                    <span>Start upload</span>
+			                </button>
+			                <button type="reset" class="btn btn-warning cancel">
+			                    <i class="glyphicon glyphicon-ban-circle"></i>
+			                    <span>Cancel upload</span>
+			                </button>
+			                <button type="button" class="btn btn-danger delete">
+			                    <i class="glyphicon glyphicon-trash"></i>
+			                    <span>Delete</span>
+			                </button>
+			                <input type="checkbox" class="toggle">
+			                <!-- The global file processing state -->
+			                <span class="fileupload-process"></span>
+			            </div>
+			            <!-- The global progress state -->
+			            <div class="col-lg-5 fileupload-progress fade">
+			                <!-- The global progress bar -->
+			                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+			                    <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+			                </div>
+			                <!-- The extended global progress state -->
+			                <div class="progress-extended">&nbsp;</div>
+			            </div>
 			        </div>
+			        <!-- The table listing the files available for upload/download -->
+                    <table role="presentation" class="table table-striped">
+                        <tbody class="files"></tbody>
+                    </table>
 			    </form>
-			    <div class="fileupload-content">
-			        <table class="files"></table>
-			        <div class="fileupload-progressbar"></div>
-			    </div>
+			    <div id="progress">
+                    <div class="bar" style="width: 0%;"></div>
+                </div>
 			</div>
 		</div>
+
+<!-- The template to display files available for upload -->
+<script id="template-upload" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-upload fade">
+        <td>
+            <span class="preview"></span>
+        </td>
+        <td>
+            <p class="name">{%=file.name%}</p>
+            <strong class="error text-danger"></strong>
+        </td>
+        <td>
+            <p class="size">Processing...</p>
+            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+        </td>
+        <td>
+            {% if (!i && !o.options.autoUpload) { %}
+                <button class="btn btn-primary start" disabled>
+                    <i class="glyphicon glyphicon-upload"></i>
+                    <span>Start</span>
+                </button>
+            {% } %}
+            {% if (!i) { %}
+                <button class="btn btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel</span>
+                </button>
+            {% } %}
+        </td>
+    </tr>
+{% } %}
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download fade">
+        <td>
+            <span class="preview">
+                {% if (file.thumbnailUrl) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+                {% } %}
+            </span>
+        </td>
+        <td>
+            <p class="name">
+                {% if (file.url) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+                {% } else { %}
+                    <span>{%=file.name%}</span>
+                {% } %}
+            </p>
+            {% if (file.error) { %}
+                <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+            {% } %}
+        </td>
+        <td>
+            <span class="size">{%=o.formatFileSize(file.size)%}</span>
+        </td>
+        <td>
+            {% if (file.deleteUrl) { %}
+                <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+                    <i class="glyphicon glyphicon-trash"></i>
+                    <span>Delete</span>
+                </button>
+                <input type="checkbox" name="delete" value="1" class="toggle">
+            {% } else { %}
+                <button class="btn btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel</span>
+                </button>
+            {% } %}
+        </td>
+    </tr>
+{% } %}
+</script>
     </body>
 </html>

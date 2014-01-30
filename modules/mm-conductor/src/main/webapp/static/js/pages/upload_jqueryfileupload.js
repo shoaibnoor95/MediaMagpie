@@ -1,3 +1,4 @@
+// TODO rwe: obsolete, remove me!
 $(function() {
 	'use strict';
 
