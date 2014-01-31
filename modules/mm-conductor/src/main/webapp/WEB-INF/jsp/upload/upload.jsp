@@ -51,40 +51,36 @@
 <!--[if (gte IE 8)&(lt IE 10)]>
 <script src="<%=request.getContextPath()%>/static/js/fileupload/cors/jquery.xdr-transport.js"></script>
 <![endif]-->
-<script type="text/javascript">
-$(function () {
-    'use strict';
-
-    // Initialize the jQuery File Upload widget:
-    $('#fileupload').fileupload({
-    });
-
-
-        $('#fileupload').fileupload('option', {
-            // Enable image resizing, except for Android and Opera,
-            // which actually support image resizing, but fail to
-            // send Blob objects via XHR requests:
-            disableImageResize: /Android(?!.*Chrome)|Opera/
-                .test(window.navigator.userAgent),
-            maxFileSize: 5000000,
-            imageMaxWidth: 800,
-            imageMaxHeight: 800,
-            imageCrop: true, // Force cropped images
-            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-            dataType: 'json',
-            done: function (e, data) {
-                $.each(data.result.files, function (index, file) {
-                	var fu = $('#fileupload');
-                	$('<p/>').text(" received file: "+ file.name + " with size " + file.size + " bytes").appendTo(fu);
-                    //$('<p/>').text(file.name).appendTo(document.body);
-                });
-            }
-        });
-
-});
-</script>
-
-    </head>
+	<script type="text/javascript">
+		$(function() {
+			'use strict';
+	
+			// Initialize the jQuery File Upload widget:
+			$('#fileupload').fileupload({});
+	
+			$('#fileupload').fileupload('option', {
+				// Enable image resizing, except for Android and Opera,
+				// which actually support image resizing, but fail to
+				// send Blob objects via XHR requests:
+				disableImageResize : true,// /Android(?!.*Chrome)|Opera/.test(window.navigator.userAgent),
+				maxFileSize : 5000000,
+/*				imageMaxWidth : 800,
+				imageMaxHeight : 800,
+				imageCrop : true,*/ // Force cropped images
+				acceptFileTypes : /(\.|\/)(gif|jpe?g|png)$/i,
+				dataType : 'json',
+				done : function(e, data) {
+					$.each(data.result.files, function(index, file) {
+						var fu = $('#fileupload');
+						$('<p/>').text(" received file: " + file.name + " with size " + file.size + " bytes").appendTo(fu);
+						//$('<p/>').text(file.name).appendTo(document.body);
+					});
+				}
+			});
+	
+		});
+	</script>
+</head>
     <body>
         <div id="content">
             <h1>${title}</h1>
