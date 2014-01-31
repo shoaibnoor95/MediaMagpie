@@ -12,10 +12,13 @@
         <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/effects.css"/>" />
 	    <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/ui-lightness/jquery-ui-1.8.13.custom.css"/>" />
         <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/jquery.dropdown.css"/>" />
+
+        <!-- TODO rwe: use bootstrap. but before we have to fix the context menue issue. See: http://getbootstrap.com/customize/ -->
+        <!-- <link rel="stylesheet" href="<%=request.getContextPath()%>/static/bootstrap/css/bootstrap.css">-->
+
+        <!-- TODO rwe: use bootstrap. but before we have to fix the context menue issue. See: http://getbootstrap.com/customize/ -->
+        <!-- <script src="<%=request.getContextPath()%>/static/bootstrap/js/bootstrap.min.js"></script>-->
         
-		<!--<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery-1.6.4.min.js"></script>-->
-		<!-- <script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery-ui-1.8.13.custom.min.js"></script>-->
-        <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>-->
         <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
         <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery.dropdown.js" ></script>

@@ -9,78 +9,72 @@
 <c:set var="urlSubMenu" value="/subNaviMedia" scope="request"/>
 <html>
     <head>
-        <!-- Bootstrap styles -->
-        <!-- TODO rwe: remove this css  
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">-->
         <!-- css for upload area: -->
         <link rel="stylesheet" href="<%=request.getContextPath()%>/static/css/jquery.fileupload-ui.css">
         <link rel="stylesheet" href="<%=request.getContextPath()%>/static/css/jquery.fileupload.css">
           
-<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
-<script src="<%=request.getContextPath()%>/static/js/fileupload/vendor/jquery.ui.widget.js"></script>
-<!-- The Templates plugin is included to render the upload/download listings -->
-<script src="<%=request.getContextPath()%>/static/js/tmpl.min.js"></script>
-<!-- The Load Image plugin is included for the preview images and image resizing functionality -->  
-<script src="<%=request.getContextPath()%>/static/js/load-image.min.js"></script>
-<!-- The Canvas to Blob plugin is included for image resizing functionality --> 
-<!-- rwe: really necessary? 
-<script src="https://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>-->
-<!-- Bootstrap JS is not required, but included for the responsive demo navigation -->
-<!-- rwe: really necessary? 
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>-->
-<!-- blueimp Gallery script -->
-<!-- rwe: really necessary? 
-<script src="https://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>-->
-<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-<script src="<%=request.getContextPath()%>/static/js/fileupload/jquery.iframe-transport.js"></script>
-<!-- The basic File Upload plugin -->
-<script src="<%=request.getContextPath()%>/static/js/fileupload/jquery.fileupload.js"></script>
-<!-- The File Upload processing plugin -->
-<script src="<%=request.getContextPath()%>/static/js/fileupload/jquery.fileupload-process.js"></script>
-<!-- The File Upload image preview & resize plugin -->
-<script src="<%=request.getContextPath()%>/static/js/fileupload/jquery.fileupload-image.js"></script>
-<!-- The File Upload audio preview plugin -->
-<script src="<%=request.getContextPath()%>/static/js/fileupload/jquery.fileupload-audio.js"></script>
-<!-- The File Upload video preview plugin -->
-<script src="<%=request.getContextPath()%>/static/js/fileupload/jquery.fileupload-video.js"></script>
-<!-- The File Upload validation plugin -->
-<script src="<%=request.getContextPath()%>/static/js/fileupload/jquery.fileupload-validate.js"></script>
-<!-- The File Upload user interface plugin -->
-<script src="<%=request.getContextPath()%>/static/js/fileupload/jquery.fileupload-ui.js"></script>
-<!-- The XDomainRequest Transport is included for cross-domain file deletion for IE 8 and IE 9 -->
-<!--[if (gte IE 8)&(lt IE 10)]>
-<script src="<%=request.getContextPath()%>/static/js/fileupload/cors/jquery.xdr-transport.js"></script>
-<![endif]-->
-	<script type="text/javascript">
-		$(function() {
-			'use strict';
-	
-			// Initialize the jQuery File Upload widget:
-			$('#fileupload').fileupload({});
-	
-			$('#fileupload').fileupload('option', {
-				// Enable image resizing, except for Android and Opera,
-				// which actually support image resizing, but fail to
-				// send Blob objects via XHR requests:
-				disableImageResize : true,// /Android(?!.*Chrome)|Opera/.test(window.navigator.userAgent),
-				maxFileSize : 5000000,
-/*				imageMaxWidth : 800,
-				imageMaxHeight : 800,
-				imageCrop : true,*/ // Force cropped images
-				acceptFileTypes : /(\.|\/)(gif|jpe?g|png)$/i,
-				dataType : 'json',
-				done : function(e, data) {
-					$.each(data.result.files, function(index, file) {
-						var fu = $('#fileupload');
-						$('<p/>').text(" received file: " + file.name + " with size " + file.size + " bytes").appendTo(fu);
-						//$('<p/>').text(file.name).appendTo(document.body);
-					});
-				}
+		<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+		<script src="<%=request.getContextPath()%>/static/js/fileupload/vendor/jquery.ui.widget.js"></script>
+		<!-- The Templates plugin is included to render the upload/download listings -->
+		<script src="<%=request.getContextPath()%>/static/js/tmpl.min.js"></script>
+		<!-- The Load Image plugin is included for the preview images and image resizing functionality -->  
+		<script src="<%=request.getContextPath()%>/static/js/load-image.min.js"></script>
+		<!-- The Canvas to Blob plugin is included for image resizing functionality --> 
+		<!-- rwe: really necessary? 
+		<script src="https://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>-->
+		<!-- blueimp Gallery script -->
+		<!-- rwe: really necessary? 
+		<script src="https://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>-->
+		<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+		<script src="<%=request.getContextPath()%>/static/js/fileupload/jquery.iframe-transport.js"></script>
+		<!-- The basic File Upload plugin -->
+		<script src="<%=request.getContextPath()%>/static/js/fileupload/jquery.fileupload.js"></script>
+		<!-- The File Upload processing plugin -->
+		<script src="<%=request.getContextPath()%>/static/js/fileupload/jquery.fileupload-process.js"></script>
+		<!-- The File Upload image preview & resize plugin -->
+		<script src="<%=request.getContextPath()%>/static/js/fileupload/jquery.fileupload-image.js"></script>
+		<!-- The File Upload audio preview plugin -->
+		<script src="<%=request.getContextPath()%>/static/js/fileupload/jquery.fileupload-audio.js"></script>
+		<!-- The File Upload video preview plugin -->
+		<script src="<%=request.getContextPath()%>/static/js/fileupload/jquery.fileupload-video.js"></script>
+		<!-- The File Upload validation plugin -->
+		<script src="<%=request.getContextPath()%>/static/js/fileupload/jquery.fileupload-validate.js"></script>
+		<!-- The File Upload user interface plugin -->
+		<script src="<%=request.getContextPath()%>/static/js/fileupload/jquery.fileupload-ui.js"></script>
+		<!-- The XDomainRequest Transport is included for cross-domain file deletion for IE 8 and IE 9 -->
+		<!--[if (gte IE 8)&(lt IE 10)]>
+		<script src="<%=request.getContextPath()%>/static/js/fileupload/cors/jquery.xdr-transport.js"></script>
+		<![endif]-->
+		<script type="text/javascript">
+			$(function() {
+				'use strict';
+		
+				// Initialize the jQuery File Upload widget:
+				$('#fileupload').fileupload({});
+		
+				$('#fileupload').fileupload('option', {
+					// Enable image resizing, except for Android and Opera,
+					// which actually support image resizing, but fail to
+					// send Blob objects via XHR requests:
+					disableImageResize : true,// /Android(?!.*Chrome)|Opera/.test(window.navigator.userAgent),
+					maxFileSize : 5000000,
+	/*				imageMaxWidth : 800,
+					imageMaxHeight : 800,
+					imageCrop : true,*/ // Force cropped images
+					acceptFileTypes : /(\.|\/)(gif|jpe?g|png)$/i,
+					dataType : 'json',
+					done : function(e, data) {
+						$.each(data.result.files, function(index, file) {
+							var fu = $('#fileupload');
+							$('<p/>').text(" received file: " + file.name + " with size " + file.size + " bytes").appendTo(fu);
+							//$('<p/>').text(file.name).appendTo(document.body);
+						});
+					}
+				});
+		
 			});
-	
-		});
-	</script>
-</head>
+		</script>
+    </head>
     <body>
         <div id="content">
             <h1>${title}</h1>
@@ -94,7 +88,7 @@
 			                    <i class="glyphicon glyphicon-plus"></i>
 			                    <span>Add files...</span>
 			                    <input type="file" name="files[]" multiple="">
-			                </span>
+			                </span>&nbsp;
 			                <button type="submit" class="btn btn-primary start">
 			                    <i class="glyphicon glyphicon-upload"></i>
 			                    <span>Start upload</span>
@@ -107,9 +101,6 @@
 			                    <i class="glyphicon glyphicon-trash"></i>
 			                    <span>Delete</span>
 			                </button>
-			                <input type="checkbox" class="toggle">
-			                <!-- The global file processing state -->
-			                <span class="fileupload-process"></span>
 			            </div>
 			            <!-- The global progress state -->
 			            <div class="col-lg-5 fileupload-progress fade">
