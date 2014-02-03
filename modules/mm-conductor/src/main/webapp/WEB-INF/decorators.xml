@@ -4,7 +4,8 @@
           <pattern>/</pattern>
     </decorator>-->
     <excludes>
-        <!-- exclude some templates like request /media/ajaxCurrentAlbumTemplate -->
+        <!-- used to test css/java script etc. -->
+        <pattern>/mockstatic</pattern>
         <pattern>*ajax*</pattern>
         <!-- for cooliris support -->
         <pattern>*crossdomain.xml</pattern>

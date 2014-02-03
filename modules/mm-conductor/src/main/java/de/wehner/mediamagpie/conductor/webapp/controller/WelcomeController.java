@@ -40,7 +40,9 @@ public class WelcomeController {
     public static final String WELCOME_URL = "/welcome";
     public static final String WELCOME_VIEW = "public/welcome";
     public static final String MOCK_URL = "/mock";
-    public static final String MOCK_VIEW = "public/mock";
+    public static final String MOCK_VIEW = "public/mock/mock";
+    public static final String MOCKSTATIC_URL = "/mockstatic";
+    public static final String MOCKSTATIC_VIEW = "public/mock/mockstatic";
 
     private final MediaDao _mediaDao;
     private final ImageService _imageSerivce;
@@ -98,5 +100,10 @@ public class WelcomeController {
     @RequestMapping(method = { RequestMethod.GET, RequestMethod.HEAD }, value = MOCK_URL)
     public String showMock() {
         return MOCK_VIEW;
+    }
+
+    @RequestMapping(method = { RequestMethod.GET, RequestMethod.HEAD }, value = MOCKSTATIC_URL)
+    public String showMockStatic() {
+        return MOCKSTATIC_VIEW;
     }
 }
