@@ -14,10 +14,10 @@
         <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/jquery.dropdown.css"/>" />
 
         <!-- TODO rwe: use bootstrap. but before we have to fix the context menue issue. See: http://getbootstrap.com/customize/ -->
-        <link rel="stylesheet" href="<%=request.getContextPath()%>/static/bootstrap/css/bootstrap.css" />
+        <!-- <link rel="stylesheet" href="<%=request.getContextPath()%>/static/bootstrap/css/bootstrap.css" />-->
 
         <!-- TODO rwe: use bootstrap. but before we have to fix the context menue issue. See: http://getbootstrap.com/customize/ -->
-        <script src="<%=request.getContextPath()%>/static/bootstrap/js/bootstrap.min.js"></script>
+        <!-- <script src="<%=request.getContextPath()%>/static/bootstrap/js/bootstrap.min.js"></script>-->
         
         <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
         <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
