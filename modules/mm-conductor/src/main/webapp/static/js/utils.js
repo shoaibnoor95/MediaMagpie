@@ -22,8 +22,8 @@ function formatTime(args) {
 	el.innerHTML = html;
 }
 
-function focusFirstEnabledField() {
-	var form = document.getElementsByTagName("form")[0];
+function focusFirstEnabledField(formNum) {
+	var form = document.getElementsByTagName("form")[formNum];
 	if (form != undefined) {
 		var allInputsInForm = $(":input", form);
 		var firstInput = allInputsInForm.filter(function(i){

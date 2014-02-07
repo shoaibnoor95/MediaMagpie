@@ -6,18 +6,19 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-<script type="text/javascript">
+    <title>Login</title>
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/static/css/signin.css"></link>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/static/js/utils.js" ></script>
+    <script type="text/javascript">
 	$(document).ready(function() {
-		focusFirstEnabledField();
+		focusFirstEnabledField(1);
 		//$('form:first *:input[type!=hidden]:first').focus();
 	});
-</script>
+    </script>
 </head>
 <body>
-	<c:set var="title" value="Login" scope="request" />
-	<div id="content">
-		<h1>Login</h1>
-
+    <form class="form-signin" role="form" name="f" action="<c:url value="/loginProcess" />" method="post">
+	    <h2 class="form-signin-heading">Please sign in</h2>
 		<c:if test="${not empty param.login_error}">
 			<div class="error">
 				<fmt:message key="login.msg.failure" />
@@ -27,49 +28,24 @@
 				<%=((AuthenticationException) session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION)).getMessage()%><br />
 			</div>
 		</c:if>
-		<div class="section">
-			<form name="f" action="<c:url value="/loginProcess" />" method="post">
-				<fieldset>
-					<div class="field">
-						<div class="label">
-							<label for="j_username"><fmt:message key="login.username" />:</label>
-						</div>
-						<div class="output">
-							<!--  <input type="text" name="j_username" id="j_username" <c:if test="${not empty param.login_error}"> value="<%=session.getAttribute(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_USERNAME_KEY)%>"</c:if> />-->
-							<input type="text" name="j_username" id="j_username" />
-						</div>
-					</div>
-					<div class="field">
-						<div class="label">
-							<label for="j_password"><fmt:message key="login.password" />:</label>
-						</div>
-						<div class="output">
-							<input type="password" name="j_password" id="j_password" />
-						</div>
-					</div>
-					<div class="field">
-						<div class="label">
-							<label for="remember_me"><fmt:message key="login.rememberMe" />:</label>
-						</div>
-						<div class="output">
-							<input type="checkbox" name="_spring_security_remember_me" id="remember_me" />
-						</div>
-					</div>
-					<div class="form-buttons">
-						<button type="submit" class="active">
-							<span><fmt:message key="button.login" /></span>
-						</button>
-					</div>
-					<a <%/*onclick="requestNewPassword();"*/%> href="<c:url value="/public/account/resetPassword"></c:url>"><fmt:message
-							key="login.password.forgotton" /></a>
-				</fieldset>
-			</form>
-			<br /> <i>If you want to test <fmt:message key="main.name" /> you can use 'guest' / 'guest' for login.
-			</i>
-		</div>
+        <input type="text" name="j_username" id="j_username" class="form-control" placeholder="<fmt:message key="login.username" />" required autofocus />
+        <input type="password" name="j_password" id="j_password" class="form-control" placeholder="<fmt:message key="login.password"/>" required />
+        <label class="checkbox">
+            <input type="checkbox" name="_spring_security_remember_me" id="remember_me" ></input>
+            <fmt:message key="login.rememberMe" />
+        </label>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">
+            <fmt:message key="button.login" />
+        </button>
+    </form>
+    <br/>
+	<a <%/*onclick="requestNewPassword();"*/%> href="<c:url value="/public/account/resetPassword"></c:url>"><fmt:message
+		    key="login.password.forgotton" /></a>
+	<br />
+	<i>If you want to test <fmt:message key="main.name" />, please sign in with 'guest' / 'guest'.</i>
 
-		<br />
-		<hr />
+	<br />
+	<hr />
 		<div class="section">
 			<h2>New on MediaMagpie?</h2>
 			Create an account, it's easy and free. <br /> <br />
@@ -78,6 +54,5 @@
 			</div>
 			<br />
 		</div>
-	</div>
 </body>
 </html>

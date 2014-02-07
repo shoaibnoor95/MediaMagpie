@@ -22,9 +22,8 @@
 
         <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
         <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-        <script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery.dropdown.js" ></script>
-		<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/utils.js" ></script>
-		<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/prefixfree.min.js"></script>
+        <script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery.dropdown.js" ></script>-->
+<!-- 		<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/prefixfree.min.js"></script>
 		<script type="text/javascript">
 		     // prefixfree plugin for jquery to enable prefixfree functionality for css changes by jquery
 			(function($, self){
