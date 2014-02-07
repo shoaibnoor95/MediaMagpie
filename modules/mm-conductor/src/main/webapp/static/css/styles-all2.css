@@ -1,3 +1,6 @@
+/***************
+tip for dropdown menus
+****************/
 .dropdown-tip:before {
 	position: absolute;
 	top: -7px;
@@ -7,18 +10,6 @@
 	border-right: 7px solid rgba(0, 0, 0, 0);
 	border-bottom: 7px solid rgb(204, 204, 204);
 	border-bottom-color: rgba(0, 0, 0, 0.2);
-	display: inline-block;
-}
-/* TODO rwe: kann das weg? */
-Pseudo ::after element
-.dropdown-tip:after {
-	position: absolute;
-	top: -5px;
-	left: 10px;
-	content: '';
-	border-left: 6px solid rgba(0, 0, 0, 0);
-	border-right: 6px solid rgba(0, 0, 0, 0);
-	border-bottom: 6px solid rgb(255, 255, 255);
 	display: inline-block;
 }
 
@@ -31,4 +22,76 @@ Pseudo ::after element
 	height: auto;
 	margin: 0px auto -60px;
 	padding: 0px 0px 60px;
+}
+
+/***************
+media gallery
+****************/
+#gallery {
+	float: left;
+	min-height: 12em;
+}
+
+* html #gallery {
+	height: 12em;
+} /* IE6 */
+.gallery.custom-state-active {
+	background: #eee;
+}
+
+.gallery li {
+	position: relative;
+	float: left;
+	margin: 0 0.4em 0.4em 0;
+	text-align: center;
+	cursor: move;
+	max-width: 130px;
+}
+
+.gallery li h5 {
+	margin: 0 0 0.4em;
+	cursor: move;
+}
+
+.gallery li a {
+	float: left;
+}
+
+.gallery li img {
+	float: right;
+}
+
+.gallery li .image-action {
+	cursor: pointer;
+}
+
+.gallery p {
+	margin: 0;
+	clear: both;
+}
+
+/*.gallery li img { cursor: move; }*/
+#album {
+	min-height: 10em;
+	padding: 0.5%;
+}
+
+* html #album {
+	height: 10em;
+} /* IE6 */
+#album h4 {
+	line-height: 16px;
+	margin: 0 0 0.4em;
+}
+
+#album h4 .ui-icon {
+	float: left;
+}
+
+#album h5 {
+	display: none;
+}
+
+.metadata {
+	font-size: 0.8em;
 }
