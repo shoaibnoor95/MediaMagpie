@@ -8,7 +8,12 @@
 <c:set var="activeSubMenu" value="user_config" scope="request"/>
 <c:set var="urlSubMenu" value="/subNaviConfiguration" scope="request"/>
 			
-			<div id="content">
+<!-- breadcrumps: <ol class="breadcrumb">
+    <li><a href="<%=request.getContextPath()%>/welcome">Home</a></li>
+    <li>Configuration</li>
+    <li class="active">User configuration</li>
+</ol>-->
+				
 				<h1>
 					${title}
 				</h1>
@@ -74,4 +79,3 @@
 					</dt>
 					<dd><button type="button" onclick="document.location.href='<%=request.getContextPath()+UserConfiguratonControllerS1.getBaseRequestMappingUrl()%>/edit'" class="active"><span>Edit</span></button></dd>	
 				</dl>
-			</div>

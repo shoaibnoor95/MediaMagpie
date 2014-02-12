@@ -10,6 +10,7 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +22,7 @@ public class PaginationTag extends /* TagSupport */SimpleTagSupport {
     private int _total;
     private int _pageSize;
     private String _path;
+    private String _class;
 
     @Override
     public void doTag() throws JspException {
@@ -31,7 +33,7 @@ public class PaginationTag extends /* TagSupport */SimpleTagSupport {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 
         try {
-            writer.write("<div class=\"pagination\">");
+            writer.write("<div " + getClassAttributeString() + ">");
             writeLink(writer, request, "link", 0, "&lt;&lt;first");
 
             int previousPage = _current - _pageSize;
@@ -73,6 +75,13 @@ public class PaginationTag extends /* TagSupport */SimpleTagSupport {
         }
     }
 
+    private String getClassAttributeString() {
+        if (!StringUtils.isEmpty(_class)) {
+            return "class=\"" + _class + "\" ";
+        }
+        return "";
+    }
+
     private void writeLink(JspWriter writer, HttpServletRequest request, String clazz, int index, String name) throws IOException {
         if (index == _current) {
             writer.write("<span class=\"pagination-" + clazz + "-current" + "\">" + name + "</span>&nbsp;");
@@ -102,6 +111,10 @@ public class PaginationTag extends /* TagSupport */SimpleTagSupport {
 
     public void setPath(String path) {
         _path = path;
+    }
+
+    public void setClazz(String clazz) {
+        _class = clazz;
     }
 
     @Override

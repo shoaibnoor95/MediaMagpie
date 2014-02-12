@@ -106,7 +106,6 @@ function initDragAndDropAndButtonListeners() {
 		revert: "invalid", // when not dropped, the item will revert back to
 						   // its initial position
 		containment: "document",
-		helper: "clone",
 		cursor: "move"
 	});
 	
@@ -200,6 +199,7 @@ function handleFlippable($item, $target, mediaId) {
 
 /** init methods after dom is loaded completely */
 $(document).ready(function() {
+	console.log( "init slider, album template and select box" );
 	initSlider();
 	loadTemplateAlbum();
 	wireUpAutoSubmitAlbumSelect();

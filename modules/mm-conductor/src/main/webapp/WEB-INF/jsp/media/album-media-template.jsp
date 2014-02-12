@@ -5,10 +5,10 @@
 <meta name="decorator" content="album-media-template" />
 
 <c:if test="${not empty albumCommand}">
-	<div id="album" class="ui-widget-content ui-state-default">
-		<h4 class="ui-widget-header">
+	<div id="album" class="ui-state-default">
+<!-- 		<h4 class="ui-widget-header">
 			<span class="ui-icon ui-icon-album">Album</span>${albumCommand.name}
-		</h4>
+		</h4>-->
 
 		<div class="ui-widget ui-helper-clearfix">
 			<ul class="gallery ui-helper-reset ui-helper-clearfix">

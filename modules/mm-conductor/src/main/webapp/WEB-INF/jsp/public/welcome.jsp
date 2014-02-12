@@ -13,7 +13,8 @@
  	<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery.galleriffic.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery.opacityrollover.js"></script>
 	<!-- We only want the thunbnails to display when javascript is disabled -->
-	<script type="text/javascript"><%@ include file="../../../static/js/pages/welcome.js" %></script>
+<!-- 	<script type="text/javascript"><%@ include file="../../../static/js/pages/welcome.js" %></script>-->
+    <script type="text/javascript" src="<%=request.getContextPath()%>/static/js/pages/welcome.js" />
     <script type="text/javascript">
         document.write('<style>.noscript { display: none; }</style>');
     </script>
@@ -32,6 +33,9 @@
 	</ul>
 		
 	<!-- Start Advanced Gallery Html Containers -->
+    <div class="row">
+        <h3>&nbsp;</h3>
+    </div>
 	<div id="thumbs" class="navigation col-md-4">
 		<ul class="thumbs noscript">
         <h2>Last added public pictures</h2>
