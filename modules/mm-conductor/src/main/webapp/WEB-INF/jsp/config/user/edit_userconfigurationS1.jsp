@@ -1,80 +1,71 @@
 <%@page contentType="text/html;charset=UTF-8"%>
 <%@page pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/jsp/general/taglibs.jsp" %>
+<%@ include file="/WEB-INF/jsp/general/taglibs.jsp"%>
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.configuration.UserConfiguratonControllerS1"%>
 
-<c:set var="title" value="User Configuration (1/2)" scope="request"/>
-<c:set var="activeMenu" value="config" scope="request"/>
-<c:set var="activeSubMenu" value="user_config" scope="request"/>
-<c:set var="urlSubMenu" value="/subNaviConfiguration" scope="request"/>
-			
-			<div id="content">
-				<h1>
-					${title}
-				</h1>
-				
-				<div>
-					<form:form commandName="userConfigurationCommand"  id="myForm" cssClass="decorated">
-					<fieldset>
-						<legend>Person</legend>
-						<dl>
-							<dt>
-								<label>Login:</label>
-							</dt>
-							<dd>
-								${userConfigurationCommand.name}
-							</dd>
-						</dl>
-						<dl>
-							<dt>
-								<label>Name:</label>
-							</dt>
-							<dd>
-								<form:input path="forename" cssClass="req"/>
-							</dd>
-							<dd class="help"></dd>	
-							<form:errors path="forename" cssClass="error"/>
-						</dl>
-						<dl>
-							<dt>
-								<label>Surname:</label>
-							</dt>
-							<dd>
-								<form:input path="surname" cssClass="req" autocomplete="off" />
-							</dd>
-							<dd class="help"></dd>	
-							<form:errors path="surname" cssClass="error"/>
-						</dl>
-						<dl>
-							<dt>
-								<label>Password:</label>
-							</dt>
-							<dd>
-								<form:password path="password" showPassword="false" cssClass="req" autocomplete="off"/>
-							</dd>
-							<dd class="help">Only fill in this field if you want to CHANGE your current password</dd>	
-							<form:errors path="password" cssClass="error"/>
-						</dl>
-						<dl>
-							<dt>
-								<label>Password Confirm:</label>
-							</dt>
-							<dd>
-								<form:password path="passwordConfirm" showPassword="false" cssClass="req" autocomplete="off"/>
-							</dd>
-							<dd class="help">Confirm your password only if you want to CHANGE your current password</dd>	
-							<form:errors path="passwordConfirm" cssClass="error"/>
-						</dl>
-						<dl class="buttons">
-							<dt>
-								&nbsp;
-							</dt>
-							<dd>
-								<button type="button" onclick="document.location.href='<%=request.getContextPath()+UserConfiguratonControllerS1.getBaseRequestMappingUrl()+UserConfiguratonControllerS1.URL_USERCONFIG%>'"><span>Cancel</span></button>
-								<button type="submit" class="active"><span>Next</span></button>
-							</dd>	
-						</dl>
-					</fieldset>
-					</form:form>
-				</div>
+<c:set var="title" value="User Configuration (1/2)" scope="request" />
+<c:set var="activeMenu" value="config" scope="request" />
+<c:set var="activeSubMenu" value="user_config" scope="request" />
+<c:set var="urlSubMenu" value="/subNaviConfiguration" scope="request" />
+
+<h2>${title}</h2>
+
+<form:form commandName="userConfigurationCommand" cssClass="form-horizontal col-sm-10" role="form">
+
+	<ol class="breadcrumb">
+		<!-- <li><a href="<%=request.getContextPath()%>/welcome">Home</a></li>-->
+		<!-- <li class="active"><a href="<%=request.getContextPath() + UserConfiguratonControllerS1.getBaseRequestMappingUrl()%>/edit">Personal Data</a></li>-->
+		<li class="active">Personal Data</li>
+		<li>Layout and Sync</li>
+	</ol>
+
+	<fieldset>
+		<legend>Personal Data</legend>
+		<div class="form-group">
+			<label for="forename" class="col-sm-2 control-label">User (Login)</label>
+			<div class="col-sm-5">
+				<p class="form-control-static">${userConfigurationCommand.name}</p>
 			</div>
+		</div>
+		<div class="form-group">
+			<label for="forename" class="col-sm-2 control-label">Name</label>
+			<div class="col-sm-5">
+				<form:input path="forename" cssClass="form-control" />
+				<form:errors path="forename" cssClass="error" />
+			</div>
+			<span class="help-block"></span>
+		</div>
+		<div class="form-group">
+			<label for="surname" class="col-sm-2 control-label">Surname</label>
+			<div class="col-sm-5">
+				<form:input path="surname" cssClass="form-control" />
+				<form:errors path="surname" cssClass="error" />
+			</div>
+			<span class="help-block"></span>
+		</div>
+		<div class="form-group">
+			<label for="surname" class="col-sm-2 control-label">Password</label>
+			<div class="col-sm-5">
+				<form:password path="password" showPassword="false" cssClass="form-control" autocomplete="off" />
+				<form:errors path="password" cssClass="error" />
+			</div>
+			<span class="help-block">Only fill in this field if you want to CHANGE your current password</span>
+		</div>
+		<div class="form-group">
+			<label for="surname" class="col-sm-2 control-label">Password Confirm</label>
+			<div class="col-sm-5">
+				<form:password path="passwordConfirm" showPassword="false" cssClass="form-control" autocomplete="off" />
+				<form:errors path="passwordConfirm" cssClass="error" />
+			</div>
+			<span class="help-block">Confirm your password only if you want to CHANGE your current password</span>
+		</div>
+		<!-- buttons -->
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<button type="button" class="btn btn-default"
+					onclick="document.location.href='<%=request.getContextPath() + UserConfiguratonControllerS1.getBaseRequestMappingUrl() + UserConfiguratonControllerS1.URL_USERCONFIG_CANCEL%>'">Cancel</button>
+				<button type="submit" class="btn btn-primary">Next</button>
+			</div>
+		</div>
+	</fieldset>
+</form:form>

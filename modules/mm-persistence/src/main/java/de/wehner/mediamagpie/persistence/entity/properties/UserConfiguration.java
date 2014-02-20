@@ -52,10 +52,12 @@ public class UserConfiguration implements UserPropertyBackedConfiguration {
 
     @Max(value = 500)
     @Min(value = 10)
+    @Deprecated
     public Integer getThumbImageSizeTable() {
         return _thumbImageSizeTable;
     }
 
+    @Deprecated
     public void setThumbImageSizeTable(Integer thumbImageSizeTable) {
         _thumbImageSizeTable = thumbImageSizeTable;
     }

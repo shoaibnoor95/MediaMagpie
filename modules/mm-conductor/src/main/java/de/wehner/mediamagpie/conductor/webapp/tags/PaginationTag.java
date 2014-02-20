@@ -113,7 +113,7 @@ public class PaginationTag extends /* TagSupport */SimpleTagSupport {
         _path = path;
     }
 
-    public void setClazz(String clazz) {
+    public void setCssClass(String clazz) {
         _class = clazz;
     }
 

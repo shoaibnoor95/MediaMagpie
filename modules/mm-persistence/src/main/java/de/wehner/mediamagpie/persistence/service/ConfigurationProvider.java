@@ -19,6 +19,7 @@ import de.wehner.mediamagpie.persistence.entity.properties.MainConfiguration;
 import de.wehner.mediamagpie.persistence.entity.properties.RequiredSetupTasks;
 import de.wehner.mediamagpie.persistence.entity.properties.S3Configuration;
 import de.wehner.mediamagpie.persistence.entity.properties.UserConfiguration;
+import de.wehner.mediamagpie.persistence.entity.properties.UserPropertyBackedConfiguration;
 
 /**
  * This class stores/loads/caches:
@@ -34,6 +35,7 @@ import de.wehner.mediamagpie.persistence.entity.properties.UserConfiguration;
 public class ConfigurationProvider {
 
     private final ConfigurationDao _configurationDao;
+
     private final UserConfigurationDao _userConfigurationDao;
 
     private final Holder<MainConfiguration> _mainConfigurationHolder = new Holder<MainConfiguration>();
@@ -74,6 +76,11 @@ public class ConfigurationProvider {
         } catch (ExecutionException e) {
             throw ExceptionUtil.convertToRuntimeException(e);
         }
+    }
+
+    public <T extends UserPropertyBackedConfiguration> void saveOrUpdateUserConfiguration(User user, T configuration) {
+        _userConfigurationDao.saveOrUpdateConfiguration(user, configuration);
+        _userName2UserConfiguration.invalidate(user.getName());
     }
 
     public void clearUserConfiguration(User user) {

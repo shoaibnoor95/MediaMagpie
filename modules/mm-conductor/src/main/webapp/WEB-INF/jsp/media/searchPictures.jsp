@@ -60,14 +60,14 @@
         </div>
         <div class="form-group">
             <label for="buzzword" class="col-sm-2 control-label">Search</label>
-            <div class="col-sm-10">
-                <form:input path="buzzword" placeholder="some key word"/>
+            <div class="col-sm-5">
+                <form:input path="buzzword" cssClass="form-control" placeholder="some key word"/>
             </div>
         </div>
         <div class="form-group">
             <label for="sortOrder" class="col-sm-2 control-label">Sort Order</label>
             <div class="col-sm-3">
-				<form:select path="sortOrder" onchange="this.form.submit();" class="form-control">
+				<form:select path="sortOrder" onchange="this.form.submit();" class="form-control input-sm">
 				    <form:options items="${mediaSortOrders}" itemLabel="displayName" />
 				</form:select>
             </div>
@@ -84,7 +84,7 @@
     <div class="panel panel-default">
     <div class="panel-heading"><strong>Result</strong></div>
     <div class="panel-body">
-  	<core:pagination clazz="" current="${start}" pageSize="${pageSize}" total="${totalHits}" path="" />
+  	<core:pagination cssClass="" current="${start}" pageSize="${pageSize}" total="${totalHits}" path="" />
 	<div class="ui-widget ui-helper-clearfix">
 		<ul id="gallery" class="gallery ui-helper-reset ui-helper-clearfix">
 			<c:forEach items="${pictures}" var="picture">

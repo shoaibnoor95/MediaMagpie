@@ -1,83 +1,79 @@
 <%@page contentType="text/html;charset=UTF-8"%>
 <%@page pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/jsp/general/taglibs.jsp" %>
+<%@ include file="/WEB-INF/jsp/general/taglibs.jsp"%>
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.configuration.UserConfiguratonControllerS1"%>
 
-<c:set var="title" value="User's Program Configuration (2/2)" scope="request"/>
-<c:set var="activeMenu" value="config" scope="request"/>
-<c:set var="activeSubMenu" value="user_config" scope="request"/>
-<c:set var="urlSubMenu" value="/subNaviConfiguration" scope="request"/>
-			
-			<div id="content">
-				<h1>
-					${title}
-				</h1>
-				
-				<div>
-					<form:form commandName="userConfigurationCommand"  id="myForm" cssClass="decorated">
-					<fieldset>
-						<legend>Program</legend>
-						<dl>
-							<dt>
-								<label>Root Media Path:</label>
-							</dt>
-							<dd>
-								<form:textarea path="rootMediaPathes" rows="3" cols="20" />
-								<img src="<%=request.getContextPath()%>/static/images/famfamfam_silk/help.png" title="One or more pathes were medias will be searched."/>
-							</dd>
-							<dd class="help">e.g. '/home/james/pictures'</dd>
-							<form:errors path="rootMediaPathes" cssClass="error"/>	
-						</dl>
-						<dl>
-							<dt>
-								<label>Thumb Image Size:</label>
-							</dt>
-							<dd>
-								<form:input path="thumbImageSize" cssClass="req"/>
-							</dd>
-							<dd class="help">e.g. '120'</dd>	
-							<form:errors path="thumbImageSize" cssClass="error"/>
-						</dl>
-						<dl>
-							<dt>
-								<label>Thumb Image Size Table:</label>
-							</dt>
-							<dd>
-								<form:input path="thumbImageSizeTable" cssClass="req"/>
-							</dd>
-							<dd class="help">e.g. '60'</dd>	
-							<form:errors path="thumbImageSizeTable" cssClass="error"/>
-						</dl>
-						<dl>
-							<dt>
-								<label>Detail Image Size:</label>
-							</dt>
-							<dd>
-								<form:input path="detailImageSize" cssClass="req"/>
-							</dd>
-							<dd class="help">e.g. '1024'</dd>	
-							<form:errors path="detailImageSize" cssClass="error"/>
-						</dl>
-						<dl>
-							<dt>
-								<label>Re-Scan Media Pathes now:</label>
-							</dt>
-							<dd>
-								<form:checkbox path="syncMediaPahtes" />
-							</dd>
-							<dd class="help">When selected your complete media path will be synchronized against the databse.</dd>	
-						</dl>
-						<dl class="buttons">
-							<dt>
-								&nbsp;
-							</dt>
-							<dd>
-								<button type="button" onclick="document.location.href='<%=request.getContextPath()+UserConfiguratonControllerS1.getBaseRequestMappingUrl()+UserConfiguratonControllerS1.URL_USERCONFIG%>'"><span>Cancel</span></button>
-								<button type="submit" class="active" name="_back"><span>Back</span></button>
-								<button type="submit" class="active"><span>Save</span></button>
-							</dd>	
-						</dl>
-					</fieldset>
-					</form:form>
+<c:set var="title" value="User's Program Configuration (2/2)" scope="request" />
+<c:set var="activeMenu" value="config" scope="request" />
+<c:set var="activeSubMenu" value="user_config" scope="request" />
+<c:set var="urlSubMenu" value="/subNaviConfiguration" scope="request" />
+
+<head>
+	<script type="text/javascript">
+		$(function() {
+			$("[rel='tooltip']").tooltip();
+		});
+	</script>
+</head>
+<body>
+	<h2>${title}</h2>
+	<form:form commandName="userConfigurationCommand" cssClass="form-horizontal col-sm-10" role="form">
+
+		<ol class="breadcrumb">
+			<li>Personal Data</li>
+			<li class="active">Layout and Sync</li>
+		</ol>
+
+		<fieldset>
+			<legend>Layout and Sync</legend>
+			<div class="form-group">
+				<label for="rootMediaPathes" class="col-sm-2 control-label">Root Media Path</label>
+				<div class="col-sm-5">
+					<form:textarea path="rootMediaPathes" rows="3" cols="20" cssClass="form-control" />
+					<div class="checkbox">
+						<label> <input type="checkbox" value=""> <form:checkbox path="syncMediaPahtes" /> Rescan Media Pathes now
+						</label> <img src="<%=request.getContextPath()%>/static/images/famfamfam_silk/help.png" rel="tooltip" data-placement="right"
+							title="When selected your complete root media path will be synchronized against the databse." />
+					</div>
 				</div>
+				<span class="help-block">One or more pathes were medias will be searched. <br />e.g. '/home/james/pictures'
+				</span>
 			</div>
+			<div class="form-group">
+				<label for="thumbImageSize" class="col-sm-2 control-label">Thumb Image Size</label>
+				<div class="col-sm-2">
+					<form:input path="thumbImageSize" cssClass="form-control" />
+					<form:errors path="thumbImageSize" cssClass="error" />
+				</div>
+				<span class="help-block">e.g. '120'</span>
+			</div>
+			<div class="form-group">
+				<label for="thumbImageSizeTable" class="col-sm-2 control-label">Thumb Image Size Table</label>
+				<div class="col-sm-2">
+					<form:input path="thumbImageSizeTable" cssClass="form-control" />
+					<form:errors path="thumbImageSizeTable" cssClass="error" />
+				</div>
+				<span class="help-block">e.g. '60'</span>
+			</div>
+			<div class="form-group">
+				<label for="detailImageSize" class="col-sm-2 control-label">Detail Image Size</label>
+				<div class="col-sm-2">
+					<form:input path="detailImageSize" cssClass="form-control" />
+					<form:errors path="detailImageSize" cssClass="error" />
+				</div>
+				<span class="help-block">e.g. '1024'</span>
+			</div>
+	        <!-- buttons -->
+	        <div class="form-group">
+	            <div class="col-sm-offset-2 col-sm-10">
+	                <button type="button" class="btn btn-default"
+	                    onclick="document.location.href='<%=request.getContextPath() + UserConfiguratonControllerS1.getBaseRequestMappingUrl() + UserConfiguratonControllerS1.URL_USERCONFIG_CANCEL%>'">Cancel</button>
+                    <button type="submit" class="btn btn-default" name="_back">
+                        <span>Back</span>
+                    </button>
+	                <button type="submit" class="btn btn-primary">Save</button>
+	            </div>
+	        </div>
+		</fieldset>
+	</form:form>
+</body>
