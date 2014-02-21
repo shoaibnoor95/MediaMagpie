@@ -1,65 +1,61 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8"%>
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.media.AlbumController"%>
-<%@ page import="de.wehner.mediamagpie.persistence.entity.Visibility" %>
-<%@ include file="/WEB-INF/jsp/general/taglibs.jsp" %>
+<%@ page import="de.wehner.mediamagpie.persistence.entity.Visibility"%>
+<%@ include file="/WEB-INF/jsp/general/taglibs.jsp"%>
 
 <c:choose>
 	<c:when test="${albumCommand.isNew}">
-		<c:set var="title" value="New Album"  scope="request"/>
+		<c:set var="title" value="New Album" scope="request" />
 	</c:when>
 	<c:otherwise>
-		<c:set var="title" value="Edit Album"  scope="request"/>
+		<c:set var="title" value="Edit Album" scope="request" />
 	</c:otherwise>
 </c:choose>
-<c:set var="activeMenu" value="media" scope="request"/>
-<c:set var="activeSubMenu" value="listAlbums" scope="request"/>
-<c:set var="urlSubMenu" value="/subNaviMedia" scope="request"/>
-<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/pages/album_edit.js"></script>
-
-			<div id="content">
-                <h1>${title}</h1>
-					<form:form commandName="albumCommand"  id="myForm" cssClass="decorated">
-					<form:hidden path="id"/>
-					<fieldset>
-						<legend></legend>
-						<dl><form:errors path="name" cssClass="error"/>
-							<dt>
-								<label>Name:</label>
-							</dt>
-							<dd>
-								<form:input path="name" cssClass="req"/>
-							</dd>
-							<dd class="help">Choose a name for your album</dd>	
-						</dl>
-						<dl><form:errors path="visibility" cssClass="error"/>
-							<dt>
-								<label>Visibility:</label>
-							</dt>
-							<dd>
-								<form:select path="visibility" items="<%=Visibility.values()%>" cssClass="req"/>
-							</dd>
-							<dd class="help">Choose a name for your album</dd>	
-						</dl>
-						<dl>
-							<dt>
-								<label>Uid:</label>
-							</dt>
-							<dd>
-								${albumCommand.uid}
-							</dd>
-							<form:hidden path="uid"/>
-						</dl>
-						<dl class="buttons">
-							<dt>
-								&nbsp;
-							</dt>
-							<dd>
-								<button type="button" onclick="document.location.href='<%=request.getContextPath()%>/media/album/list'"><span>Cancel</span></button>
-								<button type="submit" class="active"><span>Save</span></button>
-							</dd>	
-						</dl>
-					</fieldset>
-					<form:hidden path="isNew"/>
-					</form:form>
-				                
-			</div>
+<c:set var="activeMenu" value="media" scope="request" />
+<c:set var="activeSubMenu" value="listAlbums" scope="request" />
+<c:set var="urlSubMenu" value="/subNaviMedia" scope="request" />
+<head>
+<script type="text/javascript">
+    $(function() {
+        $('form:first *:input[type!=hidden]:first').focus();
+    });
+</script>
+</head>
+<body>
+	<h2>${title}</h2>
+	<form:form commandName="albumCommand" cssClass="form-horizontal" role="form">
+		<form:hidden path="id" />
+		<legend>Album Configuration</legend>
+        <div class="form-group">
+            <label for="name" class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-4">
+                <form:input path="name" cssClass="form-control" />
+                <form:errors path="name" cssClass="error" />
+            </div>
+            <span class="help-block">Choose a name for your album</span>
+        </div>
+        <div class="form-group">
+            <label for="visibility" class="col-sm-2 control-label">Visability</label>
+            <div class="col-sm-4">
+                <form:select path="visibility" items="<%=Visibility.values()%>" cssClass="form-control" />
+            </div>
+            <span class="help-block"></span>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">UUID</label>
+            <div class="col-sm-4">
+                <p class="form-control-static">${albumCommand.uid}</p>
+            </div>
+            <form:hidden path="uid" />
+        </div>
+        <!-- buttons -->
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="button" class="btn btn-default"
+                    onclick="document.location.href='<%=request.getContextPath()%>/media/album/list'">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+		<form:hidden path="isNew" />
+	</form:form>
+</body>

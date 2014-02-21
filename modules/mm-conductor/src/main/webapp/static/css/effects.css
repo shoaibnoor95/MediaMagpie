@@ -15,6 +15,7 @@ li.flippable .back {
 	top: 0;
 	transform: rotateY(-180deg);
 	background: url("ui-lightness/images/ui-bg_highlight-soft_100_eeeeee_1x100.png") repeat-x scroll 50% top #EEEEEE;
+	max-width: 100%;
 }
 
 .transition-rotate {

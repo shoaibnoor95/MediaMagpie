@@ -95,25 +95,21 @@
 						<img class="image-action flipBack" title="get more information" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/information.png" />
 						<img class="image-action delete" title="move to trash" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/bin_closed.png" />
 					</div>
-					<div class="back small">
+					<div class="back small" >
 						<h5 class="ui-widget-header">
 							<c:out value="${picture.title}" />
 						</h5>
-                        <table class="small">
+                        <table class="small small" >
                             <tr>
-                                <td>ID:</td>
                                 <td><c:out value="${picture.media.id}"/></td>
                             </tr>
                             <tr>
-	                            <td>Date:</td>
-	                            <td><core:date date="${picture.media.creationDate}"/></td>
-                            </tr>
-                            <tr>
-	                            <td>File:</td>
 	                            <td><c:out value="${picture.fileName}"/></td>
                             </tr>
                             <tr>
-	                            <td>SHA-1:</dt>
+	                            <td><core:date date="${picture.media.creationDate}"/></td>
+                            </tr>
+                            <tr>
 	                            <td><c:out value="${picture.hashValueShort}"/></td>
                             </tr>
                         </table>
@@ -122,7 +118,7 @@
 							<c:if test="${picture.s3Available}">
 								<c:choose>
 									<c:when test="${picture.media.exportedToS3}">
-									    <button title="overwrite your media to S3 bucket" type="button" class="btn btn-warning btn-xs">Export to S3 (overwrite)</button>
+									    <button title="overwrite your media to S3 bucket" type="button" class="btn btn-warning btn-xs small">Overwrite to S3</button>
 									</c:when>
 									<c:otherwise>
                                         <button title="insert your media to S3 bucket" type="button" class="btn btn-primary btn-xs">Export to S3</button>

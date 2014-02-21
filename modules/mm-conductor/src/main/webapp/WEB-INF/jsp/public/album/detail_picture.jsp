@@ -2,82 +2,77 @@
 <%@page pageEncoding="UTF-8"%><!-- TODO rwe: remove this line? -->
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.media.AlbumController"%>
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.media.PublicAlbumController"%>
-<%@ page session="false" %>
-<%@ include file="/WEB-INF/jsp/general/taglibs.jsp" %>
+<%@ page session="false"%>
+<%@ include file="/WEB-INF/jsp/general/taglibs.jsp"%>
 
-<c:set var="title" value="Album"  scope="request"/>
-<c:set var="activeMenu" value="media" scope="request"/>
-<c:set var="activeSubMenu" value="listAlbums" scope="request"/>
-<c:set var="urlSubMenu" value="/subNaviMedia" scope="request"/>
-<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/pages/album_detailPicture.js"></script>
-			
-<div id="content">
+<c:set var="title" value="Album" scope="request" />
+<c:set var="activeMenu" value="media" scope="request" />
+<c:set var="activeSubMenu" value="listAlbums" scope="request" />
+<c:set var="urlSubMenu" value="/subNaviMedia" scope="request" />
+<head>
+    <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/ui-lightness/jquery-ui-1.8.13.custom.css"/>" />
+</head>
+<body>
 
-    <div class='navigation'>
-		<a href="<%=request.getContextPath()+AlbumController.getBaseRequestMappingUrl()+AlbumController.URL_LIST%>">Album</a> &raquo; 
-		<a href="<%=request.getContextPath()+PublicAlbumController.getBaseRequestMappingUrl()%>/${mediaDetailCommand.album.uid}/view">${mediaDetailCommand.album.name}</a> &raquo; 
-		Media-${mediaDetailCommand.id} 
-    </div>
+	<!-- <div class='navigation'>
+		<a href="<%=request.getContextPath() + AlbumController.getBaseRequestMappingUrl() + AlbumController.URL_LIST%>">Album</a> &raquo; <a
+			href="<%=request.getContextPath() + PublicAlbumController.getBaseRequestMappingUrl()%>/${mediaDetailCommand.album.uid}/view">${mediaDetailCommand.album.name}</a>
+		&raquo; Media-${mediaDetailCommand.id}
+	</div>-->
+	<ol class="breadcrumb">
+		<!-- <li><a href="<%=request.getContextPath()%>/welcome">Home</a></li>-->
+		<li><a href="<%=request.getContextPath() + AlbumController.getBaseRequestMappingUrl() + AlbumController.URL_LIST%>">Albums</a></li>
+		<li><a href="<%=PublicAlbumController.getBaseRequestMappingUrl()%>/${mediaDetailCommand.album.uid}/view">${mediaDetailCommand.album.name}</a></li>
+		<li class="active">Media-${mediaDetailCommand.id}</li>
+	</ol>
 
-	<h1>${mediaDetailCommand.name}</h1>
+	<h2>${mediaDetailCommand.name}</h2>
 
-	<ul id="nav-bar" class="button-list">
+	<c:url value="/public/album/${mediaDetailCommand.album.uid}/${pos}" var="coolirisUrl">
+		<c:param name="renderer">cooliris</c:param>
+	</c:url>
+	<div class="form-group">
+	<div class="btn-group">
 		<!-- prev-button -->
-		<li class="first">
-			<c:choose>
-				<c:when test="${not empty mediaDetailCommand.urlPrev}">
-					<a href="${mediaDetailCommand.urlPrev}" class="Butt">
-						<span class="ui-icon ui-icon-seek-prev" ></span>
-						<span class="text" >previous</span>
-					</a>
-				</c:when>
+		<c:choose>
+			<c:when test="${not empty mediaDetailCommand.urlPrev}">
+				<a class="btn btn-default" href="${mediaDetailCommand.urlPrev}"> <span class="ui-icon ui-icon-seek-prev pull-left"></span> previous
+				</a>
+			</c:when>
 			<c:otherwise>
-					<span class="Butt">
-						<span class="ui-icon ui-icon-seek-prev" ></span>
-						<span class="text" >previous</span>
-					</span>
+				<button type="button" class="btn btn-default">
+					<span class="ui-icon ui-icon-seek-prev pull-left"></span> &nbsp; previous
+				</button>
 			</c:otherwise>
-			</c:choose>
-		</li>
+		</c:choose>
 		<!-- cooliris-button -->
-		<li>
-			<c:url value="/public/album/${mediaDetailCommand.album.uid}/${pos}" var="url">
-				<c:param name="renderer">cooliris</c:param>
-			</c:url>
-			<a href="${url}" class="Butt">
-				<span class="ui-icon ui-icon-newwin" ></span>
-				<span class="text">cooliris</span>
-			</a>
-		</li>
+		<a href="${coolirisUrl}" class="btn btn-default"> <span class="ui-icon ui-icon-newwin pull-left"></span> &nbsp; cooliris
+		</a>
 		<!-- next-button -->
-		<li class="last">
-			<c:choose>
-				<c:when test="${not empty mediaDetailCommand.urlNext}">
-	 				<a href="${mediaDetailCommand.urlNext}" class="Butt" >
-						<span class="text">next</span>
-						<span class="ui-icon ui-icon-seek-next" ></span>
-					</a>
-				</c:when>
-				<c:otherwise>
-					<span class="Butt">
-						<span class="text" >previous</span>
-						<span class="ui-icon ui-icon-seek-next" ></span>
-					</span>
-				</c:otherwise>
-			</c:choose>
-		</li>
-	</ul>
-	<br/>
-	
-	<img alt="${mediaDetailCommand.name}" src="${mediaDetailCommand.imageLink}"/>
-	<br/>
-	<h2>Description:</h2>
-	<h3>${mediaDetailCommand.description}</h3>
-	<h2>Details:</h2>
+		<c:choose>
+			<c:when test="${not empty mediaDetailCommand.urlNext}">
+				<a class="btn btn-default" href="${mediaDetailCommand.urlNext}"> <span class="pull-left">next &nbsp;</span> <span
+					class="ui-icon ui-icon-seek-next pull-right"></span>
+				</a>
+			</c:when>
+			<c:otherwise>
+				<button type="button" class="btn btn-default">
+					<span class="pull-left">next &nbsp;</span> <span class="ui-icon ui-icon-seek-next pull-right"></span>
+				</button>
+			</c:otherwise>
+		</c:choose>
+	</div>
+	</div>
+    
+	<img alt="${mediaDetailCommand.name}" src="${mediaDetailCommand.imageLink}" />
+	<br />
+	<h3>Description:</h3>
+	${mediaDetailCommand.description}
+	<h3>Details:</h3>
 	<dl>
-		<dt>
-			Shot was:
-		</dt>
-		<dd><core:date date="${mediaDetailCommand.creationDate}" /></dd>	
+		<dt>Creation Date:</dt>
+		<dd>
+			<core:date date="${mediaDetailCommand.creationDate}" />
+		</dd>
 	</dl>
-</div>
+</body>

@@ -9,18 +9,18 @@ $(document).ready(function() {
 		if ($target.is(".delete")) {
 			var $tdWithName = $(":first", $item);
 			var name = $tdWithName.text();
-			if (confirm("Do you really want to delete album '" + name + "'?")) {
-				deleteAlbum(id);
-			} else {
-				return false;
-			}
+			bootbox.confirm("Do you really want to delete album '" + name + "'?", function(result) {
+				if (result == true) {
+					deleteAlbum(id);
+				}
+			});
 		} else if ($target.is(".view")) {
 			document.location.href = BASE_URL + id + "/view";
 		} else if ($target.is(".edit")) {
 			document.location.href = BASE_URL + id + "/edit";
 		} else if ($target.is(".copyLink")) {
 			var link = $target.attr("alt");
-			 window.prompt ("Copy to clipboard: Ctrl+C, Enter", link);
+			window.prompt("Copy to clipboard: Ctrl+C", link);
 		}
 
 		return true;
@@ -33,18 +33,3 @@ function deleteAlbum(id) {
 	$("#deleteId").attr("value", id);
 	$("#deleteForm").submit();
 }
-
-/*
- * function executeCommand(action, id, arg1) { $("#input_action").attr("value",
- * action); $("#input_id").attr("value", id); $("#input_arg1").attr("value",
- * arg1); $("#mediaForm").submit(); }
- * 
- * $(function() { $( "img.image-action" ).click(function( event ) { var $item = $(
- * this ), $target = $( event.target );
- * 
- * if ( $target.is( "img.image-action.delete" ) ) { var mediaId =
- * $item.attr("id"); executeCommand("DELETE", mediaId); } else if ( $target.is(
- * "a img" ) ) { return true; }
- * 
- * return false; }); };
- */

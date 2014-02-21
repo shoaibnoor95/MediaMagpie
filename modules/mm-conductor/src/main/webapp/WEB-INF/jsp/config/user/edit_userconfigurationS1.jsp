@@ -7,21 +7,30 @@
 <c:set var="activeMenu" value="config" scope="request" />
 <c:set var="activeSubMenu" value="user_config" scope="request" />
 <c:set var="urlSubMenu" value="/subNaviConfiguration" scope="request" />
+<head>
+<script type="text/javascript">
+    $(function() {
+        $("[data-toggle='tooltip']").tooltip();
+        $("[data-toggle='popover']").popover();
+        $('form:first *:input[type!=hidden]:first').focus();
+    });
+</script>
+</head>
+<body>
+	<h2>${title}</h2>
 
-<h2>${title}</h2>
+	<form:form commandName="userConfigurationCommand" cssClass="form-horizontal" role="form">
 
-<form:form commandName="userConfigurationCommand" cssClass="form-horizontal" role="form">
-
-	<ol class="breadcrumb">
-		<!-- <li><a href="<%=request.getContextPath()%>/welcome">Home</a></li>-->
-		<!-- <li class="active"><a href="<%=request.getContextPath() + UserConfiguratonControllerS1.getBaseRequestMappingUrl()%>/edit">Personal Data</a></li>-->
-		<li class="active">Personal Data</li>
-		<li>Layout and Sync</li>
-	</ol>
+		<ol class="breadcrumb">
+			<!-- <li><a href="<%=request.getContextPath()%>/welcome">Home</a></li>-->
+			<!-- <li class="active"><a href="<%=request.getContextPath() + UserConfiguratonControllerS1.getBaseRequestMappingUrl()%>/edit">Personal Data</a></li>-->
+			<li class="active">Personal Data</li>
+			<li>Layout and Sync</li>
+		</ol>
 
 		<legend>Personal Data</legend>
 		<div class="form-group">
-			<label for="forename" class="col-sm-2 control-label">User (Login)</label>
+			<label class="col-sm-2 control-label">User (Login)</label>
 			<div class="col-sm-4">
 				<p class="form-control-static">${userConfigurationCommand.name}</p>
 			</div>
@@ -62,8 +71,10 @@
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
 				<button type="button" class="btn btn-default"
-					onclick="document.location.href='<%=request.getContextPath() + UserConfiguratonControllerS1.getBaseRequestMappingUrl() + UserConfiguratonControllerS1.URL_USERCONFIG_CANCEL%>'">Cancel</button>
+					onclick="document.location.href='<%=request.getContextPath() + UserConfiguratonControllerS1.getBaseRequestMappingUrl()
+                        + UserConfiguratonControllerS1.URL_USERCONFIG_CANCEL%>'">Cancel</button>
 				<button type="submit" class="btn btn-primary">Next</button>
 			</div>
 		</div>
-</form:form>
+	</form:form>
+</body>

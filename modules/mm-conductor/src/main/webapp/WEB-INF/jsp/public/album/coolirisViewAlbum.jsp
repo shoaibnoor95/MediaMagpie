@@ -22,14 +22,13 @@
     </script>       
 </head>
 <body>
-<div id="content">
-    <div class="navigation">
-		<a href="<%=request.getContextPath()+AlbumController.getBaseRequestMappingUrl()+AlbumController.URL_LIST%>">Album</a> &raquo; 
-		<a href="<%=PublicAlbumController.getBaseRequestMappingUrl()%>/${mediaDetailCommand.album.uid}/view">${mediaDetailCommand.album.name}</a> 
-    </div>
-	<h1>${title}</h1>
+    <ol class="breadcrumb">
+        <!-- <li><a href="<%=request.getContextPath()%>/welcome">Home</a></li>-->
+        <li><a href="<%=request.getContextPath() + AlbumController.getBaseRequestMappingUrl() + AlbumController.URL_LIST%>">Albums</a></li>
+        <li class="active"><a href="<%=PublicAlbumController.getBaseRequestMappingUrl()%>/${mediaDetailCommand.album.uid}/view">${mediaDetailCommand.album.name}</a></li>
+    </ol>
+	<h2>${title}</h2>
 
  	<div id="wall"><!-- 3D Wall Goes Here --></div>
-</div>
 </body>
 </html>

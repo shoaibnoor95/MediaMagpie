@@ -83,7 +83,7 @@ public class PublicAlbumController extends AbstractConfigurationSupportControlle
                 User owner = album.getOwner();
                 UserConfiguration userConfiguration = _configurationProvider.getUserConfiguration(owner);
                 final List<Media> mediasInAlbum = album.getMedias();
-                int end = Math.min((start + mainConfiguration.getHitsPerPage()), mediasInAlbum.size()-1);
+                int end = Math.min((start + mainConfiguration.getHitsPerPage()), mediasInAlbum.size());
                 for (int i = start; i < end; i++) {
                     Media media = mediasInAlbum.get(i);
                     mediaThumbCommands.add(_imageSerivce.createMediaThumbCommand(media, mainConfiguration, userConfiguration, request));
