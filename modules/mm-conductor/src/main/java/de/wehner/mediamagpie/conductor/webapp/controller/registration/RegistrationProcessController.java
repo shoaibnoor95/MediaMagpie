@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,7 +88,7 @@ public class RegistrationProcessController {
     public String submitRegistration(Model model, @Valid RegistrationCommand command, BindingResult errors, HttpServletRequest request) {
         new PasswordConfirmValidator().validate(command, errors);
         if (isUserAlreadyPresent(command.getUser())) {
-            errors.rejectValue("user", "user.is.already.used", null, "The user-id is already used by another user. Try another user.");
+            errors.rejectValue("user", "user.is.already.used", null, "The user-id is already used by another user. Try another one.");
         }
         if (errors.hasErrors()) {
             LOG.info("Got validation errors: " + errors.toString());
@@ -211,6 +212,9 @@ public class RegistrationProcessController {
     }
 
     private boolean isUserAlreadyPresent(String user) {
+        if (StringUtils.isEmpty(user)) {
+            return false;
+        }
         List<User> byName = _userDao.getUserLikeName(user);
         return !CollectionUtils.isEmpty(byName);
     }

@@ -10,7 +10,7 @@
 
 <h2>${title}</h2>
 
-<form:form commandName="userConfigurationCommand" cssClass="form-horizontal col-sm-10" role="form">
+<form:form commandName="userConfigurationCommand" cssClass="form-horizontal" role="form">
 
 	<ol class="breadcrumb">
 		<!-- <li><a href="<%=request.getContextPath()%>/welcome">Home</a></li>-->
@@ -19,17 +19,16 @@
 		<li>Layout and Sync</li>
 	</ol>
 
-	<fieldset>
 		<legend>Personal Data</legend>
 		<div class="form-group">
 			<label for="forename" class="col-sm-2 control-label">User (Login)</label>
-			<div class="col-sm-5">
+			<div class="col-sm-4">
 				<p class="form-control-static">${userConfigurationCommand.name}</p>
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="forename" class="col-sm-2 control-label">Name</label>
-			<div class="col-sm-5">
+			<div class="col-sm-4">
 				<form:input path="forename" cssClass="form-control" />
 				<form:errors path="forename" cssClass="error" />
 			</div>
@@ -37,7 +36,7 @@
 		</div>
 		<div class="form-group">
 			<label for="surname" class="col-sm-2 control-label">Surname</label>
-			<div class="col-sm-5">
+			<div class="col-sm-4">
 				<form:input path="surname" cssClass="form-control" />
 				<form:errors path="surname" cssClass="error" />
 			</div>
@@ -45,7 +44,7 @@
 		</div>
 		<div class="form-group">
 			<label for="surname" class="col-sm-2 control-label">Password</label>
-			<div class="col-sm-5">
+			<div class="col-sm-4">
 				<form:password path="password" showPassword="false" cssClass="form-control" autocomplete="off" />
 				<form:errors path="password" cssClass="error" />
 			</div>
@@ -53,7 +52,7 @@
 		</div>
 		<div class="form-group">
 			<label for="surname" class="col-sm-2 control-label">Password Confirm</label>
-			<div class="col-sm-5">
+			<div class="col-sm-4">
 				<form:password path="passwordConfirm" showPassword="false" cssClass="form-control" autocomplete="off" />
 				<form:errors path="passwordConfirm" cssClass="error" />
 			</div>
@@ -67,5 +66,4 @@
 				<button type="submit" class="btn btn-primary">Next</button>
 			</div>
 		</div>
-	</fieldset>
 </form:form>

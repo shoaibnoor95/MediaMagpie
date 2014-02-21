@@ -1,65 +1,69 @@
 <%@page pageEncoding="UTF-8"%>
-<%@ page session="false" %>
+<%@ page session="false"%>
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.configuration.AwsConfigurationController"%>
-<%@ include file="/WEB-INF/jsp/general/taglibs.jsp" %>
-<c:set var="title" value="AWS S3 Configuration" scope="request"/>
-<c:set var="activeMenu" value="config" scope="request"/>
-<c:set var="activeSubMenu" value="aws_s3" scope="request"/>
-<c:set var="urlSubMenu" value="/subNaviConfiguration" scope="request"/>
-            
-            <div id="content">
-                <h1>
-                    ${title}
-                </h1>
-                
-                <div>
-                    <form:form commandName="conf"  id="myForm" cssClass="decorated">
-                    <fieldset>
-                        <legend>Settings</legend>
-                        <dl>
-                            <dt>
-                                <label>Access Key:</label>
-                            </dt>
-                            <dd>
-                                <form:input path="accessKey" cssClass="req"/>
-                                <form:errors path="accessKey" cssClass="error"/>
-                                <img src="/static/images/famfamfam_silk/help.png" title="You will find your access key under 'Security Credenticals' of our account. Go to: https://portal.aws.amazon.com/gp/aws/securityCredentials"/>
-                            </dd>
-                            <dd class="help">e.g. 'LKUAJAFDEFYMGTKDNBUP'</dd>    
-                        </dl>
+<%@ include file="/WEB-INF/jsp/general/taglibs.jsp"%>
+<c:set var="title" value="AWS S3 Configuration" scope="request" />
+<c:set var="activeMenu" value="config" scope="request" />
+<c:set var="activeSubMenu" value="aws_s3" scope="request" />
+<c:set var="urlSubMenu" value="/subNaviConfiguration" scope="request" />
 
-                        <dl>
-                            <dt>
-                                <label>Secret Key:</label>
-                            </dt>
-                            <dd>
-                                <form:password path="secretKey" showPassword="false" cssClass="req"/>
-                                <form:errors path="secretKey" cssClass="error"/>
-                                <img src="/static/images/famfamfam_silk/help.png" title="You will find your secret key under 'Security Credenticals' of our account. Go to: https://portal.aws.amazon.com/gp/aws/securityCredentials"/>
-                            </dd>
-                            <dd class="help">e.g. 'kirpdotW6lY9zjoddtbjzcD0Oy30jkguw9DTjfOr'<br>Leave blank if you dont't want to change existing secret key.</dd>   
-                        </dl>
+<head>
+<script type="text/javascript">
+	$(function() {
+        $("[data-toggle='tooltip']").tooltip();
+		$("[data-toggle='popover']").popover();
+		$('form:first *:input[type!=hidden]:first').focus();
+	});
+</script>
+</head>
+<body>
+	<h2>${title}</h2>
 
-					    <dl>
-					        <dt>
-					            <label>Synchronize Media to S3:</label>
-					        </dt>
-					        <dd>
-					           <form:checkbox path="syncToS3" />
-                               <img src="/static/images/famfamfam_silk/help.png" title="When you set this option mediamagpie will synchronize all your medias to a bucket on your S3."/>
-                            </dd>
-					    </dl>
-
-                        <dl class="buttons">
-                            <dt>
-                                &nbsp;
-                            </dt>
-                            <dd>
-                                <button type="button" onclick="document.location.href='<%=request.getContextPath()+AwsConfigurationController.getBaseRequestMappingUrl()+AwsConfigurationController.URL_S3CONFIG%>'"><span>Cancel</span></button>
-                                <button type="submit" class="active"><span>Save</span></button>
-                            </dd>   
-                        </dl>
-                    </fieldset>
-                    </form:form>
+		<form:form commandName="conf" id="myForm" cssClass="form-horizontal" role="form">
+				<legend>Settings</legend>
+				<div class="form-group">
+					<label for="accessKey" class="col-sm-2 control-label">Access Key</label>
+					<div class="col-sm-3">
+                        <form:input path="accessKey" cssClass="form-control" placeholder="enter your access key here..."/>
+						<form:errors path="accessKey" cssClass="error" />
+					</div>
+					<span class="help-block">
+	                    <img src="<%=request.getContextPath()%>/static/images/famfamfam_silk/help.png" data-toggle="tooltip" data-placement="right"
+	                        title="You will find your access key under 'Security Credenticals' of our account. Go to: https://portal.aws.amazon.com/gp/aws/securityCredentials" />
+                        <button type="button" class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="right" data-content="You will find your access key under 'Security Credenticals' of our account. Go to: https://portal.aws.amazon.com/gp/aws/securityCredentials">?</button>
+					&nbsp;e.g. 'LKUAJAFDEFYMGTKDNBUP'
+					</span>
+				</div>
+                <div class="form-group">
+                    <label for="secretKey" class="col-sm-2 control-label">Secret Key</label>
+                    <div class="col-sm-3">
+                        <form:password path="secretKey" showPassword="false" cssClass="form-control" placeholder="enter your secret key here..."/>
+                        <form:errors path="secretKey" cssClass="error" />
+                    </div>
+                    <span class="help-block">
+                        <img src="<%=request.getContextPath()%>/static/images/famfamfam_silk/help.png" data-toggle="tooltip" data-placement="right"
+                            title="You will find your secret key under 'Security Credenticals' of our account. Go to: https://portal.aws.amazon.com/gp/aws/securityCredentials" />
+                        <button type="button" class="btn btn-xs btn-default" data-container="body" data-toggle="popover" data-placement="right" data-content="You will find your secret key under 'Security Credenticals' of our account. Go to: https://portal.aws.amazon.com/gp/aws/securityCredentials">?</button>
+                    &nbsp;e.g. 'kirpdotW6lY9zjoddtbjzcD0Oy30jkguw9DTjfOr'<br>Leave blank if you dont't want to change existing secret key.
+                    </span>
                 </div>
-            </div>
+	            <div class="form-group">
+	                <div class="col-sm-offset-2  col-sm-5">
+	                    <div class="checkbox">
+	                        <label> <input type="checkbox" value=""> <form:checkbox path="syncToS3" />Synchronize Media to S3
+	                        </label> 
+	                        <img src="<%=request.getContextPath()%>/static/images/famfamfam_silk/help.png" data-toggle="tooltip" data-placement="right"
+	                            title="When you set this option mediamagpie will synchronize all medias to your S3 buckets." />
+	                    </div>
+	                </div>
+	            </div>
+	            <!-- buttons -->
+	            <div class="form-group">
+	                <div class="col-sm-offset-2 col-sm-5">
+	                    <button type="button" class="btn btn-default"
+	                        onclick="document.location.href='<%=request.getContextPath() + AwsConfigurationController.getBaseRequestMappingUrl() + AwsConfigurationController.URL_S3CONFIG%>'">Cancel</button>
+	                    <button type="submit" class="btn btn-primary">Save</button>
+	                </div>
+	            </div>
+		</form:form>
+</body>

@@ -40,10 +40,9 @@
             <li class="active">Medias</li>
         </ol>
 -->    
-	<h1>${title}</h1>
+	<h2>${title}</h2>
 
-	<form:form id="mediaForm" class="form-horizontal" role="form" commandName="searchCriteria">
-        <fieldset class="panel">
+	<form:form id="mediaForm" cssClass="form-horizontal" role="form" commandName="searchCriteria">
         <legend>Search Criterias</legend>
 		<input id="input_action" type="hidden" value="" name="action" />
 		<input id="input_id" type="hidden" value="" name="id" />
@@ -51,7 +50,7 @@
 		<form:hidden path="sliderYearValues" />
         <div class="form-group">
             <label for="yearCriteria" class="col-sm-2 control-label">Year</label>
-            <div class="col-sm-10">
+            <div class="col-sm-5">
                 <div id="slider-select-year" style="float: left;"></div>
                 <br/>
                 <form:input path="yearCriteria" style="border:0; font-weight:bold; width:auto;" size="12" />
@@ -60,24 +59,19 @@
         </div>
         <div class="form-group">
             <label for="buzzword" class="col-sm-2 control-label">Search</label>
-            <div class="col-sm-5">
+            <div class="col-sm-4">
                 <form:input path="buzzword" cssClass="form-control" placeholder="some key word"/>
             </div>
         </div>
         <div class="form-group">
             <label for="sortOrder" class="col-sm-2 control-label">Sort Order</label>
-            <div class="col-sm-3">
+            <div class="col-sm-2">
 				<form:select path="sortOrder" onchange="this.form.submit();" class="form-control input-sm">
 				    <form:options items="${mediaSortOrders}" itemLabel="displayName" />
 				</form:select>
             </div>
+            <button type="submit" class="btn btn-primary">Search</button>
         </div>
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-primary">Search</button>
-            </div>
-        </div> 
-        </fieldset>    
 	</form:form>
 
     <br/>

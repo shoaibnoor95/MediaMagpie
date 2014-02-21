@@ -7,60 +7,64 @@
 <c:set var="activeSubMenu" value="aws_s3" scope="request" />
 <c:set var="urlSubMenu" value="/subNaviConfiguration" scope="request" />
 
-<div id="content">
-	<h1>${title}</h1>
+<head>
+</head>
+<body>
+	<h2>${title}</h2>
 
 	<c:if test="${not empty checkResultCommand}">
-		<div class="${checkResultCommand.divClass}">
-			<spring:message code="${checkResultCommand.messageKey}"/>&nbsp;<c:out value="${checkResultCommand.details}"></c:out>
+		<div class="${checkResultCommand.divClass} alert alert-info">
+			<spring:message code="${checkResultCommand.messageKey}" />
+			&nbsp;
+			<c:out value="${checkResultCommand.details}"></c:out>
 		</div>
 	</c:if>
 
 	<c:if test="${!empty conf.accessKey && !empty conf.anonymizedSecretKey}">
-	<h2><img src="<%=request.getContextPath()%>/static/images/famfamfam_silk/disconnect.png" /> 
-	    <a href="<%=request.getContextPath() + AwsConfigurationController.getBaseRequestMappingUrl() + AwsConfigurationController.URL_TEST_SETTINGS%>">Test AWS settings</a></h2>
+		<h4>
+			<img src="<%=request.getContextPath()%>/static/images/famfamfam_silk/disconnect.png" /> <a
+				href="<%=request.getContextPath() + AwsConfigurationController.getBaseRequestMappingUrl() + AwsConfigurationController.URL_TEST_SETTINGS%>">Test
+				AWS settings</a>
+		</h4>
 	</c:if>
 
-	<dl>
-		<dt>
-			<label>Access Key:</label>
-		</dt>
-		<dd>${conf.accessKey}</dd>
-	</dl>
-	<dl>
-		<dt>
-			<label>Secret Key:</label>
-		</dt>
-		<dd>${conf.anonymizedSecretKey}</dd>
-	</dl>
-    <dl>
-        <dt>
-            <label>Synchronize Media to S3:</label>
-        </dt>
-        <dd><form:checkbox path="conf.syncToS3" disabled="true"/></dd>
-    </dl>
-	<dl>
-		<dt>
-			<label>&nbsp;</label>
-		</dt>
-		<dd>
-			<button type="button"
-				onclick="document.location.href='<%=request.getContextPath() + AwsConfigurationController.getBaseRequestMappingUrl()%>/edit'"
-				class="active">
-				<span>Edit</span>
-			</button>
-		</dd>
-	</dl>
-	
+	<div class="form-horizontal">
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Access Key</label>
+			<div class="col-sm-10">
+				<p class="form-control-static">${conf.accessKey}</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Secret Key</label>
+			<div class="col-sm-10">
+				<p class="form-control-static">${conf.anonymizedSecretKey}</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Synchronize to S3</label>
+			<div class="col-sm-10">
+				<form:checkbox path="conf.syncToS3" disabled="true" cssClass="form-control-static" />
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<button type="button" class="btn btn-default"
+					onclick="document.location.href='<%=request.getContextPath() + AwsConfigurationController.getBaseRequestMappingUrl()%>/edit'">Edit</button>
+			</div>
+		</div>
+	</div>
+
 	<!-- trigger synchronisation -->
-    <c:if test="${conf.configurationComplete}">
-    <form:form action="synchronize">
-        <button id="syncWithS3" type="button" class="default"
-            onclick="$('form input[type=hidden][name=submitSelect]').val('start');document.forms[0].submit();">
-            <span>Start Synchronization</span>
-        </button>
-        <input type="hidden" name="submitSelect" />
-    </form:form>
-    </c:if>
-    	
-</div>
+	<c:if test="${conf.configurationComplete}">
+		<form:form action="/config/aws/s3/synchronize" cssClass="form-horizontal col-sm-10" role="form">
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button id="syncWithS3" type="submit" class="btn alert-warning">Start Synchronization</button>
+					<input type="hidden" name="submitSelect" value="start" />
+				</div>
+			</div>
+		</form:form>
+	</c:if>
+
+</body>

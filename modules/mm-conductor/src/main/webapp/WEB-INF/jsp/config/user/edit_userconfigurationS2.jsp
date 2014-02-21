@@ -3,7 +3,7 @@
 <%@ include file="/WEB-INF/jsp/general/taglibs.jsp"%>
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.configuration.UserConfiguratonControllerS1"%>
 
-<c:set var="title" value="User's Program Configuration (2/2)" scope="request" />
+<c:set var="title" value="User Configuration (2/2)" scope="request" />
 <c:set var="activeMenu" value="config" scope="request" />
 <c:set var="activeSubMenu" value="user_config" scope="request" />
 <c:set var="urlSubMenu" value="/subNaviConfiguration" scope="request" />
@@ -12,23 +12,23 @@
 	<script type="text/javascript">
 		$(function() {
 			$("[rel='tooltip']").tooltip();
+            $('form:first *:input[type!=hidden]:first').focus();
 		});
 	</script>
 </head>
 <body>
 	<h2>${title}</h2>
-	<form:form commandName="userConfigurationCommand" cssClass="form-horizontal col-sm-10" role="form">
+	<form:form commandName="userConfigurationCommand" cssClass="form-horizontal" role="form">
 
 		<ol class="breadcrumb">
 			<li>Personal Data</li>
 			<li class="active">Layout and Sync</li>
 		</ol>
 
-		<fieldset>
 			<legend>Layout and Sync</legend>
 			<div class="form-group">
 				<label for="rootMediaPathes" class="col-sm-2 control-label">Root Media Path</label>
-				<div class="col-sm-5">
+				<div class="col-sm-4">
 					<form:textarea path="rootMediaPathes" rows="3" cols="20" cssClass="form-control" />
 					<div class="checkbox">
 						<label> <input type="checkbox" value=""> <form:checkbox path="syncMediaPahtes" /> Rescan Media Pathes now
@@ -74,6 +74,5 @@
 	                <button type="submit" class="btn btn-primary">Save</button>
 	            </div>
 	        </div>
-		</fieldset>
 	</form:form>
 </body>
