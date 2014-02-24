@@ -13,9 +13,12 @@
 
 <script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery.galleriffic.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery.opacityrollover.js"></script>
-<!-- 1. We only want the thunbnails to display when javascript is enabled
-     2. We need to import the script directly into jsp because it contains some java code -->
-<script type="text/javascript"><%@ include file="../../../static/js/pages/welcome.js" %></script>
+
+<!-- We need to import the script directly into jsp because it contains some java code -->
+<script type="text/javascript"><%@ include file="../../../static/js/mm-toggle.js" %></script>
+
+<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/pages/welcome.js" />
+<!-- We only want the thunbnails to display when javascript is enabled -->
 <script type="text/javascript">
 	document.write('<style>.noscript { display: none; }</style>');
 </script>
@@ -52,47 +55,46 @@
 	<div id="thumbs" class="navigation col-md-4">
 		<ul class="thumbs noscript">
 			<c:forEach items="${mediaThumbCommandList}" var="mediaThumbCommand" varStatus="status">
-				<li>
-				    <a class="thumb" href="${mediaThumbCommand.urlThumbDetail}" title="Title #0"> <img src="${mediaThumbCommand.urlThumbImage}"
+				<li><a class="thumb" href="${mediaThumbCommand.urlThumbDetail}" title="Title #0"> <img src="${mediaThumbCommand.urlThumbImage}"
 						alt="${mediaThumbCommand.title}" /></a>
 					<div class="caption">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><c:out value="${mediaThumbCommand.title}" />
-                                <div class="download">
-                                    <a href="${mediaThumbCommand.urlDownload}">Show Original</a>
-                                </div></h3>
-                            </div>
-                            <div class="panel-body">
-		                        <div class="image-desc">
-		                            <i><c:out value="${mediaThumbCommand.description}" /></i><br />
-		                            <div style="padding: 3px 0 2px 5px;">
-		                                <img class="toggle-img" style="box-shadow: 0 0 0;"
-		                                    src="<%=request.getContextPath()%>static/images/famfamfam_silk/bullet_arrow_down.png" alt="hide meta information"
-		                                    onclick="toggleMetaInformation();" /> <a class="toggle-link" onclick="toggleMetaInformation();">Show camera meta informations</a>
-		                            </div>
-		                            <div class="meta" style="display: none;">
-		                                ID: ${mediaThumbCommand.id}<br />
-		                                <c:if test="${mediaThumbCommand.cameraMetaData != null && not empty mediaThumbCommand.cameraMetaData.exifData}">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title">
+									<c:out value="${mediaThumbCommand.title}" />
+									<a class="pull-right" href="${mediaThumbCommand.urlDownload}">Show Original</a>
+								</h3>
+							</div>
+							<div class="panel-body">
+								<div class="image-desc">
+									<i><c:out value="${mediaThumbCommand.description}" /></i><br />
+									<div>
+										<img class="toggle-img" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/bullet_arrow_down.png"
+											alt="hide meta information" onclick="toggleMetaInformation();" /> <a class="toggle-link" onclick="toggleMetaInformation();">Show
+											camera meta informations</a>
+									</div>
+									<div class="meta" style="display: none;">
+										ID: ${mediaThumbCommand.id}<br />
+										<c:if test="${mediaThumbCommand.cameraMetaData != null && not empty mediaThumbCommand.cameraMetaData.exifData}">
 		                               -- EXIF-Data --<br />
-		                                    <ul>
-		                                        <c:forEach items="${mediaThumbCommand.cameraMetaData.exifData}" var="exifData">
-		                                            <li>${exifData.key}:${exifData.value}</li>
-		                                        </c:forEach>
-		                                    </ul>
+											<ul>
+												<c:forEach items="${mediaThumbCommand.cameraMetaData.exifData}" var="exifData">
+													<li>${exifData.key}:${exifData.value}</li>
+												</c:forEach>
+											</ul>
 		                                -- Camera-Data --<br />
-		                                    <ul>
-		                                        <c:forEach items="${mediaThumbCommand.cameraMetaData.metaData}" var="metaData">
-		                                            <li>${metaData.key}:${metaData.value}</li>
-		                                        </c:forEach>
-		                                    </ul>
-		                                </c:if>
-		                            </div>
-		                        </div><!-- .image-desc -->
-                            </div>
-                        </div>
-					</div><!-- .caption -->
-				</li>
+											<ul>
+												<c:forEach items="${mediaThumbCommand.cameraMetaData.metaData}" var="metaData">
+													<li>${metaData.key}:${metaData.value}</li>
+												</c:forEach>
+											</ul>
+										</c:if>
+									</div>
+								</div>
+								<!-- .image-desc -->
+							</div>
+						</div>
+					</div> <!-- .caption --></li>
 			</c:forEach>
 		</ul>
 	</div>

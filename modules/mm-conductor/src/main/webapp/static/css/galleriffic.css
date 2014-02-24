@@ -81,10 +81,6 @@ div.slideshow img {
 	border: 1px solid #ccc;
 }
 
-div.download {
-	float: right;
-}
-
 div.caption-container {
 	position: relative;
 	clear: left;
@@ -193,19 +189,4 @@ div.pagination span.ellipsis {
 #gallery img, #thumbs img, #folders img {
     //-webkit-box-shadow: 4px 6px 6px rgba(0, 0, 0, 0.4);
     box-shadow: 4px 6px 6px rgba(0, 0, 0, 0.4);
-}
-div.meta {
-    font-size: 0.8em;
-    margin: 4px 4px 0 4px;
-}
-div.meta ul {
-    margin: 0;
-    padding: 0;
-}
-div.meta li {
-/*    float: left;*/
-    list-style: none outside none;
-    margin-right: 10px;
-    padding: 0;
-/*    width: 240px;*/
 }

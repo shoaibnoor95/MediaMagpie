@@ -96,7 +96,7 @@ media gallery
 }
 
 /****************************
-dl elements
+dl elements (TODO rwe: obsolete)
 ****************************/
 /*fieldset {
     margin-bottom: 15px;
@@ -106,96 +106,119 @@ dl elements
     width: 700px;
     display: block;
 }*/
-
 dl {
-    width: 700px;
-    overflow: auto;
-    margin: 0;
+	width: 700px;
+	overflow: auto;
+	margin: 0;
 }
 
 dt {
-    float: left;
-    width: 130px;
-    text-align: right;
-    margin: 0;
-    font-weight: bold;
-    padding-right: 5px
+	float: left;
+	width: 130px;
+	text-align: right;
+	margin: 0;
+	font-weight: bold;
+	padding-right: 5px
 }
 
 dd {
-    width: 550px;
-    float: left;
-    padding-right: 5px;
-    margin: 0;
-    overflow: hidden;
+	width: 550px;
+	float: left;
+	padding-right: 5px;
+	margin: 0;
+	overflow: hidden;
 }
 
 dl.metadata {
-    width: auto;
+	width: auto;
 }
 
 dl.metadata dt {
-    width: auto;
-    padding: 2px;
-    font-size: 8px;
+	width: auto;
+	padding: 2px;
+	font-size: 8px;
 }
 
 dl.metadata dd {
-    width: auto;
-    padding: 2px;
-    font-size: 8px;
+	width: auto;
+	padding: 2px;
+	font-size: 8px;
 }
 
 /****************
- Forms
+ Forms (TODO rwe: obsolete)
 ****************/
 form {
-    padding: 0;
-    margin: 0
+	padding: 0;
+	margin: 0
 }
 
 /*.decorated fieldset {
     background-color: #f2f2f2;
     padding-left: 10px
 }*/
-
 legend {
-    font-weight: bold;
-    color: #AAA;
-    font-size: 12px;
+	font-weight: bold;
+	color: #AAA;
+	font-size: 12px;
 }
 
 .decorated dl {
-    background: #f2f2f2;
-    border-bottom: 1px solid #FFF;
+	background: #f2f2f2;
+	border-bottom: 1px solid #FFF;
 }
 
 .decorated dt {
-    width: 140px;
-    padding: 10px 10px 10px 10px;
+	width: 140px;
+	padding: 10px 10px 10px 10px;
 }
 
 .decorated dd {
-    width: 290px;
-    padding: 5px 5px 5px 5px;
+	width: 290px;
+	padding: 5px 5px 5px 5px;
 }
 
 .decorated dd.help {
-    font-size: 10px;
-    color: #959595;
-    width: 220px;
-    padding: 15px 10px 10px 10px;
-    margin: 0;
+	font-size: 10px;
+	color: #959595;
+	width: 220px;
+	padding: 15px 10px 10px 10px;
+	margin: 0;
 }
 
 .error {
-    color: #ED171F;
-    line-height: 30px;
+	color: #ED171F;
+	line-height: 30px;
 }
 
 /**************
 slider on media search page
 ***************/
 #slider-select-year {
-    width: 200px;
+	width: 200px;
+}
+
+/**************
+general formation
+***************/
+
+img.toggle-img {
+	margin-bottom: 4px;
+}
+div.meta {
+	font-size: 0.8em;
+	margin: 4px 4px 0 4px;
+}
+
+div.meta ul {
+	margin: 0;
+	padding: 0;
+}
+
+div.meta li {
+	/*    float: left;*/
+	list-style: none outside none;
+	margin-right: 10px;
+	padding: 0;
+	/*    width: 240px;*/
 }

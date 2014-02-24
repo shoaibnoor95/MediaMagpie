@@ -1,16 +1,20 @@
 package de.wehner.mediamagpie.conductor.webapp.controller.commands;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.util.CollectionUtils;
 
+import de.wehner.mediamagpie.conductor.metadata.CameraMetaData;
 import de.wehner.mediamagpie.persistence.entity.Album;
 import de.wehner.mediamagpie.persistence.entity.Media;
-
 
 public class MediaDetailCommand extends Media {
 
@@ -20,22 +24,21 @@ public class MediaDetailCommand extends Media {
     private String _urlNext;
     private String _urlPrev;
     private final Album _album;
-
-    // TODO rwe: add meta information to this picture too.#
+    private CameraMetaData _cameraMetaDataObj;
+    private final ObjectMapper _mapper;
 
     public MediaDetailCommand() {
-        super();
-        _album = null;
+        this(null);
     }
 
     public MediaDetailCommand(Album album) {
-        super();
-        _album = album;
+        this(album, null);
     }
 
     public MediaDetailCommand(Album album, Media media) {
         super(media);
         _album = album;
+        _mapper = new ObjectMapper();
         if (!CollectionUtils.isEmpty(getTags())) {
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < getTags().size(); i++) {
@@ -50,6 +53,15 @@ public class MediaDetailCommand extends Media {
             try {
                 setName(new File(new URI(media.getUri()).toURL().getFile()).getName());
             } catch (Exception e) {
+            }
+        }
+        final String jsonCameraMetaData = media.getCameraMetaData();
+        if (!StringUtils.isEmpty(jsonCameraMetaData) && !"null".equals(jsonCameraMetaData)) {
+            try {
+                _cameraMetaDataObj = _mapper.readValue(jsonCameraMetaData, CameraMetaData.class);
+            } catch (JsonParseException e) {
+            } catch (JsonMappingException e) {
+            } catch (IOException e) {
             }
         }
     }
@@ -96,6 +108,10 @@ public class MediaDetailCommand extends Media {
 
     public Album getAlbum() {
         return _album;
+    }
+
+    public CameraMetaData getCameraMetaDataObj() {
+        return _cameraMetaDataObj;
     }
 
     @Override
