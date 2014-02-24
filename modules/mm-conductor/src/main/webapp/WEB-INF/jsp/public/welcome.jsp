@@ -69,9 +69,10 @@
 								<div class="image-desc">
 									<i><c:out value="${mediaThumbCommand.description}" /></i><br />
 									<div>
-										<img class="toggle-img" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/bullet_arrow_down.png"
-											alt="hide meta information" onclick="toggleMetaInformation();" /> <a class="toggle-link" onclick="toggleMetaInformation();">Show
-											camera meta informations</a>
+										<img class="toggle-img" style="box-shadow: 0 0 0;"
+											src="<%=request.getContextPath()%>/static/images/famfamfam_silk/bullet_arrow_down.png" alt="hide meta information"
+											onclick="toggleMetaInformation();" /> <a class="toggle-link" onclick="toggleMetaInformation();">Show camera meta
+											informations</a>
 									</div>
 									<div class="meta" style="display: none;">
 										ID: ${mediaThumbCommand.id}<br />
