@@ -101,14 +101,8 @@ span.image-caption {
 }
 
 div.embox {
-    background-color: #EEEEEE;
-    border: 1px solid #CCCCCC;
     clear: both;
-    padding: 6px;
-}
-
-div.caption {
-	padding: 6px;
+    padding: 0;
 }
 
 div.image-title {
