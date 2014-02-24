@@ -118,7 +118,7 @@ public class ImageController {
      * @param outputStream
      * @throws IOException
      */
-    private void readImageIntoOutputStream(String pathToContent, OutputStream outputStream) throws IOException {
+    public static void readImageIntoOutputStream(String pathToContent, OutputStream outputStream) throws IOException {
         InputStream inputStream = null;
         try {
             LOG.debug("Try reading file '" + pathToContent + "'.");
@@ -130,4 +130,9 @@ public class ImageController {
             IOUtils.closeQuietly(inputStream);
         }
     }
+
+    public static String getBaseRequestMappingUrl() {
+        return ImageController.class.getAnnotation(RequestMapping.class).value()[0];
+    }
+
 }

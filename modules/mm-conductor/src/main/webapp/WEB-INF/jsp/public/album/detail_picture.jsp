@@ -62,7 +62,7 @@
 			</c:choose>
 		</div>
 
-		<!-- extra block with download and cooliris -->
+		<!-- extra block for download and cooliris -->
 		<div class="btn-group">
 			<!-- cooliris-button -->
 			<a href="${coolirisUrl}" class="btn btn-default"> <span class="ui-icon ui-icon-newwin pull-left"></span> &nbsp; cooliris
