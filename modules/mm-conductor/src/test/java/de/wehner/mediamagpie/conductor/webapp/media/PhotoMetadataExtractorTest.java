@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import com.drew.metadata.MetadataException;
 
+import de.wehner.mediamagpie.conductor.media.CreationTimeExtractor;
 import de.wehner.mediamagpie.conductor.media.PhotoMetadataExtractor;
 import de.wehner.mediamagpie.conductor.metadata.CameraMetaData;
 import de.wehner.mediamagpie.persistence.entity.Orientation;
@@ -25,7 +26,7 @@ public class PhotoMetadataExtractorTest {
     @Test
     public void test_resolveDateTimeOriginal() throws IOException {
         File mediaFile = new File("src/test/resources/images/IMG_0013.JPG");
-        PhotoMetadataExtractor metadataExtractor = new PhotoMetadataExtractor(mediaFile.toURI());
+        CreationTimeExtractor metadataExtractor = new PhotoMetadataExtractor(mediaFile.toURI());
         Date dateOfMedia = metadataExtractor.resolveDateTimeOriginal();
         String string = DateFormatUtils.ISO_DATETIME_FORMAT.format(dateOfMedia);
         assertThat(string).isEqualTo("2009-08-14T22:00:49");
@@ -34,7 +35,7 @@ public class PhotoMetadataExtractorTest {
     @Test
     public void test_resolveDateTimeOriginal_ButMediaHasNoOriginDate() throws IOException {
         File mediaFile = new File("src/test/resources/images/1600x4.jpg");
-        PhotoMetadataExtractor metadataExtractor = new PhotoMetadataExtractor(mediaFile.toURI());
+        CreationTimeExtractor metadataExtractor = new PhotoMetadataExtractor(mediaFile.toURI());
         Date dateOfMedia = metadataExtractor.resolveDateTimeOriginal();
         assertThat(dateOfMedia).isNull();
     }
@@ -42,7 +43,7 @@ public class PhotoMetadataExtractorTest {
     @Test
     public void test_resolveDateTimeOriginal_ButMediaHasObscurceDate() throws IOException {
         File mediaFile = new File("src/test/resources/images/DSCN0006.JPG");
-        PhotoMetadataExtractor metadataExtractor = new PhotoMetadataExtractor(mediaFile.toURI());
+        CreationTimeExtractor metadataExtractor = new PhotoMetadataExtractor(mediaFile.toURI());
         //metadataExtractor.dumpMetadataToStdOut();
         Date dateOfMedia = metadataExtractor.resolveDateTimeOriginal();
         assertThat(dateOfMedia).isNull();

@@ -12,10 +12,10 @@ import de.wehner.mediamagpie.core.util.SearchPathUtil;
 //@Service
 public class ImageProcessorImageMagickFactory implements ImageProcessorFactory {
 
-    private final String findPath;
+    private final String converterBinary;
 
     public ImageProcessorImageMagickFactory() {
-        findPath = SearchPathUtil.findPath("/opt/local/bin/convert");
+        converterBinary = SearchPathUtil.findPath("/opt/local/bin/convert");
     }
 
     @Override
@@ -27,11 +27,11 @@ public class ImageProcessorImageMagickFactory implements ImageProcessorFactory {
     public boolean isProcessorAvailable() {
 
         // locate the 'convert' executable
-        if (StringUtils.isEmpty(findPath)) {
+        if (StringUtils.isEmpty(converterBinary)) {
             return false;
         }
 
-        ProcessBuilder processBuilder = new ProcessBuilder(findPath, "-version");
+        ProcessBuilder processBuilder = new ProcessBuilder(converterBinary, "-version");
         // Map<String, String> environ = processBuilder.environment();
         ProcessWrapper processWrapper = new ProcessWrapper(processBuilder);
         try {

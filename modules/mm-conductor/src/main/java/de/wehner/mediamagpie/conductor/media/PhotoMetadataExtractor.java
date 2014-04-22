@@ -30,7 +30,7 @@ import com.drew.metadata.exif.ExifSubIFDDirectory;
 import de.wehner.mediamagpie.conductor.metadata.CameraMetaData;
 import de.wehner.mediamagpie.persistence.entity.Orientation;
 
-public class PhotoMetadataExtractor {
+public class PhotoMetadataExtractor implements CreationTimeExtractor {
 
     private static final Logger LOG = LoggerFactory.getLogger(PhotoMetadataExtractor.class);
 
@@ -84,6 +84,10 @@ public class PhotoMetadataExtractor {
         return null;
     }
 
+    /* (non-Javadoc)
+     * @see de.wehner.mediamagpie.conductor.media.CreationTimeExtractor#resolveDateTimeOriginal()
+     */
+    @Override
     public Date resolveDateTimeOriginal() {
         if (_metadata != null) {
             // obtain the Exif directory

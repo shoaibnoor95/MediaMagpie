@@ -19,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.tika.Tika;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -28,8 +29,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import de.wehner.mediamagpie.conductor.media.CreationTimeExtractor;
+import de.wehner.mediamagpie.conductor.media.FfmpegWrapper;
 import de.wehner.mediamagpie.conductor.media.PhotoMetadataExtractor;
+import de.wehner.mediamagpie.conductor.media.VideoMetadataExtractor;
 import de.wehner.mediamagpie.conductor.metadata.CameraMetaData;
+import de.wehner.mediamagpie.conductor.metadata.VideoMetaData;
 import de.wehner.mediamagpie.core.concurrent.SingleThreadedController;
 import de.wehner.mediamagpie.core.util.ExceptionUtil;
 import de.wehner.mediamagpie.persistence.dao.MediaDao;
@@ -271,22 +276,55 @@ public class MediaSyncService extends SingleThreadedController {
         });
     }
 
-    public static Media createMediaFromMediaFile(final User user, URI mediaFileUri) throws IOException {
-        PhotoMetadataExtractor metadataExtractor = new PhotoMetadataExtractor(mediaFileUri);
-        Date creationDate = resolveCreationDateOfMedia(metadataExtractor, mediaFileUri);
-        Orientation orientation = metadataExtractor.resolveOrientation();
-        Media newMedia = Media.createWithHashValue(user, null, mediaFileUri, creationDate);
-        // Media newMedia = new Media(user, null, mediaFileUri, creationDate);
-        newMedia.setOrientation(orientation);
-        addCameraMetaDataToMedia(metadataExtractor, newMedia);
-        // InputStream is = null;
-        // try {
-        // is = new FileInputStream(new File(mediaFileUri));
-        // newMedia.setHashValue(DigestUtil.computeSha1AsHexString(is));
-        // } finally {
-        // IOUtils.closeQuietly(is);
-        // }
-        return newMedia;
+    public static Media createMediaFromMediaFile(final User user, URI mediaUri) throws IOException {
+        // check which kind of data we are processing
+        Tika tika = new Tika();
+        String fileType = tika.detect(mediaUri.toURL());
+        Orientation orientation = Orientation.UNKNOWN;
+
+        // create media from video
+        if (fileType.startsWith("video/")) {
+            VideoMetadataExtractor videoMetadataExtractor = new VideoMetadataExtractor(mediaUri);
+            Media newMedia = null;
+            try {
+                Date creationDate = resolveCreationDateOfMedia(videoMetadataExtractor, mediaUri);
+                newMedia = Media.createWithHashValue(user, null, mediaUri, creationDate);
+                newMedia.setOrientation(orientation);
+                addCameraMetaDataToMedia(videoMetadataExtractor, newMedia);
+            } finally {
+                videoMetadataExtractor.close();
+            }
+            return newMedia;
+        }
+
+        if (fileType.startsWith("image/")) {
+            // create a Media for an image
+            PhotoMetadataExtractor metadataExtractor = new PhotoMetadataExtractor(mediaUri);
+            Date creationDate = resolveCreationDateOfMedia(metadataExtractor, mediaUri);
+            orientation = metadataExtractor.resolveOrientation();
+            Media newMedia = Media.createWithHashValue(user, null, mediaUri, creationDate);
+            newMedia.setOrientation(orientation);
+            addCameraMetaDataToMedia(metadataExtractor, newMedia);
+            return newMedia;
+        }
+        throw new IllegalArgumentException("The given media '" + mediaUri + "' is neither an image nor an video file.");
+    }
+
+    private static void addCameraMetaDataToMedia(VideoMetadataExtractor videoMetadataExtractor, Media newMedia) throws JsonGenerationException,
+            JsonMappingException, IOException {
+        // create a Media object for a video
+        VideoMetaData videoMetadata = new VideoMetaData();
+        try {
+            FfmpegWrapper ffmpegWrapper = new FfmpegWrapper(URI.create(newMedia.getUri()));
+            videoMetadata = ffmpegWrapper.createVideoMetadata();
+        } catch (Exception e) {
+            LOG.warn("Can not apply ffmpeg to analyze video '{}'.", newMedia.getUri());
+        }
+        videoMetadata.setDuration((long) (videoMetadataExtractor.getDuration() * 1000.0));
+
+        Writer stringWriter = new StringWriter();
+        _mapper.writeValue(stringWriter, videoMetadata);
+        newMedia.setCameraMetaData(stringWriter.toString());
     }
 
     private static void addCameraMetaDataToMedia(PhotoMetadataExtractor metadataExtractor, Media newMedia) throws IOException, JsonGenerationException,
@@ -301,7 +339,7 @@ public class MediaSyncService extends SingleThreadedController {
         newMedia.setCameraMetaData(stringWriter.toString());
     }
 
-    private static Date resolveCreationDateOfMedia(PhotoMetadataExtractor metadataExtractor, URI mediaUri) {
+    private static Date resolveCreationDateOfMedia(CreationTimeExtractor metadataExtractor, URI mediaUri) {
         Date date = metadataExtractor.resolveDateTimeOriginal();
         if (date != null) {
             return date;

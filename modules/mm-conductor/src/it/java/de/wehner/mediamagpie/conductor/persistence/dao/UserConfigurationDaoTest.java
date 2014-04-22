@@ -87,7 +87,7 @@ public class UserConfigurationDaoTest {
     @Test
     public void testSaveLoad() throws Exception {
         UserConfiguration configuration = new UserConfiguration();
-        configuration.simpleSetSingleRootMediaPath("myPath");
+        configuration.setSingleRootMediaPath("myPath");
 
         _userConfigurationDao.saveOrUpdateConfiguration(_user, configuration);
         _dbTestEnvironment.flipTransaction();
@@ -122,9 +122,9 @@ public class UserConfigurationDaoTest {
     @Test
     public void testSaveDuplicateConfiguration() throws Exception {
         UserConfiguration configuration1 = new UserConfiguration();
-        configuration1.simpleSetSingleRootMediaPath("myPath");
+        configuration1.setSingleRootMediaPath("myPath");
         UserConfiguration configuration2 = new UserConfiguration();
-        configuration2.simpleSetSingleRootMediaPath("myPath2");
+        configuration2.setSingleRootMediaPath("myPath2");
 
         _userConfigurationDao.saveOrUpdateConfiguration(_user, configuration1);
         _dbTestEnvironment.flipTransaction();
@@ -140,11 +140,11 @@ public class UserConfigurationDaoTest {
     @Test
     public void testOverwriteExitingConfigurationAndLoad() throws Exception {
         UserConfiguration configuration = new UserConfiguration();
-        configuration.simpleSetSingleRootMediaPath("myPath");
+        configuration.setSingleRootMediaPath("myPath");
         _userConfigurationDao.saveOrUpdateConfiguration(_user, configuration);
         _dbTestEnvironment.flipTransaction();
 
-        configuration.simpleSetSingleRootMediaPath("myOtherPath");
+        configuration.setSingleRootMediaPath("myOtherPath");
         _userConfigurationDao.saveOrUpdateConfiguration(_user, configuration);
         _dbTestEnvironment.flipTransaction();
 
@@ -157,7 +157,7 @@ public class UserConfigurationDaoTest {
     @Test
     public void testStoreTwoDifferentConfigurationsOnSameUserAndLoad() throws Exception {
         UserConfiguration configuration = new UserConfiguration();
-        configuration.simpleSetSingleRootMediaPath("myPath1");
+        configuration.setSingleRootMediaPath("myPath1");
         OtherUserConfiguration otherConfiguration = new OtherUserConfiguration();
         otherConfiguration.setPathToMedias("myPath2");
         _userConfigurationDao.saveOrUpdateConfiguration(_user, configuration);
@@ -182,9 +182,9 @@ public class UserConfigurationDaoTest {
         user2 = _dbTestEnvironment.reload(user2);
         // create configurations for each user
         UserConfiguration configuration1 = new UserConfiguration();
-        configuration1.simpleSetSingleRootMediaPath("myPath1");
+        configuration1.setSingleRootMediaPath("myPath1");
         UserConfiguration configuration2 = new UserConfiguration();
-        configuration2.simpleSetSingleRootMediaPath("myPath2");
+        configuration2.setSingleRootMediaPath("myPath2");
         _userConfigurationDao.saveOrUpdateConfiguration(_user, configuration1);
         _userConfigurationDao.saveOrUpdateConfiguration(user2, configuration2);
         _dbTestEnvironment.flipTransaction();

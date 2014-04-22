@@ -36,7 +36,7 @@ public class UserConfiguration implements UserPropertyBackedConfiguration {
         _rootMediaPathes = rootMediaPathes;
     }
 
-    public void simpleSetSingleRootMediaPath(String path) {
+    public void setSingleRootMediaPath(String path) {
         _rootMediaPathes = new String[] { path };
     }
 

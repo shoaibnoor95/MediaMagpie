@@ -57,11 +57,11 @@
 					// which actually support image resizing, but fail to
 					// send Blob objects via XHR requests:
 					disableImageResize : true,// /Android(?!.*Chrome)|Opera/.test(window.navigator.userAgent),
-					maxFileSize : 5000000,
+					maxFileSize : 100*1024*1024,
 	/*				imageMaxWidth : 800,
 					imageMaxHeight : 800,
 					imageCrop : true,*/ // Force cropped images
-					acceptFileTypes : /(\.|\/)(gif|jpe?g|png)$/i,
+					acceptFileTypes : /(\.|\/)(gif|jpe?g|png|mov|mp4|avi|webm)$/i,
 					dataType : 'json',
 					done : function(e, data) {
 						$.each(data.result.files, function(index, file) {

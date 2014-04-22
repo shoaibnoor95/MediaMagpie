@@ -126,7 +126,7 @@ public class UploadController extends AbstractConfigurationSupportController {
                     + _uploadService.createThumbImage(newMedia, de.wehner.mediamagpie.conductor.webapp.services.UploadService.UPLOAD_PREVIEW_THUMB_LABEL,
                             Priority.HIGH, 2000);
 
-            // build propper command for respose
+            // build propper command for response
             JQueryUploadCommand command = new JQueryUploadCommand();
             command.setName(multipartFile.getOriginalFilename());
             command.setSize(multipartFile.getSize());

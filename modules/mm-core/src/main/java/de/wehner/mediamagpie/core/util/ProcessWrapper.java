@@ -90,6 +90,10 @@ public class ProcessWrapper {
         }
     }
 
+    public int getExitValue() {
+        return _process.exitValue();
+    }
+
     public void destroy() {
         // send a normal kill to process
         int pid = getUnixPID(_process);

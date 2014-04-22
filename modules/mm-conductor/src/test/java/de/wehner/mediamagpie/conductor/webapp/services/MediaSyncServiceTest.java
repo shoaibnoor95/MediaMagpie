@@ -41,6 +41,8 @@ import de.wehner.mediamagpie.persistence.entity.properties.UserConfiguration;
 
 public class MediaSyncServiceTest {
 
+    public static final String TEST_MP4_VIDEO = "MVI_2627.MOV";
+
     private static final File SOURCE_TEST_DIR_MEDIA = new File("src/test/resources/data/media");
 
     @Mock
@@ -83,7 +85,7 @@ public class MediaSyncServiceTest {
         _fileNotOnFs = new File(_testdataMediaDir, "2010/07/10/this_simulates_deleted_file_on_fs.jpg");
         _mediaSyncService = new MediaSyncService(new TransactionHandlerMock(), _userDao, _mediaDao, _userConfigurationDao);
         UserConfiguration userConfiguration = new UserConfiguration();
-        userConfiguration.simpleSetSingleRootMediaPath(_testdataMediaDir);
+        userConfiguration.setSingleRootMediaPath(_testdataMediaDir);
         _userA = new User("rwe", "rwe@localhost", Role.ADMIN);
         _userA.setId(1L);
         when(_userConfigurationDao.getConfiguration(_userA, UserConfiguration.class)).thenReturn(userConfiguration);
@@ -99,7 +101,7 @@ public class MediaSyncServiceTest {
         UserConfiguration userConfiguration = _userConfigurationDao.getConfiguration(_userA, UserConfiguration.class);
         FileUtils.copyDirectory(SOURCE_TEST_DIR_MEDIA, new File(userConfiguration.getRootMediaPathes()[0]));
         // reset mainConfiguration.rootDir to 2010/07/10
-        userConfiguration.simpleSetSingleRootMediaPath(new File(_testdataMediaDir, "2010/07/10").getPath());
+        userConfiguration.setSingleRootMediaPath(new File(_testdataMediaDir, "2010/07/10").getPath());
         Media mediaA = new Media(null, null, _fileA.toURI(), new Date());
         when(_mediaDao.getAllByPathAndUri(_userA, _fileA.getParent(), Arrays.asList(_fileA.toURI().toString()), Integer.MAX_VALUE)).thenReturn(
                 Arrays.asList(mediaA));
@@ -156,7 +158,7 @@ public class MediaSyncServiceTest {
         UserConfiguration userConfiguration = _userConfigurationDao.getConfiguration(_userA, UserConfiguration.class);
         FileUtils.copyDirectory(SOURCE_TEST_DIR_MEDIA, new File(userConfiguration.getRootMediaPathes()[0]));
         // reset mainConfiguration.rootMediaPath to 2010/07/10
-        userConfiguration.simpleSetSingleRootMediaPath(new File(_testdataMediaDir, "2010/07/10").getPath());
+        userConfiguration.setSingleRootMediaPath(new File(_testdataMediaDir, "2010/07/10").getPath());
         Media mediaA = new Media(null, null, _fileA.toURI(), new Date());
         Media mediaOnlyInDb = new Media(null, null, _fileNotOnFs.toURI(), new Date());
         when(_mediaDao.getAllByPathAndUri(_userA, _fileA.getParent(), Arrays.asList(_fileA.toURI().toString()), Integer.MAX_VALUE)).thenReturn(
@@ -186,7 +188,7 @@ public class MediaSyncServiceTest {
         UserConfiguration userConfiguration = _userConfigurationDao.getConfiguration(_userA, UserConfiguration.class);
         FileUtils.copyDirectory(SOURCE_TEST_DIR_MEDIA, new File(userConfiguration.getRootMediaPathes()[0]));
         // reset mainConfiguration.rootMediaPath to 2010/07/10
-        userConfiguration.simpleSetSingleRootMediaPath(new File(_testdataMediaDir, "2010/07/10").getPath());
+        userConfiguration.setSingleRootMediaPath(new File(_testdataMediaDir, "2010/07/10").getPath());
         when(_userDao.getAll(any(Order.class), anyInt())).thenReturn(Arrays.asList(_userA, _userB));
         // setup userA
         Media mediaA_FileA = new Media(_userA, null, _fileA.toURI(), new Date());
@@ -253,7 +255,16 @@ public class MediaSyncServiceTest {
     }
 
     @Test
-    public void test_resolveCreationDate() {
+    public void test_createMediaFromMediaFile() throws IOException {
+        // expected: create a Media entity with propper attributes, e.g. creationDate, meta data, etc
+        UserConfiguration userConfiguration = _userConfigurationDao.getConfiguration(_userA, UserConfiguration.class);
+        final File userMediaPath = new File(userConfiguration.getRootMediaPathes()[0]);
+        FileUtils.copyDirectory(new File("src/test/resources/videos"), userMediaPath);
 
+        Media mediaFile = MediaSyncService.createMediaFromMediaFile(_userA, new File(userMediaPath, TEST_MP4_VIDEO).toURI());
+
+        assertThat(mediaFile).isNotNull();
+        assertThat(mediaFile.getCreationDate()).isNotNull();
+        assertThat(mediaFile.getCameraMetaData()).isNotNull();
     }
 }

@@ -43,6 +43,21 @@ console.log( "window loaded" );
 			<li class="divider"></li>
 			<li class=""><a href="/config/admin/mainconfiguration">Main Configuration</a></li>
 			<li class=""><a href="/config/admin/mailserver/configuration">Mail Configuration</a></li>
-		</ul></li>
-
+		</ul>
+    </li>
+    <hr/>
+    mp4 (apple quicktime):
+    <video width="320" height="240" controls preload="none" >
+        <source src="/static/MVI_2734.MOV" type="video/mp4" />
+        Your browser does not support the video tag.
+    </video>
+    mp4:
+    <video width="320" height="240" controls preload="none" src="/static/MVI_2734.MP4" >
+        Your browser does not support the video tag.
+    </video>
+    WebM:
+    <video width="320" height="240" controls preload="none" src="/static/MVI_2734.webm" >
+        Your browser does not support the video tag.
+    </video>
+    
 </body>
