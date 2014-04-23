@@ -279,16 +279,16 @@ public class MediaSyncService extends SingleThreadedController {
     public static Media createMediaFromMediaFile(final User user, URI mediaUri) throws IOException {
         // check which kind of data we are processing
         Tika tika = new Tika();
-        String fileType = tika.detect(mediaUri.toURL());
+        String mediaType = tika.detect(mediaUri.toURL()); // something like: 'image/jpeg' or 'video/quicktime' etc.
         Orientation orientation = Orientation.UNKNOWN;
 
         // create media from video
-        if (fileType.startsWith("video/")) {
+        if (mediaType.startsWith("video/")) {
             VideoMetadataExtractor videoMetadataExtractor = new VideoMetadataExtractor(mediaUri);
             Media newMedia = null;
             try {
                 Date creationDate = resolveCreationDateOfMedia(videoMetadataExtractor, mediaUri);
-                newMedia = Media.createWithHashValue(user, null, mediaUri, creationDate);
+                newMedia = Media.createWithHashValue(user, null, mediaUri, creationDate, mediaType);
                 newMedia.setOrientation(orientation);
                 addCameraMetaDataToMedia(videoMetadataExtractor, newMedia);
             } finally {
@@ -297,12 +297,12 @@ public class MediaSyncService extends SingleThreadedController {
             return newMedia;
         }
 
-        if (fileType.startsWith("image/")) {
+        if (mediaType.startsWith("image/")) {
             // create a Media for an image
             PhotoMetadataExtractor metadataExtractor = new PhotoMetadataExtractor(mediaUri);
             Date creationDate = resolveCreationDateOfMedia(metadataExtractor, mediaUri);
             orientation = metadataExtractor.resolveOrientation();
-            Media newMedia = Media.createWithHashValue(user, null, mediaUri, creationDate);
+            Media newMedia = Media.createWithHashValue(user, null, mediaUri, creationDate, mediaType);
             newMedia.setOrientation(orientation);
             addCameraMetaDataToMedia(metadataExtractor, newMedia);
             return newMedia;

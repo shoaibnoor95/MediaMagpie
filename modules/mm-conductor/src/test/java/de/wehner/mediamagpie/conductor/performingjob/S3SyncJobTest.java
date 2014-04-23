@@ -75,9 +75,9 @@ public class S3SyncJobTest {
     private List<Media> _livingMedias;
 
     public S3SyncJobTest() throws FileNotFoundException {
-        m1 = Media.createWithHashValue(_user, "ralf", IMAGE_RALF, new Date());
-        m2 = Media.createWithHashValue(_user, "image-13", IMAGE_13, new Date());
-        m3 = Media.createWithHashValue(_user, "image-14", IMAGE_14, new Date());
+        m1 = Media.createWithHashValue(_user, "ralf", IMAGE_RALF, new Date(), null);
+        m2 = Media.createWithHashValue(_user, "image-13", IMAGE_13, new Date(), null);
+        m3 = Media.createWithHashValue(_user, "image-14", IMAGE_14, new Date(), null);
     }
 
     @Before
@@ -124,7 +124,7 @@ public class S3SyncJobTest {
         when(iteratorPhotos.next()).thenReturn(mediaExportFactory.create(m1), mediaExportFactory.create(m2), mediaExportFactory.create(m3), null);
         when(_s3MediaExportRepository.iteratorPhotos(_user.getName())).thenReturn(iteratorPhotos);
         when(_uploadService.saveInputStreamToFileSystemAndCreateMedia(any(User.class), any(File.class), any(InputStream.class))).thenReturn(
-                Media.createWithHashValue(_user, m3.getName(), URI.create(m3.getUri()), null));
+                Media.createWithHashValue(_user, m3.getName(), URI.create(m3.getUri()), null, null));
 
         _prepare.call();
 
@@ -143,7 +143,7 @@ public class S3SyncJobTest {
         when(iteratorPhotos.next()).thenReturn(mediaExportFactory.create(m2), mediaExportFactory.create(m3), null);
         when(_s3MediaExportRepository.iteratorPhotos(_user.getName())).thenReturn(iteratorPhotos);
         when(_uploadService.saveInputStreamToFileSystemAndCreateMedia(any(User.class), any(File.class), any(InputStream.class))).thenReturn(
-                Media.createWithHashValue(_user, m3.getName(), URI.create(m3.getUri()), null));
+                Media.createWithHashValue(_user, m3.getName(), URI.create(m3.getUri()), null, null));
 
         _prepare.call();
 

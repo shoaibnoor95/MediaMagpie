@@ -79,6 +79,7 @@ public class Media extends CreationDateBase {
     /**
      * This attribute is only present for automatic removal of assigned ImageResizeJobExecutions when a media is deleted from db.
      */
+    @SuppressWarnings("unused")
     @OneToMany(mappedBy = "_media", fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE, CascadeType.PERSIST }, orphanRemoval = true)
     private List<ImageResizeJobExecution> _imageResizeJobExecutions = new ArrayList<ImageResizeJobExecution>();
 
@@ -106,6 +107,12 @@ public class Media extends CreationDateBase {
     private String _cameraMetaData;
 
     private boolean _exportedToS3 = false;
+
+    /**
+     * This is the result of Tika.detect(). Eg: 'image/jpeg' or 'video/quicktime' etc. Can be <code>null</code> if not detected.
+     */
+    @Field(index = Index.YES, analyze = Analyze.NO, store = Store.NO)
+    private String _mediaType;
 
     public Media() {
         // needed for PersistenceUtil.deleteAll()
@@ -149,8 +156,9 @@ public class Media extends CreationDateBase {
      * @return The new Media instance
      * @throws FileNotFoundException
      */
-    public static Media createWithHashValue(User owner, String name, URI mediaFileUri, Date creationDate) throws FileNotFoundException {
+    public static Media createWithHashValue(User owner, String name, URI mediaFileUri, Date creationDate, String mediaType) throws FileNotFoundException {
         Media newMedia = new Media(owner, name, mediaFileUri, creationDate);
+        newMedia.setMediaType(mediaType);
         InputStream is = null;
         try {
             is = new FileInputStream(new File(mediaFileUri));
@@ -299,5 +307,13 @@ public class Media extends CreationDateBase {
 
     public void setExportedToS3(boolean exportedToS3) {
         _exportedToS3 = exportedToS3;
+    }
+
+    public String getMediaType() {
+        return _mediaType;
+    }
+
+    public void setMediaType(String mediaType) {
+        _mediaType = mediaType;
     }
 }
