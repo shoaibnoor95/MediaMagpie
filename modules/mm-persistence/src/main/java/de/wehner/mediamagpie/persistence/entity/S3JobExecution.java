@@ -20,7 +20,7 @@ public class S3JobExecution extends AbstractCloudJobExecution {
     }
 
     // TODO rwe: this must be optional, because in some cases the media will be removed but this job still exists!
-    // FIXME rwe:
+    // FIXME rwe: 
     // @ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinColumn(name = "MEDIA_ID")

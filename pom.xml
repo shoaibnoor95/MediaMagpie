@@ -18,8 +18,8 @@
 
 		<!-- Spring -->
 		<!--<org.springframework.ws.version>2.1.2.RELEASE</org.springframework.ws.version> -->
-		<spring-framework.version>3.2.4.RELEASE</spring-framework.version>
-		<springframework-security.version>3.1.4.RELEASE</springframework-security.version>
+		<spring-framework.version>4.0.3.RELEASE</spring-framework.version>
+		<springframework-security.version>3.2.3.RELEASE</springframework-security.version>
 
 		<!-- Java EE / Java SE dependencies -->
 		<jsp.version>2.2</jsp.version>

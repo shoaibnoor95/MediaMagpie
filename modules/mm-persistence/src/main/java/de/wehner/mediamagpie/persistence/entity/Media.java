@@ -45,6 +45,10 @@ import de.wehner.mediamagpie.persistence.realms.AlbumMediaRelation;
         @NamedQuery(name = "getAllLastAddedPublicMedias", query = "select distinct m from Media as m inner join m._albums as a where (a._visibility <= :visibility) order by m._id desc") })
 public class Media extends CreationDateBase {
 
+    public static final String VIDEO_PREFIX = "video/";
+
+    public static final String IMAGE_PREFIX = "image/";
+
     /**
      * The name of the media. This field is optional and will be initialized with the file name as default.
      */
@@ -119,7 +123,7 @@ public class Media extends CreationDateBase {
     }
 
     public Media(Media media) {
-        super(media.getCreationDate());
+        super(media != null ? media.getCreationDate() : null);
         _owner = media._owner;
         _name = media._name;
         _originalFileName = media._originalFileName;

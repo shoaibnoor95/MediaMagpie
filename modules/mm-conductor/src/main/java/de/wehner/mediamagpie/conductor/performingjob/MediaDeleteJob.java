@@ -12,7 +12,7 @@ import de.wehner.mediamagpie.persistence.entity.Media;
 public class MediaDeleteJob extends AbstractJob {
 
     // private static final long serialVersionUID = ManifestMetaData.SERIAL_VERSION_UID;
-    private static final Logger LOG = LoggerFactory.getLogger(ImageResizeJob.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MediaDeleteJob.class);
 
     private final MediaDao _mediaDao;
     private final long _mediaId;
@@ -56,7 +56,7 @@ public class MediaDeleteJob extends AbstractJob {
             @Override
             public void handleResult(URI result) {
                 Media media = _mediaDao.getById(_mediaId);
-                LOG.info("Delete Media entity with URI '" + media.getUri() + "' from database.");
+                LOG.info("Delete Media entity {} with URI '{}' from database.", media.getId(), media.getUri());
                 _mediaDao.makeTransient(media);
             }
         };

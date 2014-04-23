@@ -46,7 +46,7 @@ public class JobExecutor {
         }
     }
 
-    public JobCallable prepare(final MainConfiguration mainConfiguraiton, final JobExecution dapJobExecution) {
+    public JobCallable prepare(final MainConfiguration mainConfiguraiton, final JobExecution jobExecution) {
         return new JobCallable() {
 
             private JobCallable _jobCallable;
@@ -54,7 +54,7 @@ public class JobExecutor {
 
             @Override
             public URI call() throws Exception {
-                PerformingJob job = _jobFactory.createPerformingJob(dapJobExecution);
+                PerformingJob job = _jobFactory.createPerformingJob(jobExecution);
                 job.init(new PerformingJobContext(mainConfiguraiton));
                 _jobCallable = job.prepare();
 

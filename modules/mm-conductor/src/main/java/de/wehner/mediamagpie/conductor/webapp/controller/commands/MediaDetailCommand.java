@@ -32,6 +32,7 @@ public class MediaDetailCommand extends Media {
     }
 
     public MediaDetailCommand(Album album) {
+        // FIXME rwe: this would crash!!!
         this(album, null);
     }
 

@@ -10,7 +10,7 @@ import de.wehner.mediamagpie.persistence.dao.PersistenceService;
 import de.wehner.mediamagpie.persistence.dao.TransactionHandler;
 import de.wehner.mediamagpie.persistence.entity.JobExecution;
 
-public abstract class TransactionalJobCreator<T extends PerformingJob> implements JobCreator {
+public abstract class TransactionalJobCreator <T extends PerformingJob> implements JobCreator {
 
     /**
      * The intention is to use the transactionHandler only in create() method.
@@ -26,7 +26,7 @@ public abstract class TransactionalJobCreator<T extends PerformingJob> implement
 
     @Override
     public T create(final JobExecution execution) {
-        return _transactionHandler.executeInTransaction(new Callable<T>() {
+        return (T) _transactionHandler.executeInTransaction(new Callable<PerformingJob>() {
             @Override
             public T call() throws Exception {
                 return createInTransaction(/* configuration, */_persistenceService.reload(execution));
@@ -34,5 +34,14 @@ public abstract class TransactionalJobCreator<T extends PerformingJob> implement
         });
     }
 
+    /**
+     * This method will be called when <code>JobFactory.createPerformingJob(JobExecution)</code> is called due to executing the JobExceution
+     * instance. It is called within a database transaction.
+     * 
+     * @param execution
+     *            The JobExecution which should be processed.
+     * @return The performing job object that do really the work.
+     * @throws Exception
+     */
     protected abstract T createInTransaction(/* DapJobConfiguration configuration, */JobExecution execution) throws Exception;
 }

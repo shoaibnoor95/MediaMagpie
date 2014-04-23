@@ -283,7 +283,7 @@ public class MediaSyncService extends SingleThreadedController {
         Orientation orientation = Orientation.UNKNOWN;
 
         // create media from video
-        if (mediaType.startsWith("video/")) {
+        if (mediaType.startsWith(Media.VIDEO_PREFIX)) {
             VideoMetadataExtractor videoMetadataExtractor = new VideoMetadataExtractor(mediaUri);
             Media newMedia = null;
             try {
@@ -297,7 +297,7 @@ public class MediaSyncService extends SingleThreadedController {
             return newMedia;
         }
 
-        if (mediaType.startsWith("image/")) {
+        if (mediaType.startsWith(Media.IMAGE_PREFIX)) {
             // create a Media for an image
             PhotoMetadataExtractor metadataExtractor = new PhotoMetadataExtractor(mediaUri);
             Date creationDate = resolveCreationDateOfMedia(metadataExtractor, mediaUri);

@@ -134,7 +134,7 @@ public class ImageService {
         }
     }
 
-    public File resizeImage(File originImage, long id, File destPath, int width, int height, int necessaryRotation) {
+    public File resizeImage(File originImage, long mediaId, File destPath, int width, int height, int necessaryRotation) {
         LOG.info("Begin resizing image '" + originImage.getPath() + "' to " + width + " x " + height + " with rotation " + necessaryRotation + "...");
         StopWatch stopWatch = new StopWatch();
 
@@ -145,7 +145,7 @@ public class ImageService {
                 stopWatch.start(imageProcessorFactory.getClass().getSimpleName() + ": resize direct API (" + width + "/" + height + ")");
                 String extension = originImage.getName().toUpperCase();
                 if (!extension.endsWith(".JPG")) {
-                    LOG.warn("Detected file name {} without clear image extension.", extension  );
+                    LOG.warn("Detected file name {} without clear image extension.", extension);
                 }
                 imageProcessor = imageProcessorFactory.createProcessor(originImage);
                 imageProcessor.resize(width, height);
@@ -156,7 +156,7 @@ public class ImageService {
 
                 // save result to file
                 Dimension imageDimension = imageProcessor.getProcessedImageDimension();
-                File thumbImagePath = suggestThumbImageFile(originImage, id, destPath, imageDimension.width, imageDimension.height);
+                File thumbImagePath = suggestThumbImageFile(originImage, mediaId, destPath, imageDimension.width, imageDimension.height);
                 thumbImagePath = imageProcessor.write(thumbImagePath);
                 stopWatch.stop();
                 LOG.info("Begin resizing image... finished. Resized image into file '" + thumbImagePath.getPath() + "'.");
@@ -220,13 +220,11 @@ public class ImageService {
                 resizeImageJob.setPriority(priority);
             }
 
-            
             // rwe: try to find out mystery org.hibernate.exception.ConstraintViolationException when persiting the resize job
-            if(resizeImageJob.getMedia().getId() == null){
+            if (resizeImageJob.getMedia().getId() == null) {
                 LOG.error("Media {} has no ID!", media.toString());
             }
-            
-            
+
             _imageResizeJobExecutionDao.makePersistent(resizeImageJob);
             LOG.info("Resize job for media '" + media.getId() + "' added with priority '" + resizeImageJob.getPriority() + "'.");
             return true;
@@ -314,21 +312,23 @@ public class ImageService {
         mediaThumbCommand.setTitle(title);
         mediaThumbCommand.setDescription(media.getDescription());
 
-        final String jsonCameraMetaData = media.getCameraMetaData();
-        if (!StringUtils.isEmpty(jsonCameraMetaData) && !"null".equals(jsonCameraMetaData)) {
-            try {
-                CameraMetaData cameraMetaData = _mapper.readValue(jsonCameraMetaData, CameraMetaData.class);
-                mediaThumbCommand.setCameraMetaData(cameraMetaData);
-            } catch (JsonParseException e) {
-                LOG.error("Internal error", e);
-                e.printStackTrace();
-            } catch (JsonMappingException e) {
-                LOG.error("Internal error", e);
-            } catch (IOException e) {
-                LOG.error("Internal error", e);
+        // add camera meta data for photos only
+        if (!(media.getMediaType() != null && media.getMediaType().startsWith(Media.VIDEO_PREFIX))) {
+            final String jsonCameraMetaData = media.getCameraMetaData();
+            if (!StringUtils.isEmpty(jsonCameraMetaData) && !"null".equals(jsonCameraMetaData)) {
+                try {
+                    CameraMetaData cameraMetaData = _mapper.readValue(jsonCameraMetaData, CameraMetaData.class);
+                    mediaThumbCommand.setCameraMetaData(cameraMetaData);
+                } catch (JsonParseException e) {
+                    LOG.error("Internal error", e);
+                    e.printStackTrace();
+                } catch (JsonMappingException e) {
+                    LOG.error("Internal error", e);
+                } catch (IOException e) {
+                    LOG.error("Internal error", e);
+                }
             }
         }
-
         return mediaThumbCommand;
     }
 }

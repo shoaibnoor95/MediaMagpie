@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import de.wehner.mediamagpie.persistence.entity.JobExecution;
 
-
 @Component
 public class JobFactory {
 

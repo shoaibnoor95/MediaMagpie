@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import de.wehner.mediamagpie.conductor.webapp.commands.binder.EnumBinder;
@@ -170,6 +171,7 @@ public class SearchController extends AbstractConfigurationSupportController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = URL_UPDATE_SORT_ORDER_ALBUM)
+    @ResponseBody
     public void updateSortOrderOfAlbum(Model model, @RequestParam("mediaIds") List<Long> mediaIds) {
         LOG.info("Reorder album with ids '" + mediaIds + "'.");
         AlbumCommand albumCommand = (AlbumCommand) model.asMap().get("albumCommand");

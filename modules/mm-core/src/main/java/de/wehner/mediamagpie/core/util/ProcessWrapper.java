@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -88,6 +89,21 @@ public class ProcessWrapper {
         } catch (IllegalThreadStateException e) {
             return true;
         }
+    }
+
+    public boolean waitUntilFinished(int timeOut, TimeUnit timeUnit) {
+        long timeOutInMillis = System.currentTimeMillis() + timeUnit.toMillis(timeOut);
+        while (isRunning()) {
+            if (timeOutInMillis <= System.currentTimeMillis()) {
+                return false;
+            }
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                destroy();
+            }
+        }
+        return true;
     }
 
     public int getExitValue() {

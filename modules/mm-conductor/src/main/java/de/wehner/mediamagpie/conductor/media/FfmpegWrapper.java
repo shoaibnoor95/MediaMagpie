@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
@@ -36,8 +38,8 @@ public class FfmpegWrapper {
 
     public VideoMetaData createVideoMetadata() {
         VideoMetaData videoMetaData = new VideoMetaData();
-        final List<String> output = new ArrayList<>();
         ProcessBuilder pb = new ProcessBuilder(ffmpegBinary, "-i", videoFile.getPath(), "-f", "ffmetadata");
+        final List<String> output = new ArrayList<>();
         ProcessWrapper processWrapper = new ProcessWrapper(pb);
         try {
             processWrapper.start(new StdXXXLineListener() {
@@ -51,11 +53,41 @@ public class FfmpegWrapper {
             });
             videoMetaData.setFfmpegLines(output);
         } catch (IOException e) {
-            LOG.warn("MongoDB cound not be started. Probably it is not installed on this system or it can not be found.", e);
+            LOG.warn("ffmpeg cound not be started. Probably it is not installed on this system or it can not be found.", e);
             return null;
         }
 
+        processWrapper.waitUntilFinished(5, TimeUnit.MINUTES);
         return videoMetaData;
+    }
+
+    public File createImageFromVideo(File outputFile) {
+        if (!outputFile.getParentFile().exists()) {
+            LOG.info("create folder '{}‘.", outputFile.getParent());
+            try {
+                FileUtils.forceMkdir(outputFile.getParentFile());
+            } catch (IOException e) {
+                throw new RuntimeException("internal error", e);
+            }
+        }
+        ProcessBuilder pb = new ProcessBuilder(ffmpegBinary, "-i", videoFile.getPath(), "-r", "1", "-t", "1", outputFile.getPath());
+        ProcessWrapper processWrapper = new ProcessWrapper(pb);
+        try {
+            processWrapper.start(new StdXXXLineListener() {
+
+                @Override
+                public boolean fireNewLine(String line) {
+                    LOG.trace(line);
+                    return true;
+                }
+            });
+        } catch (IOException e) {
+            LOG.warn("ffmpeg cound not be started. Probably it is not installed on this system or it can not be found.", e);
+            return null;
+        }
+
+        processWrapper.waitUntilFinished(5, TimeUnit.SECONDS);
+        return outputFile;
     }
 
     @Override
