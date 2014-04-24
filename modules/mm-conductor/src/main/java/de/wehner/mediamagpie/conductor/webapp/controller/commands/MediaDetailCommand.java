@@ -25,21 +25,20 @@ public class MediaDetailCommand extends Media {
     private String _urlPrev;
     private final Album _album;
     private CameraMetaData _cameraMetaDataObj;
-    private final ObjectMapper _mapper;
+    private final ObjectMapper _mapper = new ObjectMapper();
 
     public MediaDetailCommand() {
         this(null);
     }
 
     public MediaDetailCommand(Album album) {
-        // FIXME rwe: this would crash!!!
-        this(album, null);
+        super();
+        _album = null;
     }
 
     public MediaDetailCommand(Album album, Media media) {
         super(media);
         _album = album;
-        _mapper = new ObjectMapper();
         if (!CollectionUtils.isEmpty(getTags())) {
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < getTags().size(); i++) {

@@ -123,7 +123,7 @@ public class Media extends CreationDateBase {
     }
 
     public Media(Media media) {
-        super(media != null ? media.getCreationDate() : null);
+        super(media.getCreationDate());
         _owner = media._owner;
         _name = media._name;
         _originalFileName = media._originalFileName;
