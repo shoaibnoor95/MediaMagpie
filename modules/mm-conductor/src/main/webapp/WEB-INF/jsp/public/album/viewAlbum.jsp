@@ -12,13 +12,14 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="/WEB-INF/tlds/core.tld" prefix="core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<c:set var="title" value="Album" scope="request" />
+<c:set var="title" value="Album ${albumCommand.name}" scope="request" />
 <c:set var="activeMenu" value="media" scope="request" />
 <c:set var="activeSubMenu" value="listAlbums" scope="request" />
 <c:set var="urlSubMenu" value="/subNaviMedia" scope="request" />
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="<c:url value="/static/css/ui-lightness/jquery-ui-1.8.13.custom.css"/>" />
+    <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/ui-lightness/jquery-ui-1.8.13.custom.css"/>" />
+    <!-- <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/cupertino/jquery-ui-1.10.4.custom.min.css"/>" />-->
 </head>
 <body>
 
@@ -32,7 +33,6 @@
 		<li>${albumCommand.name}</li>
 	</ol>
 
-	view album
 	<h2>${title}</h2>
 
 	<c:choose>
@@ -74,9 +74,12 @@
 			<c:url value="/public/album/${albumCommand.uid}/-1" var="coolirisUrl">
 				<c:param name="renderer">cooliris</c:param>
 			</c:url>
-			<div class="clearfix">
-				<a href="${coolirisUrl}" class="Butt"><span class="ui-icon ui-icon-newwin pull-left"></span>&nbsp;cooliris</a>
-			</div>
+			<div class="btn-group">
+	            <!-- cooliris-button -->
+	            <a href="${coolirisUrl}" class="btn btn-default"> <span class="ui-icon ui-icon-newwin pull-left"></span> &nbsp; cooliris
+	            </a>
+            </div>
+            <p></p>
 		</c:otherwise>
 	</c:choose>
 </body>

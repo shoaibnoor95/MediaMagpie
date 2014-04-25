@@ -11,9 +11,10 @@
 <c:set var="activeSubMenu" value="listAlbums" scope="request" />
 <c:set var="urlSubMenu" value="/subNaviMedia" scope="request" />
 <head>
-<link rel="stylesheet" type="text/css" href="<c:url value="/static/css/ui-lightness/jquery-ui-1.8.13.custom.css"/>" />
-<!-- We need to import the script directly into jsp because it contains some java code -->
-<script type="text/javascript"><%@ include file="../../../../static/js/mm-toggle.js" %></script>
+    <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/ui-lightness/jquery-ui-1.8.13.custom.css"/>" />
+    <!-- <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/cupertino/jquery-ui-1.10.4.custom.min.css"/>" />-->
+    <!-- We need to import the script directly into jsp because it contains some java code -->
+    <script type="text/javascript"><%@ include file="../../../../static/js/mm-toggle.js" %></script>
 </head>
 <body>
 
