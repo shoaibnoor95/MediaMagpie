@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -115,6 +115,10 @@ public class MediaDetailCommand extends Media {
 
     public CameraMetaData getCameraMetaDataObj() {
         return _cameraMetaDataObj;
+    }
+
+    public boolean isPhoto() {
+        return (StringUtils.isEmpty(getMediaType()) || getMediaType().startsWith(Media.IMAGE_PREFIX));
     }
 
     @Override
