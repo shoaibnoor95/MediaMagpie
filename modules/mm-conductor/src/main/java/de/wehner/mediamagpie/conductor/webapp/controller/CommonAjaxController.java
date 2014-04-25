@@ -41,14 +41,15 @@ public class CommonAjaxController {
     List<TagAutocompleteCommand> getAutocompleteTags(HttpServletResponse response, @RequestParam(value = "term") String term) {
         List<TagAutocompleteCommand> tagCommands = new ArrayList<TagAutocompleteCommand>();
 
-        LOG.info("searching tags for '" + term + "'");
-        // TODO rwe: use this for ajax requsts... (MB-44)
-        User currentUser = SecurityUtil.getCurrentUser();
+        LOG.debug("searching tags for '{}'", term);
+        // TODO rwe: Only suggest tags that belongs to the user!
+        //User currentUser = SecurityUtil.getCurrentUser();
 
         List<MediaTag> hits = _mediaTagDao.luceneSearchForName(term);
         for (MediaTag mediaTag : hits) {
             tagCommands.add(new TagAutocompleteCommand(mediaTag.getName()));
         }
+        LOG.debug("found result '{}'.", tagCommands);
         return tagCommands;
     }
 

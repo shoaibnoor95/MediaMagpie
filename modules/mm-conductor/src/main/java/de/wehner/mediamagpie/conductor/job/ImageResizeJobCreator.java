@@ -47,7 +47,8 @@ public class ImageResizeJobCreator extends TransactionalJobCreator<ImageResizeJo
         }
 
         return new ImageResizeJob(_mediaDao, _thumbImageDao, _imageService, _videoService, media.getFileFromUri(), media.getId(),
-                resizeImageExecution.getLabel(), media.getOrientation(), media.getMediaType().startsWith(Media.VIDEO_PREFIX));
+                resizeImageExecution.getLabel(), media.getOrientation(), media.getMediaType() != null
+                        && media.getMediaType().startsWith(Media.VIDEO_PREFIX));
     }
 
     @Override

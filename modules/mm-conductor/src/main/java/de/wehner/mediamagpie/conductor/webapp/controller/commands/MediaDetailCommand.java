@@ -10,6 +10,8 @@ import org.apache.commons.lang.builder.ToStringStyle;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.dozer.DozerBeanMapper;
+import org.dozer.Mapper;
 import org.springframework.util.CollectionUtils;
 
 import de.wehner.mediamagpie.conductor.metadata.CameraMetaData;
@@ -23,47 +25,44 @@ public class MediaDetailCommand extends Media {
     private String _tagsAsString;
     private String _urlNext;
     private String _urlPrev;
-    private final Album _album;
+    private Album _album;
     private CameraMetaData _cameraMetaDataObj;
     private final ObjectMapper _mapper = new ObjectMapper();
 
     public MediaDetailCommand() {
-        this(null);
-    }
-
-    public MediaDetailCommand(Album album) {
         super();
-        _album = null;
     }
 
-    public MediaDetailCommand(Album album, Media media) {
-        super(media);
-        _album = album;
-        if (!CollectionUtils.isEmpty(getTags())) {
+    public static MediaDetailCommand createFromMedia(Media media) {
+        Mapper mapper = new DozerBeanMapper();
+        MediaDetailCommand mediaDetailCommand = mapper.map(media, MediaDetailCommand.class);
+        if (!CollectionUtils.isEmpty(mediaDetailCommand.getTags())) {
             StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < getTags().size(); i++) {
+            for (int i = 0; i < mediaDetailCommand.getTags().size(); i++) {
                 if (i > 0) {
                     builder.append(", ");
                 }
-                builder.append(getTags().get(i).getName());
+                builder.append(mediaDetailCommand.getTags().get(i).getName());
             }
-            _tagsAsString = builder.toString();
+            mediaDetailCommand._tagsAsString = builder.toString();
         }
         if (StringUtils.isEmpty(media.getName())) {
             try {
-                setName(new File(new URI(media.getUri()).toURL().getFile()).getName());
+                mediaDetailCommand.setName(new File(new URI(media.getUri()).toURL().getFile()).getName());
             } catch (Exception e) {
             }
         }
         final String jsonCameraMetaData = media.getCameraMetaData();
         if (!StringUtils.isEmpty(jsonCameraMetaData) && !"null".equals(jsonCameraMetaData)) {
             try {
-                _cameraMetaDataObj = _mapper.readValue(jsonCameraMetaData, CameraMetaData.class);
+                mediaDetailCommand._cameraMetaDataObj = mediaDetailCommand._mapper.readValue(jsonCameraMetaData, CameraMetaData.class);
             } catch (JsonParseException e) {
             } catch (JsonMappingException e) {
             } catch (IOException e) {
             }
         }
+
+        return mediaDetailCommand;
     }
 
     public void setImageLink(String imageLink) {
@@ -108,6 +107,10 @@ public class MediaDetailCommand extends Media {
 
     public Album getAlbum() {
         return _album;
+    }
+
+    public void setAlbum(Album album) {
+        _album = album;
     }
 
     public CameraMetaData getCameraMetaDataObj() {

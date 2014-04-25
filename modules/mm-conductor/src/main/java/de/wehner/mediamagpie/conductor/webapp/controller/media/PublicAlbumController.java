@@ -155,14 +155,10 @@ public class PublicAlbumController extends AbstractConfigurationSupportControlle
             @RequestParam(value = "renderer", required = false) String renderer, HttpServletRequest servletRequest) {
         MainConfiguration mainConfiguration = getMainConfiguration();
         Album album = _albumDao.getByUuid(uuid);
-        Media media = null;
-        MediaDetailCommand mediaDetailCommand;
-        if (pos < 0) {
-            mediaDetailCommand = new MediaDetailCommand(album);
-        } else {
-            media = album.getMedias().get(pos);
-            mediaDetailCommand = new MediaDetailCommand(album, media);
-        }
+        pos = Math.max(0, pos);
+        Media media = album.getMedias().get(pos);
+        MediaDetailCommand mediaDetailCommand = MediaDetailCommand.createFromMedia(media);
+        mediaDetailCommand.setAlbum(album);
         if ("cooliris".equals(renderer)) {
             model.addAttribute("mediaDetailCommand", mediaDetailCommand);
             model.addAttribute("pos", pos);

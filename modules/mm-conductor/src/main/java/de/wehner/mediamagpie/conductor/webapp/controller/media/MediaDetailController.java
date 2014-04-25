@@ -65,7 +65,8 @@ public class MediaDetailController extends AbstractConfigurationSupportControlle
     public String showDetailPictureEdit(Model model, @PathVariable Long mediaId, HttpServletRequest servletRequest) {
         Media media = _mediaDao.getById(mediaId);
         String imageUrl = _imageSerivce.getOrCreateImageUrl(media, getCurrentUserConfiguration().getDetailImageSize(), false, Priority.HIGH);
-        MediaDetailCommand mediaDetailCommand = new MediaDetailCommand(null, media);
+        MediaDetailCommand mediaDetailCommand = MediaDetailCommand.createFromMedia(media);
+        // MediaDetailCommand mediaDetailCommand = new MediaDetailCommand(null, media);
         mediaDetailCommand.setImageLink(imageUrl);
         mediaDetailCommand.setOverviewUrl(servletRequest.getHeader("Referer"));
         model.addAttribute(mediaDetailCommand);

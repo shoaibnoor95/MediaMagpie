@@ -35,7 +35,7 @@ public class MediaTagDao extends Dao<MediaTag> {
         QueryBuilder qb = fullTextEntityManager.getSearchFactory().buildQueryBuilder().forEntity(MediaTag.class).get();
 
         org.apache.lucene.search.Query query = qb.keyword().wildcard().onField("_name").matching("*" + buzzword + "*").createQuery();
-        LOG.info("using lucene query '" + query + "'.");
+        LOG.debug("using lucene query '{}'...", query);
 
         // wrap Lucene query in a javax.persistence.Query
         javax.persistence.Query persistenceQuery = fullTextEntityManager.createFullTextQuery(query, MediaTag.class);
