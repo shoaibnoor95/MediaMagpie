@@ -27,7 +27,7 @@ Vagrant.configure("2") do |config|
         #mm.vm.network :forwarded_port, guest: 80, host: 8080, auto_correct: true
         #mm.vm.network :forwarded_port, guest: 443, host: 8443, auto_correct: true
         #mm.vm.network :forwarded_port, guest: 5000, host: 8000, auto_correct: true
-        mm.vm.network :private_network, ip: "192.168.254.102"
+        #mm.vm.network :private_network, ip: "192.168.254.102"
 
         mm.vm.provision :puppet do |puppet|
             puppet.manifests_path = "mm-distribution/src/main/puppet/manifests"

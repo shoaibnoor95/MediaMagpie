@@ -35,6 +35,21 @@ class repository {
     gpgkey   => 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-servergrove-rhel-6',
     require  => Exec['import-key']
   }
+
+  # add two repositories to add ffmpeg
+  yumrepo { 'dag.repo':
+    baseurl  => 'http://apt.sw.be/redhat/el5/en/x86_64/dag/',
+    enabled  => 0,
+    gpgcheck => 1,
+    require  => Exec['import-key']
+  }
+  yumrepo { 'centos5.5.repo':
+    baseurl  => 'http://mirror.centos.org/centos/5/os/x86_64/',
+    enabled  => 1,
+    gpgcheck => 1,
+    gpgkey   => 'http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-5',
+    require  => Exec['import-key']
+  }
 }
  
 # Define stages which will be executed in order: 
