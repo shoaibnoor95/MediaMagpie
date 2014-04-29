@@ -33,8 +33,7 @@
 	MediaMagpie is a web application used to share photos with friends and other registered users. You can easily upload your media files on
 	upload web pages, set titles, tags and description to photos, search photos and place them into photo albums. Each photo album can be
 	configured to be viewable for public users, only for registered users or only for you. In case of a public albums you can simple send a
-	special link (url) to your album to your friends. Currently, MediaMagpie is limited only to share photos but the application is designed to
-	share videos as well and this feature will coming soon.
+	special link (url) to your album to your friends.
 	<h3>Features</h3>
 	<ul>
 		<li>Upload Photos and Videos easily to the server via Drag&Drop from your desktop</li>

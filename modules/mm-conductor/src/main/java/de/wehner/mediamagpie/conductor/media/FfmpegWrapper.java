@@ -27,7 +27,7 @@ public class FfmpegWrapper {
 
     public FfmpegWrapper(URI videoSource) {
         super();
-        ffmpegBinary = SearchPathUtil.findPath("/opt/local/bin/ffmpeg");
+        ffmpegBinary = SearchPathUtil.findPath("/opt/local/bin/ffmpeg", "/usr/bin/ffmpeg");
         if (videoSource.getScheme().equals("file") && new File(videoSource.getPath()).exists()) {
             this.videoFile = new File(videoSource);
         } else {
