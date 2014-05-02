@@ -30,6 +30,7 @@ public class ImageResizeJobIntegrationTest {
 
     private static final String TEST_IMAGE_1600X4 = "src/test/resources/images/1600x4.jpg";
     private static final String TEST_VIDEO_QUICKTIME = "src/test/resources/videos/MVI_2627.MOV";
+
     @Rule
     public ItEnvironment _itEnvironment = new LocalItEnvironment(CleanFolderInstruction.BEFORE_CLASS);
     protected JobExecutor _jobExecutor = _itEnvironment.getJobExecutor();

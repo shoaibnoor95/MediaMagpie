@@ -54,7 +54,7 @@ public class ImageResizeJob extends AbstractJob {
                 File temporaryImage = null;
                 if (_createImageFromVideo) {
                     LOG.debug("First extract image from video");
-                    temporaryImage = _videoService.createImageFromVideo(_originImage, _mediaId, getPerformingJobContext().getTempMediaPath());
+                    temporaryImage = _videoService.createImageFromVideo(_originImage, getPerformingJobContext().getTempMediaPath());
                 }
                 try {
                     int widthOrHeight = Integer.parseInt(_widthOrHeight);

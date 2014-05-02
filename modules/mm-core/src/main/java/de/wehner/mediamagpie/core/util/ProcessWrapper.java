@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 public class ProcessWrapper {
 
@@ -48,6 +49,9 @@ public class ProcessWrapper {
      */
     public void start(final StdXXXLineListener newStdOutLineListener) throws IOException {
         _processBuilder.redirectErrorStream(true);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Start external Process: {}", StringUtils.collectionToDelimitedString(_processBuilder.command(), " "));
+        }
         _process = _processBuilder.start();
 
         if (newStdOutLineListener != null) {
@@ -91,6 +95,12 @@ public class ProcessWrapper {
         }
     }
 
+    /**
+     * @param timeOut
+     * @param timeUnit
+     * @return <code>true</code> if process ends before given timeout. Otherwise <code>false</code> if the process is stopped due to running
+     *         out of timeout.
+     */
     public boolean waitUntilFinished(int timeOut, TimeUnit timeUnit) {
         long timeOutInMillis = System.currentTimeMillis() + timeUnit.toMillis(timeOut);
         while (isRunning()) {
