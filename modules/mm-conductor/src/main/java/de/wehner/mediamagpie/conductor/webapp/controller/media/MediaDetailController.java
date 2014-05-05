@@ -11,15 +11,18 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mobile.device.Device;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import de.wehner.mediamagpie.conductor.webapp.controller.AbstractConfigurationSupportController;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaDetailCommand;
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
+import de.wehner.mediamagpie.conductor.webapp.services.VideoService;
 import de.wehner.mediamagpie.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.persistence.entity.Media;
@@ -39,13 +42,15 @@ public class MediaDetailController extends AbstractConfigurationSupportControlle
 
     private final MediaDao _mediaDao;
     private final ImageService _imageSerivce;
+    private final VideoService _videoService;
 
     @Autowired
-    public MediaDetailController(MediaDao mediaDao, ImageService imageService, ConfigurationProvider configurationProvider,
+    public MediaDetailController(MediaDao mediaDao, ImageService imageService, VideoService videoService, ConfigurationProvider configurationProvider,
             UserConfigurationDao userConfigurationDao) {
         super(configurationProvider, null);
         _mediaDao = mediaDao;
         _imageSerivce = imageService;
+        _videoService = videoService;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = { URL_DETAIL_PICTURE_EDIT }, params = "submitSelect=goBack")
@@ -62,13 +67,17 @@ public class MediaDetailController extends AbstractConfigurationSupportControlle
     }
 
     @RequestMapping(method = RequestMethod.GET, value = URL_DETAIL_PICTURE_EDIT)
-    public String showDetailPictureEdit(Model model, @PathVariable Long mediaId, HttpServletRequest servletRequest) {
+    public String showDetailPictureEdit(Model model, @PathVariable Long mediaId, HttpServletRequest servletRequest,
+            Device device) {
         Media media = _mediaDao.getById(mediaId);
         String imageUrl = _imageSerivce.getOrCreateImageUrl(media, getCurrentUserConfiguration().getDetailImageSize(), false, Priority.HIGH);
         MediaDetailCommand mediaDetailCommand = MediaDetailCommand.createFromMedia(media);
-        // MediaDetailCommand mediaDetailCommand = new MediaDetailCommand(null, media);
         mediaDetailCommand.setImageLink(imageUrl);
         mediaDetailCommand.setOverviewUrl(servletRequest.getHeader("Referer"));
+        if (!mediaDetailCommand.isPhoto()) {
+            // add url to video stream
+            mediaDetailCommand.setVideoUrl(_videoService.getOrCreateVideoUrl(media, servletRequest, device, false, Priority.HIGH));
+        }
         model.addAttribute(mediaDetailCommand);
         return VIEW_DETAIL_PICTURE_EDIT;
     }

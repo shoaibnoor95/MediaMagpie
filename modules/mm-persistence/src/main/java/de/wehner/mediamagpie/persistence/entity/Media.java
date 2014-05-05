@@ -157,6 +157,8 @@ public class Media extends CreationDateBase {
      *            Can be <code>null</code>
      * @param mediaFileUri
      * @param creationDate
+     * @param mediaType
+     *            The result of Tika.detect(). Eg: 'image/jpeg' or 'video/quicktime' etc. Can be <code>null</code> if not detected.
      * @return The new Media instance
      * @throws FileNotFoundException
      */

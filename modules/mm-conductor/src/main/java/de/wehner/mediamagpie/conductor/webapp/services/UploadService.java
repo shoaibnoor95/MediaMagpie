@@ -165,7 +165,7 @@ public class UploadService {
                 }
             });
         }
-        return _imageService.createLink(media, UPLOAD_PREVIEW_THUMB_LABEL, Priority.NORMAL);
+        return ImageService.createLink(media, UPLOAD_PREVIEW_THUMB_LABEL, Priority.NORMAL);
     }
 
     /**

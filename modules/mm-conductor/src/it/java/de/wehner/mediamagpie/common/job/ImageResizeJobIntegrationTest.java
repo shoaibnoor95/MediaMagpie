@@ -75,6 +75,6 @@ public class ImageResizeJobIntegrationTest {
     }
 
     private VideoService createVideoService() {
-        return new VideoService();
+        return new VideoService(null, null);
     }
 }

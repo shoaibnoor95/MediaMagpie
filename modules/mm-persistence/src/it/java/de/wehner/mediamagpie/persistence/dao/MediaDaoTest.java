@@ -165,7 +165,7 @@ public class MediaDaoTest {
     public void testMakeTransient_withAssignedImageResizeJobExecution() throws Exception {
         Media m1 = new Media(_dbTestEnvironment.getOrCreateTestUser(), "ralf", _testMedia.toURI(), new Date());
         ImageResizeJobExecution jobExecution = new ImageResizeJobExecution(m1, "30");
-        ImageResizeJobExecutionDao imageResizeJobExecutionDao = new ImageResizeJobExecutionDao(_dbTestEnvironment.getPersistenceService());
+        MediaDataProcessingJobExecutionDao imageResizeJobExecutionDao = new MediaDataProcessingJobExecutionDao(_dbTestEnvironment.getPersistenceService());
         _mediaDao.makePersistent(m1);
         imageResizeJobExecutionDao.makePersistent(jobExecution);
         _dbTestEnvironment.flipTransaction();

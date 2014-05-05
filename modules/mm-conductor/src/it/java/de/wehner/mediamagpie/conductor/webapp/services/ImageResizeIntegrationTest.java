@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import de.wehner.mediamagpie.conductor.webapp.AbstractSpringContextTest;
 import de.wehner.mediamagpie.conductor.webapp.services.JobScheduler;
-import de.wehner.mediamagpie.persistence.dao.ImageResizeJobExecutionDao;
+import de.wehner.mediamagpie.persistence.dao.MediaDataProcessingJobExecutionDao;
 import de.wehner.mediamagpie.persistence.dao.PersistenceService;
 import de.wehner.mediamagpie.persistence.entity.ImageResizeJobExecution;
 import de.wehner.mediamagpie.persistence.entity.JobStatus;
@@ -23,7 +23,7 @@ public class ImageResizeIntegrationTest extends AbstractSpringContextTest {
     @Autowired
     private PersistenceService _persistenceService;
     @Autowired
-    private ImageResizeJobExecutionDao _jobDao;
+    private MediaDataProcessingJobExecutionDao _jobDao;
 
     private Media _media;
 

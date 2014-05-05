@@ -19,7 +19,7 @@ import de.wehner.mediamagpie.conductor.webapp.processor.ImageProcessorImageIOFac
 import de.wehner.mediamagpie.conductor.webapp.processor.ImageProcessorJAIFactory;
 import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
 import de.wehner.mediamagpie.core.util.Pair;
-import de.wehner.mediamagpie.persistence.dao.ImageResizeJobExecutionDao;
+import de.wehner.mediamagpie.persistence.dao.MediaDataProcessingJobExecutionDao;
 import de.wehner.mediamagpie.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.persistence.dao.MediaDeleteJobExecutionDao;
 import de.wehner.mediamagpie.persistence.dao.PersistenceService;
@@ -40,7 +40,7 @@ public class UploadServiceIntegrationTest {
     public TestEnvironment _testEnvironment = new TestEnvironment(getClass());
 
     @Mock
-    private ImageResizeJobExecutionDao _imageResizeJobExecutionDao;
+    private MediaDataProcessingJobExecutionDao _imageResizeJobExecutionDao;
     @Mock
     private MediaDeleteJobExecutionDao _mediaDeleteJobExecutionDao;
 

@@ -46,18 +46,18 @@ console.log( "window loaded" );
 		</ul>
     </li>
     <hr/>
-    mp4 (apple quicktime):
+    mp4 (apple quicktime, MVI_2734.MOV):
     <video width="320" height="240" controls preload="none" >
         <source src="/static/MVI_2734.MOV" type="video/mp4" />
         Your browser does not support the video tag.
-    </video>
-    mp4:
+    </video><br/>
+    mp4 (MVI_2734.MP4):
     <video width="320" height="240" controls preload="none" src="/static/MVI_2734.MP4" >
         Your browser does not support the video tag.
-    </video>
-    WebM:
+    </video><br/>
+    WebM (MVI_2734.webm):
     <video width="320" height="240" controls preload="none" src="/static/MVI_2734.webm" >
         Your browser does not support the video tag.
-    </video>
+    </video><br/>
     
 </body>

@@ -38,7 +38,7 @@ import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaThumbComm
 import de.wehner.mediamagpie.conductor.webapp.processor.AbstractImageProcessor;
 import de.wehner.mediamagpie.conductor.webapp.processor.ImageProcessorFactory;
 import de.wehner.mediamagpie.core.util.ExceptionUtil;
-import de.wehner.mediamagpie.persistence.dao.ImageResizeJobExecutionDao;
+import de.wehner.mediamagpie.persistence.dao.MediaDataProcessingJobExecutionDao;
 import de.wehner.mediamagpie.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.persistence.dao.MediaDeleteJobExecutionDao;
 import de.wehner.mediamagpie.persistence.dao.ThumbImageDao;
@@ -56,13 +56,15 @@ import de.wehner.mediamagpie.persistence.entity.properties.UserConfiguration;
 @Service
 public class ImageService {
 
+    private static final String ORIGINAL_SIZE = "original";
+
     public static final Logger LOG = LoggerFactory.getLogger(ImageService.class);
 
     private final ThumbImageDao _thumbImageDao;
 
     private final MediaDao _mediaDao;
 
-    private final ImageResizeJobExecutionDao _imageResizeJobExecutionDao;
+    private final MediaDataProcessingJobExecutionDao _imageResizeJobExecutionDao;
 
     private final MediaDeleteJobExecutionDao _mediaDeleteJobExecutionDao;
 
@@ -71,7 +73,7 @@ public class ImageService {
     private final List<ImageProcessorFactory> _imageProcessorFactories;
 
     @Autowired
-    public ImageService(ThumbImageDao imageDao, MediaDao mediaDao, ImageResizeJobExecutionDao imageResizeJobDao,
+    public ImageService(ThumbImageDao imageDao, MediaDao mediaDao, MediaDataProcessingJobExecutionDao imageResizeJobDao,
             MediaDeleteJobExecutionDao mediaDeleteJobDao, List<ImageProcessorFactory> imageProcessors) {
         super();
         _thumbImageDao = imageDao;
@@ -203,11 +205,11 @@ public class ImageService {
     }
 
     public String getOrCreateImageUrl(Media media, Integer size, boolean createJob, Priority priority) {
-        String label = (size != null) ? size.toString() : null;
-        if (label != null && createJob && !_thumbImageDao.hasData(media, label)) {
-            addImageResizeJobExecutionIfNecessary(label, media, priority);
+        String sizeLabel = (size != null) ? size.toString() : null;
+        if (sizeLabel != null && createJob && !_thumbImageDao.hasData(media, sizeLabel)) {
+            addImageResizeJobExecutionIfNecessary(sizeLabel, media, priority);
         }
-        return createLink(media, label, priority);
+        return createLink(media, sizeLabel, priority);
     }
 
     public boolean addImageResizeJobExecutionIfNecessary(String label, Media media, Priority priority) {
@@ -220,7 +222,7 @@ public class ImageService {
                 resizeImageJob.setPriority(priority);
             }
 
-            // rwe: try to find out mystery org.hibernate.exception.ConstraintViolationException when persiting the resize job
+            // rwe: try to find out mystery org.hibernate.exception.ConstraintViolationException when persisting the resize job
             if (resizeImageJob.getMedia().getId() == null) {
                 LOG.error("Media {} has no ID!", media.toString());
             }
@@ -232,8 +234,8 @@ public class ImageService {
         return false;
     }
 
-    public String createLink(Media media, String imageLabel, Priority priority) {
-        String label = imageLabel == null ? "original" : imageLabel;
+    public static String createLink(Media media, String imageLabel, Priority priority) {
+        String label = imageLabel == null ? ORIGINAL_SIZE : imageLabel;
         File mediaOriginalFile = media.getFileFromUri();
         return String.format("/content/images/%d/%s.%s?priority=%s", media.getId(), label, FilenameUtils.getExtension(mediaOriginalFile.getPath()),
                 priority);
@@ -242,7 +244,7 @@ public class ImageService {
     public boolean addDeleteJobIfNecessary(Media media) {
         if (!_mediaDeleteJobExecutionDao.hasJob(media)) {
             // finish all image resize jobs before
-            for (ImageResizeJobExecution resizeJob : _imageResizeJobExecutionDao.getJobsByMedia(media)) {
+            for (ImageResizeJobExecution resizeJob : _imageResizeJobExecutionDao.getJobsByMedia(media, Integer.MAX_VALUE, ImageResizeJobExecution.class)) {
                 resizeJob.setJobStatus(JobStatus.STOPPING);
                 _imageResizeJobExecutionDao.makePersistent(resizeJob);
             }

@@ -21,7 +21,7 @@ import org.mockito.MockitoAnnotations;
 import de.wehner.mediamagpie.conductor.webapp.processor.ImageProcessorImageIOFactory;
 import de.wehner.mediamagpie.conductor.webapp.processor.ImageProcessorJAIFactory;
 import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
-import de.wehner.mediamagpie.persistence.dao.ImageResizeJobExecutionDao;
+import de.wehner.mediamagpie.persistence.dao.MediaDataProcessingJobExecutionDao;
 import de.wehner.mediamagpie.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.persistence.dao.MediaDeleteJobExecutionDao;
 import de.wehner.mediamagpie.persistence.dao.ThumbImageDao;
@@ -39,7 +39,7 @@ public class ImageServiceTest {
     static final int RESIZE_H = 600;
 
     @Rule
-    public TestEnvironment _testEnvironment = new TestEnvironment(ImageServiceTest.class);
+    public TestEnvironment _testEnvironment = new TestEnvironment(getClass());
 
     private ImageService _imageService;
     @Mock
@@ -47,7 +47,7 @@ public class ImageServiceTest {
     @Mock
     private MediaDao _mediaDao;
     @Mock
-    private ImageResizeJobExecutionDao _imageResizeJobExecutionDao;
+    private MediaDataProcessingJobExecutionDao _imageResizeJobExecutionDao;
     @Mock
     private MediaDeleteJobExecutionDao _mediaDeleteJobExecutionDao;
 
@@ -62,6 +62,7 @@ public class ImageServiceTest {
     public void test_getOrCreateImageUrl_newImageResizeJob_wasCreated() {
         Media media = new Media(null, "name", new File("src/test/resources/images/1600x4.jpg").toURI(), new Date());
         media.setId(1L);
+        
         _imageService.getOrCreateImageUrl(media, 300);
 
         verify(_imageResizeJobExecutionDao).makePersistent(any(ImageResizeJobExecution.class));
@@ -116,11 +117,11 @@ public class ImageServiceTest {
         Media media = new Media(null, "name", new File("src/test/resources/images/4x1600.jpg").toURI(), new Date());
         media.setId(1L);
         final String label = "200";
-        String link = _imageService.createLink(media, label, Priority.NORMAL);
+        String link = ImageService.createLink(media, label, Priority.NORMAL);
 
         assertEquals("/content/images/1/200.jpg?priority=NORMAL", link);
 
-        link = _imageService.createLink(media, null, Priority.NORMAL);
+        link = ImageService.createLink(media, null, Priority.NORMAL);
 
         assertEquals("/content/images/1/original.jpg?priority=NORMAL", link);
     }

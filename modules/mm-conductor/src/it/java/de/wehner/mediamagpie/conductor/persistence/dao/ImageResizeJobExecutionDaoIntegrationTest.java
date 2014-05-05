@@ -12,7 +12,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.wehner.mediamagpie.persistence.dao.ImageResizeJobExecutionDao;
+import de.wehner.mediamagpie.persistence.dao.MediaDataProcessingJobExecutionDao;
 import de.wehner.mediamagpie.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.persistence.dao.PersistenceService;
 import de.wehner.mediamagpie.persistence.dao.ThumbImageDao;
@@ -25,23 +25,23 @@ import de.wehner.mediamagpie.persistence.entity.ThumbImage;
 import de.wehner.mediamagpie.persistence.testsupport.DbTestEnvironment;
 
 
-public class ImageResizeJobExecutionDaoIntegrationTest extends AbstractDaoTest<ImageResizeJobExecutionDao> {
+public class ImageResizeJobExecutionDaoIntegrationTest extends AbstractDaoTest<MediaDataProcessingJobExecutionDao> {
 
     private ThumbImageDao _thumbImageDao;
-    private ImageResizeJobExecutionDao _imageResizeJobExecutionDao;
+    private MediaDataProcessingJobExecutionDao _imageResizeJobExecutionDao;
     private MediaDao _mediaDao;
 
     @Before
     public void setUp() {
         super.setUp();
         _thumbImageDao = new ThumbImageDao(_persistenceService);
-        _imageResizeJobExecutionDao = new ImageResizeJobExecutionDao(_persistenceService);
+        _imageResizeJobExecutionDao = new MediaDataProcessingJobExecutionDao(_persistenceService);
         _mediaDao = new MediaDao(_persistenceService);
     }
 
     @Override
-    protected ImageResizeJobExecutionDao createDao(PersistenceService persistenceService) {
-        return new ImageResizeJobExecutionDao(_persistenceService);
+    protected MediaDataProcessingJobExecutionDao createDao(PersistenceService persistenceService) {
+        return new MediaDataProcessingJobExecutionDao(_persistenceService);
     }
 
     @Test

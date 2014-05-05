@@ -20,6 +20,7 @@ import de.wehner.mediamagpie.persistence.entity.Media;
 
 public class MediaDetailCommand extends Media {
 
+    private String _videoUrl;
     private String _imageLink;
     private String _overviewUrl;
     private String _tagsAsString;
@@ -124,6 +125,14 @@ public class MediaDetailCommand extends Media {
     @Override
     public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        _videoUrl = videoUrl;
+    }
+
+    public String getVideoUrl() {
+        return _videoUrl;
     }
 
 }

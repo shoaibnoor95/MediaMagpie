@@ -26,7 +26,7 @@ import de.wehner.mediamagpie.conductor.webapp.services.MediaSyncService;
 import de.wehner.mediamagpie.conductor.webapp.services.UploadService;
 import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
 import de.wehner.mediamagpie.core.util.TimeUtil;
-import de.wehner.mediamagpie.persistence.dao.ImageResizeJobExecutionDao;
+import de.wehner.mediamagpie.persistence.dao.MediaDataProcessingJobExecutionDao;
 import de.wehner.mediamagpie.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.entity.MediaTag;
@@ -84,7 +84,7 @@ public class S3SyncJobIntTest {
         _m2.addTag(new MediaTag("family"));
         _configurationProvider = _dbTestEnvironment.createConfigurationProvider(_testEnvironment.getWorkingDir());
         List<ImageProcessorFactory> imageProcessorFactories = Arrays.asList(new ImageProcessorImageIOFactory(), new ImageProcessorJAIFactory());
-        ImageService imageService = new ImageService(null, _mediaDao, new ImageResizeJobExecutionDao(_dbTestEnvironment.getPersistenceService()), null,
+        ImageService imageService = new ImageService(null, _mediaDao, new MediaDataProcessingJobExecutionDao(_dbTestEnvironment.getPersistenceService()), null,
                 imageProcessorFactories);
         UploadService uploadService = new UploadService(_configurationProvider, _mediaDao, imageService, _dbTestEnvironment.getPersistenceService(), null);
         _job = new S3SyncJob(_s3MediaExportRepository, uploadService, _user, _configurationProvider, _dbTestEnvironment.createTransactionHandler(),
