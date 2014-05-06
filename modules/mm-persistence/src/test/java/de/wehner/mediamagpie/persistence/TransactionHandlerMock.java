@@ -2,25 +2,30 @@ package de.wehner.mediamagpie.persistence;
 
 import static org.mockito.Mockito.*;
 
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
 import de.wehner.mediamagpie.persistence.dao.PersistenceService;
 import de.wehner.mediamagpie.persistence.dao.TransactionHandler;
 import de.wehner.mediamagpie.persistence.entity.Base;
 
 public class TransactionHandlerMock extends TransactionHandler {
 
-    private final PersistenceService _persistenceService;
-
+    
     public TransactionHandlerMock() {
         this(mock(PersistenceService.class));
+        doAnswer(new Answer<Base>() {
+
+            @Override
+            public Base answer(InvocationOnMock invocation) throws Throwable {
+                return (Base) invocation.getArguments()[0];
+            }
+            
+        }).when(_persistenceService).reload(any(Base.class));
     }
 
     private TransactionHandlerMock(PersistenceService persistenceService) {
         super(persistenceService);
-        _persistenceService = persistenceService;
-    }
-
-    public PersistenceService getPersistenceService() {
-        return _persistenceService;
     }
 
     @Override

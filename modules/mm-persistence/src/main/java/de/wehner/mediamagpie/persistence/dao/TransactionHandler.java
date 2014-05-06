@@ -16,7 +16,7 @@ public class TransactionHandler {
 
     private final Logger LOG = LoggerFactory.getLogger(TransactionHandler.class);
 
-    private final PersistenceService _persistenceService;
+    protected final PersistenceService _persistenceService;
 
     @Autowired
     public TransactionHandler(PersistenceService persistenceService) {

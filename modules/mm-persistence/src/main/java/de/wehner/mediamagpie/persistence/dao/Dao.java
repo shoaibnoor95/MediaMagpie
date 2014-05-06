@@ -73,6 +73,17 @@ public abstract class Dao<T extends Base> {
         return crit;
     }
 
+    /**
+     * Find by primary key. Search for an entity of the specified class and primary key. If the entity instance is contained in the
+     * persistence context, it is returned from there.
+     * 
+     * @param id
+     *            primary key
+     * @return the found entity instance or null if the entity does not exist
+     * @throws IllegalArgumentException
+     *             if the first argument does not denote an entity type or the second argument is is not a valid type for that entitys
+     *             primary key or is null
+     */
     public T getById(Long id) {
         return _persistenceService.getById(_clazz, id);
     }

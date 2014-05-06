@@ -2,6 +2,8 @@ package de.wehner.mediamagpie.conductor.job;
 
 import java.io.FileNotFoundException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +14,6 @@ import de.wehner.mediamagpie.conductor.performingjob.AbstractJob;
 import de.wehner.mediamagpie.conductor.performingjob.S3PutJob;
 import de.wehner.mediamagpie.persistence.MediaExportFactory;
 import de.wehner.mediamagpie.persistence.dao.MediaDao;
-import de.wehner.mediamagpie.persistence.dao.PersistenceService;
 import de.wehner.mediamagpie.persistence.dao.TransactionHandler;
 import de.wehner.mediamagpie.persistence.dao.UserConfigurationDao;
 import de.wehner.mediamagpie.persistence.entity.JobExecution;
@@ -24,13 +25,14 @@ import de.wehner.mediamagpie.persistence.entity.properties.S3Configuration;
 @Component
 public class S3JobCreator extends TransactionalJobCreator<AbstractJob> {
 
+    private final static Logger LOG = LoggerFactory.getLogger(S3JobCreator.class);
+
     private final UserConfigurationDao _userConfigurationDao;
     private final MediaDao _mediaDao;
 
     @Autowired
-    public S3JobCreator(UserConfigurationDao userConfigurationDao, MediaDao mediaDao, TransactionHandler transactionHandler,
-            PersistenceService persistenceService) {
-        super(transactionHandler, persistenceService);
+    public S3JobCreator(UserConfigurationDao userConfigurationDao, MediaDao mediaDao, TransactionHandler transactionHandler) {
+        super(transactionHandler);
         _userConfigurationDao = userConfigurationDao;
         _mediaDao = mediaDao;
     }
@@ -38,7 +40,12 @@ public class S3JobCreator extends TransactionalJobCreator<AbstractJob> {
     @Override
     protected AbstractJob createInTransaction(JobExecution execution) throws FileNotFoundException {
         S3JobExecution s3JobExecution = (S3JobExecution) execution;
-        Media media = s3JobExecution.getMedia();
+        Media media = _mediaDao.getById(s3JobExecution.getMediaId());
+        if (media == null) {
+            // this is possible in case of the media is deleted by a MediaDeleteJob before
+            LOG.warn("Can not find media with id {}. Maybe the media was deleted before this job was executed.", s3JobExecution.getMediaId());
+            return null;
+        }
         User user = media.getOwner();
         S3Configuration existingS3Configuration = _userConfigurationDao.getConfiguration(user, S3Configuration.class);
         if (!existingS3Configuration.hasToSyncToS3()) {

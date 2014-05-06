@@ -1,9 +1,6 @@
 package de.wehner.mediamagpie.persistence.entity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.Column;
 
 @javax.persistence.Entity
 public class S3JobExecution extends AbstractCloudJobExecution {
@@ -19,12 +16,11 @@ public class S3JobExecution extends AbstractCloudJobExecution {
         GET
     }
 
-    // TODO rwe: this must be optional, because in some cases the media will be removed but this job still exists!
-    // FIXME rwe: 
-    // @ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
-    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    @JoinColumn(name = "MEDIA_ID")
-    private Media _media;   
+    // @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    // @JoinColumn(name = "MEDIA_ID")
+    // private Media _media;
+    @Column(name = "MEDIA_ID")
+    private Long _mediaId;
 
     private Direction _direction;
 
@@ -45,7 +41,7 @@ public class S3JobExecution extends AbstractCloudJobExecution {
 
     public S3JobExecution(JobStatus status, Media media, Direction direction) {
         setJobStatus(status);
-        setMedia(media);
+        setMediaId(media.getId());
         _direction = direction;
         setPriority(Priority.LOW);
     }
@@ -55,12 +51,12 @@ public class S3JobExecution extends AbstractCloudJobExecution {
         return super.clone();
     }
 
-    public void setMedia(Media media) {
-        _media = media;
+    public Long getMediaId() {
+        return _mediaId;
     }
 
-    public Media getMedia() {
-        return _media;
+    public void setMediaId(Long mediaId) {
+        _mediaId = mediaId;
     }
 
     public void setDirection(Direction direction) {

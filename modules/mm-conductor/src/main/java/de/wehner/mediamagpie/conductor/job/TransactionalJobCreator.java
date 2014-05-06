@@ -10,7 +10,7 @@ import de.wehner.mediamagpie.persistence.dao.PersistenceService;
 import de.wehner.mediamagpie.persistence.dao.TransactionHandler;
 import de.wehner.mediamagpie.persistence.entity.JobExecution;
 
-public abstract class TransactionalJobCreator <T extends PerformingJob> implements JobCreator {
+public abstract class TransactionalJobCreator<T extends PerformingJob> implements JobCreator {
 
     /**
      * The intention is to use the transactionHandler only in create() method.
@@ -19,11 +19,12 @@ public abstract class TransactionalJobCreator <T extends PerformingJob> implemen
     protected PersistenceService _persistenceService;
 
     @Autowired
-    public TransactionalJobCreator(TransactionHandler transactionHandler, PersistenceService persistenceService) {
+    public TransactionalJobCreator(TransactionHandler transactionHandler) {
         _transactionHandler = transactionHandler;
-        _persistenceService = persistenceService;
+        _persistenceService = transactionHandler.getPersistenceService();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public T create(final JobExecution execution) {
         return (T) _transactionHandler.executeInTransaction(new Callable<PerformingJob>() {

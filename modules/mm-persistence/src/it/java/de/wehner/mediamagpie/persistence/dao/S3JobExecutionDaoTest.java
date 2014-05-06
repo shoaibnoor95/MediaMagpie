@@ -24,8 +24,8 @@ public class S3JobExecutionDaoTest {
         _mediaDao = new MediaDao(_dbTestEnvironment.getPersistenceService());
     }
 
-    @Test(expected = javax.persistence.RollbackException.class)
-    public void test_deleteJobAlthoughtAJobAlreadyExists() throws Exception {
+    @Test
+    public void test_deleteMediaAlthoughtAJobToThisMediaAlreadyExists() throws Exception {
         try {
             // create Media and associated S3JobExecution
             Media m1 = _dbTestEnvironment.createNewMedia("m1");

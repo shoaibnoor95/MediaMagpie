@@ -13,7 +13,6 @@ import de.wehner.mediamagpie.conductor.performingjob.AbstractJob;
 import de.wehner.mediamagpie.conductor.performingjob.S3SyncJob;
 import de.wehner.mediamagpie.conductor.webapp.services.UploadService;
 import de.wehner.mediamagpie.persistence.dao.MediaDao;
-import de.wehner.mediamagpie.persistence.dao.PersistenceService;
 import de.wehner.mediamagpie.persistence.dao.TransactionHandler;
 import de.wehner.mediamagpie.persistence.entity.CloudSyncJobExecution;
 import de.wehner.mediamagpie.persistence.entity.CloudSyncJobExecution.CloudType;
@@ -33,8 +32,8 @@ public class CloudSyncJobCreator extends TransactionalJobCreator<AbstractJob> {
 
     @Autowired
     public CloudSyncJobCreator(ConfigurationProvider configurationProvider, UploadService uploadService, MediaDao mediaDao,
-            TransactionHandler transactionHandler, PersistenceService persistenceService, TimeProvider timeProvider) {
-        super(transactionHandler, persistenceService);
+            TransactionHandler transactionHandler, TimeProvider timeProvider) {
+        super(transactionHandler);
         _configurationProvider = configurationProvider;
         _uploadService = uploadService;
         _mediaDao = mediaDao;

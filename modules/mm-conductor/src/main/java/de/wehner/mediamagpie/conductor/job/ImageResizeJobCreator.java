@@ -9,7 +9,6 @@ import de.wehner.mediamagpie.conductor.performingjob.ImageResizeJob;
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
 import de.wehner.mediamagpie.conductor.webapp.services.VideoService;
 import de.wehner.mediamagpie.persistence.dao.MediaDao;
-import de.wehner.mediamagpie.persistence.dao.PersistenceService;
 import de.wehner.mediamagpie.persistence.dao.ThumbImageDao;
 import de.wehner.mediamagpie.persistence.dao.TransactionHandler;
 import de.wehner.mediamagpie.persistence.entity.ImageResizeJobExecution;
@@ -26,8 +25,8 @@ public class ImageResizeJobCreator extends TransactionalJobCreator<ImageResizeJo
 
     @Autowired
     public ImageResizeJobCreator(MediaDao mediaDao, ThumbImageDao thumbImageDao, ImageService imageService, VideoService videoService,
-            TransactionHandler transactionHandler, PersistenceService persistenceService) {
-        super(transactionHandler, persistenceService);
+            TransactionHandler transactionHandler) {
+        super(transactionHandler);
         _mediaDao = mediaDao;
         _thumbImageDao = thumbImageDao;
         _imageService = imageService;

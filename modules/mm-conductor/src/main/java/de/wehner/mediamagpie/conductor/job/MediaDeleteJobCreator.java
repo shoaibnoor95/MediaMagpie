@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import de.wehner.mediamagpie.conductor.performingjob.MediaDeleteJob;
 import de.wehner.mediamagpie.persistence.dao.MediaDao;
-import de.wehner.mediamagpie.persistence.dao.PersistenceService;
 import de.wehner.mediamagpie.persistence.dao.TransactionHandler;
 import de.wehner.mediamagpie.persistence.entity.JobExecution;
 import de.wehner.mediamagpie.persistence.entity.MediaDeleteJobExecution;
@@ -18,8 +17,8 @@ public class MediaDeleteJobCreator extends TransactionalJobCreator<MediaDeleteJo
     private final MediaDao _mediaDao;
 
     @Autowired
-    public MediaDeleteJobCreator(MediaDao mediaDao, TransactionHandler transactionHandler, PersistenceService persistenceService) {
-        super(transactionHandler, persistenceService);
+    public MediaDeleteJobCreator(MediaDao mediaDao, TransactionHandler transactionHandler) {
+        super(transactionHandler);
         _mediaDao = mediaDao;
     }
 

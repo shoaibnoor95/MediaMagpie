@@ -14,7 +14,6 @@ import de.wehner.mediamagpie.conductor.performingjob.S3DeleteJob;
 import de.wehner.mediamagpie.conductor.webapp.services.UploadService;
 import de.wehner.mediamagpie.persistence.MediaExportFactory;
 import de.wehner.mediamagpie.persistence.dao.MediaDao;
-import de.wehner.mediamagpie.persistence.dao.PersistenceService;
 import de.wehner.mediamagpie.persistence.dao.TransactionHandler;
 import de.wehner.mediamagpie.persistence.entity.CloudMediaDeleteJobExecution;
 import de.wehner.mediamagpie.persistence.entity.CloudSyncJobExecution.CloudType;
@@ -32,8 +31,8 @@ public class CloudMediaDeleteJobCreator extends TransactionalJobCreator<Abstract
 
     @Autowired
     public CloudMediaDeleteJobCreator(ConfigurationProvider configurationProvider, UploadService uploadService, MediaDao mediaDao,
-            TransactionHandler transactionHandler, PersistenceService persistenceService) {
-        super(transactionHandler, persistenceService);
+            TransactionHandler transactionHandler) {
+        super(transactionHandler);
         _configurationProvider = configurationProvider;
         _uploadService = uploadService;
         _mediaDao = mediaDao;
