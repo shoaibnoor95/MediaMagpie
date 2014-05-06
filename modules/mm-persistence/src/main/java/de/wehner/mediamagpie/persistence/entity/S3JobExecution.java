@@ -24,7 +24,7 @@ public class S3JobExecution extends AbstractCloudJobExecution {
     // @ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinColumn(name = "MEDIA_ID")
-    private Media _media;
+    private Media _media;   
 
     private Direction _direction;
 

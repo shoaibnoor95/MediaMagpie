@@ -63,12 +63,10 @@ public class MediaDaoTest {
     @Test
     public void testGetAll() throws Exception {
         Media m1 = new Media(_user, "ralf", new File("/data/picture1.jpg").toURI(), new Date());
-
-        MediaDao mediaDao = new MediaDao(_dbTestEnvironment.getPersistenceService());
-        mediaDao.makePersistent(m1);
+        _mediaDao.makePersistent(m1);
         _dbTestEnvironment.flipTransaction();
 
-        List<Media> all = mediaDao.getAll();
+        List<Media> all = _mediaDao.getAll();
         assertEquals(1, all.size());
         assertEquals(m1.getName(), all.get(0).getName());
         assertThat(m1.getOwner()).isEqualTo(_user);
@@ -85,18 +83,17 @@ public class MediaDaoTest {
         Media m1 = new Media(_user, "M1", new File("/data/picture21.jpg").toURI(), t1);
         Media m2 = new Media(_user, "M2", new File("/data/picture3.jpg").toURI(), t2);
         Media m3 = new Media(_user, "M3", new File("/data/picture4.jpg").toURI(), t3);
-        MediaDao mediaDao = new MediaDao(_dbTestEnvironment.getPersistenceService());
-        mediaDao.makePersistent(m0);
-        mediaDao.makePersistent(m1);
-        mediaDao.makePersistent(m2);
-        mediaDao.makePersistent(m3);
+        _mediaDao.makePersistent(m0);
+        _mediaDao.makePersistent(m1);
+        _mediaDao.makePersistent(m2);
+        _mediaDao.makePersistent(m3);
         _dbTestEnvironment.flipTransaction();
 
         SearchCriteriaCommand criteriaCommand = mock(SearchCriteriaCommand.class);
         when(criteriaCommand.getSearchBeginAsDate()).thenReturn(t1);
         when(criteriaCommand.getSearchEndAsDate()).thenReturn(t2);
         when(criteriaCommand.getSortOrder()).thenReturn(UiMediaSortOrder.DATE);
-        List<Media> allByCriterias = mediaDao.getAllByCriterias(_user, 0, Integer.MAX_VALUE, true, criteriaCommand);
+        List<Media> allByCriterias = _mediaDao.getAllByCriterias(_user, 0, Integer.MAX_VALUE, true, criteriaCommand);
 
         assertThat(allByCriterias).containsSequence(m1, m2);
         _dbTestEnvironment.commitTransaction();
@@ -112,12 +109,11 @@ public class MediaDaoTest {
         m0.addTag(tag);
         m1.addTag(tag1);
         m1.addTag(tag2);
-        MediaDao mediaDao = new MediaDao(_dbTestEnvironment.getPersistenceService());
-        mediaDao.makePersistent(m0);
-        mediaDao.makePersistent(m1);
+        _mediaDao.makePersistent(m0);
+        _mediaDao.makePersistent(m1);
         _dbTestEnvironment.flipTransaction();
 
-        List<Media> allMediasFromDb = mediaDao.getAll(Order.asc("id"), 10);
+        List<Media> allMediasFromDb = _mediaDao.getAll(Order.asc("id"), 10);
 
         assertThat(allMediasFromDb).contains(m0, m1);
         assertThat(allMediasFromDb.get(0).getTags()).contains(tag);
@@ -127,10 +123,10 @@ public class MediaDaoTest {
         assertThat(mediaTagsFromDb).hasSize(3);
         _dbTestEnvironment.flipTransaction();
 
-        mediaDao.makeTransient(_dbTestEnvironment.reload(m0));
+        _mediaDao.makeTransient(_dbTestEnvironment.reload(m0));
         _dbTestEnvironment.flipTransaction();
 
-        mediaDao.makeTransient(_dbTestEnvironment.reload(m1));
+        _mediaDao.makeTransient(_dbTestEnvironment.reload(m1));
         _dbTestEnvironment.flipTransaction();
 
         mediaTagsFromDb = mediaTagDao.getAll();

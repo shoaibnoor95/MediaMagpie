@@ -14,9 +14,11 @@ import de.wehner.mediamagpie.persistence.entity.ImageResizeJobExecution;
 import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.entity.MediaDeleteJobExecution;
 import de.wehner.mediamagpie.persistence.entity.MediaTag;
+import de.wehner.mediamagpie.persistence.entity.S3JobExecution;
 import de.wehner.mediamagpie.persistence.entity.ThumbImage;
 import de.wehner.mediamagpie.persistence.entity.User;
 import de.wehner.mediamagpie.persistence.entity.UserGroup;
+import de.wehner.mediamagpie.persistence.entity.VideoConversionJobExecution;
 import de.wehner.mediamagpie.persistence.entity.properties.Property;
 
 public class PersistenceTestUtil {
@@ -51,7 +53,9 @@ public class PersistenceTestUtil {
 
     public static void deleteAll(PersistenceService persistenceService) {
         PersistenceTestUtil.deleteAllEntities(persistenceService, Property.class);
+        PersistenceTestUtil.deleteAllEntities(persistenceService, S3JobExecution.class);
         PersistenceTestUtil.deleteAllEntities(persistenceService, CloudSyncJobExecution.class);
+        PersistenceTestUtil.deleteAllEntities(persistenceService, VideoConversionJobExecution.class);
         PersistenceTestUtil.deleteAllEntities(persistenceService, ImageResizeJobExecution.class);
         PersistenceTestUtil.deleteAllEntities(persistenceService, MediaDeleteJobExecution.class);
         PersistenceTestUtil.deleteAllEntities(persistenceService, ThumbImage.class);
