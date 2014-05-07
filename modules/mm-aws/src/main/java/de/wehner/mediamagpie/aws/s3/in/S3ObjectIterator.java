@@ -61,7 +61,7 @@ public class S3ObjectIterator implements Iterator<S3ObjectSummary> {
             /* .withDelimiter(S3MediaRepository.KEY_DELIMITER) */.withMaxKeys(MAX_OBJECTS_PER_READ);
             _lastObjectListing = _s3.listObjects(listObjectsRequest);
             filterZeroLengthObjects();
-            LOG.debug("list objects in '" + _bucketName + "'#'" + _prefix + "' and got " + _lastObjectListing.getObjectSummaries().size() + " items.");
+            LOG.debug("list objects in '{}/{}' and got {} items.", _bucketName, _prefix, _lastObjectListing.getObjectSummaries().size());
             return;
         }
 
