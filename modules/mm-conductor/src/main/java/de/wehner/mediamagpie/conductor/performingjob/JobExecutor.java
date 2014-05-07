@@ -55,6 +55,11 @@ public class JobExecutor {
             @Override
             public URI call() throws Exception {
                 PerformingJob job = _jobFactory.createPerformingJob(jobExecution);
+                if (job == null) {
+                    // this can be in case of a job that is obsolete now
+                    LOG.warn("No job was created. It seems that it is obsolete now.");
+                    return null;
+                }
                 job.init(new PerformingJobContext(mainConfiguraiton));
                 _jobCallable = job.prepare();
 
