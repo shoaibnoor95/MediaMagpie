@@ -20,8 +20,14 @@ public class ConvertedVideo extends CreationDateBase {
     @JoinColumn(name = "MEDIA_ID")
     private Media _media;
 
+    /**
+     * can be 'original' or the width of converted video
+     */
     private String _label;
 
+    /**
+     * currently the file extension like 'webm' or 'mp4'
+     */
     private String _videoFormat;
 
     private String _pathToImage;
@@ -30,6 +36,13 @@ public class ConvertedVideo extends CreationDateBase {
         // default constructor
     }
 
+    /**
+     * @param media
+     * @param label
+     *            The width of converted video or 'original' ({@link VideoService#ORIGINAL_SIZE})
+     * @param videoFormat
+     * @param pathToImage
+     */
     public ConvertedVideo(Media media, String label, String videoFormat, String pathToImage) {
         _media = media;
         _label = label;

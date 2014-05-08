@@ -25,9 +25,6 @@ import de.wehner.mediamagpie.conductor.webapp.services.VideoService.VideoFormat;
 import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
 import de.wehner.mediamagpie.persistence.dao.ConvertedVideoDao;
 import de.wehner.mediamagpie.persistence.dao.MediaDataProcessingJobExecutionDao;
-import de.wehner.mediamagpie.persistence.dao.MediaDao;
-import de.wehner.mediamagpie.persistence.dao.MediaDeleteJobExecutionDao;
-import de.wehner.mediamagpie.persistence.dao.ThumbImageDao;
 import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.entity.Priority;
 import de.wehner.mediamagpie.persistence.entity.VideoConversionJobExecution;
@@ -43,15 +40,8 @@ public class VideoServiceTest {
     @Rule
     public TestEnvironment _testEnvironment = new TestEnvironment(getClass());
 
-    private ImageService _imageService;
-    @Mock
-    private ThumbImageDao _thumbImageDao;
-    @Mock
-    private MediaDao _mediaDao;
     @Mock
     private MediaDataProcessingJobExecutionDao _imageResizeJobExecutionDao;
-    @Mock
-    private MediaDeleteJobExecutionDao _mediaDeleteJobExecutionDao;
     @Mock
     private ConvertedVideoDao _convertedVideoDao;
 
@@ -67,6 +57,7 @@ public class VideoServiceTest {
         _testEnvironment.cleanWorkingDir();
         _conversionPath = new File(_testEnvironment.getWorkingDir(), "conversion");
         _service = new VideoService(_convertedVideoDao, _imageResizeJobExecutionDao);
+        when(device.isNormal()).thenReturn(Boolean.TRUE);
     }
 
     @Test
@@ -146,6 +137,7 @@ public class VideoServiceTest {
 
         String videoUrl = _service.getOrCreateVideoUrl(media, servletRequest, device, true, Priority.NORMAL);
 
+        assertThat(videoUrl).isEqualTo("/content/videos/1/original.webm?priority=NORMAL");
         verify(_imageResizeJobExecutionDao).makePersistent(any(VideoConversionJobExecution.class));
     }
 }

@@ -16,7 +16,9 @@ public class S3JobCreatorTest {
 
     @Mock
     private MediaDao _mediaDao;
+    
     private S3JobCreator _s3JobCreator;
+    
     private TransactionHandler _transactionHandlerMock = new TransactionHandlerMock();
 
     @Before

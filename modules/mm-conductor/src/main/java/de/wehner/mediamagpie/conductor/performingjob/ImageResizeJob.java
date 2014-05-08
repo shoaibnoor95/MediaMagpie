@@ -83,9 +83,11 @@ public class ImageResizeJob extends AbstractJob {
             @Override
             public void handleResult(URI result) {
                 Media media = _mediaDao.getById(_mediaId);
-                String pathToImage = new File(result).getPath();
-                ThumbImage thumbImage = new ThumbImage(media, "" + _widthOrHeight, pathToImage);
-                _thumbImageDao.makePersistent(thumbImage);
+                if (media != null) {
+                    String pathToImage = new File(result).getPath();
+                    ThumbImage thumbImage = new ThumbImage(media, "" + _widthOrHeight, pathToImage);
+                    _thumbImageDao.makePersistent(thumbImage);
+                }
             }
         };
     }

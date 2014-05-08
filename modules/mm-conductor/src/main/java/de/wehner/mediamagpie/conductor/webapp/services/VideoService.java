@@ -41,7 +41,7 @@ import de.wehner.mediamagpie.persistence.entity.VideoConversionJobExecution;
 @Service
 public class VideoService {
 
-    private static final String ORIGINAL_SIZE = "original";
+    public static final String ORIGINAL_SIZE = "original";
 
     public static final Logger LOG = LoggerFactory.getLogger(VideoService.class);
 
@@ -124,7 +124,14 @@ public class VideoService {
         return ffmpegWrapper.convertVideo(outputFile, destFormat, widthOrHeight);
     }
 
-    public static String createLink(Media media, String sizeLabel, VideoFormat videoFormat, Priority priority) {
+    public static String createLabel(Integer widthOrHeight) {
+        if (widthOrHeight == null) {
+            return ORIGINAL_SIZE;
+        }
+        return "" + widthOrHeight;
+    }
+
+    static String createLink(Media media, String sizeLabel, VideoFormat videoFormat, Priority priority) {
         if (StringUtils.isEmpty(sizeLabel)) {
             sizeLabel = ORIGINAL_SIZE;
         }
@@ -132,34 +139,25 @@ public class VideoService {
     }
 
     public String getOrCreateVideoUrl(Media media, HttpServletRequest servletRequest, Device device, boolean createJob, Priority priority) {
-        String userAgent = servletRequest.getHeader("User-Agent");
-
         Integer width = calculateBestWidth(device);
-        String sizeLabel = width == null ? ORIGINAL_SIZE : ("" + width);
-        VideoFormat videoFormat = getBestFormat(userAgent);
-
+        VideoFormat videoFormat = getBestFormat(servletRequest.getHeader("User-Agent"));
+        String sizeLabel = createLabel(width);
         if (createJob && !_convertedVideoDao.hasData(media, sizeLabel, videoFormat.toString())) {
-            addVideoConversionJobExecutionIfNecessary(media, sizeLabel, videoFormat, priority);
+            addVideoConversionJobExecutionIfNecessary(media, videoFormat, width, priority);
         }
         return createLink(media, sizeLabel, videoFormat, priority);
     }
 
-    private boolean addVideoConversionJobExecutionIfNecessary(Media media, String label, VideoFormat videoFormat, Priority priority) {
-        if (StringUtils.isEmpty(label)) {
-            throw new IllegalArgumentException("label must not be empty");
-        }
-        if (!_videoConversionJobExecutionDao.hasResizeJob(media, label)) {
-            VideoConversionJobExecution resizeImageJob = new VideoConversionJobExecution(media, label);
+    private boolean addVideoConversionJobExecutionIfNecessary(Media media, VideoFormat videoFormat, Integer widthOrHeight, Priority priority) {
+        if (!_videoConversionJobExecutionDao.hasVideoConversionJob(media, videoFormat.toString(), widthOrHeight)) {
+            VideoConversionJobExecution videoConversionJob = new VideoConversionJobExecution(media, videoFormat.toString(), widthOrHeight);
             if (priority != null) {
-                resizeImageJob.setPriority(priority);
+                videoConversionJob.setPriority(priority);
             }
 
-            if (resizeImageJob.getMedia().getId() == null) {
-                LOG.error("Media {} has no ID!", media.toString());
-            }
-
-            _videoConversionJobExecutionDao.makePersistent(resizeImageJob);
-            LOG.info("Resize job for media '" + media.getId() + "' added with priority '" + resizeImageJob.getPriority() + "'.");
+            _videoConversionJobExecutionDao.makePersistent(videoConversionJob);
+            LOG.info("New job {} for media {} with priority {} added.", videoConversionJob.getClass().getSimpleName(), media.getId(),
+                    videoConversionJob.getPriority());
             return true;
         }
         return false;
@@ -175,8 +173,13 @@ public class VideoService {
     }
 
     private Integer calculateBestWidth(Device device) {
-        // TODO Auto-generated method stub
-        return null;
+        if (device.isNormal()) {
+            return null;
+        }
+        if (device.isMobile()) {
+            return 320;
+        }
+        return 400;
     }
 
 }

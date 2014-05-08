@@ -29,38 +29,38 @@ public class JobExecutorTest {
     private JobExecutor _jobExecutor;
 
     @Mock
-    private PerformingJob _dapJob;
+    private PerformingJob _performingJob;
 
     @Mock
-    private JobCallable _dapJobCallable;
+    private JobCallable _jobCallable;
 
-    private JobExecution _dapJobExecution;
+    private JobExecution _jobExecution;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        when(_dapJob.prepare()).thenReturn(_dapJobCallable);
+        when(_performingJob.prepare()).thenReturn(_jobCallable);
         _jobExecutor = _unitTestEnvironment.createJobExecutor();
-        _dapJobExecution = _unitTestEnvironment.createJobExecution(_dapJob);
+        _jobExecution = _unitTestEnvironment.createJobExecution(_performingJob);
     }
 
     @Test
     public void testExecute() throws Exception {
-        _jobExecutor.execute(_unitTestEnvironment.getConfigurationDaoWithMainConfiguration().getConfiguration(MainConfiguration.class), _dapJobExecution);
+        _jobExecutor.execute(_unitTestEnvironment.getConfigurationDaoWithMainConfiguration().getConfiguration(MainConfiguration.class), _jobExecution);
 
-        InOrder inOrder = inOrder(_dapJob, _dapJobCallable);
-        inOrder.verify(_dapJob).init(any(PerformingJobContext.class));
-        inOrder.verify(_dapJob).prepare();
-        inOrder.verify(_dapJobCallable).call();
+        InOrder inOrder = inOrder(_performingJob, _jobCallable);
+        inOrder.verify(_performingJob).init(any(PerformingJobContext.class));
+        inOrder.verify(_performingJob).prepare();
+        inOrder.verify(_jobCallable).call();
     }
 
     @Test
     public void testLoggingErrors() throws Exception {
-        doThrow(new RuntimeException("test exception")).when(_dapJob).init(any(PerformingJobContext.class));
+        doThrow(new RuntimeException("test exception")).when(_performingJob).init(any(PerformingJobContext.class));
 
         try {
             _jobExecutor.execute(_unitTestEnvironment.getConfigurationDaoWithMainConfiguration().getConfiguration(MainConfiguration.class),
-                    _dapJobExecution);
+                    _jobExecution);
             fail();
         } catch (RuntimeException e) {
             // expected

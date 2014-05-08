@@ -1,18 +1,16 @@
 package de.wehner.mediamagpie.persistence.entity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.Column;
 
 @javax.persistence.Entity
 public class VideoConversionJobExecution extends JobExecution {
 
-    @ManyToOne(optional = false, fetch=FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "MEDIA_ID")
-    private Media _media;
+    @Column(name = "MEDIA_ID")
+    private Long _mediaId;
 
-    private String _label;
+    private String _destFormat;
+
+    private Integer _widthOrHeight;
 
     public VideoConversionJobExecution() {
     }
@@ -23,29 +21,42 @@ public class VideoConversionJobExecution extends JobExecution {
      * @param media
      *            The media that contains the original image..
      */
-    public VideoConversionJobExecution(Media media, String label) {
-        this(JobStatus.QUEUED, media, label);
+    public VideoConversionJobExecution(Media media, String destFormat, Integer widthOrHeight) {
+        this(media, destFormat, widthOrHeight, JobStatus.QUEUED);
     }
 
-    public VideoConversionJobExecution(JobStatus status, Media media, String label) {
+    public VideoConversionJobExecution(Media media, String destFormat, Integer widthOrHeight, JobStatus status) {
+        if (media.getId() == null) {
+            throw new IllegalArgumentException("Media must have an id!");
+        }
         setJobStatus(status);
-        setMedia(media);
-        _label = label;
+        setMediaId(media.getId());
+        _destFormat = destFormat;
+        _widthOrHeight = widthOrHeight;
     }
 
-    public void setMedia(Media media) {
-        _media = media;
+    public Long getMediaId() {
+        return _mediaId;
     }
 
-    public Media getMedia() {
-        return _media;
+    public void setMediaId(Long mediaId) {
+        _mediaId = mediaId;
     }
 
-    public void setLabel(String label) {
-        _label = label;
+    public String getDestFormat() {
+        return _destFormat;
     }
 
-    public String getLabel() {
-        return _label;
+    public void setDestFormat(String destFormat) {
+        _destFormat = destFormat;
     }
+
+    public Integer getWidthOrHeight() {
+        return _widthOrHeight;
+    }
+
+    public void setWidthOrHeight(Integer widthOrHeight) {
+        _widthOrHeight = widthOrHeight;
+    }
+
 }
