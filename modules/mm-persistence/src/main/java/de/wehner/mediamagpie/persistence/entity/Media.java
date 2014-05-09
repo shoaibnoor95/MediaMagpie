@@ -80,6 +80,9 @@ public class Media extends CreationDateBase {
     @OneToMany(mappedBy = "_media", fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE, CascadeType.PERSIST }, orphanRemoval = true)
     private List<ThumbImage> _thumbImages = new ArrayList<ThumbImage>();
 
+    @OneToMany(mappedBy = "_media", fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE, CascadeType.PERSIST }, orphanRemoval = true)
+    private List<ConvertedVideo> _convertedVideos = new ArrayList<ConvertedVideo>();
+
     /**
      * This attribute is only present for automatic removal of assigned ImageResizeJobExecutions when a media is deleted from db.
      */
@@ -229,6 +232,14 @@ public class Media extends CreationDateBase {
 
     public void setThumbImages(List<ThumbImage> thumbImages) {
         _thumbImages = thumbImages;
+    }
+
+    public List<ConvertedVideo> getConvertedVideos() {
+        return _convertedVideos;
+    }
+
+    public void setConvertedVideos(List<ConvertedVideo> convertedVideos) {
+        _convertedVideos = convertedVideos;
     }
 
     public String toString() {

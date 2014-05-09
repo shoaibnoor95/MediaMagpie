@@ -21,6 +21,7 @@ public class ConvertedVideoDao extends CreationDateBaseDao<ConvertedVideo> {
         super(ConvertedVideo.class, persistenceService);
     }
 
+    @Deprecated
     public boolean hasData(Media media, String label, String videoFormat) {
         Long result = (Long) createCriteria(Restrictions.eq("_media", media), Restrictions.eq("_label", label),
                 Restrictions.eq("_videoFormat", videoFormat)).setProjection(Projections.count("id")).uniqueResult();

@@ -10,6 +10,7 @@ import de.wehner.mediamagpie.persistence.dao.PersistenceService;
 import de.wehner.mediamagpie.persistence.entity.Album;
 import de.wehner.mediamagpie.persistence.entity.Base;
 import de.wehner.mediamagpie.persistence.entity.CloudSyncJobExecution;
+import de.wehner.mediamagpie.persistence.entity.ConvertedVideo;
 import de.wehner.mediamagpie.persistence.entity.ImageResizeJobExecution;
 import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.entity.MediaDeleteJobExecution;
@@ -59,6 +60,7 @@ public class PersistenceTestUtil {
         PersistenceTestUtil.deleteAllEntities(persistenceService, ImageResizeJobExecution.class);
         PersistenceTestUtil.deleteAllEntities(persistenceService, MediaDeleteJobExecution.class);
         PersistenceTestUtil.deleteAllEntities(persistenceService, ThumbImage.class);
+        PersistenceTestUtil.deleteAllEntities(persistenceService, ConvertedVideo.class);
         PersistenceTestUtil.deleteAllEntities(persistenceService, Media.class);
         PersistenceTestUtil.deleteAllEntities(persistenceService, MediaTag.class);
         PersistenceTestUtil.deleteAllEntities(persistenceService, Album.class);

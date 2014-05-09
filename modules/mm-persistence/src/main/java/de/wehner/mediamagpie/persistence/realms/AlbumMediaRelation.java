@@ -7,7 +7,6 @@ import javax.persistence.PreRemove;
 import de.wehner.mediamagpie.persistence.entity.Album;
 import de.wehner.mediamagpie.persistence.entity.Media;
 
-
 public class AlbumMediaRelation {
 
     @PreRemove

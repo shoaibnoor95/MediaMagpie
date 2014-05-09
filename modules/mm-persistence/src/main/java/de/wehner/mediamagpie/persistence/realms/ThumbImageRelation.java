@@ -1,4 +1,4 @@
-package de.wehner.mediamagpie.persistence.entity;
+package de.wehner.mediamagpie.persistence.realms;
 
 import java.io.File;
 
@@ -6,6 +6,8 @@ import javax.persistence.PreRemove;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import de.wehner.mediamagpie.persistence.entity.ThumbImage;
 
 public class ThumbImageRelation {
 

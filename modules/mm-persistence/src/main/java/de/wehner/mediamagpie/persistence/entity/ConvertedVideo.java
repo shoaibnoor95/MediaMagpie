@@ -11,8 +11,10 @@ import javax.persistence.NamedQuery;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
+import de.wehner.mediamagpie.persistence.realms.ConvertedVideoRelation;
+
 @javax.persistence.Entity
-@EntityListeners({ ThumbImageRelation.class })
+@EntityListeners({ ConvertedVideoRelation.class })
 @NamedQueries({ @NamedQuery(name = "getByMediaIdAndLabelAndFormat", query = "select v from ConvertedVideo as v where v._label = :label and _media._id = :mediaId and v._videoFormat = :videoFormat") })
 public class ConvertedVideo extends CreationDateBase {
 
@@ -30,7 +32,7 @@ public class ConvertedVideo extends CreationDateBase {
      */
     private String _videoFormat;
 
-    private String _pathToImage;
+    private String _pathToFile;
 
     public ConvertedVideo() {
         // default constructor
@@ -41,13 +43,13 @@ public class ConvertedVideo extends CreationDateBase {
      * @param label
      *            The width of converted video or 'original' ({@link VideoService#ORIGINAL_SIZE})
      * @param videoFormat
-     * @param pathToImage
+     * @param pathToFile
      */
-    public ConvertedVideo(Media media, String label, String videoFormat, String pathToImage) {
+    public ConvertedVideo(Media media, String label, String videoFormat, String pathToFile) {
         _media = media;
         _label = label;
         _videoFormat = videoFormat;
-        _pathToImage = pathToImage;
+        _pathToFile = pathToFile;
     }
 
     public Media getMedia() {
@@ -66,12 +68,12 @@ public class ConvertedVideo extends CreationDateBase {
         _label = label;
     }
 
-    public String getPathToImage() {
-        return _pathToImage;
+    public String getPathToFile() {
+        return _pathToFile;
     }
 
-    public void setPathToImage(String pathToImage) {
-        _pathToImage = pathToImage;
+    public void setPathToFile(String pathToFile) {
+        _pathToFile = pathToFile;
     }
 
     public String getVideoFormat() {

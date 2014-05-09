@@ -15,7 +15,6 @@ import org.springframework.mobile.device.Device;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -67,8 +66,7 @@ public class MediaDetailController extends AbstractConfigurationSupportControlle
     }
 
     @RequestMapping(method = RequestMethod.GET, value = URL_DETAIL_PICTURE_EDIT)
-    public String showDetailPictureEdit(Model model, @PathVariable Long mediaId, HttpServletRequest servletRequest,
-            Device device) {
+    public String showDetailPictureEdit(Model model, @PathVariable Long mediaId, HttpServletRequest servletRequest, Device device) {
         Media media = _mediaDao.getById(mediaId);
         String imageUrl = _imageSerivce.getOrCreateImageUrl(media, getCurrentUserConfiguration().getDetailImageSize(), false, Priority.HIGH);
         MediaDetailCommand mediaDetailCommand = MediaDetailCommand.createFromMedia(media);

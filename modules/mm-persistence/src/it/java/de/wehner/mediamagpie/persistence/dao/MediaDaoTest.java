@@ -28,6 +28,7 @@ import de.wehner.mediamagpie.core.util.TimeUtil;
 import de.wehner.mediamagpie.persistence.dto.SearchCriteriaCommand;
 import de.wehner.mediamagpie.persistence.dto.UiMediaSortOrder;
 import de.wehner.mediamagpie.persistence.entity.Album;
+import de.wehner.mediamagpie.persistence.entity.ConvertedVideo;
 import de.wehner.mediamagpie.persistence.entity.ImageResizeJobExecution;
 import de.wehner.mediamagpie.persistence.entity.LifecyleStatus;
 import de.wehner.mediamagpie.persistence.entity.Media;
@@ -158,6 +159,28 @@ public class MediaDaoTest {
     }
 
     @Test
+    public void testMakeTransient_withAssignedConvertedVideo() throws Exception {
+        Media m1 = new Media(_dbTestEnvironment.getOrCreateTestUser(), "videoMedia", _testMedia.toURI(), new Date());
+        ConvertedVideo convertedVideo = new ConvertedVideo(m1, "label", "mp4", _testThumb.getPath());
+        m1.getConvertedVideos().add(convertedVideo);
+        _mediaDao.makePersistent(m1);
+        _dbTestEnvironment.flipTransaction();
+
+        assertThat(_mediaDao.getAll()).hasSize(1);
+        assertThat(_dbTestEnvironment.getPersistenceService().getAll(ConvertedVideo.class)).hasSize(1);
+
+        _mediaDao.makeTransient(_dbTestEnvironment.reload(m1));
+        _dbTestEnvironment.flipTransaction();
+
+        assertThat(_mediaDao.getAll()).isEmpty();
+        assertThat(_dbTestEnvironment.getPersistenceService().getAll(ConvertedVideo.class)).isEmpty();
+        _dbTestEnvironment.commitTransaction();
+
+        // verify, thumb file doesn't exists
+        assertThat(_testThumb).doesNotExist();
+    }
+
+    @Test
     public void testMakeTransient_withAssignedImageResizeJobExecution() throws Exception {
         Media m1 = new Media(_dbTestEnvironment.getOrCreateTestUser(), "ralf", _testMedia.toURI(), new Date());
         ImageResizeJobExecution jobExecution = new ImageResizeJobExecution(m1, "30");
@@ -279,9 +302,9 @@ public class MediaDaoTest {
         album2.addMedia(m0);
         mediaDao.makePersistent(m0);
         _dbTestEnvironment.flipTransaction();
-        
+
         List<Media> lastAddedPublicMedias = mediaDao.getAllLastAddedPublicMedias(Visibility.PUBLIC, 100);
-        
+
         assertThat(lastAddedPublicMedias).hasSize(1);
     }
 }

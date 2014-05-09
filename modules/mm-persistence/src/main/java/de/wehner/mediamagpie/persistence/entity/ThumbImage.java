@@ -13,6 +13,8 @@ import javax.persistence.NamedQuery;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
+import de.wehner.mediamagpie.persistence.realms.ThumbImageRelation;
+
 @javax.persistence.Entity
 @EntityListeners({ ThumbImageRelation.class })
 @NamedQueries( { @NamedQuery(name = "getByMediaIdAndLabel", query = "select t from ThumbImage as t where t._label = :label and _media._id = :mediaId") })

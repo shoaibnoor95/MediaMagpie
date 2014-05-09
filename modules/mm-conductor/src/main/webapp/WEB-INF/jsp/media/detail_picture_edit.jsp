@@ -79,7 +79,7 @@
             </c:when>
             <c:otherwise>
                 <!-- see: http://www.w3schools.com/TAgs/tag_video.asp  -->
-				<video poster="<%=request.getContextPath()%>${mediaDetailCommand.imageLink}" controls preload="none" src="/static/MVI_2734.webm" >
+				<video poster="<%=request.getContextPath()%>${mediaDetailCommand.imageLink}" controls preload="none" src="<%=request.getContextPath()%>${mediaDetailCommand.videoUrl}" >
 				    Your browser does not support the video tag.
 				</video>
             </c:otherwise>

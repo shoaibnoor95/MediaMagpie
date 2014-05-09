@@ -1,6 +1,8 @@
 package de.wehner.mediamagpie.conductor.webapp.services;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -61,12 +63,23 @@ public class VideoService {
 
         private final String _extension;
 
+        private final static Map<String, VideoFormat> extension2VideoFormat = new HashMap<>();
+
         private VideoFormat(String extension) {
             _extension = extension;
+            addExtension2Map(extension);
+        }
+
+        private void addExtension2Map(String extension) {
+            extension2VideoFormat.put(extension, this);
         }
 
         public String getExtension() {
             return _extension;
+        }
+
+        public static VideoFormat extension2VideoFormat(String extension) {
+            return extension2VideoFormat.get(extension);
         }
     }
 
@@ -131,6 +144,15 @@ public class VideoService {
         return "" + widthOrHeight;
     }
 
+    /**
+     * Creates the link used in html output
+     * 
+     * @param media
+     * @param sizeLabel
+     * @param videoFormat
+     * @param priority
+     * @return something like '/content/videos/123/640.mp4?priority=HIGH'
+     */
     static String createLink(Media media, String sizeLabel, VideoFormat videoFormat, Priority priority) {
         if (StringUtils.isEmpty(sizeLabel)) {
             sizeLabel = ORIGINAL_SIZE;
@@ -148,7 +170,7 @@ public class VideoService {
         return createLink(media, sizeLabel, videoFormat, priority);
     }
 
-    private boolean addVideoConversionJobExecutionIfNecessary(Media media, VideoFormat videoFormat, Integer widthOrHeight, Priority priority) {
+    public boolean addVideoConversionJobExecutionIfNecessary(Media media, VideoFormat videoFormat, Integer widthOrHeight, Priority priority) {
         if (!_videoConversionJobExecutionDao.hasVideoConversionJob(media, videoFormat.toString(), widthOrHeight)) {
             VideoConversionJobExecution videoConversionJob = new VideoConversionJobExecution(media, videoFormat.toString(), widthOrHeight);
             if (priority != null) {
