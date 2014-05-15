@@ -3,6 +3,7 @@ package de.wehner.mediamagpie.conductor.job;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import de.wehner.mediamagpie.conductor.performingjob.VideoConversionJob;
 import de.wehner.mediamagpie.conductor.webapp.services.VideoService;
@@ -14,6 +15,7 @@ import de.wehner.mediamagpie.persistence.entity.JobExecution;
 import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.entity.VideoConversionJobExecution;
 
+@Component
 public class VideoConversionJobCreator extends TransactionalJobCreator<VideoConversionJob> {
 
     private final static Logger LOG = LoggerFactory.getLogger(VideoConversionJobCreator.class);

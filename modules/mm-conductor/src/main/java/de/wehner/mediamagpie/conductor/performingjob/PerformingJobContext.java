@@ -19,4 +19,8 @@ public class PerformingJobContext {
     public File getTempMediaPath() {
         return new File(_mainConfiguration.getTempMediaPath());
     }
+
+    public File getConvertedVideoPath() {
+        return new File(_mainConfiguration.getConvertedVideoPath());
+    }
 }

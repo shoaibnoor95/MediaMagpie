@@ -8,6 +8,9 @@ public class VideoConversionJobExecution extends JobExecution {
     @Column(name = "MEDIA_ID")
     private Long _mediaId;
 
+    /**
+     * The <code>VideoService.VideoFormat</code> as string
+     */
     private String _destFormat;
 
     private Integer _widthOrHeight;
@@ -20,6 +23,10 @@ public class VideoConversionJobExecution extends JobExecution {
      * 
      * @param media
      *            The media that contains the original image..
+     * @param destFormat
+     *            The destination video format described as String of <code>VideoService.VideoFormat</code>
+     * @param widthOrHeight
+     *            In general, this is only the width of requested video
      */
     public VideoConversionJobExecution(Media media, String destFormat, Integer widthOrHeight) {
         this(media, destFormat, widthOrHeight, JobStatus.QUEUED);

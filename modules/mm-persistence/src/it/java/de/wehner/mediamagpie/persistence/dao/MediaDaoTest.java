@@ -44,7 +44,7 @@ public class MediaDaoTest {
     public DbTestEnvironment _dbTestEnvironment = new DbTestEnvironment();
     private TestEnvironment _testEnvironment = new TestEnvironment(getClass());
     private File _testMedia;
-    private File _testThumb;
+    private File _thumbOrConvVideo;
 
     private User _user;
     private MediaDao _mediaDao;
@@ -54,8 +54,8 @@ public class MediaDaoTest {
         _dbTestEnvironment.cleanDb();
         _testMedia = new File(_testEnvironment.getWorkingDir(), "image.png");
         FileUtils.writeStringToFile(_testMedia, "foo");
-        _testThumb = new File(_testEnvironment.getWorkingDir(), "thumb.png");
-        FileUtils.writeStringToFile(_testThumb, "foo");
+        _thumbOrConvVideo = new File(_testEnvironment.getWorkingDir(), "thumb.png");
+        FileUtils.writeStringToFile(_thumbOrConvVideo, "foo");
         _dbTestEnvironment.beginTransaction();
         _user = _dbTestEnvironment.getOrCreateTestUser();
         _mediaDao = new MediaDao(_dbTestEnvironment.getPersistenceService());
@@ -139,7 +139,7 @@ public class MediaDaoTest {
     @Test
     public void testMakeTransient_withAssignedThumbImage() throws Exception {
         Media m1 = new Media(_dbTestEnvironment.getOrCreateTestUser(), "ralf", _testMedia.toURI(), new Date());
-        ThumbImage thumbImage = new ThumbImage(m1, "label", _testThumb.getPath());
+        ThumbImage thumbImage = new ThumbImage(m1, "label", _thumbOrConvVideo.getPath());
         m1.getThumbImages().add(thumbImage);
         _mediaDao.makePersistent(m1);
         _dbTestEnvironment.flipTransaction();
@@ -155,13 +155,13 @@ public class MediaDaoTest {
         _dbTestEnvironment.commitTransaction();
 
         // verify, thumb file doesn't exists
-        assertThat(_testThumb).doesNotExist();
+        assertThat(_thumbOrConvVideo).doesNotExist();
     }
 
     @Test
     public void testMakeTransient_withAssignedConvertedVideo() throws Exception {
         Media m1 = new Media(_dbTestEnvironment.getOrCreateTestUser(), "videoMedia", _testMedia.toURI(), new Date());
-        ConvertedVideo convertedVideo = new ConvertedVideo(m1, "label", "mp4", _testThumb.getPath());
+        ConvertedVideo convertedVideo = new ConvertedVideo(m1, "label", "mp4", _thumbOrConvVideo.getPath());
         m1.getConvertedVideos().add(convertedVideo);
         _mediaDao.makePersistent(m1);
         _dbTestEnvironment.flipTransaction();
@@ -176,8 +176,8 @@ public class MediaDaoTest {
         assertThat(_dbTestEnvironment.getPersistenceService().getAll(ConvertedVideo.class)).isEmpty();
         _dbTestEnvironment.commitTransaction();
 
-        // verify, thumb file doesn't exists
-        assertThat(_testThumb).doesNotExist();
+        // verify, video file doesn't exists any more
+        assertThat(_thumbOrConvVideo).doesNotExist();
     }
 
     @Test

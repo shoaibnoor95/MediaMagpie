@@ -29,6 +29,18 @@
 							<form:errors path="tempMediaPath" cssClass="error"/>
 						</dl>
 
+                        <dl>
+                            <dt>
+                                <label>Base Path to temporary converted video files:</label>
+                            </dt>
+                            <dd>
+                                <form:input path="convertedVideoPath" cssClass="req"/>
+                                <img src="/static/images/famfamfam_silk/help.png" title="Path used to store temporary generated video files."/>
+                            </dd>
+                            <dd class="help">e.g. '/tmp/mediamagpie/videos'</dd>    
+                            <form:errors path="convertedVideoPath" cssClass="error"/>
+                        </dl>
+
 						<dl>
 							<dt>
 								<label>Base Path to user's upload media files:</label>

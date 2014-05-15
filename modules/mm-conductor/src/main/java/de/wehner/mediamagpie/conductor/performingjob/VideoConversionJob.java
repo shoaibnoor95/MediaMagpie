@@ -45,9 +45,9 @@ public class VideoConversionJob extends AbstractJob {
 
             @Override
             public URI call() throws Exception {
-                LOG.debug("start video conversion job to format {} for media {}.", _destFormat, _mediaId);
-                File tempMediaPath = getPerformingJobContext().getTempMediaPath();
-                File destVideo = _videoService.convertVideo(_srcVideo, _destFormat, _destWidth, tempMediaPath);
+                LOG.debug("Start video conversion job for Media {} to format '{}'.", _mediaId, _destFormat);
+                File destPath = getPerformingJobContext().getConvertedVideoPath();
+                File destVideo = _videoService.convertVideo(_srcVideo, _destFormat, _destWidth, destPath);
                 return (destVideo != null) ? destVideo.toURI() : null;
             }
 

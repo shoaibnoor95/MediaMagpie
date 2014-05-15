@@ -19,6 +19,12 @@
 					</dt>
 					<dd>${conf.tempMediaPath}</dd>	
 				</dl>
+                <dl>
+                    <dt>
+                        <label>Path to temporary converted video files:</label>
+                    </dt>
+                    <dd>${conf.convertedVideoPath}</dd>  
+                </dl>
 				<dl>
 					<dt>
 						<label>Base Path to user's upload media files:</label>

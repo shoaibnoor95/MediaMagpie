@@ -9,6 +9,7 @@ import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.entity.Priority;
 
 /**
+ * TODO rwe:
  * @author ralfwehner
  * @deprecated Does we really need this one anywere? Remove this class and use MediaThumbCommand instead which can be created in ImageService!
  */

@@ -38,16 +38,18 @@ public class UploadService {
     private final ConfigurationProvider _configurationProvider;
     private final MediaDao _mediaDao;
     private final ImageService _imageService;
+    private final VideoService _videoService;
     private final PersistenceService _persistenceService;
     private final ThumbImageDao _thumbImageDao;
 
     @Autowired
-    public UploadService(ConfigurationProvider configurationProvider, MediaDao mediaDao, ImageService imageService, PersistenceService persistenceService,
-            ThumbImageDao thumbImageDao) {
+    public UploadService(ConfigurationProvider configurationProvider, MediaDao mediaDao, ImageService imageService, VideoService videoService,
+            PersistenceService persistenceService, ThumbImageDao thumbImageDao) {
         super();
         _configurationProvider = configurationProvider;
         _mediaDao = mediaDao;
         _imageService = imageService;
+        _videoService = videoService;
         _persistenceService = persistenceService;
         _thumbImageDao = thumbImageDao;
     }
@@ -169,16 +171,20 @@ public class UploadService {
     }
 
     /**
-     * Be aware: This method does call a flipTransaction() internally and detaches entities.
+     * Creaets jobs for thumb images and video conversion in case of uploaded video media
      * 
      * @param newMedia
      * @param configurationProvider
      */
-    public void createJobsForAllThumbImages(Media newMedia, ConfigurationProvider configurationProvider) {
+    public void createAllJobsAfterUpload(Media newMedia, ConfigurationProvider configurationProvider) {
 
         List<Integer> allThumbSizes = configurationProvider.createConfigurationFacade(newMedia.getOwner()).getAllThumbSizes();
         for (Integer thumbSize : allThumbSizes) {
             createThumbImage(newMedia, "" + thumbSize, Priority.LOW, 0);
+        }
+
+        if (!VideoService.isPhoto(newMedia)) {
+            _videoService.addVideoConversionJobExecutionIfNecessary(newMedia, VideoService.VideoFormat.WebM_vp8, null, Priority.LOW);
         }
     }
 

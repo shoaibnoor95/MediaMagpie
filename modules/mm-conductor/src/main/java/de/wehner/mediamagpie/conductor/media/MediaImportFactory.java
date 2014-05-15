@@ -87,7 +87,7 @@ public class MediaImportFactory {
 
         // create job executions for image resizing
         _mediaDao.makePersistent(newMedia);
-        _uploadService.createJobsForAllThumbImages(newMedia, _configurationProvider);
+        _uploadService.createAllJobsAfterUpload(newMedia, _configurationProvider);
 
         return newMedia;
     }

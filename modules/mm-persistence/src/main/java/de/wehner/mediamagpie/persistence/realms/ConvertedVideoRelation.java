@@ -19,7 +19,7 @@ public class ConvertedVideoRelation {
         String pathToFile = convertedVideo.getPathToFile();
         File videoFile = new File(pathToFile);
         if (videoFile.exists()) {
-            LOG.debug("Delete file '{}' from file system.", videoFile.getPath());
+            LOG.debug("Delete converted video file '{}' from file system.", videoFile.getPath());
             videoFile.delete();
         }
     }

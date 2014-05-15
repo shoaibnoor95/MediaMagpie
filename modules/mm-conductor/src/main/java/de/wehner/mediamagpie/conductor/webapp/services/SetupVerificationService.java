@@ -35,9 +35,10 @@ public class SetupVerificationService {
 
         // test existence of directories configured in MainConfiguration
         String tempMediaPath = mainConfiguration.getTempMediaPath();
+        String convertedVideoPath = mainConfiguration.getConvertedVideoPath();
         String baseUploadPath = mainConfiguration.getBaseUploadPath();
-        if (StringUtils.isEmpty(tempMediaPath) || !new File(tempMediaPath).exists() || StringUtils.isEmpty(baseUploadPath)
-                || !new File(baseUploadPath).exists()) {
+        if (StringUtils.isEmpty(tempMediaPath) || !new File(tempMediaPath).exists() || StringUtils.isEmpty(convertedVideoPath)
+                || !new File(convertedVideoPath).exists() || StringUtils.isEmpty(baseUploadPath) || !new File(baseUploadPath).exists()) {
             SetupTask newTaskToAdd = SetupTask.CONFIGURE_SYSTEM_DIRS;
             LOG.warn("Adding new SetupTask '" + newTaskToAdd + "' because some local pathes are missing on system.");
             setupTasks.add(newTaskToAdd);

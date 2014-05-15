@@ -26,6 +26,11 @@ public class MainConfiguration implements PropertyBackedConfiguration, Filesyste
     private String _tempMediaPath;
 
     /**
+     * The path were all converted video files will be stored
+     */
+    private String _convertedVideoPath;
+
+    /**
      * The base path, were all user uploaded media files will be stored. The final user path will be
      * <code>&lt;baseUploadPath&gt;/&lt;userId&gt;/</code>.
      */
@@ -58,6 +63,15 @@ public class MainConfiguration implements PropertyBackedConfiguration, Filesyste
 
     public void setTempMediaPath(String tempMediaPath) {
         _tempMediaPath = tempMediaPath;
+    }
+
+    @NotEmpty
+    public String getConvertedVideoPath() {
+        return _convertedVideoPath;
+    }
+
+    public void setConvertedVideoPath(String convertedVideoPath) {
+        _convertedVideoPath = convertedVideoPath;
     }
 
     @NotEmpty
@@ -116,6 +130,9 @@ public class MainConfiguration implements PropertyBackedConfiguration, Filesyste
         }
         if (!createDirIfNecessary(getTempMediaPath())) {
             e.rejectValue("tempMediaPath", "can.not.create.local.dir", new String[] { getTempMediaPath() }, "Can not create directory.");
+        }
+        if (!createDirIfNecessary(getConvertedVideoPath())) {
+            e.rejectValue("convertedVideoPath", "can.not.create.local.dir", new String[] { getConvertedVideoPath() }, "Can not create directory.");
         }
     }
 

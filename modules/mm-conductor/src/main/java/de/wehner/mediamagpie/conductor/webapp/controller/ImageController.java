@@ -27,6 +27,7 @@ import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.entity.Priority;
 import de.wehner.mediamagpie.persistence.entity.ThumbImage;
 
+// TODO rwe: better rename to ImageStreamController or just StreamController
 @Controller
 @RequestMapping({ "/content/images/{mediaId}" })
 public class ImageController {

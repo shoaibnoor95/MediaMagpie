@@ -19,7 +19,7 @@ public class ThumbImageRelation {
         String pathToImage = thumbImage.getPathToImage();
         File thumbImageFile = new File(pathToImage);
         if (thumbImageFile.exists()) {
-            LOG.debug("Delete image '" + thumbImageFile.getPath() + "' from file system.");
+            LOG.debug("Delete thumb image file '{}' from file system.", thumbImageFile.getPath());
             thumbImageFile.delete();
         }
     }

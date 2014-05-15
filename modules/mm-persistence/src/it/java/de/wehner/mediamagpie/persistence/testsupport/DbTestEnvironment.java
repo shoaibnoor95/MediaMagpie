@@ -124,6 +124,9 @@ public class DbTestEnvironment extends ExternalResource {
         path = new File(workingDir, "tempMediaPath");
         FileUtils.forceMkdir(path);
         mainConfiguration.setTempMediaPath(path.getPath());
+        path = new File(workingDir, "convertedMediaPath");
+        FileUtils.forceMkdir(path);
+        mainConfiguration.setConvertedVideoPath(path.getPath());
 
         mainConfiguration.setDefaultThumbSize(50);
         mainConfiguration.setDefaultDetailThumbSize(500);

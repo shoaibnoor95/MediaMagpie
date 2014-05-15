@@ -72,7 +72,7 @@ public class MediaDetailController extends AbstractConfigurationSupportControlle
         MediaDetailCommand mediaDetailCommand = MediaDetailCommand.createFromMedia(media);
         mediaDetailCommand.setImageLink(imageUrl);
         mediaDetailCommand.setOverviewUrl(servletRequest.getHeader("Referer"));
-        if (!mediaDetailCommand.isPhoto()) {
+        if (!VideoService.isPhoto(mediaDetailCommand)) {
             // add url to video stream
             mediaDetailCommand.setVideoUrl(_videoService.getOrCreateVideoUrl(media, servletRequest, device, false, Priority.HIGH));
         }

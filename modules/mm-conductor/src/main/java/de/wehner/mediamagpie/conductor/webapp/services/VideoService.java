@@ -63,15 +63,10 @@ public class VideoService {
 
         private final String _extension;
 
-        private final static Map<String, VideoFormat> extension2VideoFormat = new HashMap<>();
+        private static Map<String, VideoFormat> _extension2VideoFormat;
 
         private VideoFormat(String extension) {
             _extension = extension;
-            addExtension2Map(extension);
-        }
-
-        private void addExtension2Map(String extension) {
-            extension2VideoFormat.put(extension, this);
         }
 
         public String getExtension() {
@@ -79,7 +74,14 @@ public class VideoService {
         }
 
         public static VideoFormat extension2VideoFormat(String extension) {
-            return extension2VideoFormat.get(extension);
+            if (_extension2VideoFormat == null) {
+                _extension2VideoFormat = new HashMap<>();
+                for (VideoFormat videoFormat : VideoFormat.values()) {
+                    _extension2VideoFormat.put(videoFormat.getExtension(), videoFormat);
+                    _extension2VideoFormat.put(videoFormat.getExtension().toUpperCase(), videoFormat);
+                }
+            }
+            return _extension2VideoFormat.get(extension);
         }
     }
 
@@ -171,7 +173,7 @@ public class VideoService {
     }
 
     public boolean addVideoConversionJobExecutionIfNecessary(Media media, VideoFormat videoFormat, Integer widthOrHeight, Priority priority) {
-        if (!_videoConversionJobExecutionDao.hasVideoConversionJob(media, videoFormat.toString(), widthOrHeight)) {
+        if (!_videoConversionJobExecutionDao.hasVideoConversionJob(media.getId(), videoFormat.toString(), widthOrHeight)) {
             VideoConversionJobExecution videoConversionJob = new VideoConversionJobExecution(media, videoFormat.toString(), widthOrHeight);
             if (priority != null) {
                 videoConversionJob.setPriority(priority);
@@ -183,6 +185,10 @@ public class VideoService {
             return true;
         }
         return false;
+    }
+
+    public static boolean isPhoto(Media media) {
+        return (StringUtils.isEmpty(media.getMediaType()) || media.getMediaType().startsWith(Media.IMAGE_PREFIX));
     }
 
     private VideoFormat getBestFormat(String userAgent) {

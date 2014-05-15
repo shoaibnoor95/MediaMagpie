@@ -21,6 +21,10 @@ public class MainConfigurationValidator implements Validator {
             e.rejectValue("tempMediaPath", "dir.does.not.exists", new String[] { conf.getTempMediaPath() }, "Pfad '" + conf.getTempMediaPath()
                     + "' existiert nicht");
         }
+        if (!new File(conf.getConvertedVideoPath()).exists()) {
+            e.rejectValue("convertedVideoPath", "dir.does.not.exists", new String[] { conf.getConvertedVideoPath() }, "Pfad '" + conf.getConvertedVideoPath()
+                    + "' existiert nicht");
+        }
         if (!new File(conf.getBaseUploadPath()).exists()) {
             e.rejectValue("baseUploadPath", "dir.does.not.exists", new String[] { conf.getBaseUploadPath() }, "Pfad '" + conf.getBaseUploadPath()
                     + "' existiert nicht");

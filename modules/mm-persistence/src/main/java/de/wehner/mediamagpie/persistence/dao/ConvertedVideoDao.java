@@ -21,17 +21,18 @@ public class ConvertedVideoDao extends CreationDateBaseDao<ConvertedVideo> {
         super(ConvertedVideo.class, persistenceService);
     }
 
-    @Deprecated
+    private Criteria createSearchCriteria(Media media, String label, String videoFormat) {
+        return createCriteria(Restrictions.eq("_media", media), Restrictions.eq("_label", label), Restrictions.eq("_videoFormat", videoFormat));
+    }
+
     public boolean hasData(Media media, String label, String videoFormat) {
-        Long result = (Long) createCriteria(Restrictions.eq("_media", media), Restrictions.eq("_label", label),
-                Restrictions.eq("_videoFormat", videoFormat)).setProjection(Projections.count("id")).uniqueResult();
+        Long result = (Long) createSearchCriteria(media, label, videoFormat).setProjection(Projections.count("id")).uniqueResult();
         return result > 0;
     }
 
     @SuppressWarnings("unchecked")
     public List<ConvertedVideo> getData(Media media, String label, String videoFormat, int maxResults) {
-        Criteria criteria = createCriteria(Restrictions.eq("_media", media), Restrictions.eq("_label", label),
-                Restrictions.eq("_videoFormat", videoFormat));
+        Criteria criteria = createSearchCriteria(media, label, videoFormat);
         criteria.setMaxResults(maxResults);
         return criteria.list();
     }
