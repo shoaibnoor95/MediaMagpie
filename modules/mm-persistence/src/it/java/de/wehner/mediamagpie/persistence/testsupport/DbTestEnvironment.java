@@ -2,6 +2,8 @@ package de.wehner.mediamagpie.persistence.testsupport;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
 import javax.persistence.EntityManagerFactory;
@@ -13,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import de.wehner.mediamagpie.core.util.ExceptionUtil;
 import de.wehner.mediamagpie.persistence.dao.ConfigurationDao;
+import de.wehner.mediamagpie.persistence.dao.Dao;
 import de.wehner.mediamagpie.persistence.dao.PersistenceService;
 import de.wehner.mediamagpie.persistence.dao.TransactionHandler;
 import de.wehner.mediamagpie.persistence.dao.UserConfigurationDao;
@@ -134,5 +137,16 @@ public class DbTestEnvironment extends ExternalResource {
         configurationProvider.saveOrUpdateMainConfiguration(mainConfiguration);
 
         return configurationProvider;
+    }
+
+    public <D extends Dao<?>> D createDao(Class<D> clazz) {
+        try {
+            Constructor<D> constructor = clazz.getConstructor(PersistenceService.class);
+            return constructor.newInstance(_persistenceService);
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException
+                | InvocationTargetException e) {
+            throw new RuntimeException("Internal error. Can not create Dao for class " + clazz, e);
+        }
+
     }
 }

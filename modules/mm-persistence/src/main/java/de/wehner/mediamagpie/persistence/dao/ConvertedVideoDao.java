@@ -37,26 +37,26 @@ public class ConvertedVideoDao extends CreationDateBaseDao<ConvertedVideo> {
         return criteria.list();
     }
 
-    /**
-     * @param mediaId
-     * @param label
-     * @param videoFormat
-     * @return
-     * @deprecated use {@linkplain #getData(Media, String, String, int)}
-     */
-    @SuppressWarnings("unchecked")
-    public ConvertedVideo getByMediaIdAndLabel(Long mediaId, String label, String videoFormat) {
-        Query query = _persistenceService.createNamedQuery("getByMediaIdAndLabelAndFormat");
-        query.setParameter("mediaId", mediaId);
-        query.setParameter("label", label);
-        query.setParameter("videoFormat", videoFormat);
-        query.setMaxResults(1);
-        List<ConvertedVideo> resultList = query.getResultList();
-
-        if (resultList.size() > 0) {
-            return resultList.get(0);
-        }
-        return null;
-    }
+//    /**
+//     * @param mediaId
+//     * @param label
+//     * @param videoFormat
+//     * @return
+//     * @deprecated use {@linkplain #getData(Media, String, String, int)}
+//     */
+//    @SuppressWarnings("unchecked")
+//    public ConvertedVideo getByMediaIdAndLabel(Long mediaId, String label, String videoFormat) {
+//        Query query = _persistenceService.createNamedQuery("getByMediaIdAndLabelAndFormat");
+//        query.setParameter("mediaId", mediaId);
+//        query.setParameter("label", label);
+//        query.setParameter("videoFormat", videoFormat);
+//        query.setMaxResults(1);
+//        List<ConvertedVideo> resultList = query.getResultList();
+//
+//        if (resultList.size() > 0) {
+//            return resultList.get(0);
+//        }
+//        return null;
+//    }
 
 }

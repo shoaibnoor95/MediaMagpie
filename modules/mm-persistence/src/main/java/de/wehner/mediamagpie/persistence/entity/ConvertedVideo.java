@@ -15,7 +15,7 @@ import de.wehner.mediamagpie.persistence.realms.ConvertedVideoRelation;
 
 @javax.persistence.Entity
 @EntityListeners({ ConvertedVideoRelation.class })
-@NamedQueries({ @NamedQuery(name = "getByMediaIdAndLabelAndFormat", query = "select v from ConvertedVideo as v where v._label = :label and _media._id = :mediaId and v._videoFormat = :videoFormat") })
+// rwe: remove me: @NamedQueries({ @NamedQuery(name = "getByMediaIdAndLabelAndFormat", query = "select v from ConvertedVideo as v where v._label = :label and _media._id = :mediaId and v._videoFormat = :videoFormat") })
 public class ConvertedVideo extends CreationDateBase {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })

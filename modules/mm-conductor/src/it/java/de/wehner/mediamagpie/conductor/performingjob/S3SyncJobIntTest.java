@@ -24,10 +24,12 @@ import de.wehner.mediamagpie.conductor.webapp.processor.ImageProcessorJAIFactory
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
 import de.wehner.mediamagpie.conductor.webapp.services.MediaSyncService;
 import de.wehner.mediamagpie.conductor.webapp.services.UploadService;
+import de.wehner.mediamagpie.conductor.webapp.services.VideoService;
 import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
 import de.wehner.mediamagpie.core.util.TimeUtil;
-import de.wehner.mediamagpie.persistence.dao.MediaDataProcessingJobExecutionDao;
+import de.wehner.mediamagpie.persistence.dao.ConvertedVideoDao;
 import de.wehner.mediamagpie.persistence.dao.MediaDao;
+import de.wehner.mediamagpie.persistence.dao.MediaDataProcessingJobExecutionDao;
 import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.entity.MediaTag;
 import de.wehner.mediamagpie.persistence.entity.User;
@@ -70,7 +72,7 @@ public class S3SyncJobIntTest {
 
         _testEnvironment.cleanWorkingDir();
         _dbTestEnvironment.cleanDb();
-        _mediaDao = new MediaDao(_dbTestEnvironment.getPersistenceService());
+        _mediaDao = _dbTestEnvironment.createDao(MediaDao.class);
         _dbTestEnvironment.beginTransaction();
         _user = _dbTestEnvironment.getOrCreateTestUser();
         _m1 = MediaSyncService.createMediaFromMediaFile(_user, IMAGE_13.toURL().toURI());
@@ -84,9 +86,12 @@ public class S3SyncJobIntTest {
         _m2.addTag(new MediaTag("family"));
         _configurationProvider = _dbTestEnvironment.createConfigurationProvider(_testEnvironment.getWorkingDir());
         List<ImageProcessorFactory> imageProcessorFactories = Arrays.asList(new ImageProcessorImageIOFactory(), new ImageProcessorJAIFactory());
-        ImageService imageService = new ImageService(null, _mediaDao, new MediaDataProcessingJobExecutionDao(_dbTestEnvironment.getPersistenceService()), null,
-                imageProcessorFactories);
-        UploadService uploadService = new UploadService(_configurationProvider, _mediaDao, imageService, _dbTestEnvironment.getPersistenceService(), null);
+        ImageService imageService = new ImageService(null, _mediaDao, new MediaDataProcessingJobExecutionDao(_dbTestEnvironment.getPersistenceService()),
+                null, imageProcessorFactories);
+        VideoService videoService = new VideoService(_dbTestEnvironment.createDao(ConvertedVideoDao.class),
+                _dbTestEnvironment.createDao(MediaDataProcessingJobExecutionDao.class));
+        UploadService uploadService = new UploadService(_configurationProvider, _mediaDao, imageService, videoService,
+                _dbTestEnvironment.getPersistenceService(), null);
         _job = new S3SyncJob(_s3MediaExportRepository, uploadService, _user, _configurationProvider, _dbTestEnvironment.createTransactionHandler(),
                 _mediaDao, new TimeProvider());
 

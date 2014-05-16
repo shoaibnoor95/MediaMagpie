@@ -51,6 +51,8 @@ public class UploadServiceTest {
     @Mock
     private ImageService _imageService;
     @Mock
+    private VideoService _videoService;
+    @Mock
     private PersistenceService _persistenceService;
     @Mock
     private ThumbImageDao _thumbImageDao;
@@ -58,7 +60,7 @@ public class UploadServiceTest {
     @Before
     public void setUp() throws IOException {
         MockitoAnnotations.initMocks(this);
-        _uploadService = new UploadService(_configurationProvider, _mediaDao, _imageService, _persistenceService, _thumbImageDao);
+        _uploadService = new UploadService(_configurationProvider, _mediaDao, _imageService, _videoService, _persistenceService, _thumbImageDao);
         _user = new User("Ralf", "rwe@localhost", Role.ADMIN);
         _user.setId(123L);
         mc = new MainConfiguration();
