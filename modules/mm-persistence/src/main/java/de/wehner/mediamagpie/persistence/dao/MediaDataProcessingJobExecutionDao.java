@@ -20,26 +20,30 @@ public class MediaDataProcessingJobExecutionDao extends JobExecutionDao {
         super(persistenceService);
     }
 
-    @SuppressWarnings("unchecked")
     public boolean hasResizeJob(Media media, String label) {
         final Criteria crit = _persistenceService.createCriteria(ImageResizeJobExecution.class);
 
         crit.add(Restrictions.eq("_media", media));
         crit.add(Restrictions.eq("_label", label));
         crit.setMaxResults(1);
-        List<ImageResizeJobExecution> jobs = crit.list();
+        List<?> jobs = crit.list();
         return (jobs.size() > 0);
     }
 
-    @SuppressWarnings("unchecked")
     public boolean hasVideoConversionJob(long mediaId, String destFormat, Integer widthOrHeight) {
         final Criteria crit = _persistenceService.createCriteria(VideoConversionJobExecution.class);
 
         crit.add(Restrictions.eq("_mediaId", mediaId));
         crit.add(Restrictions.eq("_destFormat", destFormat));
-//        crit.add(Restrictions.eq("_widthOrHeight", widthOrHeight));// FIXME rwe: this criteria doesn't work !!!!
+        if (widthOrHeight == null) {
+            crit.add(Restrictions.isNull("_widthOrHeight"));
+        } else {
+            crit.add(Restrictions.eq("_widthOrHeight", widthOrHeight));
+        }
+        // alternative solution:
+        // crit.add(Restrictions.or(Restrictions.isNull("_widthOrHeight"), Restrictions.eq("_widthOrHeight", widthOrHeight)));
         crit.setMaxResults(1);
-        List<ImageResizeJobExecution> jobs = crit.list();
+        List<?> jobs = crit.list();
         return (jobs.size() > 0);
     }
 
