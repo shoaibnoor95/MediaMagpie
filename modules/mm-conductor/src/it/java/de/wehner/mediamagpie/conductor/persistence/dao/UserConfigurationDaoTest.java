@@ -186,6 +186,7 @@ public class UserConfigurationDaoTest {
         UserConfiguration configuration2 = new UserConfiguration();
         configuration2.setSingleRootMediaPath("myPath2");
         _userConfigurationDao.saveOrUpdateConfiguration(_user, configuration1);
+        _dbTestEnvironment.flipTransaction(); // commit transaction to update the column property.user_fk
         _userConfigurationDao.saveOrUpdateConfiguration(user2, configuration2);
         _dbTestEnvironment.flipTransaction();
 
@@ -201,5 +202,19 @@ public class UserConfigurationDaoTest {
     public void testReadFromDb() {
         UserConfiguration configuration = _userConfigurationDao.getConfiguration(_user, UserConfiguration.class);
         assertThat(configuration).isNotNull();
+    }
+
+    @Test
+    public void test_deleteUser_willalsoDeletePropertiesAsWell() {
+        UserConfiguration configuration = new UserConfiguration();
+        _userConfigurationDao.saveOrUpdateConfiguration(_user, configuration);
+        _dbTestEnvironment.flipTransaction();
+        assertThat(_dbTestEnvironment.getPersistenceService().getAll(Property.class)).hasSize(1);
+
+        // remove user
+        _dbTestEnvironment.createDao(UserDao.class).makeTransient(_dbTestEnvironment.getPersistenceService().reload(_user));
+
+        // verify user's configuration is removed as well
+        assertThat(_dbTestEnvironment.getPersistenceService().getAll(Property.class)).hasSize(0);
     }
 }

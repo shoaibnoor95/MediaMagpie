@@ -10,7 +10,7 @@ import de.wehner.mediamagpie.persistence.entity.Base;
 
 @Entity
 // rwe: Unfortunately this constrain doesn't work if we use non-user Properties which uses <null> as user_fk.
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "user_fk" }) })
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "NAME", "USER_FK" }) })
 public class Property extends Base {
 
     @Column(nullable = false, name = "name")

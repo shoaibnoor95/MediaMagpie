@@ -61,13 +61,14 @@
 			<property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect" />
             <property name="hibernate.ejb.naming_strategy" value="de.wehner.mediamagpie.persistence.DatabaseNamingStrategy" />
 			<property name="hibernate.connection.url" value="jdbc:hsqldb:mem:Test" />
+            <!-- <property name="hibernate.connection.url" value="jdbc:hsqldb:hsql://localhost:9002/xdb2" />-->
 			<property name="hibernate.connection.driver_class" value="org.hsqldb.jdbcDriver" />
 			<property name="hibernate.connection.username" value="sa" />
 			<property name="hibernate.connection.password" value="" />
 			<!-- <property name="hibernate.max_fetch_depth" value="3" /> <property name="hibernate.jdbc.batch_size" 
 				value="1" / > -->
 			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<!-- <property name="hibernate.show_sql" value="true" /> -->
+			<property name="hibernate.show_sql" value="false" />
 			<property name="hibernate.search.default.directory_provider" value="filesystem" />
 			<property name="hibernate.search.default.indexBase" value="target/runtime/lucene_test" />
 		</properties>

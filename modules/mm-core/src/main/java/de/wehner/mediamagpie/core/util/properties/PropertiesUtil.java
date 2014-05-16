@@ -73,7 +73,7 @@ public class PropertiesUtil {
                 try {
                     Method readMethod = propertyDescriptor.getReadMethod();
                     if (readMethod == null) {
-                        LOG.warn("For property '" + propertyDescriptor.getName() + "' a write method (" + propertyDescriptor.getWriteMethod().getName()
+                        LOG.debug("For property '" + propertyDescriptor.getName() + "' a write method (" + propertyDescriptor.getWriteMethod().getName()
                                 + "()) exists but NO read method! Skip this property.");
                         continue;
                     }
