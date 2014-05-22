@@ -22,6 +22,9 @@
     <logger name="org.dozer">
         <level value="info" />
     </logger>
+    <logger name="org.apache.commons.beanutils">
+        <level value="info" />
+    </logger>
 
 	<root>
 		<level value="debug" />

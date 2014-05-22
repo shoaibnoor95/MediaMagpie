@@ -248,6 +248,10 @@ public class SearchController extends AbstractConfigurationSupportController {
         return SearchController.class.getAnnotation(RequestMapping.class).value()[0];
     }
 
+    public static String getSearchUrl() {
+        return getBaseRequestMappingUrl() + URL_MEDIA_SEARCH;
+    }
+
     public static String getAjaxUrlCurrentAlbum() {
         return getBaseRequestMappingUrl() + AJAX_CURRENT_ALBUM;
     }

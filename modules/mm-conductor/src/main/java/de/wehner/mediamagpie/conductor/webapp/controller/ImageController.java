@@ -52,7 +52,7 @@ public class ImageController {
             Media media = _mediaDao.getById(mediaId);
             if (media != null) {
                 try {
-                    readImageIntoOutputStream(media.getFileFromUri().getPath(), outputStream);
+                    readFileIntoOutputStream(media.getFileFromUri().getPath(), outputStream);
                 } catch (FileNotFoundException e) {
                     LOG.warn("Remove Media '" + media.getId() + "' from db.", e);
                     _mediaDao.makeTransient(media);
@@ -63,7 +63,7 @@ public class ImageController {
             ThumbImage thumbImage = _thumbImageDao.getByMediaIdAndLabel(mediaId, label);
             if (thumbImage != null) {
                 try {
-                    readImageIntoOutputStream(thumbImage.getPathToImage(), outputStream);
+                    readFileIntoOutputStream(thumbImage.getPathToImage(), outputStream);
                 } catch (FileNotFoundException e) {
                     LOG.info("Remove ThumbImage '" + thumbImage.getId() + "' from db.");
                     _thumbImageDao.makeTransient(thumbImage);
@@ -84,7 +84,7 @@ public class ImageController {
                         if (thumbImage != null) {
                             ByteArrayOutputStream os = new ByteArrayOutputStream();
                             try {
-                                readImageIntoOutputStream(thumbImage.getPathToImage(), os);
+                                readFileIntoOutputStream(thumbImage.getPathToImage(), os);
                             } catch (IOException e) {
                                 IOUtils.closeQuietly(os);
                                 return null;
@@ -101,7 +101,7 @@ public class ImageController {
                 } else {
                     // image is not available, maybe we have to wait a little bit longer until the resize job is finished
                     try {
-                        readImageIntoOutputStream(SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF, outputStream);
+                        readFileIntoOutputStream(SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF, outputStream);
                     } catch (IOException ex) {
                         throw new RuntimeException("Internal error: Can not find picture in path '"
                                 + SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF + "'.", ex);
@@ -109,7 +109,7 @@ public class ImageController {
                 }
             }
         }
-        LOG.debug("streaming image id: " + mediaId + " with label '" + label + "'...DONE");
+        LOG.trace("streaming image id: " + mediaId + " with label '" + label + "'...DONE");
     }
 
     /**
@@ -119,7 +119,7 @@ public class ImageController {
      * @param outputStream
      * @throws IOException
      */
-    public static void readImageIntoOutputStream(String pathToContent, OutputStream outputStream) throws IOException {
+    public static void readFileIntoOutputStream(String pathToContent, OutputStream outputStream) throws IOException {
         InputStream inputStream = null;
         try {
             LOG.debug("Try reading file '" + pathToContent + "'.");
@@ -127,6 +127,7 @@ public class ImageController {
             IOUtils.copy(inputStream, outputStream);
         } catch (IOException e) {
             LOG.error("Can not read file '{}'.", pathToContent, e);
+            throw e;
         } finally {
             IOUtils.closeQuietly(inputStream);
         }

@@ -72,7 +72,7 @@ public class DownloadController extends AbstractConfigurationSupportController {
             response.addHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
         }
 
-        ImageController.readImageIntoOutputStream(media.getFileFromUri().getPath(), response.getOutputStream());
+        ImageController.readFileIntoOutputStream(media.getFileFromUri().getPath(), response.getOutputStream());
     }
 
     public static String getBaseRequestMappingUrl() {

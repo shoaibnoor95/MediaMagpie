@@ -73,17 +73,7 @@
 <body>
 	<h2>${title}</h2>
     <div class="well" >
-        <c:choose>
-            <c:when test="${mediaDetailCommand.photo}">
-                <img class="center-block" alt="${mediaDetailCommand.name}" src="<%=request.getContextPath()%>${mediaDetailCommand.imageLink}" />
-            </c:when>
-            <c:otherwise>
-                <!-- see: http://www.w3schools.com/TAgs/tag_video.asp  -->
-				<video poster="<%=request.getContextPath()%>${mediaDetailCommand.imageLink}" controls preload="none" src="<%=request.getContextPath()%>${mediaDetailCommand.videoUrl}" >
-				    Your browser does not support the video tag.
-				</video>
-            </c:otherwise>
-        </c:choose>
+    <%@ include file="/WEB-INF/jsp/partitals/media_show.partitial.jsp"%>
 	</div>
 	<form:form commandName="mediaDetailCommand" cssClass="form-horizontal" role="form">
 		<form:hidden path="imageLink" />

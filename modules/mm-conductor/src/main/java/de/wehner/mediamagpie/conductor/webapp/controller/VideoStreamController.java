@@ -43,7 +43,7 @@ public class VideoStreamController {
     private VideoService _videoService;
 
     @RequestMapping({ "/{label}.{extension}*" })
-    public void streamImageContent(@PathVariable final Long mediaId, @PathVariable final String label, @PathVariable final String extension,
+    public void streamVideo(@PathVariable final Long mediaId, @PathVariable final String label, @PathVariable final String extension,
             @RequestParam(required = false, value = "priority") String priority, OutputStream outputStream, HttpServletResponse response)
             throws IOException {
         LOG.trace("streaming video for media {} with label '{}'...", mediaId, label);
@@ -55,7 +55,7 @@ public class VideoStreamController {
         if (convertedVideos != null && !convertedVideos.isEmpty()) {
             try {
                 convertedVideo = convertedVideos.get(0);
-                ImageController.readImageIntoOutputStream(convertedVideo.getPathToFile(), outputStream);
+                ImageController.readFileIntoOutputStream(convertedVideo.getPathToFile(), outputStream);
             } catch (FileNotFoundException e) {
                 LOG.info("Remove {} '{}' from db.", ConvertedVideo.class.getSimpleName(), convertedVideo.getId());
                 _convertedVideoDao.makeTransient(convertedVideo);
@@ -78,7 +78,7 @@ public class VideoStreamController {
                     if (!availableVideos.isEmpty()) {
                         ByteArrayOutputStream os = new ByteArrayOutputStream();
                         try {
-                            ImageController.readImageIntoOutputStream(availableVideos.get(0).getPathToFile(), os);
+                            ImageController.readFileIntoOutputStream(availableVideos.get(0).getPathToFile(), os);
                         } catch (IOException e) {
                             IOUtils.closeQuietly(os);
                             return null;

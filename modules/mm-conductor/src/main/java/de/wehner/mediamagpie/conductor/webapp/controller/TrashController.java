@@ -24,7 +24,7 @@ import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.service.ConfigurationProvider;
 
 @Controller
-@RequestMapping("/trash")
+@RequestMapping("/media/trash")
 public class TrashController extends AbstractConfigurationSupportController {
 
     @SuppressWarnings("unused")
@@ -80,6 +80,14 @@ public class TrashController extends AbstractConfigurationSupportController {
         model.addAttribute("pageSize", getMainConfiguration().getHitsPerPage());
         model.addAttribute("totalHits", hits);
         return VIEW_TRASH;
+    }
+
+    public static String getBaseRequestMappingUrl() {
+        return TrashController.class.getAnnotation(RequestMapping.class).value()[0];
+    }
+
+    public static String getTrashUrl() {
+        return getBaseRequestMappingUrl() + URL_TRASH;
     }
 
 }

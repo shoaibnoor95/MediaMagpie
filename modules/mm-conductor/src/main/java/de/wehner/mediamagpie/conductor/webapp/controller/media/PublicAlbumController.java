@@ -13,6 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mobile.device.Device;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -27,6 +28,7 @@ import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaFeedComma
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaFeedCommand.Item;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaThumbCommand;
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
+import de.wehner.mediamagpie.conductor.webapp.services.VideoService;
 import de.wehner.mediamagpie.conductor.webapp.util.WebAppUtils;
 import de.wehner.mediamagpie.conductor.webapp.util.security.SecurityUtil;
 import de.wehner.mediamagpie.persistence.dao.AlbumDao;
@@ -60,12 +62,14 @@ public class PublicAlbumController extends AbstractConfigurationSupportControlle
 
     private final AlbumDao _albumDao;
     private final ImageService _imageSerivce;
+    private final VideoService _videoService;
 
     @Autowired
-    public PublicAlbumController(ConfigurationProvider configurationProvider, AlbumDao albumDao, ImageService imageService) {
+    public PublicAlbumController(ConfigurationProvider configurationProvider, AlbumDao albumDao, ImageService imageService, VideoService videoService) {
         super(configurationProvider, null);
         _albumDao = albumDao;
         _imageSerivce = imageService;
+        _videoService = videoService;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = URL_VIEW)
@@ -152,7 +156,7 @@ public class PublicAlbumController extends AbstractConfigurationSupportControlle
 
     @RequestMapping(method = RequestMethod.GET, value = URL_DETAIL_PICTURE)
     public String showDetailPicture(Model model, @PathVariable String uuid, @PathVariable Integer pos,
-            @RequestParam(value = "renderer", required = false) String renderer, HttpServletRequest servletRequest) {
+            @RequestParam(value = "renderer", required = false) String renderer, HttpServletRequest servletRequest, Device device) {
         MainConfiguration mainConfiguration = getMainConfiguration();
         Album album = _albumDao.getByUuid(uuid);
         pos = Math.max(0, pos);
@@ -167,6 +171,10 @@ public class PublicAlbumController extends AbstractConfigurationSupportControlle
 
         String imageUrl = _imageSerivce.getOrCreateImageUrl(media, mainConfiguration.getDefaultDetailThumbSize(), false, Priority.HIGH);
         mediaDetailCommand.setImageLink(servletRequest.getContextPath() + imageUrl);
+        if (!VideoService.isPhoto(mediaDetailCommand)) {
+            // add url to video stream
+            mediaDetailCommand.setVideoUrl(_videoService.getOrCreateVideoUrl(media, servletRequest, device, false, Priority.HIGH));
+        }
         // mediaDetailCommand.setOverviewUrl(servletRequest.getHeader("Referer"));
         mediaDetailCommand.setUrlPrev(buildPrevNextUrl(servletRequest, album, pos - 1));
         mediaDetailCommand.setUrlNext(buildPrevNextUrl(servletRequest, album, pos + 1));

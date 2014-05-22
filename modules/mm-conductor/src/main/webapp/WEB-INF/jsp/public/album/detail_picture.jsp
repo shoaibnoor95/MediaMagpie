@@ -11,6 +11,7 @@
 <c:set var="activeSubMenu" value="listAlbums" scope="request" />
 <c:set var="urlSubMenu" value="/subNaviMedia" scope="request" />
 <head>
+    <!-- used for button icons -->
     <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/ui-lightness/jquery-ui-1.8.13.custom.css"/>" />
     <!-- <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/cupertino/jquery-ui-1.10.4.custom.min.css"/>" />-->
     <!-- We need to import the script directly into jsp because it contains some java code -->
@@ -75,7 +76,7 @@
 	</div>
 
 	<h3>Title: ${mediaDetailCommand.name}</h3>
-	<img alt="${mediaDetailCommand.name}" src="${mediaDetailCommand.imageLink}" />
+	<%@ include file="/WEB-INF/jsp/partitals/media_show.partitial.jsp"%>
 	<br />
 
 	<h3>Details:</h3>

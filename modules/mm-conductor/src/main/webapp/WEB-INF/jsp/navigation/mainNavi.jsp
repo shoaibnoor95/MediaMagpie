@@ -1,4 +1,6 @@
 <%@ include file="/WEB-INF/jsp/general/taglibs.jsp"%>
+<%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.media.SearchController"%>
+<%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.TrashController"%>
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.configuration.UserConfiguratonControllerS1"%>
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.configuration.AdministrationController"%>
 <%@ page import="de.wehner.mediamagpie.conductor.webapp.controller.configuration.MailServerController"%>
@@ -9,13 +11,13 @@
 	data-hover="dropdown">Media<b class="caret"></b></a>
 	<ul class="dropdown-menu">
 		<li class="<c:if test="${activeSubMenu == 'mediaSearch'}">active</c:if>"><a
-			href="<%=request.getContextPath()%>/media/search_pictures">Medias</a></li>
+			href="<%=request.getContextPath() + SearchController.getSearchUrl()%>">Medias</a></li>
 		<li class="<c:if test="${activeSubMenu == 'listAlbums'}">active</c:if>"><a href="<%=request.getContextPath()%>/media/album/list">Albums</a>
 		</li>
 		<li class="<c:if test="${activeSubMenu == 'upload'}">active</c:if>"><a href="<%=request.getContextPath()%>/upload/file-upload">Upload</a>
 		</li>
 		<li class="divider"></li>
-		<li class="<c:if test="${activeSubMenu == 'trash'}">active</c:if>"><a href="<%=request.getContextPath()%>/trash/content">Trash</a></li>
+		<li class="<c:if test="${activeSubMenu == 'trash'}">active</c:if>"><a href="<%=request.getContextPath() + TrashController.getTrashUrl()%>">Trash</a></li>
 	</ul></li>
 
 <li class="dropdown<c:if test="${activeMenu == 'config'}"> active</c:if>"><a href="#" class="dropdown-toggle" data-toggle="dropdown"
