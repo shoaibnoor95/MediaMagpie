@@ -104,7 +104,7 @@ public class UploadController extends AbstractConfigurationSupportController {
                 throw new RuntimeException("Internal error: No file name given");
             }
 
-            // upload file, create Media, Thumb, thumbimage link etc..
+            // upload file, create Media, Thumb, thumb images links etc..
             User currentUser = SecurityUtil.getCurrentUser();
             Pair<String, File> uploadFileInfo = _uploadService.createUniqueUserStoreFile(currentUser, multipartFile.getOriginalFilename());
             LOG.info("Try dump upload stream '" + uploadFileInfo.getFirst() + "' into file '" + uploadFileInfo.getSecond().getPath() + "'");

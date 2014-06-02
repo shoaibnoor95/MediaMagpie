@@ -122,7 +122,7 @@ public class ImageController {
     public static void readFileIntoOutputStream(String pathToContent, OutputStream outputStream) throws IOException {
         InputStream inputStream = null;
         try {
-            LOG.debug("Try reading file '" + pathToContent + "'.");
+            LOG.trace("Try reading file '" + pathToContent + "'.");
             inputStream = new FileInputStream(pathToContent);
             IOUtils.copy(inputStream, outputStream);
         } catch (IOException e) {

@@ -242,7 +242,7 @@ public class ImageService {
     }
 
     public boolean addDeleteJobIfNecessary(Media media) {
-        if (!_mediaDeleteJobExecutionDao.hasJob(media)) {
+        if (!_mediaDeleteJobExecutionDao.hasJobForDelete(media)) {
             // finish all image resize jobs before
             for (ImageResizeJobExecution resizeJob : _imageResizeJobExecutionDao.getJobsByMedia(media, Integer.MAX_VALUE, ImageResizeJobExecution.class)) {
                 resizeJob.setJobStatus(JobStatus.STOPPING);

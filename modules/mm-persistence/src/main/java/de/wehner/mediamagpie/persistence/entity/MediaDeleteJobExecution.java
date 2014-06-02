@@ -13,10 +13,10 @@ public class MediaDeleteJobExecution extends JobExecution {
     }
 
     public MediaDeleteJobExecution(Media media) {
-        this(JobStatus.QUEUED, media);
+        this(media, JobStatus.QUEUED);
     }
 
-    public MediaDeleteJobExecution(JobStatus status, Media media) {
+    public MediaDeleteJobExecution(Media media, JobStatus status) {
         setJobStatus(status);
         _mediaId = media.getId();
     }

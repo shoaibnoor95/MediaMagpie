@@ -56,6 +56,7 @@
 		</properties>
 	</persistence-unit>
 
+    <!-- used for JUnit tests -->
 	<persistence-unit name="hsql-memory-withoutDS" transaction-type="RESOURCE_LOCAL">
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect" />
@@ -68,7 +69,7 @@
 			<!-- <property name="hibernate.max_fetch_depth" value="3" /> <property name="hibernate.jdbc.batch_size" 
 				value="1" / > -->
 			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<property name="hibernate.show_sql" value="false" />
+			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.search.default.directory_provider" value="filesystem" />
 			<property name="hibernate.search.default.indexBase" value="target/runtime/lucene_test" />
 		</properties>

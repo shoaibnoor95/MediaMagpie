@@ -120,7 +120,7 @@ public class VideoService {
      * @return
      */
     public File convertVideo(File srcVideo, VideoFormat destFormat, Integer widthOrHeight, File tempMediaPath) {
-        String destName = FilenameUtils.getBaseName(srcVideo.getName());
+        String destName = FilenameUtils.getBaseName(srcVideo.getName()) + "_conv";
 
         if (widthOrHeight != null) {
             destName += "x" + widthOrHeight;
