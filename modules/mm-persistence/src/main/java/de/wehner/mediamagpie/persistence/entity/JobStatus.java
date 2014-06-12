@@ -27,7 +27,7 @@ public enum JobStatus {
     /** Job terminated with an error. (6) */
     TERMINATED_WITH_ERROR(true, false, true, "Error"),
 
-    /** Job completed with warning(s). */
+    /** Job completed with warning(s). (7) */
     COMPLETED_WITH_WARNINGS(true, true, false, "Completed With Warnings"),
 
     /** Job was stopped though was already running on a processing node **/

@@ -14,7 +14,6 @@ import org.springframework.stereotype.Repository;
 import de.wehner.mediamagpie.persistence.entity.JobExecution;
 import de.wehner.mediamagpie.persistence.entity.JobStatus;
 
-
 @Repository
 public class JobExecutionDao extends Dao<JobExecution> {
 
@@ -29,44 +28,45 @@ public class JobExecutionDao extends Dao<JobExecution> {
         super(JobExecution.class, persistenceService);
     }
 
-//    @Deprecated
-//    protected Criteria createMostRecentJobsCriteria(Object source, Collection<JobStatus> status) {
-//        List<Criterion> criteria = new ArrayList<Criterion>();
-//        if (source != null) {
-//            criteria.add(Restrictions.eq("_source", source));
-//        }
-//        if (status != null) {
-//            criteria.add(Restrictions.in("_status", status));
-//        }
-//        Criteria crit = createCriteria();
-//        for (Criterion c : criteria) {
-//            crit.add(c);
-//        }
-//        return crit;
-//    }
+    // @Deprecated
+    // protected Criteria createMostRecentJobsCriteria(Object source, Collection<JobStatus> status) {
+    // List<Criterion> criteria = new ArrayList<Criterion>();
+    // if (source != null) {
+    // criteria.add(Restrictions.eq("_source", source));
+    // }
+    // if (status != null) {
+    // criteria.add(Restrictions.in("_status", status));
+    // }
+    // Criteria crit = createCriteria();
+    // for (Criterion c : criteria) {
+    // crit.add(c);
+    // }
+    // return crit;
+    // }
 
-//    @Deprecated
-//    @SuppressWarnings("unchecked")
-//    public List<JobExecution> getJobs(JobOrder order, Object source, Collection<JobStatus> status, int start, int maxNumber) {
-//        Criteria criteria = createMostRecentJobsCriteria(source, status);
-//
-//        switch (order) {
-//        case OLDEST_FIRST:
-//            criteria.addOrder(Order.asc("id"));
-//            break;
-//        case MOST_RECENT_FIRST:
-//            criteria.addOrder(Order.desc("id"));
-//            break;
-//        case BY_PRIORITY_OLDEST_FIRST:
-//            criteria.addOrder(Order.desc("_priority"));
-//            criteria.addOrder(Order.asc("id"));
-//            break;
-//        }
-//        return criteria.setFirstResult(start).setMaxResults(maxNumber).list();
-//    }
+    // @Deprecated
+    // @SuppressWarnings("unchecked")
+    // public List<JobExecution> getJobs(JobOrder order, Object source, Collection<JobStatus> status, int start, int maxNumber) {
+    // Criteria criteria = createMostRecentJobsCriteria(source, status);
+    //
+    // switch (order) {
+    // case OLDEST_FIRST:
+    // criteria.addOrder(Order.asc("id"));
+    // break;
+    // case MOST_RECENT_FIRST:
+    // criteria.addOrder(Order.desc("id"));
+    // break;
+    // case BY_PRIORITY_OLDEST_FIRST:
+    // criteria.addOrder(Order.desc("_priority"));
+    // criteria.addOrder(Order.asc("id"));
+    // break;
+    // }
+    // return criteria.setFirstResult(start).setMaxResults(maxNumber).list();
+    // }
 
     // @SuppressWarnings("unchecked")
-    // public <T extends Job<?>> List<T> getJobsForHousekeeping(Class<T> jobClass, int maxNumber, Date purgeDate, JobStatus... status) {
+    // public <T extends JobExecution> List<T> getJobsForHousekeeping(Class<T> jobClass, int maxNumber, Date purgeDate, JobStatus... status)
+    // {
     // String queryString =
     // "select j from Job j where j._endTime <= :purgeDate and j._status in (:status) and j not in (select k._triggeringJob from Job k)";
     // Query query = session.createQuery(queryString);
@@ -76,13 +76,13 @@ public class JobExecutionDao extends Dao<JobExecution> {
     // }
 
     @SuppressWarnings("unchecked")
-    public List<? extends JobExecution> findJobs(JobOrder order, Date searchEndTime, JobStatus... status) {
+    public List<JobExecution> findJobs(JobOrder order, Date stopTime, JobStatus... status) {
         final Criteria crit = createCriteria();
 
-        crit.add(Restrictions.in("_status", status));
-        crit.add(Restrictions.ge("_endTime", searchEndTime));
+        crit.add(Restrictions.in("_jobStatus", status));
+        crit.add(Restrictions.ge("_stopTime", stopTime));
 
-        Order ordering = ((order == JobOrder.MOST_RECENT_FIRST) ? Order.desc("id") : Order.asc("id"));
+        Order ordering = ((order == JobOrder.MOST_RECENT_FIRST) ? Order.desc("_id") : Order.asc("_id"));
         return crit.addOrder(ordering).list();
     }
 
