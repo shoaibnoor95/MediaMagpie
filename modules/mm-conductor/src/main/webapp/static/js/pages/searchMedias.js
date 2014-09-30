@@ -38,7 +38,7 @@ function submitMediaToS3(mediaId) {
 	      },
 	      success: function(data) {
 	          ;// $('#albumArea').html(data);
-	      }  
+	      }   
 		});
 }
 var $gallery;

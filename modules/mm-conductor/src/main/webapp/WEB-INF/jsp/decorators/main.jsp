@@ -6,7 +6,6 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<meta http-equiv="expires" content="0" />
 	
 	<c:if test="${not empty title}">
 		<title>${title}</title>
@@ -17,7 +16,7 @@
 	<!-- Custom styles for this template -->
 	<link rel="stylesheet" type="text/css" href="/static/bootstrap/css/sticky-footer-navbar.css"></link>
 	
-	<script src="/static/js/jquery-1.11.0.min.js"></script>
+	<script src="/static/js/jquery-1.11.0.min.js" type="text/javascript"></script>
 	<decorator:head />
 </head>
 <body>
@@ -71,7 +70,7 @@
 	<!-- Bootstrap core JavaScript
     ================================================== -->
 	<!-- Placed at the end of the document so the pages load faster -->
-	<script src="/static/bootstrap/js/bootstrap.min.js"></script>
-	<script src="/static/js/bootstrap.hoverdropdown.js"></script>
+	<script src="/static/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+	<script src="/static/js/bootstrap.hoverdropdown.js" type="text/javascript"></script>
 </body>
 </html>

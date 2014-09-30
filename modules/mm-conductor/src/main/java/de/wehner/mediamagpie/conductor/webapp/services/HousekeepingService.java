@@ -11,9 +11,11 @@ import javax.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import de.wehner.mediamagpie.core.util.TimeUtil;
 import de.wehner.mediamagpie.persistence.dao.JobExecutionDao;
 import de.wehner.mediamagpie.persistence.dao.PersistenceService;
 import de.wehner.mediamagpie.persistence.dao.TransactionHandler;
@@ -30,13 +32,16 @@ public class HousekeepingService {
     private final JobExecutionDao _jobExecutionDao;
     private final Semaphore _housekeepingRunning;
     private final TimeProvider _timeProvider;
+    private final long _finishedJobsLifeTime;
 
     @Autowired
-    public HousekeepingService(PersistenceService persistenceService, TransactionHandler transactionHandler, TimeProvider timeProvider) {
+    public HousekeepingService(PersistenceService persistenceService, TransactionHandler transactionHandler, TimeProvider timeProvider,
+            @Qualifier("finishedJobsLifeTime") String durationStr) {
         _transactionHandler = transactionHandler;
         _housekeepingRunning = new Semaphore(1);
         _jobExecutionDao = new JobExecutionDao(persistenceService);
         _timeProvider = timeProvider;
+        _finishedJobsLifeTime = TimeUtil.parseDurationToMilliseconds(durationStr);
     }
 
     @PreDestroy
@@ -51,8 +56,7 @@ public class HousekeepingService {
         if (_housekeepingRunning.tryAcquire()) {
             try {
                 removeJobsWithStatusJobs(null, JobStatus.ABORTED, JobStatus.COMPLETED_WITH_WARNINGS, JobStatus.TERMINATED_WITH_ERROR);
-                // TODO rwe: add a parser to add duration which comes from configuration file
-                removeJobsWithStatusJobs(new Date(_timeProvider.getTime() - (12L * 60 * 60 * 1000)), JobStatus.COMPLETED, JobStatus.COMPLETED_WITH_WARNINGS);
+                removeJobsWithStatusJobs(new Date(_timeProvider.getTime() - _finishedJobsLifeTime), JobStatus.COMPLETED, JobStatus.COMPLETED_WITH_WARNINGS);
             } catch (Exception e) {
                 LOG.error("internal error", e);
             } finally {

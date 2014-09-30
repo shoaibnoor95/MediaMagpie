@@ -163,7 +163,7 @@ public class TimeUtil {
      *            The duration this object should represent.
      * @return the duration in milliseconds.
      */
-    public static long convertToMilliseconds(String durationStr) {
+    public static long parseDurationToMilliseconds(String durationStr) {
         if (durationStr == null) {
             throw new IllegalArgumentException("Argument 'durationStr' should not be null.");
         }
@@ -175,7 +175,7 @@ public class TimeUtil {
 
         if (durationStr.length() == 1) {
             // we need at least one digit for value and one character for time unit
-            throw new IllegalArgumentException("Argument durationStr '' contains only one character.");
+            throw new IllegalArgumentException("Argument durationStr '" + durationStr + "' contains only one character.");
         }
 
         TimeUnit timeUnit;
