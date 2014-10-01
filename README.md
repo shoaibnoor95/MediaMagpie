@@ -56,4 +56,3 @@ Create a 'Java Application' Run Target with properties:
  - VM Arguments: -Xmx350m -Ddeploy.mode=local 
 Run or Debug your configuration and open you browser with url: http://localhost:8088 
 
-

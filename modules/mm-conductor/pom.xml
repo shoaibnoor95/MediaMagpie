@@ -84,7 +84,6 @@
 		<dependency>
 			<groupId>ma.glasnost.orika</groupId>
 			<artifactId>orika-core</artifactId>
-			<version>1.4.3</version>
 		</dependency>
 		
 		<!-- slf4j -->
@@ -131,14 +130,6 @@
             <groupId>org.springframework.mobile</groupId>
             <artifactId>spring-mobile-device</artifactId>
         </dependency>
-<!-- 		<dependency>
-		    <groupId>net.sf.dozer</groupId>
-		    <artifactId>dozer-spring</artifactId>
-		</dependency>-->
-		<dependency>
-			<groupId>net.sf.dozer</groupId>
-			<artifactId>dozer</artifactId>
-		</dependency>
 
 		<!-- spring web service stuff -->
 		<!-- <dependency> <groupId>org.springframework.ws</groupId> <artifactId>spring-ws</artifactId> <classifier>all</classifier> 

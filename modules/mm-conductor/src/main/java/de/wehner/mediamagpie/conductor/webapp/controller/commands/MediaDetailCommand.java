@@ -4,14 +4,15 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 
+import ma.glasnost.orika.MapperFactory;
+import ma.glasnost.orika.impl.DefaultMapperFactory;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.dozer.DozerBeanMapper;
-import org.dozer.Mapper;
 import org.springframework.util.CollectionUtils;
 
 import de.wehner.mediamagpie.conductor.metadata.CameraMetaData;
@@ -29,14 +30,15 @@ public class MediaDetailCommand extends Media {
     private Album _album;
     private CameraMetaData _cameraMetaDataObj;
     private final ObjectMapper _mapper = new ObjectMapper();
+    private final static MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
 
     public MediaDetailCommand() {
         super();
     }
 
     public static MediaDetailCommand createFromMedia(Media media) {
-        Mapper mapper = new DozerBeanMapper();
-        MediaDetailCommand mediaDetailCommand = mapper.map(media, MediaDetailCommand.class);
+
+        MediaDetailCommand mediaDetailCommand = mapperFactory.getMapperFacade().map(media, MediaDetailCommand.class);
         if (!CollectionUtils.isEmpty(mediaDetailCommand.getTags())) {
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < mediaDetailCommand.getTags().size(); i++) {
