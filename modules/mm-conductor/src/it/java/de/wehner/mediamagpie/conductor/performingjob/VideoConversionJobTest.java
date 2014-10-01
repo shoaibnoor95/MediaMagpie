@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 
 import de.wehner.mediamagpie.common.testsupport.ItEnvironment.CleanFolderInstruction;
 import de.wehner.mediamagpie.common.testsupport.LocalItEnvironment;
+import de.wehner.mediamagpie.conductor.media.FfmpegWrapper;
 import de.wehner.mediamagpie.conductor.webapp.services.MediaSyncService;
 import de.wehner.mediamagpie.conductor.webapp.services.VideoService;
 import de.wehner.mediamagpie.conductor.webapp.services.VideoService.VideoFormat;
@@ -52,6 +53,10 @@ public class VideoConversionJobTest {
 
     @Before
     public void setUp() throws Exception {
+        
+        // checkout if ffmpeg is available otherwise quit test
+        org.junit.Assume.assumeTrue(FfmpegWrapper.getFfmpegBinaryPath(true) != null);
+        
         MockitoAnnotations.initMocks(this);
 
         _testEnvironment.cleanWorkingDir();

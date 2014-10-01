@@ -54,7 +54,9 @@ public class ImageResizeJobIntegrationTest {
 
     @Test
     public void testCreateThumbImageFromVideo_ImageJAI() throws Exception {
+        // checkout if ffmpeg is available otherwise quit test
         org.junit.Assume.assumeTrue(FfmpegWrapper.getFfmpegBinaryPath(true) != null);
+        
         URI doImageResize = prepareImageResizeJob(Orientation.UNKNOWN, TEST_VIDEO_QUICKTIME, true, new ImageProcessorImageIOFactory()).call();
 
         // verify existence of resized image

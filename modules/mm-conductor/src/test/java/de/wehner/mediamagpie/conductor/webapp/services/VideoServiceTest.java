@@ -21,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mobile.device.Device;
 
+import de.wehner.mediamagpie.conductor.media.FfmpegWrapper;
 import de.wehner.mediamagpie.conductor.webapp.services.VideoService.VideoFormat;
 import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
 import de.wehner.mediamagpie.persistence.dao.ConvertedVideoDao;
@@ -62,6 +63,9 @@ public class VideoServiceTest {
 
     @Test
     public void test_createImageFromVideo() throws IOException {
+
+        // checkout if ffmpeg is available otherwise quit test
+        org.junit.Assume.assumeTrue(FfmpegWrapper.getFfmpegBinaryPath(true) != null);
 
         _service.createImageFromVideo(TEST_VIDEO_QUICKTIME, _conversionPath);
 
