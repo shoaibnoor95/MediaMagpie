@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.wehner.mediamagpie.core.util.ProcessWrapper;
 import de.wehner.mediamagpie.core.util.ProcessWrapper.StdXXXLineListener;
@@ -12,10 +14,24 @@ import de.wehner.mediamagpie.core.util.SearchPathUtil;
 //@Service
 public class ImageProcessorImageMagickFactory implements ImageProcessorFactory {
 
+    private final static Logger LOG = LoggerFactory.getLogger(ImageProcessorImageMagickFactory.class);
+
     private final String converterBinary;
 
     public ImageProcessorImageMagickFactory() {
-        converterBinary = SearchPathUtil.findPath("/opt/local/bin/convert");
+        converterBinary = getConvertPath(false);
+    }
+
+    public static String getConvertPath(boolean testPath) {
+        try {
+            return SearchPathUtil.findPath("/opt/local/bin/convert");
+        } catch (Exception e) {
+            LOG.warn("Can not find path to external 'convert' program.");
+            if (!testPath) {
+                throw e;
+            }
+            return null;
+        }
     }
 
     @Override

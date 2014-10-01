@@ -38,11 +38,12 @@ public class FfmpegWrapper {
         }
     }
 
-    public static String getFfmpegBinaryPath(boolean test) {
+    public static String getFfmpegBinaryPath(boolean testPath) {
         try {
             return SearchPathUtil.findPath("/opt/local/bin/ffmpeg", "/usr/bin/ffmpeg");
         } catch (Exception e) {
-            if (!test) {
+            LOG.warn("Can not find path to external 'ffmpeg' program.");
+            if (!testPath) {
                 throw e;
             }
             return null;

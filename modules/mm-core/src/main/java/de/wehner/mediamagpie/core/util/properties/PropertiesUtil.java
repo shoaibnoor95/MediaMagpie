@@ -56,8 +56,11 @@ public class PropertiesUtil {
             }
         }
         if (!missingProperties.isEmpty()) {
-            throw new IllegalArgumentException("properties " + properties + " does not contain following properties " + missingProperties
-                    + " in order instantiate " + clazz.getName() + " properly");
+            String msg = String
+                    .format("Missing configuration properties %s needed to setup class '%s' attributes. All available properties are: %s.",
+                            missingProperties.toString(), clazz.getSimpleName(), properties.toString());
+            LOG.warn(msg);
+            throw new IllegalArgumentException();
         }
     }
 
