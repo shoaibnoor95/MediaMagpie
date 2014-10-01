@@ -14,6 +14,7 @@ import org.junit.Test;
 import de.wehner.mediamagpie.common.testsupport.ItEnvironment;
 import de.wehner.mediamagpie.common.testsupport.ItEnvironment.CleanFolderInstruction;
 import de.wehner.mediamagpie.common.testsupport.LocalItEnvironment;
+import de.wehner.mediamagpie.conductor.media.FfmpegWrapper;
 import de.wehner.mediamagpie.conductor.performingjob.ImageResizeJob;
 import de.wehner.mediamagpie.conductor.performingjob.JobCallable;
 import de.wehner.mediamagpie.conductor.performingjob.JobExecutor;
@@ -53,6 +54,7 @@ public class ImageResizeJobIntegrationTest {
 
     @Test
     public void testCreateThumbImageFromVideo_ImageJAI() throws Exception {
+        org.junit.Assume.assumeTrue(FfmpegWrapper.getFfmpegBinaryPath(true) != null);
         URI doImageResize = prepareImageResizeJob(Orientation.UNKNOWN, TEST_VIDEO_QUICKTIME, true, new ImageProcessorImageIOFactory()).call();
 
         // verify existence of resized image
