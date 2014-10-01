@@ -63,6 +63,7 @@ public class VideoServiceTest {
 
     @Test
     public void test_createImageFromVideo() throws IOException {
+
         // checkout if ffmpeg is available otherwise quit test
         org.junit.Assume.assumeTrue(FfmpegWrapper.getFfmpegBinaryPath(true) != null);
 
