@@ -169,7 +169,7 @@ Add some settings in /etc/my.cnf
   
 ### Run puppet inside vagrant box:
   $ vagrant ssh
-  $ sudo puppet apply /vagrant/puppet/manifests/base.pp  
+  $ puppet apply /vagrant/mm-distribution/src/main/puppet/manifests/base.pp
   
 ### run your application
   $ sudo /vagrant/mm-distribution/target/mm-distribution-0.1-SNAPSHOT-distribution/mm-distribution-0.1-SNAPSHOT/bin/mediamagpie.sh start  
