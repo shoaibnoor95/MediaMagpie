@@ -42,8 +42,8 @@ fi
 ## Extract the local zip file into temporary folder
 #
 mkdir $DIR_LOCAL_DIST
-#rm -rf $DIR_LOCAL_DIST/*
-#unzip $DIST_ZIP -d $DIR_LOCAL_DIST
+rm -rf $DIR_LOCAL_DIST/*
+unzip $DIST_ZIP -d $DIR_LOCAL_DIST
 
 #
 ## sync distribution --> node
