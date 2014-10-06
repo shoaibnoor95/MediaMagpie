@@ -1,15 +1,17 @@
 #!/bin/bash
 #
-# call eg:  ssh puppet-test -t "sudo -u root /home/ec2-user/update_node.sh" 
+# copy this file locally (or use /tmp/mm-dist/...) and execute as sudo 
 # 
-# Installs puppet version 3.4.1 on a target machine like ec2 AMI or vagrant machine
+# Installs puppet version 3.4.3 on a target machine like ec2 AMI or vagrant machine
+
 
 if ! yum repolist | grep -q puppetlabs;
 then
     echo "..enabling puppet repository.."
     # https://tickets.puppetlabs.com/browse/PUP-2132
     echo -e "[main]\nenabled = 0" > /etc/yum/pluginconf.d/priorities.conf
-    rpm --quiet -ivh http://yum.puppetlabs.com/el/6/products/x86_64/puppetlabs-release-6-10.noarch.rpm
+    #rpm --quiet -ivh http://yum.puppetlabs.com/el/6/products/x86_64/puppetlabs-release-6-10.noarch.rpm
+    rpm --quiet -ivh http://yum.puppetlabs.com/el/7/products/x86_64/puppetlabs-release-7-11.noarch.rpm
 fi
 echo "..updating.."
 yum -y --quiet clean all

@@ -75,5 +75,5 @@ echo ""
 
 set -x
 
-$CMD_SSH -l ec2-user -t $1 "sudo unzip /tmp/mm-dist/puppet-node.zip -d /"
+$CMD_SSH -l ec2-user -t $1 "sudo unzip -f /tmp/mm-dist/puppet-node.zip -d /"
 
