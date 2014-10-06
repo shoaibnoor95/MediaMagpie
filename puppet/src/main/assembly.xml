@@ -1,0 +1,37 @@
+<assembly>
+	<!-- This assembly is used to package the puppet src -->
+	<id>puppet</id>
+	<formats>
+		<format>dir</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>src/main/puppet</directory>
+			<outputDirectory>/etc/puppet</outputDirectory>
+     		<includes>
+				<include>/**</include>
+			</includes>
+<!-- 			<excludes>
+				<exclude>inc/application/configs/e2.ini</exclude>
+				<exclude>inc/application/configs/application.ini</exclude>
+				<exclude>htdocs/js/internal/src/**</exclude>
+				<exclude>htdocs/js/vendor/src/**</exclude>
+			</excludes>
+		</fileSet>
+		<fileSet>
+			<directory>empty</directory>
+			<outputDirectory>/e2/share/apache/chroot/dev</outputDirectory>
+			<excludes>
+				<exclude>*</exclude>
+			</excludes>
+		</fileSet>
+		<fileSet>
+			<directory>empty</directory>
+			<outputDirectory>/e2/share/apache/chroot/tmp</outputDirectory>
+			<excludes>
+				<exclude>*</exclude>
+			</excludes>-->
+		</fileSet>
+	</fileSets>
+</assembly>

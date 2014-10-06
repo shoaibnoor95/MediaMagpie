@@ -3,10 +3,10 @@
 	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
 	<id>distribution</id>
 	<formats>
-		<format>dir</format>
-		<!-- <format>zip</format> -->
+		<!-- <format>dir</format>-->
+		<format>zip</format>
 	</formats>
-	<includeBaseDirectory>true</includeBaseDirectory>
+	<includeBaseDirectory>false</includeBaseDirectory>
 	<dependencySets>
 		<dependencySet>
 			<outputDirectory>/lib</outputDirectory>
@@ -33,6 +33,9 @@
 			<includes>
 				<include>*.sh</include>
 			</includes>
+			<excludes>
+                <exclude>sync-to-ec2.sh</exclude>
+			</excludes>
 			<fileMode>755</fileMode>
 			<lineEnding>unix</lineEnding>
 			<outputDirectory>bin</outputDirectory>

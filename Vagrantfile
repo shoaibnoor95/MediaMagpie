@@ -20,6 +20,8 @@ Vagrant.configure("2") do |config|
     config.vm.box = "CentOS 6.3 x86_64 mediamagpie"
     config.vm.box_url = "file://package.box"
     
+    config.vm.synced_folder "./puppet/src/main/puppet", "/etc/puppet"
+    
     config.vm.define :mm do |mm|
         mm.vm.hostname = 'mediamagpie-01.local.localdomain'
         

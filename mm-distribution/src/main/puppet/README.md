@@ -24,7 +24,7 @@ So, trying to do 'yum install ffmpeg ffmpeg-devel' will give you.
 
 No package ffmpeg available
 
-To sollve this, we can add to the rpm repo by following below instructions.
+To solve this, we can add to the rpm repo by following below instructions.
 
 Go to etc/yum.repos.d
 
