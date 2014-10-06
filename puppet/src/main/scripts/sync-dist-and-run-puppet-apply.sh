@@ -77,5 +77,11 @@ echo ""
 set -x
 DIR_REMOTE_PUPPET="/tmp/mm-puppet"
 $CMD_SSH -l $USER $1 "sudo rm -rf $DIR_REMOTE_PUPPET; sudo mkdir $DIR_REMOTE_PUPPET"
-$CMD_SSH -l $USER -t $1 "sudo tar xfz /tmp/mm-dist/puppet-*.tar.gz -C /tmp/mm-puppet"
+$CMD_SSH -l $USER $1 "sudo tar xfz /tmp/mm-dist/puppet-*.tar.gz -C /tmp/mm-puppet"
 
+#
+## run puppet now
+#
+echo "** run puppet now..."
+$CMD_SSH -l $USER $1 "puppet apply --noop /tmp/mm-puppet/etc/puppet/manifests/site.pp --modulepath=/tmp/mm-puppet/etc/puppet/modules/:/etc/puppet/modules"
+echo ""
