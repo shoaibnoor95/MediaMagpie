@@ -83,5 +83,5 @@ $CMD_SSH -l $USER $1 "sudo tar xfz /tmp/mm-dist/puppet-*.tar.gz -C /tmp/mm-puppe
 ## run puppet now
 #
 echo "** run puppet now..."
-$CMD_SSH -l $USER $1 "puppet apply --noop /tmp/mm-puppet/etc/puppet/manifests/site.pp --modulepath=/tmp/mm-puppet/etc/puppet/modules/:/etc/puppet/modules"
+$CMD_SSH -l $USER $1 "sudo puppet apply --noop /tmp/mm-puppet/etc/puppet/manifests/site.pp --modulepath=/tmp/mm-puppet/etc/puppet/modules/:/etc/puppet/modules"
 echo ""
