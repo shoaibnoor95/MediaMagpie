@@ -16,11 +16,12 @@
 PRIVATE_KEY=~/projects/wehner/aws_rwe1.pem
 VERSION="0.3"
 
+USER="ubuntu"
 DIR_SCRIPTS=$(cd `dirname $0` && pwd)
 DIR_BASE_PROJECT=$(cd $DIR_SCRIPTS/../../../.. && pwd)
 DIST_ZIP="$DIR_BASE_PROJECT/mm-distribution/target/mm-distribution-$VERSION-SNAPSHOT-distribution.zip"
 DIR_LOCAL_DIST="$DIR_BASE_PROJECT/mm-distribution/target/mm-dist"
-PUPPET_ZIP="$DIR_BASE_PROJECT/puppet/target/mm-puppet-$VERSION-SNAPSHOT-puppet.zip"
+PUPPET_ZIP="$DIR_BASE_PROJECT/puppet/target/mm-puppet-$VERSION-SNAPSHOT-puppet.tar.gz"
 DIR_LOCAL_PUPPET="$DIR_BASE_PROJECT/puppet/target/puppet-dist"
 RSYC_OPT=(-mvrcC --delete -e "ssh -l root -i $PRIVATE_KEY")
 CMD_SCP="scp -i $PRIVATE_KEY"
@@ -63,17 +64,17 @@ fi
 ## sync distribution --> node
 #
 echo "** sync mediamagpie distribution..."
-rsync "${RSYC_OPT[@]}" $DIR_LOCAL_DIST/ ec2-user@$1:/tmp/mm-dist
+rsync "${RSYC_OPT[@]}" $DIR_LOCAL_DIST/ $USER@$1:/tmp/mm-dist
 echo ""
 
 #
 ## copy puppet --> node
 #
 echo "** copy puppet distribution..."
-$CMD_SCP $PUPPET_ZIP ec2-user@$1:/tmp/mm-dist/puppet-node.zip
+$CMD_SCP $PUPPET_ZIP $USER@$1:/tmp/mm-dist/puppet-node.tar.gz
 echo ""
 
 set -x
 
-$CMD_SSH -l ec2-user -t $1 "sudo unzip -f /tmp/mm-dist/puppet-node.zip -d /"
+$CMD_SSH -l $USER -t $1 "sudo tar xfz /tmp/mm-dist/puppet-*.tar.gz -C /"
 
