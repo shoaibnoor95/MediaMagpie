@@ -20,7 +20,7 @@ Vagrant.configure("2") do |config|
     config.vm.box = "CentOS 6.3 x86_64 mediamagpie"
     config.vm.box_url = "file://package.box"
     
-    config.vm.synced_folder "./puppet/src/main/puppet", "/etc/puppet"
+    config.vm.synced_folder "./puppet/src/main/puppet", "/tmp/mm-puppet/etc/puppet"
     config.vm.synced_folder "./mm-distribution/target/mm-dist", "/tmp/mm-dist"
     
     config.vm.define :mm do |mm|

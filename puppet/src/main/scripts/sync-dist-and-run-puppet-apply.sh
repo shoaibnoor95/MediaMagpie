@@ -3,8 +3,8 @@
 # This script syncs the mediamagpie distribution to the ec2-instance
 # result is:
 #            /tmp/mm-dist  <-- contains the distribution part of the application
-#            /etc/puppet/modules    <-- contains the puppet part
-#                       /manifests
+#            /tmp/mm-puppet/modules    <-- contains the puppet part
+#                          /manifests
 #
 # Call: sync-dist-and-puppet-2node.sh hostname
 #
@@ -75,6 +75,7 @@ $CMD_SCP $PUPPET_ZIP $USER@$1:/tmp/mm-dist/puppet-node.tar.gz
 echo ""
 
 set -x
-
-$CMD_SSH -l $USER -t $1 "sudo tar xfz /tmp/mm-dist/puppet-*.tar.gz -C /"
+DIR_REMOTE_PUPPET="/tmp/mm-puppet"
+$CMD_SSH -l $USER $1 "sudo rm -rf $DIR_REMOTE_PUPPET; sudo mkdir $DIR_REMOTE_PUPPET"
+$CMD_SSH -l $USER -t $1 "sudo tar xfz /tmp/mm-dist/puppet-*.tar.gz -C /tmp/mm-puppet"
 
