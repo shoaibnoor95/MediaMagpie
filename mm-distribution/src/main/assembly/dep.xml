@@ -18,6 +18,9 @@
 		<!-- src/main/webapp -->
 		<fileSet>
 			<directory>../modules/mm-conductor/src/main/webapp</directory>
+            <excludes>
+                <exclude>**/static/MVI*</exclude>
+            </excludes>
 			<outputDirectory>src/main/webapp</outputDirectory>
 		</fileSet>
 		<!-- conf -->

@@ -12,14 +12,7 @@
 
 	<artifactId>mm-puppet</artifactId>
 	<name>Puppet Artifact for MediaMagpie</name>
-
-	<dependencies>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>mm-conductor</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-	</dependencies>
+    <packaging>pom</packaging>
 
 	<build>
 		<plugins>

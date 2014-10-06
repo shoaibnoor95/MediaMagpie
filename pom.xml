@@ -790,7 +790,8 @@
 		<profile>
 			<id>release</id>
 			<modules>
-				<module>mm-distribution</module>
+				<module>puppet</module>
+                <module>mm-distribution</module>
 			</modules>
 			<build>
 				<plugins>

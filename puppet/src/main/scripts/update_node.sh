@@ -1,5 +1,7 @@
 #!/bin/bash
 #
+# call eg:  ssh puppet-test -t "sudo -u root /home/ec2-user/update_node.sh" 
+# 
 # Installs puppet version 3.4.1 on a target machine like ec2 AMI or vagrant machine
 
 if ! yum repolist | grep -q puppetlabs;
