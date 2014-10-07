@@ -1,0 +1,4 @@
+#playground
+# test: hiera -d -c /tmp/mm-puppet/etc/puppet/hiera.yaml sshservicename ::osfamily=Debian
+
+sshservicename: ssh

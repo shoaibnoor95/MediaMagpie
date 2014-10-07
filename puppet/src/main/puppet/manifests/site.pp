@@ -4,15 +4,16 @@
 class sayHello {
   exec { 'blah':
     path    => '/bin:/usr/bin',
-    command => 'echo starting puppet setup of vagrant box...'
+    command => 'echo starting puppet setup of vagrant $::fqdn box...'
   }
 }
 
 node default {
-  
+
+  notify { "Running on machine: $::fqdn and osfamily: $::osfamily": }
+
   require sayHello
-  
-  
+
   include webapp
 }
 

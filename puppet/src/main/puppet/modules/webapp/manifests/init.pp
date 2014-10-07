@@ -3,6 +3,6 @@
 
 class webapp {
   include "webapp::install"
-  #include "webapp::config"
+  include "webapp::config"
   #include "webapp::service"
 }

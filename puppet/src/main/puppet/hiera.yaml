@@ -1,0 +1,9 @@
+:hierarchy:
+    - "%{fqdn}"
+    - "%{::osfamily}"
+    - common
+:backends:
+    - yaml
+:yaml:
+    :datadir: '/tmp/mm-puppet/etc/puppet/hieradata/'
+

@@ -170,7 +170,7 @@ Add some settings in /etc/my.cnf
 ### Run puppet inside vagrant box:
   $ vagrant ssh
   $ # old: puppet apply /vagrant/mm-distribution/src/main/puppet/manifests/base.pp
-  $ # new: puppet apply --noop /tmp/mm-puppet/etc/puppet/manifests/site.pp --modulepath=/tmp/mm-puppet/etc/puppet/modules/:/etc/puppet/modules
+  $ # new: puppet apply --noop --modulepath=/tmp/mm-puppet/etc/puppet/modules/:/etc/puppet/modules --hiera_config=/tmp/mm-puppet/etc/puppet/hiera.yaml /tmp/mm-puppet/etc/puppet/manifests/site.pp
   
 ### New: update vagrant to new puppet3 (do only once when starting vagrant box the first time!)
   $ vagrand ssh

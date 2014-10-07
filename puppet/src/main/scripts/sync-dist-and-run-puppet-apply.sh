@@ -32,7 +32,7 @@ CMD_SSH="ssh -i $PRIVATE_KEY"
 #
 showHelp () 
 {
-    echo "use: $0 <ec2-instance> [full | with-config]"
+    echo "use: $0 <ec2-instance>"
 }
 
 if [ -z "$1" ]; then
@@ -83,7 +83,7 @@ $CMD_SSH -l $USER $1 "sudo tar xfz /tmp/mm-dist/puppet-*.tar.gz -C /tmp/mm-puppe
 ## run puppet now
 #
 echo "** run puppet now..."
-$CMD_SSH -l $USER $1 "sudo puppet apply --noop /tmp/mm-puppet/etc/puppet/manifests/site.pp --modulepath=/tmp/mm-puppet/etc/puppet/modules/:/etc/puppet/modules"
+$CMD_SSH -l $USER $1 "sudo puppet apply /tmp/mm-puppet/etc/puppet/manifests/site.pp --modulepath=/tmp/mm-puppet/etc/puppet/modules/:/etc/puppet/modules"
 EXIT=$?
 echo "puppet finished with $EXIT"
 if [ $EXIT == 4 ] || [ $EXIT == 6 ]

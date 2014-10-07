@@ -1,0 +1,23 @@
+# DB-Selection
+# define one of hsql-memory, hsql-file, mysql
+system.property.persistent.unit=<%= scope.function_hiera(["persistent.unit"]) %> 
+#system.property.server.address=127.0.0.1:8088
+
+######################
+# Jetty specific stuff
+######################
+webapp.port.http=80
+webapp.port.https=443
+webapp.context.path=/
+
+######################
+# EMail service settings
+######################
+mail.enabled=true
+mail.hostName=localhost
+mail.port=25
+mail.userName=rwe
+mail.password=<password>
+
+mainconfiguration.tempMediaPath=/mnt/mediamagpie/temp/thumbs
+mainconfiguration.baseUploadPath=/mnt/mediamagpie/useruploads

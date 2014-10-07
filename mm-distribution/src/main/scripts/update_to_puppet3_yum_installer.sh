@@ -1,9 +1,20 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # copy this file locally (or use /tmp/mm-dist/...) and execute as sudo 
 # 
 # Installs puppet version 3.4.3 on a target machine like ec2 AMI or vagrant machine
 
+set -e
+
+if [ "$EUID" -ne "0" ] ; then
+        echo "Script must be run as root." >&2
+        exit 1
+fi
+
+if which puppet > /dev/null ; then
+        echo "Puppet is already installed"
+        exit 0
+fi
 
 if ! yum repolist | grep -q puppetlabs;
 then
@@ -33,3 +44,6 @@ yum install -y puppet-3.4.3-1.el6
 #fi
 
 puppet --version
+
+# install puppetlabs-apt
+puppet module install puppetlabs-apt

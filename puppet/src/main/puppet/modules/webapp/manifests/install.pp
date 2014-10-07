@@ -21,4 +21,21 @@ class webapp::install {
 
   package { 'openjdk-7-jre': ensure => 'latest', }
 
+  package { "imagemagick": ensure => 'latest' }
+
+  # package { "ffmpeg": ensure => 'latest' }
+  # requires before: sudo puppet module install puppetlabs-apt
+  class { 'apt':
+    always_apt_update => true,
+  }
+
+  apt::ppa { 'ppa:jon-severinsson/ffmpeg': }
+
+  #  package { [others]: }
+
+  package { 'ffmpeg':
+    ensure  => 'installed',
+    require => Apt::Ppa['ppa:jon-severinsson/ffmpeg']
+  }
+
 }
