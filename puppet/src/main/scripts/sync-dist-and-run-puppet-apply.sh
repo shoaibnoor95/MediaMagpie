@@ -84,4 +84,12 @@ $CMD_SSH -l $USER $1 "sudo tar xfz /tmp/mm-dist/puppet-*.tar.gz -C /tmp/mm-puppe
 #
 echo "** run puppet now..."
 $CMD_SSH -l $USER $1 "sudo puppet apply --noop /tmp/mm-puppet/etc/puppet/manifests/site.pp --modulepath=/tmp/mm-puppet/etc/puppet/modules/:/etc/puppet/modules"
-echo ""
+EXIT=$?
+echo "puppet finished with $EXIT"
+if [ $EXIT == 4 ] || [ $EXIT == 6 ]
+then 
+  echo "> an error occured when applying new puppet configuration"
+  exit -1
+ else
+  exit 0
+ fi
