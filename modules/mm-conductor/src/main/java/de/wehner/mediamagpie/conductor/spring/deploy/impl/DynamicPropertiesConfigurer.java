@@ -40,7 +40,6 @@ public class DynamicPropertiesConfigurer extends PropertyPlaceholderConfigurer {
      * </ul>
      */
     public static void setupDeployModeAndSpringProfile() {
-        final String SPRINGS_PROFILE_ACTIVE = "spring.profiles.active";
         Properties systemProperties = System.getProperties();
         // resolve 'deploy.mode' property
         String deployMode = systemProperties.getProperty(DEPLOY_MODE);
@@ -50,24 +49,6 @@ public class DynamicPropertiesConfigurer extends PropertyPlaceholderConfigurer {
             LOG.warn("Set System.Property '" + DEPLOY_MODE + "=" + deployMode + "'  to impact loading propper configuration properties.");
             System.setProperty(DEPLOY_MODE, deployMode);
         }
-        // resolve the spring profile property
-        String springProfile = systemProperties.getProperty(SPRINGS_PROFILE_ACTIVE);
-        if (springProfile == null) {
-            springProfile = getDefaultProfileByStrategie();
-            LOG.info("Set System.Property '" + SPRINGS_PROFILE_ACTIVE + "=" + springProfile + "' to impact the spring context.");
-            System.setProperty(SPRINGS_PROFILE_ACTIVE, springProfile);
-        }
-    }
-
-    private static String getDefaultProfileByStrategie() {
-        // To detect Cloud Foundry, see also class CloudEnvironment (cloudfoundry-runtime.jar)
-        // See also: http://aestasit.com/taking-vmware-cloud-foundry-on-a-test-drive
-        String isCloudFoundry = System.getenv().get("VCAP_APPLICATION");
-        if (isCloudFoundry != null) {
-            LOG.info("System seems to be running within cloud foundry environment. Environment: VCAP_SERVICES='" + isCloudFoundry + "'");
-            return "cloud";
-        }
-        return System.getProperty(DEPLOY_MODE);
     }
 
     public DynamicPropertiesConfigurer(String... propertyPaths) throws IOException {

@@ -23,14 +23,17 @@ Vagrant.configure("2") do |config|
         mm.vm.hostname = 'mediamagpie-01.local.localdomain'
         
         mm.vm.network :forwarded_port, guest: 80, host: 8081, auto_correct: true
+        mm.vm.network :forwarded_port, guest: 8080, host: 8082, auto_correct: true
         #mm.vm.network :forwarded_port, guest: 5000, host: 8000, auto_correct: true
         mm.vm.network :private_network, ip: "192.168.254.102"
+
+        mm.vm.provision "shell", inline: "puppet module install puppetlabs-apt"
 
         mm.vm.provision :puppet do |puppet|
             puppet.manifests_path = "puppet/src/main/puppet/manifests"
             puppet.manifest_file = "site.pp"
             puppet.module_path = "puppet/src/main/puppet/modules"
-            puppet.options = "--verbose --debug –hiera_config /tmp/mm-puppet/etc/puppet/hiera.yaml"
+            puppet.options = "--verbose --debug --hiera_config=/tmp/mm-puppet/etc/puppet/hiera.yaml"
         end
     end
 end

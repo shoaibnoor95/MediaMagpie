@@ -11,6 +11,7 @@ class webapp::install {
     groups => 'root'
   }
 
+# TODO rwe: exclude the puppet-node.tar.gz from /opt/mediamagpie
   file { 'application files':
     path    => '/opt/mediamapgie',
     source  => '/tmp/mm-dist',

@@ -1,12 +1,12 @@
 # DB-Selection
 # define one of hsql-memory, hsql-file, mysql
-system.property.persistent.unit=<%= scope.function_hiera(["persistent.unit"]) %> 
+system.property.persistent.unit=<%= scope.function_hiera(["persistent.unit"]) %>
 #system.property.server.address=127.0.0.1:8088
 
 ######################
 # Jetty specific stuff
 ######################
-webapp.port.http=80
+webapp.port.http=8080
 webapp.port.https=443
 webapp.context.path=/
 

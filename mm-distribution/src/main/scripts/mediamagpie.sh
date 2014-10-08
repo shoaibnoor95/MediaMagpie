@@ -10,7 +10,7 @@
 
 ## set distribution specific settings
 #MGR_USER=magpie
-MGR_DEPLOY_MODE=live
+MGR_DEPLOY_MODE=node
 #MGR_DEPLOY_MODE=local
 #JAVA_HOME=
 #ADDITIONAL_PARAMETERS="-Dpersistent.unit=mysql"
