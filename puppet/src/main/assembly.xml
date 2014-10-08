@@ -7,7 +7,7 @@
 	<includeBaseDirectory>false</includeBaseDirectory>
 	<fileSets>
 		<fileSet>
-			<directory>src/main/puppet</directory>
+			<directory>src/puppet</directory>
 			<outputDirectory>/etc/puppet</outputDirectory>
      		<includes>
 				<include>/**</include>
