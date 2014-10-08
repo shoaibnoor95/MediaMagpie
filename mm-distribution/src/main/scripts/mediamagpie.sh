@@ -9,9 +9,8 @@
 ###################################################################################
 
 ## set distribution specific settings
-#MGR_USER=magpie
+#MGR_USER=mediamagpie
 MGR_DEPLOY_MODE=node
-#MGR_DEPLOY_MODE=local
 #JAVA_HOME=
 #ADDITIONAL_PARAMETERS="-Dpersistent.unit=mysql"
 #ADDITIONAL_PARAMETERS="-Dwebapp.port.http=8080 -Dwebapp.port.https=9191 -Dwebapp.context.path=/mediamagpie"
@@ -152,7 +151,7 @@ case "$ACTION" in
               echo $PID > $MGR_PID
           fi
 
-          echo "STARTED Status-Manager demon `date`" 
+          echo "STARTED MediaMagpie Web-Application `date`" 
         ;;
 
   stop)

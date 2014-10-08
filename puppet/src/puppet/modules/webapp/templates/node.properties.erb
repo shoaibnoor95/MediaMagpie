@@ -1,3 +1,5 @@
+# Beware: All properties which starts with 'system.property.' will be added into Systemproperties AND will be spring beans!
+#
 # DB-Selection
 # define one of hsql-memory, hsql-file, mysql
 system.property.persistent.unit=<%= scope.function_hiera(["persistent.unit"]) %>
@@ -6,18 +8,19 @@ system.property.persistent.unit=<%= scope.function_hiera(["persistent.unit"]) %>
 ######################
 # Jetty specific stuff
 ######################
-webapp.port.http=8080
-webapp.port.https=443
+webapp.port.http=<%= scope.function_hiera(["port.http"]) %>
+webapp.port.https=<%= scope.function_hiera(["port.https"]) %>
 webapp.context.path=/
 
 ######################
 # EMail service settings
 ######################
 mail.enabled=true
-mail.hostName=localhost
-mail.port=25
-mail.userName=rwe
-mail.password=<password>
+mail.hostName=<%= scope.function_hiera(["mail.hostName"]) %>
+mail.port=<%= scope.function_hiera(["mail.port"], "25") %>
+mail.userName=<%= scope.function_hiera(["mail.userName"], []) %>
+mail.password=<%= scope.function_hiera(["mail.password"], "") %>
 
-mainconfiguration.tempMediaPath=/mnt/mediamagpie/temp/thumbs
-mainconfiguration.baseUploadPath=/mnt/mediamagpie/useruploads
+#mainconfiguration.tempMediaPath=/mnt/mediamagpie/temp/thumbs
+#mainconfiguration.baseUploadPath=/mnt/mediamagpie/useruploads
+#mainconfiguration.convertedVideoPath=/data/mediamagpie/temp/videos

@@ -1,4 +1,8 @@
-#playground
-sshservicename: no-ssh
 
 persistent.unit: hsql-file
+
+port.http: 8088
+port.https: 8443
+
+mail.userName: <user name mail>
+mail.password: <passwd mail>

@@ -1,5 +1,6 @@
 :hierarchy:
-    - "%{fqdn}"
+    - "node/%{::fqdn}"
+#    - %{env}/%{tmp_module_name}
     - "%{::osfamily}"
     - common
 :backends:
