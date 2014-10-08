@@ -50,9 +50,9 @@ set -x
 #
 ## Extract the local distribution zip file into temporary folder
 #
-#mkdir $DIR_LOCAL_DIST
-#rm -rf $DIR_LOCAL_DIST/*
-#unzip $DIST_ZIP -d $DIR_LOCAL_DIST
+mkdir $DIR_LOCAL_DIST
+rm -rf $DIR_LOCAL_DIST/*
+unzip $DIST_ZIP -d $DIR_LOCAL_DIST
 
 #
 ## Extract the local puppet zip file into temporary folder
