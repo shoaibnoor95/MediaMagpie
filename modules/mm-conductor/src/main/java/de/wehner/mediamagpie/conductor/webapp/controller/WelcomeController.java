@@ -63,6 +63,7 @@ public class WelcomeController {
 
         String redirectUrl = nextRequiredSetupLink(request);
         if (!StringUtils.isEmpty(redirectUrl)) {
+            LOG.warn("Found setup task and offer new redirect url {}.", redirectUrl);
             return "redirect:" + redirectUrl;
         }
 
