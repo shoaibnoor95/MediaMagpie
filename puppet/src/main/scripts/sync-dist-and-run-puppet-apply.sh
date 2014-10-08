@@ -45,6 +45,8 @@ if [ "${1}" == "-h" -o "${1}" == "--help" ]; then
     exit 0
 fi
 
+set -x
+
 #
 ## Extract the local distribution zip file into temporary folder
 #
@@ -74,7 +76,6 @@ echo "** copy puppet distribution..."
 $CMD_SCP $PUPPET_ZIP $USER@$1:/tmp/mm-dist/puppet-node.tar.gz
 echo ""
 
-set -x
 DIR_REMOTE_PUPPET="/tmp/mm-puppet"
 $CMD_SSH -l $USER $1 "sudo rm -rf $DIR_REMOTE_PUPPET; sudo mkdir $DIR_REMOTE_PUPPET"
 $CMD_SSH -l $USER $1 "sudo tar xfz /tmp/mm-dist/puppet-*.tar.gz -C /tmp/mm-puppet"
