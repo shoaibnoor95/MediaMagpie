@@ -20,7 +20,9 @@ class webapp::install {
     require => User['mediamagpie']
   }
 
-  package { 'openjdk-7-jre': ensure => 'latest', }
+  package { 'openjdk-7-jre': ensure => 'purged', }
+
+  package { 'openjdk-7-jdk': ensure => 'latest', }
 
   package { "imagemagick": ensure => 'latest' }
 

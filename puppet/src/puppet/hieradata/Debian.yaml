@@ -1,6 +1,6 @@
 
 # test: hiera -d -c /tmp/mm-puppet/etc/puppet/hiera.yaml persistent.unit ::osfamily=Debian
-persistent.unit: hsql-mem
+persistent.unit: hsql-memory
 port.http: 8088
 port.https: 8443
 
