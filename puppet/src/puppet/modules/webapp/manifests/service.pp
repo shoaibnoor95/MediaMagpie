@@ -2,9 +2,11 @@
 # vi: set ft=ruby :
 
 class abs::service {
-	service { "httpd":
+  
+	service { "apache2":
 		enable => true,
 		ensure => running,
-		require => [Class["abs::config"], Class["php-dev::config"]]
+		restart => true,
+		require => [Exec["webapp::proxy_http"]]
 	}
 }

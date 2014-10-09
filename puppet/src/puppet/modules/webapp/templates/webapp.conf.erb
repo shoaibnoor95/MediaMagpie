@@ -1,0 +1,10 @@
+<VirtualHost *:80>
+    ServerName <%= @public_ip %>  
+    ProxyRequests Off
+    <Proxy *>
+        Order deny,allow
+        Allow from all
+    </Proxy>
+    ProxyPreserveHost on
+    ProxyPass / http://localhost:8080/
+</VirtualHost>

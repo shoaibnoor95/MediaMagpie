@@ -9,8 +9,12 @@ class sayHello {
 }
 
 node default {
-
-  notify { "Running on machine: $::fqdn and osfamily: $::osfamily and public-ip: $::ec2_public_ipv4": }
+  
+  # do some variable definitions
+  $public_ip = $::ec2_public_ipv4
+  
+  
+  notify { "Running on machine: $::fqdn and osfamily: $::osfamily and public-ip: $public_ip": }
 
   require sayHello
 
