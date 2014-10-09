@@ -10,7 +10,7 @@ class sayHello {
 
 node default {
 
-  notify { "Running on machine: $::fqdn and osfamily: $::osfamily": }
+  notify { "Running on machine: $::fqdn and osfamily: $::osfamily and public-ip: $::ec2_public_ipv4": }
 
   require sayHello
 

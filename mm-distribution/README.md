@@ -177,6 +177,9 @@ Add some settings in /etc/my.cnf
   $ # centos os: sudo /bin/bash /vagrant/mm-distribution/src/main/scripts/update_to_puppet3_yum_installer.sh
   $ # ubuntu: sudo apt-get install puppet 
   
+### update ubuntu's packages
+  $ sudo apt-get update && sudo apt-get upgrade
+  
 ### run your application
   $ sudo /vagrant/mm-distribution/target/mm-distribution-0.1-SNAPSHOT-distribution/mm-distribution-0.1-SNAPSHOT/bin/mediamagpie.sh start  
   

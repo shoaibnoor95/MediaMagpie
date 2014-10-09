@@ -11,7 +11,6 @@ class webapp::install {
     groups => 'root'
   }
 
-  # TODO rwe: exclude the puppet-node.tar.gz from /opt/mediamagpie
   file { 'application files':
     path    => '/opt/mediamapgie',
     source  => '/tmp/mm-dist',
@@ -37,11 +36,15 @@ class webapp::install {
 
   apt::ppa { 'ppa:jon-severinsson/ffmpeg': }
 
-  #  package { [others]: }
-
   package { 'ffmpeg':
     ensure  => 'installed',
     require => Apt::Ppa['ppa:jon-severinsson/ffmpeg']
   }
+  
+  # TODO rwe:
+  # - install apache https://gist.github.com/jsuwo/9038610
+  # - activate port forwarding
+  # - install mysql
+  # - prepare fresh mysql db
 
 }
