@@ -5,7 +5,6 @@ class webapp::config (
   
   $webapp_conf_dir = "/opt/mediamapgie/conf",
   $webapp_name = 'mediamagpie',
-  $public_ip = $::public_ip,
 ) {
   file { "${::webapp_conf_dir}/node.properties":
     content => template('webapp/node.properties.erb'),
@@ -21,6 +20,7 @@ class webapp::config (
     require => Package['apache2'],
   }
 
+  notify { "updating conf $webapp_name with public-ip: $public_ip": }
   file { "/etc/apache2/sites-available/$webapp_name.conf":
     content => template('webapp/webapp.conf.erb'),
     # notify => Service["mediamagpie"],
@@ -28,7 +28,6 @@ class webapp::config (
     require => Exec['proxy_http']
   }
 
-#  notify { "a2ensite $webapp_name": }
   exec { "a2ensite $webapp_name":
     path    => '/sbin:/bin:/usr/sbin:/usr/bin',
     command => 'a2ensite $webapp_name',

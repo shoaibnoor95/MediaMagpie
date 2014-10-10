@@ -4,5 +4,9 @@
 class webapp {
   include "webapp::install"
   include "webapp::config"
-  #include "webapp::service"
+  include "webapp::service"
+
+  Class["webapp::install"] ->
+  Class["webapp::config"] ->
+  Class["webapp::service"]
 }
