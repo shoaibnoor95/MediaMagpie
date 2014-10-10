@@ -4,9 +4,8 @@
 class webapp::service {
   
 	service { "apache2":
-		enable => true,
 		ensure => running,
+		enable => true,
 		restart => true,
-#		require => [Exec["webapp::proxy_http"]]
 	}
 }

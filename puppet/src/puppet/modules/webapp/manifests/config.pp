@@ -30,7 +30,7 @@ class webapp::config (
 
   exec { "a2ensite $webapp_name":
     path    => '/sbin:/bin:/usr/sbin:/usr/bin',
-    command => 'a2ensite $webapp_name',
+    command => "a2ensite $webapp_name",
     require => File["/etc/apache2/sites-available/$webapp_name.conf"],
   }
 }
