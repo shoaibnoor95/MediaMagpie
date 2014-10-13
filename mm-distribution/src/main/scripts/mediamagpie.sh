@@ -7,11 +7,11 @@
 #
 # 12.08.2011: Ralf Wehner
 ###################################################################################
-
+set -x
 ## set distribution specific settings
 MGR_USER=mediamagpie
 MGR_DEPLOY_MODE=node
-#JAVA_HOME=
+JAVA_HOME= /usr/lib/jvm/java-7-openjdk-amd64
 #ADDITIONAL_PARAMETERS="-Dpersistent.unit=mysql"
 #ADDITIONAL_PARAMETERS="-Dwebapp.port.http=8080 -Dwebapp.port.https=9191 -Dwebapp.context.path=/mediamagpie"
 VM_ARGS="-Xmx200m -XX:MaxPermSize=120m -XX:+CMSClassUnloadingEnabled $ADDITIONAL_PARAMETERS"

@@ -31,7 +31,7 @@ class webapp::config () {
     require => File["/etc/apache2/sites-available/$webapp_name.conf"],
   }
 
-  file { ["/data", "/data/mediamagpie"]:
+  file { ["/data", "/data/mediamagpie", "/data/mediamagpie/temp", "/data/mediamagpie/temp/thumbs", "/data/mediamagpie/temp/videos", "/data/mediamagpie/useruploads"]:
     ensure => "directory",
     owner  => "mediamagpie",
     #    group  => "wheel",
