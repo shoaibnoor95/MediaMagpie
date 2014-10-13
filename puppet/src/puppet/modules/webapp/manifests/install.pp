@@ -18,13 +18,13 @@ class webapp::install {
     source  => '/tmp/mm-dist',
     owner   => 'mediamagpie',
     recurse => true,
-    require => User['mediamagpie']
+    require => [User['mediamagpie'], Package['openjdk-7-jdk']]
   }
 
   package { 'openjdk-7-jre': ensure => 'purged', }
 
   package { 'openjdk-7-jdk':
-    ensure  => 'latest',
+    ensure  => 'installed',
     require => Package['openjdk-7-jre']
   }
 
