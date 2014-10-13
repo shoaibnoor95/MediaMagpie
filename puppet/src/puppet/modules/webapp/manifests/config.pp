@@ -2,7 +2,6 @@
 # vi: set ft=ruby :
 
 class webapp::config () {
-  
   file { "${webapp_conf_dir}/node.properties":
     content => template('webapp/node.properties.erb'),
     # notify => Service["mediamagpie"],
@@ -31,4 +30,13 @@ class webapp::config () {
     command => "a2ensite $webapp_name",
     require => File["/etc/apache2/sites-available/$webapp_name.conf"],
   }
+
+  file { ["/data", "/data/mediamagpie"]:
+    ensure => "directory",
+    owner  => "mediamagpie",
+    #    group  => "wheel",
+    mode   => 755,
+    require => User['mediamagpie'],
+  }
+
 }
