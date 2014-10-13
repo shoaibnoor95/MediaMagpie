@@ -9,7 +9,7 @@
 ###################################################################################
 
 ## set distribution specific settings
-#MGR_USER=mediamagpie
+MGR_USER=mediamagpie
 MGR_DEPLOY_MODE=node
 #JAVA_HOME=
 #ADDITIONAL_PARAMETERS="-Dpersistent.unit=mysql"
@@ -138,7 +138,8 @@ case "$ACTION" in
           then
               touch $MGR_PID
               chown $MGR_USER $MGR_PID
-              su - $MGR_USER -c "
+              # do not use 'su - <user>' because we have to stay in current directory
+              su $MGR_USER -c "
                 $RUN_CMD 1> stdout.log 2> stderr.log &
                 PID=\$!
                 disown \$PID

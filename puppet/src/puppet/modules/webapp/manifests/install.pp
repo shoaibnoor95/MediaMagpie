@@ -7,8 +7,10 @@ class webapp::install {
   #    	require => Class["php-dev::install"]
   #    }
   user { 'mediamagpie':
-    name   => 'mediamagpie',
-    groups => 'root'
+    name       => 'mediamagpie',
+    ensure     => 'present',
+    shell      => '/bin/bash',
+    managehome => true
   }
 
   file { 'application files':
@@ -40,15 +42,12 @@ class webapp::install {
     ensure  => 'installed',
     require => Apt::Ppa['ppa:jon-severinsson/ffmpeg']
   }
-  
-  package { 'apache2':
-    ensure  => 'latest',
-  }
+
+  package { 'apache2': ensure => 'latest', }
 
   # TODO rwe:
   # - install apache https://gist.github.com/jsuwo/9038610
   # - activate port forwarding
   # - install mysql
   # - prepare fresh mysql db
-
 }
