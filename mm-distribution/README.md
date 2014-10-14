@@ -163,6 +163,10 @@ Add some settings in /etc/my.cnf
   --> Create a shell script ?
   
 ## Vagrant
+### prepare the puppet/target/mm-dist dir (outside the puppet box)
+  $ mvn clean package -Prelease
+  $ bash puppet/src/main/scripts/sync-dist-and-run-puppet-apply.sh 54.171.82.164
+
 ### startup vagrant box
   $ cd mediamapgie
   $ vagrant up
