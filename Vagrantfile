@@ -22,13 +22,19 @@ Vagrant.configure("2") do |config|
     config.vm.define :mm do |mm|
         mm.vm.hostname = 'mediamagpie-01.local.localdomain'
         
-        mm.vm.network :forwarded_port, guest: 80, host: 8081, auto_correct: true
-        mm.vm.network :forwarded_port, guest: 443, host: 8082, auto_correct: true
-        mm.vm.network :forwarded_port, guest: 8080, host: 8090, auto_correct: true
-        mm.vm.network :forwarded_port, guest: 8443, host: 8091, auto_correct: true
-        #mm.vm.network :forwarded_port, guest: 5000, host: 8000, auto_correct: true
         mm.vm.network :private_network, ip: "192.168.254.102"
+        # http
+        mm.vm.network :forwarded_port, guest: 80, host: 8081, auto_correct: true
+        # https
+        mm.vm.network :forwarded_port, guest: 443, host: 8082, auto_correct: true
+        # http jetty
+        mm.vm.network :forwarded_port, guest: 8080, host: 8090, auto_correct: true
+        # https jetty
+        mm.vm.network :forwarded_port, guest: 8443, host: 8091, auto_correct: true
+        # remote debugging
+        mm.vm.network :forwarded_port, guest: 5000, host: 8000, auto_correct: true
 
+        # provisioning
         mm.vm.provision "shell", inline: "puppet module install puppetlabs-apt"
 
         mm.vm.provision :puppet do |puppet|

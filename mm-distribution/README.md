@@ -104,7 +104,7 @@ I've found a very good installation guide here: http://livingtao.blogspot.de/201
   $ ln -s /usr/java/default/jre /usr/lib/jvm/jre
   $ ln -s /usr/share/java /usr/lib/jvm-exports/jre
 
-### Install openjdk 7:
+### Install openjdk 7 (centos):
 ```bash
   $ sudo yum update
   $ yum --enablerepo="*" list available | grep openjdk
@@ -180,8 +180,11 @@ Add some settings in /etc/my.cnf
 ### update ubuntu's packages
   $ sudo apt-get update && sudo apt-get upgrade
   
+### list installed packages
+  $ dpkg --get-selections | grep -v deinstall
+  
 ### run your application
-  $ sudo /vagrant/mm-distribution/target/mm-distribution-0.1-SNAPSHOT-distribution/mm-distribution-0.1-SNAPSHOT/bin/mediamagpie.sh start  
+  $ sudo /opt/mediamagpie/bin/mediamagpie.sh start  
   
 ### export your provisioned box
 Before we create the new image from current box, we have to delte /etc/udev/rules.d/70-persistent-net.rules. (see: https://github.com/mitchellh/vagrant/issues/997)

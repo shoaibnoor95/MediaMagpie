@@ -26,8 +26,18 @@
 		<remember-me key="MediaMagpie-remember-me" token-validity-seconds="172800" user-service-ref="userSecurityService" />
 		<access-denied-handler ref="accessDeniedHandler" />
 		<port-mappings>
-			<port-mapping http="${webapp.port.http}" https="${webapp.port.https}" />
-		</port-mappings>
+ 			<!-- <port-mapping http="${webapp.port.http}" https="${webapp.port.https}" />-->
+	        <!-- Default ports -->
+	        <port-mapping http="80" https="443"/>
+            <!-- local (developing) port mapping -->
+            <port-mapping http="8088" https="8443"/>
+	        <!-- My Vagrant port mapping -->
+	        <port-mapping http="8090" https="8091"/>
+	        <!-- Tomcat default ports -->
+	        <port-mapping http="8080" https="8443"/>
+	        <!-- Jetty custom ports -->
+	        <port-mapping http="7777" https="7443"/>
+        </port-mappings>
 		<!-- session-fixation-protext=none will result in a JSESSIONID cookie which has NO secure flag, so it can be used booth in https and http. -->
 		<session-management session-fixation-protection="none"/>
 	</http>

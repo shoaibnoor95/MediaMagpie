@@ -45,7 +45,7 @@
 	</logger>
 
 	<root>
-		<level value="debug" />
+		<level value="info" />
 		<appender-ref ref="STDOUT" />
 		<!-- <appender-ref ref="FILE" />-->
 	</root>
