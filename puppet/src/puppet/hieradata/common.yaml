@@ -1,5 +1,6 @@
 
 persistent.unit: hsql-file
+server.address: localhost:8088
 
 port.http: 8088
 port.https: 8443

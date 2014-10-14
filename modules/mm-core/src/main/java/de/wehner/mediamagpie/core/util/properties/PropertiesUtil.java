@@ -27,7 +27,7 @@ public class PropertiesUtil {
         Method[] methods = annotatedClass.getMethods();
         List<String> properties = new ArrayList<String>();
         for (Method method : methods) {
-            if (method.getName().startsWith("set")) {
+            if (method.getName().startsWith("set") && !method.isAnnotationPresent(PropertyTransient.class)) {
                 String fieldName = Character.toLowerCase(method.getName().charAt(3)) + method.getName().substring(4);
                 properties.add(prefix + "." + fieldName);
             }
@@ -56,9 +56,8 @@ public class PropertiesUtil {
             }
         }
         if (!missingProperties.isEmpty()) {
-            String msg = String
-                    .format("Missing configuration properties %s needed to setup class '%s' attributes. All available properties are: %s.",
-                            missingProperties.toString(), clazz.getSimpleName(), properties.toString());
+            String msg = String.format("Missing configuration properties %s needed to setup class '%s' attributes. All available properties are: %s.",
+                    missingProperties.toString(), clazz.getSimpleName(), properties.toString());
             LOG.warn(msg);
             throw new IllegalArgumentException();
         }

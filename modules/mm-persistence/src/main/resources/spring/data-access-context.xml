@@ -35,7 +35,7 @@
 	</bean>
 
 	<!-- Definition of EntityManagerFactoryBeans which consumes one of the datasource beans -->
-	<beans profile="test,default">
+	<beans profile="test,local,default">
 		<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 			<property name="persistenceUnitName" value="${persistent.unit}" />
 			<property name="dataSource" ref="DS-${persistent.unit}" />

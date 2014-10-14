@@ -7,7 +7,7 @@
 #
 # 12.08.2011: Ralf Wehner
 ###################################################################################
-set -x
+
 ## set distribution specific settings
 MGR_USER=mediamagpie
 MGR_DEPLOY_MODE=node
@@ -29,7 +29,7 @@ done
 
 JAVA=`which java`
 if [[ $JAVA_HOME != "" ]]; then
-        JAVA=$JAVA_HOME/bin/java
+    JAVA=$JAVA_HOME/bin/java
 fi
 if test -z "$JAVA"; then
     echo "No java found in the PATH. Please set JAVA_HOME."

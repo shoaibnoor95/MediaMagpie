@@ -56,7 +56,7 @@
 		</properties>
 	</persistence-unit>
 
-    <!-- used for JUnit tests -->
+    <!-- used for JUnit tests only -->
 	<persistence-unit name="hsql-memory-withoutDS" transaction-type="RESOURCE_LOCAL">
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect" />

@@ -1,6 +1,9 @@
 
 # test: hiera -d -c /tmp/mm-puppet/etc/puppet/hiera.yaml persistent.unit ::osfamily=Debian
-persistent.unit: hsql-memory
+persistent.unit: hsql-file
+server.address: www.mediamagpie.org
+
+
 port.http: 8080
 port.https: 8443
 

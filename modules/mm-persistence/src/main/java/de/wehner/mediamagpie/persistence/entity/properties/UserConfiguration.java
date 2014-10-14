@@ -11,6 +11,7 @@ import org.springframework.beans.propertyeditors.StringArrayPropertyEditor;
 
 import de.wehner.mediamagpie.core.util.properties.PropertiesBacked;
 import de.wehner.mediamagpie.core.util.properties.PropertyDef;
+import de.wehner.mediamagpie.core.util.properties.PropertyTransient;
 
 @PropertiesBacked(prefix = "user.configuration", initFromProperties = false)
 public class UserConfiguration implements UserPropertyBackedConfiguration {
@@ -36,6 +37,7 @@ public class UserConfiguration implements UserPropertyBackedConfiguration {
         _rootMediaPathes = rootMediaPathes;
     }
 
+    @PropertyTransient
     public void setSingleRootMediaPath(String path) {
         _rootMediaPathes = new String[] { path };
     }
