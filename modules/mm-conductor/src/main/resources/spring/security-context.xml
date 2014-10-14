@@ -31,8 +31,10 @@
 	        <port-mapping http="80" https="443"/>
             <!-- local (developing) port mapping -->
             <port-mapping http="8088" https="8443"/>
-	        <!-- My Vagrant port mapping -->
+	        <!-- My Vagrant port mapping (direct to tomcat: 8090 -> 8080 and 8091 -> 8443) -->
 	        <port-mapping http="8090" https="8091"/>
+            <!-- My Vagrant port mapping (to apache2 and than to tomcat: 8081 -> 80 -> 8080 and 8082 ->8443 -> 8443) -->
+            <port-mapping http="8081" https="8082"/>
 	        <!-- Tomcat default ports -->
 	        <port-mapping http="8080" https="8443"/>
 	        <!-- Jetty custom ports -->
