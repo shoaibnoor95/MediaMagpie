@@ -10,26 +10,27 @@ class webapp::config () {
   }
 
   # TODO rwe: checkout, does we need a2enmod ssl too?
-  exec { 'proxy_http':
-    path    => '/sbin:/bin:/usr/sbin:/usr/bin',
-    command => 'a2enmod proxy_http',
-    require => Package['apache2'],
-  }
+#  exec { 'proxy_http':
+#    path    => '/sbin:/bin:/usr/sbin:/usr/bin',
+#    command => 'a2enmod proxy_http',
+#    require => Package['apache2'],
+#  }
 
-  notify { "updating conf $webapp_name with public-ip: $public_ip": }
+  ## TODO rwe: remove apache2
+  #notify { "updating conf $webapp_name with public-ip: $public_ip": }
 
-  file { "/etc/apache2/sites-available/$webapp_name.conf":
-    content => template('webapp/webapp.conf.erb'),
-    # notify => Service["mediamagpie"],
-    ensure  => file,
-    require => Exec['proxy_http']
-  }
-
-  exec { "a2ensite $webapp_name":
-    path    => '/sbin:/bin:/usr/sbin:/usr/bin',
-    command => "a2ensite $webapp_name",
-    require => File["/etc/apache2/sites-available/$webapp_name.conf"],
-  }
+#  file { "/etc/apache2/sites-available/$webapp_name.conf":
+#    content => template('webapp/webapp.conf.erb'),
+#    # notify => Service["mediamagpie"],
+#    ensure  => file,
+#    require => Exec['proxy_http']
+#  }
+#
+#  exec { "a2ensite $webapp_name":
+#    path    => '/sbin:/bin:/usr/sbin:/usr/bin',
+#    command => "a2ensite $webapp_name",
+#    require => File["/etc/apache2/sites-available/$webapp_name.conf"],
+#  }
 
   file { ["/data", "/data/mediamagpie", "/data/mediamagpie/temp", "/data/mediamagpie/temp/thumbs", "/data/mediamagpie/temp/videos", "/data/mediamagpie/useruploads"]:
     ensure => "directory",

@@ -4,8 +4,8 @@ persistent.unit: hsql-file
 server.address: www.mediamagpie.org
 
 
-port.http: 8080
-port.https: 8443
+port.http: 80
+port.https: 443
 
 mail.hostName: email-smtp.eu-west-1.amazonaws.com
 mail.port: 465

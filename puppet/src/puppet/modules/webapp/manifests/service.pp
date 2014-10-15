@@ -3,9 +3,9 @@
 
 class webapp::service {
   
-	service { "apache2":
-		ensure => running,
-		enable => true,
-		restart => true,
-	}
+#	service { "apache2":
+#		ensure => running,
+#		enable => true,
+#		restart => true,
+#	}
 }

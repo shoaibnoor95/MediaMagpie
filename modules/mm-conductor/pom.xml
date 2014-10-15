@@ -13,15 +13,15 @@
 	<name>MediaMagpie Web</name>
 	<packaging>${packaging.type}</packaging>
 
-    <repositories>
-        <!-- only needed to get javax.media.jai:com.springsource.javax.media.jai.core:jar -->
-        <repository>
-            <id>com.springsource.repository.bundles.external</id>
-            <name>SpringSource Enterprise 
+	<repositories>
+		<!-- only needed to get javax.media.jai:com.springsource.javax.media.jai.core:jar -->
+		<repository>
+			<id>com.springsource.repository.bundles.external</id>
+			<name>SpringSource Enterprise 
             Bundle Repository - External Bundle Releases</name>
-            <url>http://repository.springsource.com/maven/bundles/external</url>
-        </repository>
-    </repositories>
+			<url>http://repository.springsource.com/maven/bundles/external</url>
+		</repository>
+	</repositories>
 
 	<profiles>
 		<profile>
@@ -78,6 +78,10 @@
 			<version>1.4</version>
 		</dependency>
 		<dependency>
+			<groupId>commons-daemon</groupId>
+			<artifactId>commons-daemon</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
@@ -85,7 +89,7 @@
 			<groupId>ma.glasnost.orika</groupId>
 			<artifactId>orika-core</artifactId>
 		</dependency>
-		
+
 		<!-- slf4j -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
@@ -126,10 +130,10 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-taglibs</artifactId>
 		</dependency>
-        <dependency>
-            <groupId>org.springframework.mobile</groupId>
-            <artifactId>spring-mobile-device</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>org.springframework.mobile</groupId>
+			<artifactId>spring-mobile-device</artifactId>
+		</dependency>
 
 		<!-- spring web service stuff -->
 		<!-- <dependency> <groupId>org.springframework.ws</groupId> <artifactId>spring-ws</artifactId> <classifier>all</classifier> 
@@ -151,17 +155,17 @@
 			<groupId>com.drewnoakes</groupId>
 			<artifactId>metadata-extractor</artifactId>
 		</dependency>
-        <dependency>
-		    <groupId>org.apache.tika</groupId>
-		    <artifactId>tika-core</artifactId>
-		    <version>1.5</version>
+		<dependency>
+			<groupId>org.apache.tika</groupId>
+			<artifactId>tika-core</artifactId>
+			<version>1.5</version>
 		</dependency>
 		<dependency>
 			<groupId>com.googlecode.mp4parser</groupId>
 			<artifactId>isoparser</artifactId>
 			<version>1.0-RC-37</version>
 		</dependency>
-		   
+
 		<!-- JAI as alternative for image processing -->
 		<dependency>
 			<groupId>javax.media.jai</groupId>

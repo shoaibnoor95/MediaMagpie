@@ -43,7 +43,10 @@ class webapp::install {
     require => Apt::Ppa['ppa:jon-severinsson/ffmpeg']
   }
 
-  package { 'apache2': ensure => 'latest', }
+  ## TODO rwe: remove apache2
+  package { 'apache2': ensure => 'purged', }
+
+  package { 'jsvc': ensure => 'latest', }
 
   # TODO rwe:
   # - install apache https://gist.github.com/jsuwo/9038610
