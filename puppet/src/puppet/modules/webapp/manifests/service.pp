@@ -2,10 +2,10 @@
 # vi: set ft=ruby :
 
 class webapp::service {
-  
-#	service { "apache2":
-#		ensure => running,
-#		enable => true,
-#		restart => true,
-#	}
+
+  service { 'mediamagpie':
+    ensure     => running,
+    enable     => true,
+    require    => [File['/etc/init.d/mediamagpie']],
+  }
 }

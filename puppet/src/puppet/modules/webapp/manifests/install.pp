@@ -2,10 +2,7 @@
 # vi: set ft=ruby :
 
 class webapp::install {
-  #    package { ["httpd", "mod_ssl", "openssl"]:
-  #    	ensure => present,
-  #    	require => Class["php-dev::install"]
-  #    }
+
   user { 'mediamagpie':
     name       => 'mediamagpie',
     ensure     => 'present',
@@ -14,11 +11,20 @@ class webapp::install {
   }
 
   file { 'application files':
-    path    => '/opt/mediamapgie',
+    path    => "$base_app_dir",
     source  => '/tmp/mm-dist',
     owner   => 'mediamagpie',
     recurse => true,
     require => [User['mediamagpie'], Package['openjdk-7-jdk']]
+  }
+
+  file { "/etc/init.d/mediamagpie":
+    content => template('webapp/mediamagpie_jsvc.sh.erb'),
+    ensure  => file,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0755',
+#    require => Exec['install-mediamagpie-service'];
   }
 
 #  package { 'openjdk-7-jre-headless': ensure => "purged", }
@@ -43,16 +49,11 @@ class webapp::install {
     require => Apt::Ppa['ppa:jon-severinsson/ffmpeg']
   }
 
-  ## TODO rwe: remove apache2
-  package { 'apache2': ensure => 'purged', }
-
   package { 'authbind': ensure => 'installed', }
 
   package { 'jsvc': ensure => 'latest', }
 
   # TODO rwe:
-  # - install apache https://gist.github.com/jsuwo/9038610
-  # - activate port forwarding
   # - install mysql
   # - prepare fresh mysql db
 }

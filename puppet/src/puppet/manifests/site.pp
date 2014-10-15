@@ -13,7 +13,7 @@ node default {
   # do some variable definitions
   $webapp_name = 'mediamagpie'
   $public_ip = $::ec2_public_ipv4
-  $webapp_conf_dir = "/opt/mediamapgie/conf"
+  $base_app_dir = "/opt/mediamagpie"
   
   
   notify { "Running on machine: $::fqdn and osfamily: $::osfamily and public-ip: $public_ip": }

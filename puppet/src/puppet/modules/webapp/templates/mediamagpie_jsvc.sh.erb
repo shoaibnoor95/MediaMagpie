@@ -5,18 +5,26 @@
 # 15.10.2014: Ralf Wehner
 ###################################################################################
 
+### BEGIN INIT INFO
+# Provides:          mediamagpie
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start daemon at boot time
+# Description:       Enable service provided by daemon.
+### END INIT INFO
+
 ## set distribution specific settings
 DESC="MediaMagpie service"
 MGR_USER=mediamagpie
 MGR_DEPLOY_MODE=node
 JAVA_HOME="/usr/lib/jvm/java-7-openjdk-amd64"
 #ADDITIONAL_PARAMETERS="-Dpersistent.unit=mysql"
-#ADDITIONAL_PARAMETERS="-Dwebapp.port.http=8080 -Dwebapp.port.https=9191 -Dwebapp.context.path=/mediamagpie"
 VM_ARGS="-Xmx200m -XX:MaxPermSize=120m -XX:+CMSClassUnloadingEnabled $ADDITIONAL_PARAMETERS"
 #########################
 
-MGR_BIN=$(cd `dirname $0` && pwd)
-MGR_HOME=`dirname $MGR_BIN`
+MGR_HOME="<%= @base_app_dir %>"
 cd $MGR_HOME
 
 # add libs to CLASSPATH
