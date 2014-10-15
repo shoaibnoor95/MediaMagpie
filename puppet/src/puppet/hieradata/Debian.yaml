@@ -3,6 +3,8 @@
 persistent.unit: hsql-file
 server.address: www.mediamagpie.org
 
+db.user: mmagpie
+db.password: mmagpie
 
 port.http: 80
 port.https: 443

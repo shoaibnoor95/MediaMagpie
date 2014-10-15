@@ -1,2 +1,5 @@
 port.http: 80
 port.https: 443
+
+db.user: mmagpie
+db.password: mmagpie

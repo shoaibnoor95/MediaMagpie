@@ -24,6 +24,7 @@ class webapp::install {
     source  => '/tmp/mm-dist',
     owner   => 'mediamagpie',
     recurse => true,
+    notify  => Service["mediamagpie"],  # this sets up the relationship
     require => [User['mediamagpie'], Package['openjdk-7-jdk']]
   }
 
@@ -46,7 +47,7 @@ class webapp::install {
   package { "imagemagick": ensure => 'latest' }
 
   # package { "ffmpeg": ensure => 'latest' }
-  # requires before: sudo puppet module install puppetlabs-apt
+  # requires before: $ sudo puppet module install puppetlabs-apt
   class { 'apt':
     always_apt_update => true,
   }

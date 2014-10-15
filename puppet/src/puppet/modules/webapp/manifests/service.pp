@@ -3,9 +3,10 @@
 
 class webapp::service {
   service { 'mediamagpie':
-    ensure  => running,
-    enable  => true,
-    require => [File['/etc/init.d/mediamagpie']],
+    ensure     => running,
+    enable     => true,
+    hasrestart => true,
+    require    => [File['/etc/init.d/mediamagpie']],
   }
 
   # ensure mysql service is running

@@ -1,10 +1,14 @@
 # Beware: All properties which starts with 'system.property.' will be added into Systemproperties AND will be spring beans!
 #
 
-# DB-Selection
-# define one of hsql-memory, hsql-file, mysql
 system.property.persistent.unit=<%= scope.function_hiera(["persistent.unit"]) %>
 system.property.server.address=<%= scope.function_hiera(["server.address"]) %>
+
+######################
+# DB settings
+######################
+db.user=<%= scope.function_hiera(["db.user"]) %>
+db.password=<%= scope.function_hiera(["db.password"]) %>
 
 ######################
 # Jetty specific stuff
