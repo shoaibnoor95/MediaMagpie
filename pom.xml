@@ -41,8 +41,8 @@
 		<!-- Database access -->
 		<commons-dbcp.version>1.4</commons-dbcp.version>
 		<ehcache.version>2.6.5</ehcache.version>
-		<!--<hsqldb.version>2.2.9</hsqldb.version> -->
-		<hsqldb.version>SNAPSHOT</hsqldb.version>
+		<hsqldb.version>2.3.2</hsqldb.version>
+		<!-- <hsqldb.version>SNAPSHOT</hsqldb.version>-->
 		<mysql.connector.version>5.1.26</mysql.connector.version>
 
 		<!-- etc... -->
@@ -574,11 +574,11 @@
 			<name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name> <url>http://repository.springsource.com/maven/bundles/external</url> 
 			</repository> -->
 		<!-- needed to get the latest version of HSQLDB (>= 3.0) -->
-		<repository>
+		<!-- <repository>
 			<id>hsqldb.org.repos</id>
 			<name>HSQL-Project Repository</name>
 			<url>http://www.hsqldb.org/repos</url>
-		</repository>
+		</repository>-->
 		<!-- only necessary for jets3t (aws) -->
 		<!--<repository> <name>jets3t</name> <id>jets3t</id> <url>http://www.jets3t.org/maven2</url> </repository> -->
 	</repositories>
