@@ -46,6 +46,8 @@ class webapp::install {
   ## TODO rwe: remove apache2
   package { 'apache2': ensure => 'purged', }
 
+  package { 'authbind': ensure => 'installed', }
+
   package { 'jsvc': ensure => 'latest', }
 
   # TODO rwe:

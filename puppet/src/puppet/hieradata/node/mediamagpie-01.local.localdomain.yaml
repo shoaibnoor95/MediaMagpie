@@ -1,2 +1,2 @@
-port.http: 8080
-port.https: 8443
+port.http: 80
+port.https: 443

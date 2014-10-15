@@ -112,7 +112,7 @@ LOG_OUT=/var/log/mm-stdout.log
 LOG_ERR=/var/log/mm-stderr.log
 jsvc_exec()
 {
-    $JSVC_EXEC -home "$JAVA_HOME" -classpath :/usr/share/java/commons-daemon.jar$CLASSPATH -user $MGR_USER -outfile $LOG_OUT -errfile $LOG_ERR -pidfile $MGR_PID -cwd $MGR_HOME -debug $RUN_ARGS $1 de.wehner.mediamagpie.conductor.JettyDeamon
+    /usr/bin/authbind --deep $JSVC_EXEC -home "$JAVA_HOME" -classpath :/usr/share/java/commons-daemon.jar$CLASSPATH -user $MGR_USER -outfile $LOG_OUT -errfile $LOG_ERR -pidfile $MGR_PID -cwd $MGR_HOME -debug $RUN_ARGS $1 de.wehner.mediamagpie.conductor.JettyDeamon
 }
 
 
