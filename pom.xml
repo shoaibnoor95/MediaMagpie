@@ -409,6 +409,11 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
+	        <dependency>
+	            <groupId>org.flywaydb</groupId>
+	            <artifactId>flyway-core</artifactId>
+	            <version>3.0</version>
+	        </dependency>
 
 			<!-- JSR 303 with Hibernate Validator, see http://www.roseindia.net/tutorial/spring/spring3/web/spring-3-mvc-validation-example.html -->
 			<!-- <dependency> <groupId>javax.validation</groupId> <artifactId>validation-api</artifactId> <version>1.1.0.Beta3</version> 
