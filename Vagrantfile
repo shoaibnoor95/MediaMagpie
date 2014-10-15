@@ -33,6 +33,8 @@ Vagrant.configure("2") do |config|
         mm.vm.network :forwarded_port, guest: 8443, host: 8091, auto_correct: true
         # remote debugging
         mm.vm.network :forwarded_port, guest: 5000, host: 8000, auto_correct: true
+        # mysql db
+        mm.vm.network :forwarded_port, guest: 3306, host: 13306, auto_correct: true
 
         # provisioning
         mm.vm.provision "shell", inline: "puppet module install puppetlabs-apt"

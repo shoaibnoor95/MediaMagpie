@@ -36,4 +36,5 @@ class webapp::config () {
     require => User['mediamagpie'],
   }
 
+  # TODO rwe: checkout if we should use the mysql module (http://puppetlabs.com/blog/manage-your-mysql-deployment-puppet-enterprise-supported-module-puppetlabs-mysql)
 }

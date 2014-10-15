@@ -1,7 +1,16 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+
+# some hints:
+# list installed packages: $ dpkg --get-selections | grep -v deinstall
+#
+
 class webapp::install {
+  # execute 'apt-get update'
+  #  exec { 'apt-update': # exec resource named 'apt-update'
+  #    command => '/usr/bin/apt-get update' # command this resource will run
+  #   }
 
   user { 'mediamagpie':
     name       => 'mediamagpie',
@@ -24,14 +33,14 @@ class webapp::install {
     owner   => 'root',
     group   => 'root',
     mode    => '0755',
-#    require => Exec['install-mediamagpie-service'];
+  #    require => Exec['install-mediamagpie-service'];
   }
 
-#  package { 'openjdk-7-jre-headless': ensure => "purged", }
+  #  package { 'openjdk-7-jre-headless': ensure => "purged", }
 
   package { 'openjdk-7-jdk':
-    ensure  => 'installed',
-#    require => Package['openjdk-7-jre-headless']
+    ensure => 'installed',
+  #    require => Package['openjdk-7-jre-headless']
   }
 
   package { "imagemagick": ensure => 'latest' }
@@ -53,7 +62,9 @@ class webapp::install {
 
   package { 'jsvc': ensure => 'latest', }
 
-  # TODO rwe:
-  # - install mysql
-  # - prepare fresh mysql db
+  # install mysql-server package
+  package { 'mysql-server': #    require => Exec['apt-update'], # require 'apt-update' before installing
+    ensure => installed, }
+
+  package { 'mysql-client': ensure => present }
 }
