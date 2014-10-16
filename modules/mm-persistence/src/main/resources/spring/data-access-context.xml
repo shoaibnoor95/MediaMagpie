@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx" 
-	xmlns:util="http://www.springframework.org/schema/util"
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
                            http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
                            http://www.springframework.org/schema/context 
@@ -10,11 +10,12 @@
                            http://www.springframework.org/schema/tx/spring-tx.xsd
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
-    <context:component-scan base-package="de.wehner.mediamagpie.persistence" />
-    <!-- TODO rwe: remove next line -->
-    <context:component-scan base-package="de.wehner.mediamagpie.common" />
-	
+	<context:component-scan base-package="de.wehner.mediamagpie.persistence" />
+	<!-- TODO rwe: remove next line -->
+	<context:component-scan base-package="de.wehner.mediamagpie.common" />
+
 	<!-- Definition of all datasources. The pattern of BeanId must be: 'DS-<PersistenceUnitName>' -->
+	<!-- TODO rwe: try to find a solution to use only one DS -->
 	<bean id="DS-mysql" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url" value="jdbc:mysql://localhost/mediamagpie?autoReconnect=true" />
@@ -36,34 +37,32 @@
 
 	<!-- Definition of EntityManagerFactoryBeans which consumes one of the datasource beans -->
 	<beans profile="test,local,default">
-		<bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate" depends-on="DS-${persistent.unit}">
-			<property name="dataSource" ref="DS-${persistent.unit}" />
-			<property name="locations" value="classpath:/db/migration" />
-			<property name="initOnMigrate" value="true"/>
-			<property name="schemas" value="mediamagpie" />
-		</bean>
 		<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 			<property name="persistenceUnitName" value="${persistent.unit}" />
 			<property name="dataSource" ref="DS-${persistent.unit}" />
+		</bean>
+		<bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate" depends-on="entityManagerFactory">
+			<property name="dataSource" ref="DS-${persistent.unit}" />
+			<property name="locations">
+				<array>
+					<value>classpath:/db/migration</value>
+					<!-- <value>filesystem:target/flyway/db/migraton</value>-->
+				</array>
+			</property>
+			<property name="initOnMigrate" value="true" />
+			<property name="schemas" value="mediamagpie" />
 		</bean>
 	</beans>
 
 	<beans profile="cloud">
 		<!-- see: http://blog.springsource.org/2011/11/09/using-cloud-foundry-services-with-spring-applications-part-3-the-cloud-namespace/ -->
-		<!-- <cloud:data-source id="cloudDataSource">
-			<cloud:connection properties="charset=utf-8;" />
-			<cloud:pool pool-size="5-10" max-wait-time="2000" />
-		</cloud:data-source>
-		<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-			<property name="persistenceUnitName" value="mysql" />
-			<property name="dataSource" ref="cloudDataSource" />
-		</bean>-->
+		<!-- <cloud:data-source id="cloudDataSource"> <cloud:connection properties="charset=utf-8;" /> <cloud:pool pool-size="5-10" 
+			max-wait-time="2000" /> </cloud:data-source> <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"> 
+			<property name="persistenceUnitName" value="mysql" /> <property name="dataSource" ref="cloudDataSource" /> </bean> -->
 
 		<!-- testing integration of mongoDB -->
-		<!-- <cloud:mongo-db-factory id="mongoDbFactory" />
-		<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
-			<constructor-arg ref="mongoDbFactory" />
-		</bean>-->
+		<!-- <cloud:mongo-db-factory id="mongoDbFactory" /> <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate"> 
+			<constructor-arg ref="mongoDbFactory" /> </bean> -->
 	</beans>
 
 </beans>
