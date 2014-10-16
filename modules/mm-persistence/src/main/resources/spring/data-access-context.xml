@@ -36,14 +36,15 @@
 
 	<!-- Definition of EntityManagerFactoryBeans which consumes one of the datasource beans -->
 	<beans profile="test,local,default">
-		<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-			<property name="persistenceUnitName" value="${persistent.unit}" />
-			<property name="dataSource" ref="DS-${persistent.unit}" />
-		</bean>
-		<bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate" depends-on="entityManagerFactory">
+		<bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate" depends-on="DS-${persistent.unit}">
 			<property name="dataSource" ref="DS-${persistent.unit}" />
 			<property name="locations" value="classpath:/db/migration" />
 			<property name="initOnMigrate" value="true"/>
+			<property name="schemas" value="mediamagpie" />
+		</bean>
+		<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+			<property name="persistenceUnitName" value="${persistent.unit}" />
+			<property name="dataSource" ref="DS-${persistent.unit}" />
 		</bean>
 	</beans>
 

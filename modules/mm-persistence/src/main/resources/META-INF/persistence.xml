@@ -8,10 +8,6 @@
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
-			<!-- <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" />
-			<property name="hibernate.connection.username" value="mmagpie" />
-			<property name="hibernate.connection.password" value="mmagpie" />
-			<property name="hibernate.connection.url" value="jdbc:mysql://localhost/mediamagpie?autoReconnect=true" />-->
 			<property name="hibernate.max_fetch_depth" value="3" />
 			<!-- <property name="hibernate.hbm2ddl.auto" value="validate" /> -->
 			<property name="hibernate.hbm2ddl.auto" value="update" />

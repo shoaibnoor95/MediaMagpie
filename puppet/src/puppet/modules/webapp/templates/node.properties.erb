@@ -7,8 +7,8 @@ system.property.server.address=<%= scope.function_hiera(["server.address"]) %>
 ######################
 # DB settings
 ######################
-db.user=<%= scope.function_hiera(["db.user"]) %>
-db.password=<%= scope.function_hiera(["db.password"]) %>
+db.user=<%= scope.function_hiera(["db.app.user"]) %>
+db.password=<%= scope.function_hiera(["db.app.pw"]) %>
 
 ######################
 # Jetty specific stuff

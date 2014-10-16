@@ -1,11 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-
-# some hints:
-# list installed packages: $ dpkg --get-selections | grep -v deinstall
-#
-
 class webapp::install {
   # execute 'apt-get update'
   #  exec { 'apt-update': # exec resource named 'apt-update'

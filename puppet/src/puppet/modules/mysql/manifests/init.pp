@@ -19,7 +19,7 @@ class mysql {
 define mysqldb ($user, $password) {
   exec { "create-${mysql::schema_name}-db":
     unless  => "/usr/bin/mysql -u${user} -p${password} ${mysql::schema_name}",
-    command => "/usr/bin/mysql -uroot -p${mysql::root_pw} -e \"create database ${mysql::schema_name}; grant all on ${mysql::schema_name}.* to ${user}@localhost identified by '$password';\"",
+    command => "/usr/bin/mysql -uroot -p${mysql::root_pw} -e \"create database ${mysql::schema_name} DEFAULT CHARACTER SET utf8; grant all on ${mysql::schema_name}.* to ${user}@localhost identified by '$password';\"",
     require => Service["mysql"],
   }
 }

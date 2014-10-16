@@ -1,10 +1,7 @@
 
 # test: hiera -d -c /tmp/mm-puppet/etc/puppet/hiera.yaml persistent.unit ::osfamily=Debian
-persistent.unit: hsql-file
+persistent.unit: mysql
 server.address: www.mediamagpie.org
-
-db.user: mmagpie
-db.password: mmagpie
 
 port.http: 80
 port.https: 443
