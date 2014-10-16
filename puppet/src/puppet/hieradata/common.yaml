@@ -7,3 +7,9 @@ port.https: 8443
 
 mail.userName: <user name mail>
 mail.password: <passwd mail>
+
+# MySql specific part
+db.schema.name: mediamagpie
+db.root.pw: root
+db.app.user: mmagpie
+db.app.pw: mmagpie

@@ -4,7 +4,7 @@
 class webapp::config () {
   file { "${$base_app_dir}/conf/node.properties":
     content => template('webapp/node.properties.erb'),
-    # notify => Service["mediamagpie"],
+    notify  => Service['mediamagpie'],
     ensure  => file,
     require => Class["webapp::install"]
   }

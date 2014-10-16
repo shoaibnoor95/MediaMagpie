@@ -24,7 +24,7 @@ class webapp::install {
     source  => '/tmp/mm-dist',
     owner   => 'mediamagpie',
     recurse => true,
-    notify  => Service["mediamagpie"],  # this sets up the relationship
+    notify  => Service["mediamagpie"],
     require => [User['mediamagpie'], Package['openjdk-7-jdk']]
   }
 
@@ -63,9 +63,4 @@ class webapp::install {
 
   package { 'jsvc': ensure => 'latest', }
 
-  # install mysql-server package
-  package { 'mysql-server': #    require => Exec['apt-update'], # require 'apt-update' before installing
-    ensure => installed, }
-
-  package { 'mysql-client': ensure => present }
 }
