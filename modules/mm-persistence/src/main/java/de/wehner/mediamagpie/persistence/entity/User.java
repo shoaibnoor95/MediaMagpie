@@ -31,7 +31,7 @@ public class User extends UniqueBaseName implements UserDetails {
 
     private static final long serialVersionUID = 1L;
 
-    static class UserGrantedAuthority implements GrantedAuthority {
+    public static class UserGrantedAuthority implements GrantedAuthority {
 
         private static final long serialVersionUID = 1L;
 

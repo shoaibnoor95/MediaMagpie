@@ -86,7 +86,6 @@ public class Media extends CreationDateBase {
     /**
      * This attribute is only present for automatic removal of assigned ImageResizeJobExecutions when a media is deleted from db.
      */
-    @SuppressWarnings("unused")
     @OneToMany(mappedBy = "_media", fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE, CascadeType.PERSIST }, orphanRemoval = true)
     private List<ImageResizeJobExecution> _imageResizeJobExecutions = new ArrayList<ImageResizeJobExecution>();
 
