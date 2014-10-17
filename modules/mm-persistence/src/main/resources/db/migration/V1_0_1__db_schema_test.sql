@@ -1,4 +1,3 @@
-create table test_schrott_person (
-    ID int not null,
-    name varchar (100) not null
-);
+-- Currently, flyway is not used, because we have configured the mysql persistence unit with: "hibernate.hbm2ddl.auto=update"
+--
+-- But, add your update code here...
