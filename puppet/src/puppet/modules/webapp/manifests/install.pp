@@ -7,11 +7,17 @@ class webapp::install {
   #    command => '/usr/bin/apt-get update' # command this resource will run
   #   }
 
+  exec { "stop mediamagpie":
+    path    => ["/usr/sbin", "/bin", "/usr/bin"],
+    command => "service mediamagpie stop",
+    onlyif  => "test -e /etc/init.d/mediamagpie",
+  }
+
   user { 'mediamagpie':
     name       => 'mediamagpie',
     ensure     => 'present',
     shell      => '/bin/bash',
-    managehome => true
+    managehome => true,
   }
 
   file { 'application files':
@@ -20,7 +26,7 @@ class webapp::install {
     owner   => 'mediamagpie',
     recurse => true,
     notify  => Service["mediamagpie"],
-    require => [User['mediamagpie'], Package['openjdk-7-jdk']]
+    require => [User['mediamagpie'], Package['openjdk-7-jdk'], Exec['stop mediamagpie']]
   }
 
   file { "/etc/init.d/mediamagpie":

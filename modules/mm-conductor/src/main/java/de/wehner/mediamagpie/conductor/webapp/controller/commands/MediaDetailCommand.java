@@ -33,6 +33,7 @@ public class MediaDetailCommand extends Media {
     private String _urlPrev;
     private Album _album;
     private CameraMetaData _cameraMetaDataObj;
+    
     private final ObjectMapper _mapper = new ObjectMapper();
 
     private static MapperFactory mapperFactory = null;

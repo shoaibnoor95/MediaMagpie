@@ -3,8 +3,10 @@
 
 class webapp::service {
   service { 'mediamagpie':
-    ensure     => running,
+    ensure     => "running",
     enable     => true,
+    hasrestart => true,
+    hasstatus  => false,
     require    => [File['/etc/init.d/mediamagpie']],
   }
 
