@@ -1,15 +1,15 @@
-Hi,
+Hello ${forename} ${lastname},
 
-you have successfully registered to MediaMagpie with settings:
-
-host: ${host}
-user: ${user}
-
-To use your account, please follow the activation link within the next ${timeout} hours, otherwise the registration will be deleted and you have to register again.
+the first part of your registration is now completed. To activate your account, please follow the link beneath.
 
 Activation link: ${activationLink}
+ 
+(Please activate your account within the next ${timeout} hours, otherwise the registration will be deleted and you have to register again.)
 
-After you have processed your activation, you can login and use MediaMagie. 
+When you have activated your account you can use MediaMagpie (${serviceUrl}) with this settings.
 
-Have fun with MediaMagpie,
+user: ${user}
+
+Thank you for testing the MediaMagpie service and have fun with our service
+
 MediaMagpie team

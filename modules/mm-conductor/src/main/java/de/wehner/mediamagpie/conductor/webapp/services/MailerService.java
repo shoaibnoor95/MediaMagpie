@@ -59,9 +59,11 @@ public class MailerService {
             TemplateException, MessagingException {
         MailTemplateType mailType = MailTemplateType.NEW_REGISTRATION;
         Map<String, Object> dataMap = new HashMap<String, Object>();
+        dataMap.put("forename", registration.getForename());
+        dataMap.put("lastname", registration.getSurname());
         dataMap.put("user", registration.getUser());
         dataMap.put("activationLink", registration.getActivationLink());
-        dataMap.put("host", getConductorAddress());
+        dataMap.put("serviceUrl", getConductorAddress());
         dataMap.put("timeout", "" + timeoutHours);
         InternetAddress receiver = new InternetAddress(registration.getEmail(), registration.getForename() + " " + registration.getSurname());
         sendMail(Arrays.asList(receiver), locale, mailType, dataMap);
