@@ -9,13 +9,14 @@
 <c:set var="urlSubMenu" value="/subNaviMedia" scope="request" />
 
 <head>
-<script type="text/javascript">
-	function executeCommand(action, id) {
-		$("#input_action").attr("value", action);
-		$("#input_id").attr("value", id);
-		$("#mediaForm").submit();
-	}
-</script>
+    <title>${title}</title>
+	<script type="text/javascript">
+		function executeCommand(action, id) {
+			$("#input_action").attr("value", action);
+			$("#input_id").attr("value", id);
+			$("#mediaForm").submit();
+		}
+	</script>
 </head>
 <body>
 	<h2>Trash</h2>

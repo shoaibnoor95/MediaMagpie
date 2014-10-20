@@ -10,6 +10,7 @@
 <c:set var="urlSubMenu" value="/subNaviMedia" scope="request" />
 <html>
     <head>
+        <title>${title}</title>
         <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/effects.css"/>" />
 
         <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/ui-lightness/jquery-ui-1.8.13.custom.css"/>" />

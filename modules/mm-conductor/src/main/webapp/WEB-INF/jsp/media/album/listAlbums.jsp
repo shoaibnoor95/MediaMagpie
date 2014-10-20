@@ -10,9 +10,10 @@
 <c:set var="activeSubMenu" value="listAlbums" scope="request" />
 <c:set var="urlSubMenu" value="/subNaviMedia" scope="request" />
 <head>
-<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/pages/album_listAlbums.js"></script>
-<!-- bootbox code (http://bootboxjs.com) -->
-<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/bootbox.min.js"></script>
+    <title>${title}</title>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/pages/album_listAlbums.js"></script>
+	<!-- bootbox code (http://bootboxjs.com) -->
+	<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/bootbox.min.js"></script>
 </head>
 <body>
 

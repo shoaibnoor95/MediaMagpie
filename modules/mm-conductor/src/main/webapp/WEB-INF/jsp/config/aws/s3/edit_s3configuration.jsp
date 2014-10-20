@@ -8,13 +8,14 @@
 <c:set var="urlSubMenu" value="/subNaviConfiguration" scope="request" />
 
 <head>
-<script type="text/javascript">
-	$(function() {
-        $("[data-toggle='tooltip']").tooltip();
-		$("[data-toggle='popover']").popover();
-		$('form:first *:input[type!=hidden]:first').focus();
-	});
-</script>
+    <title>${title}</title>
+	<script type="text/javascript">
+		$(function() {
+	        $("[data-toggle='tooltip']").tooltip();
+			$("[data-toggle='popover']").popover();
+			$('form:first *:input[type!=hidden]:first').focus();
+		});
+	</script>
 </head>
 <body>
 	<h2>${title}</h2>

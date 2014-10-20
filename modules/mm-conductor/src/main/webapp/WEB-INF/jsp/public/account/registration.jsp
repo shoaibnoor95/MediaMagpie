@@ -4,14 +4,15 @@
 <%@include file="/WEB-INF/jsp/general/taglibs.jsp"%>
 <c:set var="title" value="Create New Account" scope="request" />
 <head>
-<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/utils.js"></script>
-<script type="text/javascript">
-	$(function() {
-		focusFirstEnabledField(1);
-		$("[data-toggle='tooltip']").tooltip();
-		//$('form:first *:input[type!=hidden]:first').focus();
-	});
-</script>
+    <title>${title}</title>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/utils.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			focusFirstEnabledField(1);
+			$("[data-toggle='tooltip']").tooltip();
+			//$('form:first *:input[type!=hidden]:first').focus();
+		});
+	</script>
 </head>
 <body>
 	<h2>${title}</h2>

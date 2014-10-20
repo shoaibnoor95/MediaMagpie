@@ -12,7 +12,7 @@
 <c:set var="linkBase"
 	value="<%=WebAppUtils.buildHttpRequestBasedOnServletRequest(request, pageContext) + PublicAlbumController.getBaseRequestMappingUrl()%>" />
 <head>
-<title>Album details</title>
+    <title>Album details</title>
 </head>
 <body>
 	<h2>Album details</h2>

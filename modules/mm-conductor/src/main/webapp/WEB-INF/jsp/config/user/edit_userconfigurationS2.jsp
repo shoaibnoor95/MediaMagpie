@@ -9,6 +9,7 @@
 <c:set var="urlSubMenu" value="/subNaviConfiguration" scope="request" />
 
 <head>
+    <title>${title}</title>
 	<script type="text/javascript">
 		$(function() {
 			$("[rel='tooltip']").tooltip();

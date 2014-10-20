@@ -9,19 +9,20 @@
 <c:set var="title" value="Welcome to MediaMagpie" scope="request" />
 <c:set var="activeMenu" value="welcome" scope="request" />
 <head>
-<link rel="stylesheet" type="text/css" href="<c:url value="/static/css/galleriffic.css"/>" />
-
-<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery.galleriffic.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery.opacityrollover.js"></script>
-
-<!-- We need to import the script directly into jsp because it contains some java code -->
-<script type="text/javascript"><%@ include file="../../../static/js/mm-toggle.js" %></script>
-
-<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/pages/welcome.js" />
-<!-- We only want the thunbnails to display when javascript is enabled -->
-<script type="text/javascript">
-	document.write('<style>.noscript { display: none; }</style>');
-</script>
+    <title>${title}</title>
+	<link rel="stylesheet" type="text/css" href="<c:url value="/static/css/galleriffic.css"/>" />
+	
+	<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery.galleriffic.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery.opacityrollover.js"></script>
+	
+	<!-- We need to import the script directly into jsp because it contains some java code -->
+	<script type="text/javascript"><%@ include file="../../../static/js/mm-toggle.js" %></script>
+	
+	<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/pages/welcome.js" />
+	<!-- We only want the thunbnails to display when javascript is enabled -->
+	<script type="text/javascript">
+		document.write('<style>.noscript { display: none; }</style>');
+	</script>
 </head>
 <body>
 	<h1>${title}</h1>

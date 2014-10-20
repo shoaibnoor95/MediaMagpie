@@ -2,7 +2,10 @@
 <%@page pageEncoding="UTF-8"%>
 <%@ page session="false"%>
 <%@ include file="/WEB-INF/jsp/general/taglibs.jsp"%>
+
+<c:set var="title" value="Reset Password"  scope="request"/>
 <head>
+    <title>${title}</title>
 </head>
 <body>
 	<c:choose>

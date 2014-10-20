@@ -4,12 +4,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
+	<title>MediaMagpie - <decorator:title default="Welcome!"/></title> 
 	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	
-	<c:if test="${not empty title}">
-		<title>${title}</title>
-	</c:if>
 	
 	<link rel="stylesheet" type="text/css" href="/static/css/styles-all2.css" />
 	<link rel="stylesheet" type="text/css" href="/static/bootstrap/css/bootstrap.css" />
@@ -43,9 +40,9 @@
 						<%
 						    java.security.Principal p = request.getUserPrincipal();
 						    if (p == null) {
-						%> <a href="<%=request.getContextPath()%>/login">Login</a> <%
+						%> <a id="login" href="<%=request.getContextPath()%>/login">Login</a> <%
      } else {
- %> <a href="<%=request.getContextPath()%>/j_spring_security_logout">Logout (<%=p.getName()%>)
+ %> <a id="logout" href="<%=request.getContextPath()%>/j_spring_security_logout">Logout (<%=p.getName()%>)
 					</a> <%
      }
  %>

@@ -8,6 +8,7 @@
 <c:set var="urlSubMenu" value="/subNaviConfiguration" scope="request" />
 
 <head>
+    <title>${title}</title>
 </head>
 <body>
 	<h2>${title}</h2>

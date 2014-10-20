@@ -2,6 +2,7 @@
 <%@page pageEncoding="UTF-8"%>
 <%@page session="false"%>
 <%@include file="/WEB-INF/jsp/general/taglibs.jsp"%>
+
 <c:set var="title" value="Activtion link was sent" scope="request" />
 <h2>${title}</h2>
 <c:if test="${not empty errormessage}">

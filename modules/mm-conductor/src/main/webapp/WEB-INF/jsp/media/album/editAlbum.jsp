@@ -15,11 +15,12 @@
 <c:set var="activeSubMenu" value="listAlbums" scope="request" />
 <c:set var="urlSubMenu" value="/subNaviMedia" scope="request" />
 <head>
-<script type="text/javascript">
-    $(function() {
-        $('form:first *:input[type!=hidden]:first').focus();
-    });
-</script>
+    <title>${title}</title>
+	<script type="text/javascript">
+	    $(function() {
+	        $('form:first *:input[type!=hidden]:first').focus();
+	    });
+	</script>
 </head>
 <body>
 	<h2>${title}</h2>

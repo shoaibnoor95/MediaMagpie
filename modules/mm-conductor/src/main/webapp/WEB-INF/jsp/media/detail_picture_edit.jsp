@@ -7,6 +7,7 @@
 <c:set var="activeSubMenu" value="" scope="request" />
 <c:set var="urlSubMenu" value="/subNaviMedia" scope="request" />
 <head>
+    <title>${title}</title>
     <link rel="stylesheet" type="text/css", href="/static/css/cupertino/jquery-ui-1.10.4.custom.min.css" />
     <script type="text/javascript" src="/static/js/jquery-ui-1.10.4.custom.min.js"></script>
 

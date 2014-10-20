@@ -12,6 +12,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+    <title>${title}</title>
     <!-- cooliris -->
     <script type="text/javascript" src="<%=request.getContextPath()%>/static/js/pages/album_coolirisViewAlbum.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
