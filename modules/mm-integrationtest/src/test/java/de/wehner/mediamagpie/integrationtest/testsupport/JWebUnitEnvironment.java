@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This Rule initializes the baseUrl attribute of JHtmlUnit Test framework with the value of system.properties <code>BASE_URL</code>
- * setting.
+ * setting. Use something like: <code>BASE_URL=http://54.171.82.164/</code>
  * 
  * @author Ralf Wehner
  *
@@ -24,6 +24,7 @@ public class JWebUnitEnvironment extends ExternalResource {
         if (StringUtils.isBlank(baseUrl)) {
             baseUrl = "http://localhost:8088/";
         }
+        LOG.info("Using connection to '{}'.", baseUrl);
         setBaseUrl(baseUrl);
     }
 

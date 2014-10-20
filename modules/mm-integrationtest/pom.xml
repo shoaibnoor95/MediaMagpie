@@ -15,14 +15,22 @@
 
 	<dependencies>
 		<!-- <dependency> <groupId>${project.groupId}</groupId> <artifactId>mm-api</artifactId> <version>${project.version}</version> 
-			</dependency> <dependency> <groupId>${project.groupId}</groupId> <artifactId>mm-core</artifactId> <version>${project.version}</version> 
-			</dependency> <dependency> <groupId>${project.groupId}</groupId> <artifactId>mm-persistence</artifactId> <version>${project.version}</version> 
-			</dependency> 
+			</dependency> -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>mm-conductor</artifactId>
+			<artifactId>mm-core</artifactId>
 			<version>${project.version}</version>
-		</dependency>-->
+		</dependency>
+		<!-- <dependency> <groupId>${project.groupId}</groupId> <artifactId>mm-persistence</artifactId> <version>${project.version}</version> 
+			</dependency> <dependency> <groupId>${project.groupId}</groupId> <artifactId>mm-conductor</artifactId> <version>${project.version}</version> 
+			</dependency> -->
+
+		<!-- slf4j -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<scope>compile</scope>
+		</dependency>
 
 		<!-- test -->
 		<!-- <dependency> <groupId>${project.groupId}</groupId> <artifactId>mm-aws</artifactId> <version>${project.version}</version> 

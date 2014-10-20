@@ -27,7 +27,7 @@
     </logger>
 
 	<root>
-		<level value="debug" />
+		<level value="info" />
 		<appender-ref ref="STDOUT" />
 	</root>
 </configuration>
