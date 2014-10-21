@@ -27,6 +27,7 @@ import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.wehner.mediamagpie.conductor.performingjob.AbstractJobCallable;
 import de.wehner.mediamagpie.conductor.performingjob.JobCallable;
 import de.wehner.mediamagpie.conductor.performingjob.JobExecutor;
 import de.wehner.mediamagpie.core.testsupport.TestEnvironment;
@@ -151,7 +152,7 @@ public class JobSchedulerIntegrationTest {
 
         final CountDownLatch jobExecuting = new CountDownLatch(1);
 
-        JobCallable jobCallable = mock(JobCallable.class);
+        JobCallable jobCallable = mock(AbstractJobCallable.class);
         doReturn(jobCallable).when(_jobExecutor).prepare(any(MainConfiguration.class), any(JobExecution.class));
         doAnswer(new Answer<Object>() {
             @Override
@@ -178,7 +179,7 @@ public class JobSchedulerIntegrationTest {
     private CountDownLatch createExecutionRunningCountDownLatch(final boolean deleteMedia) throws Exception {
         final CountDownLatch jobExecutionRunning = new CountDownLatch(1);
 
-        JobCallable jobCallable = mock(JobCallable.class);
+        JobCallable jobCallable = mock(AbstractJobCallable.class);
         doReturn(jobCallable).when(_jobExecutor).prepare(any(MainConfiguration.class), eq(getJobExecutionFromDb())/* any(JobExecution.class) */);
         doAnswer(new Answer<URI>() {
             @Override

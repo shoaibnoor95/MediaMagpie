@@ -109,7 +109,7 @@ public class UserConfigurationDaoTest {
 
         _userConfigurationDao.saveOrUpdateConfiguration(_user, configuration);
         _dbTestEnvironment.flipTransaction();
-        assertThat(_dbTestEnvironment.getPersistenceService().getAll(Property.class)).hasSize(2);
+        assertThat(_dbTestEnvironment.getPersistenceService().getAll(Property.class)).hasSize(3);
 
         S3Configuration configurationFromDb = _userConfigurationDao.getConfiguration(_user, S3Configuration.class);
         try {
