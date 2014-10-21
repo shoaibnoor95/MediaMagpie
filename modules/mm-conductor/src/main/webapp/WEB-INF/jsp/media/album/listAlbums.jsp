@@ -51,11 +51,11 @@
 							</c:otherwise>
 						</c:choose></td>
 					<td><core:date date="${album.creationDate}" /></td>
-					<td><img class="image-action view" alt="view" title="show the album settings"
-						src="<%=request.getContextPath()%>/static/images/famfamfam_silk/eye.png" /> <img class="image-action edit" alt="edit"
-						title="edit the album settings" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/image_edit.png" /> <img
-						class="image-action delete" alt="delete" title="delete this album"
-						src="<%=request.getContextPath()%>/static/images/famfamfam_silk/bin_closed.png" /></td>
+					<td>
+					   <!-- <img class="image-action view" alt="view" title="show the album settings" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/eye.png" />
+					   <img class="image-action edit" alt="edit" title="edit the album settings" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/image_edit.png" />-->
+					   <img class="image-action view" alt="view" title="show/edit the album settings" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/image_edit.png" />
+					   <img	class="image-action delete" alt="delete" title="delete this album" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/bin_closed.png" /></td>
 				</tr>
 			</c:forEach>
 		</tbody>
