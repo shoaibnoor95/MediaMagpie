@@ -41,11 +41,11 @@ public class VideoConversionJob extends AbstractJob {
 
     @Override
     public JobCallable prepare() throws Exception {
-        return new JobCallable() {
+        return new AbstractJobCallable() {
 
             @Override
-            public URI call() throws Exception {
-                LOG.debug("Start video conversion job for Media {} to format '{}'.", _mediaId, _destFormat);
+            public URI internalCall() throws Exception {
+                LOG.debug("Start video conversion job for Media {}, file {} to format '{}'.", _mediaId, _srcVideo.getName(), _destFormat);
                 File destPath = getPerformingJobContext().getConvertedVideoPath();
                 File destVideo = _videoService.convertVideo(_srcVideo, _destFormat, _destWidth, destPath);
                 return (destVideo != null) ? destVideo.toURI() : null;

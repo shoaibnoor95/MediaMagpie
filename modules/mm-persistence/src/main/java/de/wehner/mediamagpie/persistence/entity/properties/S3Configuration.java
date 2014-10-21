@@ -20,6 +20,8 @@ public class S3Configuration implements UserPropertyBackedConfiguration {
 
     protected boolean syncToS3;
 
+    protected boolean syncVideosToS3;
+
     public S3Configuration() {
     }
 
@@ -45,6 +47,14 @@ public class S3Configuration implements UserPropertyBackedConfiguration {
 
     public void setSyncToS3(boolean syncToS3) {
         this.syncToS3 = syncToS3;
+    }
+
+    public boolean isSyncVideosToS3() {
+        return syncVideosToS3;
+    }
+
+    public void setSyncVideosToS3(boolean syncVideosToS3) {
+        this.syncVideosToS3 = syncVideosToS3;
     }
 
     public boolean isConfigurationComplete() {

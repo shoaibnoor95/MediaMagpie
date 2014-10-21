@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -136,6 +137,18 @@ public class SearchPathUtil {
             }
         }
         throw new IllegalArgumentException("Resource not found in '" + paths + "'.");
+    }
+
+    public static Properties loadProperties(String... path) throws IOException {
+        InputStream inputStream = null;
+        try {
+            inputStream = openStream(path);
+            Properties properties = new Properties();
+            properties.load(inputStream);
+            return properties;
+        } finally {
+            IOUtils.closeQuietly(inputStream);
+        }
     }
 
     private static boolean isClasspathResource(String path) {

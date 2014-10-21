@@ -20,8 +20,8 @@ public class JobExecutor {
     private final JobFactory _jobFactory;
 
     @Autowired
-    public JobExecutor(JobFactory dapJobFactory, TransactionHandler transactionHandler) {
-        _jobFactory = dapJobFactory;
+    public JobExecutor(JobFactory jobFactory, TransactionHandler transactionHandler) {
+        _jobFactory = jobFactory;
         // ThreadLocalLog4jAppender.install();
     }
 
@@ -46,20 +46,21 @@ public class JobExecutor {
         }
     }
 
-    public JobCallable prepare(final MainConfiguration mainConfiguraiton, final JobExecution jobExecution) {
-        return new JobCallable() {
+    public AbstractJobCallable prepare(final MainConfiguration mainConfiguraiton, final JobExecution jobExecution) {
+        return new AbstractJobCallable() {
 
             private JobCallable _jobCallable;
             private volatile boolean _stopFlag;
 
             @Override
-            public URI call() throws Exception {
+            public URI internalCall() throws Exception {
                 PerformingJob job = _jobFactory.createPerformingJob(jobExecution);
                 if (job == null) {
                     // this can be in case of a job that is obsolete now
                     LOG.warn("No job was created. It seems that it is obsolete now.");
                     return null;
                 }
+                _name = job.getClass().getSimpleName();
                 job.init(new PerformingJobContext(mainConfiguraiton));
                 _jobCallable = job.prepare();
 

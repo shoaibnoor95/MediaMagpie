@@ -13,9 +13,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.Validator;
 
 import de.wehner.mediamagpie.conductor.webapp.services.SetupVerificationService;
+import de.wehner.mediamagpie.core.util.SearchPathUtil;
 import de.wehner.mediamagpie.core.util.properties.PropertiesUtil;
 import de.wehner.mediamagpie.persistence.dao.ConfigurationDao;
 import de.wehner.mediamagpie.persistence.dao.TransactionHandler;
@@ -96,7 +98,10 @@ public class SetupPropertiesInjectorTest {
 
     @Test
     public void testStoring() throws Exception {
-        _props.load(SetupPropertiesInjector.class.getResourceAsStream("/properties/deploy/default.properties"));
+        Properties defaultProps = SearchPathUtil.loadProperties("classpath:/properties/deploy/default.properties");
+        Properties testProps = SearchPathUtil.loadProperties("classpath:/properties/deploy/test.properties");
+        CollectionUtils.mergePropertiesIntoMap(defaultProps, _props);
+        CollectionUtils.mergePropertiesIntoMap(testProps, _props);
         when(_dynamicPropertiesConfigurer.getProperties()).thenReturn(_props);
         SetupPropertiesInjector injector = new SetupPropertiesInjector(_dynamicPropertiesConfigurer, _userDao, _confDao, _userConfigurationDao,
                 _transactionHandler, _beanValidator, _cipherService, _setupVerificationService);

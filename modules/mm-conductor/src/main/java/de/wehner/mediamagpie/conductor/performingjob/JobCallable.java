@@ -12,6 +12,22 @@ import de.wehner.mediamagpie.persistence.entity.JobExecution;
 public interface JobCallable extends Callable<URI> {
 
     /**
+     * Return the date when the executor service enters the {@linkplain #call()} method. This method is used to detect hanging job
+     * executables.
+     * 
+     * @return The time when the <code>ExecutorService</code> enters the call method or <code>null</code> if it is not started and still
+     *         queued within the <code>ExecutorService</code>.
+     */
+    Long getRealJobStart();
+
+    /**
+     * Just used for debugging, finding hanging jobs etc.
+     * 
+     * @return
+     */
+    String getName();
+
+    /**
      * @return progress, 0-100%
      */
     int getProgress();

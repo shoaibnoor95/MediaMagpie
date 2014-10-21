@@ -56,4 +56,13 @@ public class MediaDataProcessingJobExecutionDao extends JobExecutionDao {
         return crit.list();
     }
 
+    @SuppressWarnings("unchecked")
+    public <T extends JobExecution> List<T> getJobsByMediaId(Long mediaId, int maxResult, Class<T> entityClass) {
+        final Criteria crit = _persistenceService.createCriteria(entityClass);
+
+        crit.add(Restrictions.eq("_mediaId", mediaId));
+        crit.setMaxResults(maxResult);
+        return crit.list();
+    }
+
 }

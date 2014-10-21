@@ -81,7 +81,7 @@ public class SetupPropertiesInjector implements DataInjector {
                     try {
                         for (Class clazz : classes) {
                             // FIXME rwe: In case we still want to use the spring's Validator to validate classes here, we have to create
-                            // our own Annotation class, because the <code>Validatabe</code> class comes from hibernate and isn't available
+                            // our own Annotation class, because the <code>Validatable</code> class comes from hibernate and isn't available
                             // in version 4.0.
                             // Annotation validatable = clazz.getAnnotation(Validatable.class);
                             Object setupEntity = PropertiesUtil.readFromProperties(_cipherService, clazz, properties);

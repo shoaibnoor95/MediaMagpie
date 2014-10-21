@@ -33,6 +33,7 @@ import de.wehner.mediamagpie.conductor.webapp.controller.AbstractConfigurationSu
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.FileUploadCommand;
 import de.wehner.mediamagpie.conductor.webapp.controller.json.JQueryUploadCommand;
 import de.wehner.mediamagpie.conductor.webapp.services.UploadService;
+import de.wehner.mediamagpie.conductor.webapp.services.VideoService;
 import de.wehner.mediamagpie.conductor.webapp.util.security.SecurityUtil;
 import de.wehner.mediamagpie.core.util.Pair;
 import de.wehner.mediamagpie.persistence.dao.PersistenceService;
@@ -87,8 +88,7 @@ public class UploadController extends AbstractConfigurationSupportController {
      * 
      */
     @RequestMapping(method = RequestMethod.POST, value = URL_UPLOAD)
-    public @ResponseBody
-    Map<String, List<JQueryUploadCommand>> doPost(HttpServletRequest request) throws ServletException, IOException {
+    public @ResponseBody Map<String, List<JQueryUploadCommand>> doPost(HttpServletRequest request) throws ServletException, IOException {
         if (!ServletFileUpload.isMultipartContent(request)) {
             throw new IllegalArgumentException("Request is not multipart, please 'multipart/form-data' enctype for your form.");
         }
@@ -107,18 +107,28 @@ public class UploadController extends AbstractConfigurationSupportController {
             // upload file, create Media, Thumb, thumb images links etc..
             User currentUser = SecurityUtil.getCurrentUser();
             Pair<String, File> uploadFileInfo = _uploadService.createUniqueUserStoreFile(currentUser, multipartFile.getOriginalFilename());
-            LOG.info("Try dump upload stream '" + uploadFileInfo.getFirst() + "' into file '" + uploadFileInfo.getSecond().getPath() + "'");
+            LOG.debug("Stored upload stream '{}' into file '{}'.", uploadFileInfo.getFirst(), uploadFileInfo.getSecond().getPath());
             Media newMedia = _uploadService.saveInputStreamToFileSystemAndCreateMedia(currentUser, uploadFileInfo.getSecond(),
                     multipartFile.getInputStream());
             _persistenceService.persist(newMedia);
+            LOG.debug("Created new media with id '{}' based on file '{}'.", newMedia.getId(), uploadFileInfo.getSecond().getPath());
 
-            // create job executions for a) image resizing and S3 Upload
+            // create jobs for thumb images and video conversion
+            _uploadService.createAllJobsAfterUpload(newMedia, _configurationProvider);
+
+            // create job for synchronization to S3
             S3Configuration userS3Configuration = getCurrentUsersS3Configuration();
             if (_s3SyncService != null && userS3Configuration.hasToSyncToS3()) {
-                // sync media to s3 bucket
-                _s3SyncService.pushToS3(newMedia);
+                if (VideoService.isPhoto(newMedia)) {
+                    // sync photo to s3 bucket
+                    _s3SyncService.pushToS3(newMedia);
+                } else {
+                    if (getCurrentUsersS3Configuration().isSyncVideosToS3()) {
+                        // sync video to s3 bucket
+                        _s3SyncService.pushToS3(newMedia);
+                    }
+                }
             }
-            _uploadService.createAllJobsAfterUpload(newMedia, _configurationProvider);
 
             // create a thumb image for the upload view
             String contextPath = request.getContextPath();

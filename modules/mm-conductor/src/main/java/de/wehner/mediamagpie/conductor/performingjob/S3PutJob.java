@@ -33,10 +33,10 @@ public class S3PutJob extends AbstractJob {
 
     @Override
     public JobCallable prepare() throws Exception {
-        return new JobCallable() {
+        return new AbstractJobCallable() {
 
             @Override
-            public URI call() throws Exception {
+            public URI internalCall() throws Exception {
                 LOG.debug("try to upload media to S3 bucket ...");
                 MediaExportResults exportResults = _s3MediaRepositiory.addMedia(_user, _mediaExport);
                 // the uri shoud be something like 'https://s3.amazonaws.com/mediamagpie-photo/rwe/PHOTO/ID5/IMG_0154-mmcounter-2.JPG'
@@ -60,6 +60,11 @@ public class S3PutJob extends AbstractJob {
                 media.setExportedToS3(true);
                 LOG.trace("Mark Media entity with URI '" + media.getUri() + "' to be sucessfully exported to S3.");
                 _mediaDao.makePersistent(media);
+            }
+            
+            @Override
+            public String getName() {
+                return super.getName();
             }
         };
     }

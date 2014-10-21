@@ -28,10 +28,10 @@ public class S3DeleteJob extends AbstractJob {
 
     @Override
     public JobCallable prepare() throws Exception {
-        return new JobCallable() {
+        return new AbstractJobCallable() {
 
             @Override
-            public URI call() throws Exception {
+            public URI internalCall() throws Exception {
                 _s3MediaRepositiory.deleteMediaStoragePath(_bucketName, new MediaStorageInfo(_exportStoragePath, _exportStorageMetaPath));
                 return null;
             }

@@ -46,10 +46,10 @@ public class ImageResizeJob extends AbstractJob {
 
     @Override
     public JobCallable prepare() throws Exception {
-        return new JobCallable() {
+        return new AbstractJobCallable() {
 
             @Override
-            public URI call() throws Exception {
+            public URI internalCall() throws Exception {
                 LOG.debug("create the thumb image ...");
                 File temporaryImage = null;
                 if (_createImageFromVideo) {

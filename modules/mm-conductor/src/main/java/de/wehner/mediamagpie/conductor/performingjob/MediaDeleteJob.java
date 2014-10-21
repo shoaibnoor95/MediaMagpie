@@ -27,11 +27,11 @@ public class MediaDeleteJob extends AbstractJob {
 
     @Override
     public JobCallable prepare() throws Exception {
-        return new JobCallable() {
+        return new AbstractJobCallable() {
 
             @Override
-            public URI call() throws Exception {
-                LOG.info("Delete media file with URI '" + _uriMedia + "'...");
+            public URI internalCall() throws Exception {
+                LOG.info("Delete media {} and file '{}'.", _mediaId, _uriMedia);
                 String pathToFile = _uriMedia.getRawPath();
                 if (pathToFile != null) {
                     File file = new File(pathToFile);

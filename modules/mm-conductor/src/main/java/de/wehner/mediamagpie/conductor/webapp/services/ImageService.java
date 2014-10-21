@@ -38,8 +38,8 @@ import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaThumbComm
 import de.wehner.mediamagpie.conductor.webapp.processor.AbstractImageProcessor;
 import de.wehner.mediamagpie.conductor.webapp.processor.ImageProcessorFactory;
 import de.wehner.mediamagpie.core.util.ExceptionUtil;
-import de.wehner.mediamagpie.persistence.dao.MediaDataProcessingJobExecutionDao;
 import de.wehner.mediamagpie.persistence.dao.MediaDao;
+import de.wehner.mediamagpie.persistence.dao.MediaDataProcessingJobExecutionDao;
 import de.wehner.mediamagpie.persistence.dao.MediaDeleteJobExecutionDao;
 import de.wehner.mediamagpie.persistence.dao.ThumbImageDao;
 import de.wehner.mediamagpie.persistence.entity.CloudMediaDeleteJobExecution;
@@ -50,6 +50,7 @@ import de.wehner.mediamagpie.persistence.entity.LifecyleStatus;
 import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.entity.MediaDeleteJobExecution;
 import de.wehner.mediamagpie.persistence.entity.Priority;
+import de.wehner.mediamagpie.persistence.entity.VideoConversionJobExecution;
 import de.wehner.mediamagpie.persistence.entity.properties.MainConfiguration;
 import de.wehner.mediamagpie.persistence.entity.properties.UserConfiguration;
 
@@ -64,7 +65,7 @@ public class ImageService {
 
     private final MediaDao _mediaDao;
 
-    private final MediaDataProcessingJobExecutionDao _imageResizeJobExecutionDao;
+    private final MediaDataProcessingJobExecutionDao _jobExecutionDao;
 
     private final MediaDeleteJobExecutionDao _mediaDeleteJobExecutionDao;
 
@@ -73,12 +74,12 @@ public class ImageService {
     private final List<ImageProcessorFactory> _imageProcessorFactories;
 
     @Autowired
-    public ImageService(ThumbImageDao imageDao, MediaDao mediaDao, MediaDataProcessingJobExecutionDao imageResizeJobDao,
+    public ImageService(ThumbImageDao imageDao, MediaDao mediaDao, MediaDataProcessingJobExecutionDao jobDao,
             MediaDeleteJobExecutionDao mediaDeleteJobDao, List<ImageProcessorFactory> imageProcessors) {
         super();
         _thumbImageDao = imageDao;
         _mediaDao = mediaDao;
-        _imageResizeJobExecutionDao = imageResizeJobDao;
+        _jobExecutionDao = jobDao;
         _mediaDeleteJobExecutionDao = mediaDeleteJobDao;
         _mapper = new ObjectMapper();
         _imageProcessorFactories = new ArrayList<ImageProcessorFactory>(imageProcessors);
@@ -216,7 +217,7 @@ public class ImageService {
         if (StringUtils.isEmpty(label)) {
             throw new IllegalArgumentException("label must not be empty");
         }
-        if (!_imageResizeJobExecutionDao.hasResizeJob(media, label)) {
+        if (!_jobExecutionDao.hasResizeJob(media, label)) {
             ImageResizeJobExecution resizeImageJob = new ImageResizeJobExecution(media, label);
             if (priority != null) {
                 resizeImageJob.setPriority(priority);
@@ -227,8 +228,9 @@ public class ImageService {
                 LOG.error("Media {} has no ID!", media.toString());
             }
 
-            _imageResizeJobExecutionDao.makePersistent(resizeImageJob);
-            LOG.info("Resize job for media '" + media.getId() + "' added with priority '" + resizeImageJob.getPriority() + "'.");
+            _jobExecutionDao.makePersistent(resizeImageJob);
+            LOG.info("Added Image/Video resize job ({}) for media '{}' added with priority '{}'.", resizeImageJob.getId(), media.getId(),
+                    resizeImageJob.getPriority());
             return true;
         }
         return false;
@@ -243,17 +245,23 @@ public class ImageService {
 
     public boolean addDeleteJobIfNecessary(Media media) {
         if (!_mediaDeleteJobExecutionDao.hasJobForDelete(media)) {
-            // finish all image resize jobs before
-            for (ImageResizeJobExecution resizeJob : _imageResizeJobExecutionDao.getJobsByMedia(media, Integer.MAX_VALUE, ImageResizeJobExecution.class)) {
+            // finish all image resize and video conversion jobs before
+            for (ImageResizeJobExecution resizeJob : _jobExecutionDao.getJobsByMedia(media, Integer.MAX_VALUE, ImageResizeJobExecution.class)) {
+                LOG.debug("Change status of job '{}' from '{}' -> 'STOPPING'.", resizeJob.getClass().getSimpleName(), resizeJob.getJobStatus());
                 resizeJob.setJobStatus(JobStatus.STOPPING);
-                _imageResizeJobExecutionDao.makePersistent(resizeJob);
+                _jobExecutionDao.makePersistent(resizeJob);
+            }
+            for (VideoConversionJobExecution job : _jobExecutionDao.getJobsByMediaId(media.getId(), Integer.MAX_VALUE, VideoConversionJobExecution.class)) {
+                LOG.debug("Change status of job '{}' from '{}' -> 'STOPPING'.", job.getClass().getSimpleName(), job.getJobStatus());
+                job.setJobStatus(JobStatus.STOPPING);
+                _jobExecutionDao.makePersistent(job);
             }
 
             // add new delete job for this media
             MediaDeleteJobExecution mediaDeleteJobExecution = new MediaDeleteJobExecution(media);
             mediaDeleteJobExecution.setPriority(Priority.LOW);
             _mediaDeleteJobExecutionDao.makePersistent(mediaDeleteJobExecution);
-            LOG.debug("Delete job for media '" + media.getId() + "' added with priority '" + mediaDeleteJobExecution.getPriority() + "'.");
+            LOG.info("Added delete job for media '{}' added with priority '{}'.", media.getId(), mediaDeleteJobExecution.getPriority());
 
             // delete media from cloud (s3)
             S3MediaExportRepository s3MediaExportRepository = new S3MediaExportRepository((S3ClientFacade) null);
@@ -286,7 +294,7 @@ public class ImageService {
      */
     public void deleteMediaCompletely(List<Media> medias) {
         for (Media media : medias) {
-            LOG.debug("Mark media '" + media + "' with uri '" + media.getUri() + "' for removal from database.");
+            LOG.debug("Mark media '" + media + "' with uri '" + media.getUri() + "' for removal from database and filesystem.");
             media.setLifeCycleStatus(LifecyleStatus.MarkedForErasure);
             addDeleteJobIfNecessary(media);
             _mediaDao.makePersistent(media);

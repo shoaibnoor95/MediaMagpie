@@ -3,6 +3,8 @@ package de.wehner.mediamagpie.conductor.webapp.services;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +18,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.tika.detect.Detector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,6 +99,7 @@ public class JobScheduler extends SingleThreadedTransactionController {
 
     @Override
     protected boolean executeInTransaction() {
+        showPendingJobs();
         if (collectFinishedJobs()) {
             return true;
         }
@@ -132,6 +136,9 @@ public class JobScheduler extends SingleThreadedTransactionController {
      *            The job to start.
      */
     private void startJob(JobExecution jobExecution) {
+
+        // TODO rwe: checkout, are there some good reasons to reject adding of new jobs? EG in case of a full executorservice queue?
+
         jobExecution.setJobStatus(JobStatus.RUNNING);
         jobExecution.setStartTime(new Date());
 
@@ -159,12 +166,15 @@ public class JobScheduler extends SingleThreadedTransactionController {
         } while (!jobs.isEmpty());
     }
 
+    /**
+     * @return true if a finished job was detected otherwise false.
+     */
     private boolean collectFinishedJobs() {
         for (Entry<Long, Future<URI>> entry : _runningJobFutureByJobId.entrySet()) {
             Future<URI> future = entry.getValue();
             if (future.isDone()) {
-                Long dapJobExecutionId = entry.getKey();
-                JobExecution jobExecution = _jobExecutionDao.getById(dapJobExecutionId);
+                Long jobExecutionId = entry.getKey();
+                JobExecution jobExecution = _jobExecutionDao.getById(jobExecutionId);
                 try {
                     URI resultData = future.get();
                     JobCallable jobCallable = _runningJobCallableByJobId.get(jobExecution.getId());
@@ -184,12 +194,48 @@ public class JobScheduler extends SingleThreadedTransactionController {
                 if (jobExecution != null) {
                     jobExecution.setStopTime(new Date());
                 }
-                _runningJobFutureByJobId.remove(dapJobExecutionId);
-                _runningJobCallableByJobId.remove(dapJobExecutionId);
+                _runningJobFutureByJobId.remove(jobExecutionId);
+                _runningJobCallableByJobId.remove(jobExecutionId);
                 return true;
             }
         }
         return false;
+    }
+
+    private void showPendingJobs() {
+        List<JobCallable> pendingJobs = new ArrayList<JobCallable>();
+        for (Entry<Long, Future<URI>> entry : _runningJobFutureByJobId.entrySet()) {
+            Future<URI> future = entry.getValue();
+            if (!future.isDone()) {
+                Long jobExecutionId = entry.getKey();
+                JobCallable jobCallable = _runningJobCallableByJobId.get(jobExecutionId);
+                Long realJobStart = jobCallable.getRealJobStart();
+                if (realJobStart != null) {
+                    pendingJobs.add(jobCallable);
+                }
+            }
+        }
+
+        if (pendingJobs.isEmpty()) {
+            return;
+        }
+
+        // sort pending jobs show show these in log
+        Collections.sort(pendingJobs, new Comparator<JobCallable>() {
+
+            @Override
+            public int compare(JobCallable o1, JobCallable o2) {
+                return o1.getRealJobStart().compareTo(o2.getRealJobStart());
+            }
+        });
+
+        long timeNow = System.currentTimeMillis();
+        for (JobCallable jobCallable : pendingJobs) {
+            final long runningTime = timeNow - jobCallable.getRealJobStart();
+            if (runningTime > 10000) {
+                LOG.info("Found pending job '{}' running since '{}' seconds.", jobCallable.getName(), (runningTime / 1000));
+            }
+        }
     }
 
     private void handleJobException(JobExecution jobExecution, Throwable throwable) {

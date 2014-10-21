@@ -56,10 +56,10 @@ public class S3SyncJob extends AbstractJob {
 
     @Override
     public JobCallable prepare() throws Exception {
-        return new JobCallable() {
+        return new AbstractJobCallable() {
 
             @Override
-            public URI call() throws Exception {
+            public URI internalCall() throws Exception {
                 LOG.debug("sync medias from S3 bucket ...");
                 List<Media> medias = _transactionHandler.executeInTransaction(new Callable<List<Media>>() {
 
