@@ -48,6 +48,12 @@
 				<form:checkbox path="conf.syncToS3" disabled="true" cssClass="form-control-static" />
 			</div>
 		</div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Upload Videos to S3</label>
+            <div class="col-sm-10">
+                <form:checkbox path="conf.syncVideosToS3" disabled="true" cssClass="form-control-static" />
+            </div>
+        </div>
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
 				<button type="button" class="btn btn-default"

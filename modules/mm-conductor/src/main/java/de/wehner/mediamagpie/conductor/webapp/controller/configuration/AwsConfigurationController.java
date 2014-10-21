@@ -123,6 +123,11 @@ public class AwsConfigurationController extends AbstractConfigurationSupportCont
             _s3SyncService.syncS3Bucket(user);
         }
         existingS3Configuration.setSyncToS3(command.isSyncToS3());
+        if (command.isSyncToS3()) {
+            existingS3Configuration.setSyncVideosToS3(command.isSyncVideosToS3());
+        } else {
+            existingS3Configuration.setSyncVideosToS3(false);
+        }
         _configurationProvider.saveOrUpdateS3Configuration(user, existingS3Configuration);
 
         return "redirect:" + getBaseRequestMappingUrl() + URL_S3CONFIG;

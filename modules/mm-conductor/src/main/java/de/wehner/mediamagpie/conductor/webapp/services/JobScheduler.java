@@ -18,7 +18,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.tika.detect.Detector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +49,7 @@ public class JobScheduler extends SingleThreadedTransactionController {
     private final TimeProvider _timeProvider;
     private final Map<Long, Future<URI>> _runningJobFutureByJobId = new ConcurrentHashMap<Long, Future<URI>>();
     private final Map<Long, JobCallable> _runningJobCallableByJobId = new ConcurrentHashMap<Long, JobCallable>();
+    private long lastEnterMethodShowPendingJob = 0;
 
     @Autowired
     public JobScheduler(TransactionHandler transactionHandler, JobExecutionDao jobExecutionDao, ConfigurationDao configurationDao,
@@ -203,6 +203,11 @@ public class JobScheduler extends SingleThreadedTransactionController {
     }
 
     private void showPendingJobs() {
+        long timeNow = System.currentTimeMillis();
+        if((timeNow - lastEnterMethodShowPendingJob) < 5000){
+            return;
+        }
+        lastEnterMethodShowPendingJob = timeNow;
         List<JobCallable> pendingJobs = new ArrayList<JobCallable>();
         for (Entry<Long, Future<URI>> entry : _runningJobFutureByJobId.entrySet()) {
             Future<URI> future = entry.getValue();
@@ -229,7 +234,6 @@ public class JobScheduler extends SingleThreadedTransactionController {
             }
         });
 
-        long timeNow = System.currentTimeMillis();
         for (JobCallable jobCallable : pendingJobs) {
             final long runningTime = timeNow - jobCallable.getRealJobStart();
             if (runningTime > 10000) {

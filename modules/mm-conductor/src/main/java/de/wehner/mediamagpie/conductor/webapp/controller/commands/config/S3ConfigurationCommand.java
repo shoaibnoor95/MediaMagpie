@@ -1,5 +1,9 @@
 package de.wehner.mediamagpie.conductor.webapp.controller.commands.config;
 
+import ma.glasnost.orika.MapperFacade;
+import ma.glasnost.orika.MapperFactory;
+import ma.glasnost.orika.impl.DefaultMapperFactory;
+
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.commons.lang3.StringUtils;
@@ -10,6 +14,7 @@ public class S3ConfigurationCommand extends S3Configuration {
 
     private final int MAX_ANONYMIZED_LENGTH = 20;
     private final char ANONYM_CHAR = '*';
+    private static MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
 
     public S3ConfigurationCommand(String accessKey, String secretKey) {
         this.accessKey = (accessKey != null) ? accessKey.trim() : null;
@@ -19,12 +24,9 @@ public class S3ConfigurationCommand extends S3Configuration {
     public S3ConfigurationCommand() {
     }
 
-    // TODO rwe: I think this would be a good job for dozer.
     public static S3ConfigurationCommand createCommand(S3Configuration s3Configuration) {
-        S3ConfigurationCommand command = new S3ConfigurationCommand();
-        command.accessKey = s3Configuration.getAccessKey();
-        command.secretKey = s3Configuration.getSecretKey();
-        command.syncToS3 = s3Configuration.isSyncToS3();
+        MapperFacade mapper = mapperFactory.getMapperFacade();
+        S3ConfigurationCommand command = mapper.map(s3Configuration, S3ConfigurationCommand.class);
         return command;
     }
 

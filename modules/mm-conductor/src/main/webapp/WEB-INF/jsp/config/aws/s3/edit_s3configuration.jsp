@@ -56,6 +56,12 @@
 	                        <img src="<%=request.getContextPath()%>/static/images/famfamfam_silk/help.png" data-toggle="tooltip" data-placement="right"
 	                            title="When you set this option mediamagpie will synchronize all medias to your S3 buckets." />
 	                    </div>
+                        <div class="checkbox">
+                            <label> <input type="checkbox" value=""> <form:checkbox path="syncVideosToS3" />Upload Videos to S3
+                            </label> 
+                            <img src="<%=request.getContextPath()%>/static/images/famfamfam_silk/help.png" data-toggle="tooltip" data-placement="right"
+                                title="Because Videos are mostly very large, you can control explicitly the upload to your S3 here. Select this option to upload videos to your S3 buckets." />
+                        </div>
 	                </div>
 	            </div>
 	            <!-- buttons -->
