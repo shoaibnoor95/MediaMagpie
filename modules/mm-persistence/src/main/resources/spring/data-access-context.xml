@@ -14,43 +14,45 @@
 	<!-- TODO rwe: remove next line -->
 	<context:component-scan base-package="de.wehner.mediamagpie.common" />
 
-	<!-- Definition of all datasources. The pattern of BeanId must be: 'DS-<PersistenceUnitName>' -->
-	<!-- TODO rwe: try to find a solution to use only one DS -->
-	<bean id="DS-mysql" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost/mediamagpie?autoReconnect=true" />
-		<property name="username" value="${db.user}" />
-		<property name="password" value="${db.password}" />
+	<!-- information can be found here: https://github.com/brettwooldridge/HikariCP -->
+	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+		<property name="poolName" value="springHikariCP" />
+		<property name="connectionTestQuery" value="SELECT 1" />
+		<property name="dataSourceClassName" value="${db.dataSourceClassName}" />
+		<property name="maximumPoolSize" value="20" />
+		<property name="idleTimeout" value="600000" />
+		<property name="autoCommit" value="false" />
+
+		<property name="dataSourceProperties">
+			<props>
+				<prop key="url">${db.url}</prop>
+				<prop key="user">${db.user}</prop>
+				<prop key="password">${db.password}</prop>
+			</props>
+		</property>
 	</bean>
-	<bean id="DS-hsql-file" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-		<property name="driverClassName" value="org.hsqldb.jdbcDriver" />
-		<property name="url" value="jdbc:hsqldb:file:target/database/hsqlDB" />
-		<property name="username" value="sa" />
-		<property name="password" value="" />
-	</bean>
-	<bean id="DS-hsql-memory" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-		<property name="driverClassName" value="org.hsqldb.jdbcDriver" />
-		<property name="url" value="jdbc:hsqldb:mem:Test" />
-		<property name="username" value="sa" />
-		<property name="password" value="" />
+
+	<!-- HikariCP configuration -->
+	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+		<constructor-arg ref="hikariConfig" />
 	</bean>
 
 	<!-- Definition of EntityManagerFactoryBeans which consumes one of the datasource beans -->
 	<beans profile="test,local,default">
-		<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-			<property name="persistenceUnitName" value="${persistent.unit}" />
-			<property name="dataSource" ref="DS-${persistent.unit}" />
-		</bean>
-		<bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate" depends-on="entityManagerFactory">
-			<property name="dataSource" ref="DS-${persistent.unit}" />
+		<bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate" depends-on="dataSource">
+			<property name="dataSource" ref="dataSource" />
 			<property name="locations">
 				<array>
 					<value>classpath:/db/migration</value>
-					<!-- <value>filesystem:target/flyway/db/migraton</value>-->
+					<!-- <value>filesystem:target/flyway/db/migraton</value> -->
 				</array>
 			</property>
 			<property name="initOnMigrate" value="true" />
 			<property name="schemas" value="mediamagpie" />
+		</bean>
+		<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+			<property name="persistenceUnitName" value="${persistent.unit}" />
+			<property name="dataSource" ref="dataSource" />
 		</bean>
 	</beans>
 

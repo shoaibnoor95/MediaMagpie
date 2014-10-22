@@ -7,6 +7,8 @@ system.property.server.address=<%= scope.function_hiera(["server.address"]) %>
 ######################
 # DB settings
 ######################
+db.dataSourceClassName=com.mysql.jdbc.jdbc2.optional.MysqlDataSource
+db.url=jdbc:mysql://localhost/<%= scope.function_hiera(["db.schema.name"])%>?autoReconnect=true
 db.user=<%= scope.function_hiera(["db.app.user"]) %>
 db.password=<%= scope.function_hiera(["db.app.pw"]) %>
 

@@ -63,6 +63,24 @@ public class PersistenceService {
         return entityManager;
     }
 
+    protected void close() {
+        EntityManager entityManager = getEntityManager(false);
+        if (entityManager != null) {
+            _threadLocal.remove();
+            entityManager.close();
+        }
+    }
+
+    protected EntityManager getEntityManager(boolean failIfNotExists) {
+        EntityManager entityManager = _threadLocal.get();
+        if (failIfNotExists) {
+            if (entityManager == null) {
+                throw new IllegalStateException("No entity manager (did you call beginTransaction)?");
+            }
+        }
+        return entityManager;
+    }
+
     /**
      * Commits the current transaction. Does nothing if no transaction was started, yet.
      */
@@ -89,24 +107,6 @@ public class PersistenceService {
             transaction.rollback();
         }
         close();
-    }
-
-    protected void close() {
-        EntityManager entityManager = getEntityManager(false);
-        if (entityManager != null) {
-            _threadLocal.remove();
-            entityManager.close();
-        }
-    }
-
-    protected EntityManager getEntityManager(boolean failIfNotExists) {
-        EntityManager entityManager = _threadLocal.get();
-        if (failIfNotExists) {
-            if (entityManager == null) {
-                throw new IllegalStateException("No entity manager (did you call beginTransaction)?");
-            }
-        }
-        return entityManager;
     }
 
     public EntityManager getEntityManagerWithActiveTransaction() {
