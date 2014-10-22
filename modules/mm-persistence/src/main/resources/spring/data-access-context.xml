@@ -14,47 +14,65 @@
 	<!-- TODO rwe: remove next line -->
 	<context:component-scan base-package="de.wehner.mediamagpie.common" />
 
-	<!-- information can be found here: https://github.com/brettwooldridge/HikariCP -->
-	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
-		<property name="poolName" value="springHikariCP" />
-		<property name="connectionTestQuery" value="SELECT 1" />
-		<property name="dataSourceClassName" value="${db.dataSourceClassName}" />
-		<property name="maximumPoolSize" value="20" />
-		<property name="idleTimeout" value="600000" />
-		<property name="autoCommit" value="false" />
-
-		<property name="dataSourceProperties">
-			<props>
-				<prop key="url">${db.url}</prop>
-				<prop key="user">${db.user}</prop>
-				<prop key="password">${db.password}</prop>
-			</props>
-		</property>
-	</bean>
-
 	<!-- HikariCP configuration -->
 	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
 		<constructor-arg ref="hikariConfig" />
 	</bean>
 
+ 	<bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate" depends-on="dataSource">
+		<property name="dataSource" ref="dataSource" />
+		<property name="locations">
+			<array>
+				<value>classpath:/db/migration</value>
+				<!-- <value>filesystem:target/flyway/db/migraton</value> --> 
+			</array>
+		</property>
+		<property name="initOnMigrate" value="true" />
+		<property name="schemas" value="mediamagpie" />
+	</bean>
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="persistenceUnitName" value="${persistent.unit}" />
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
 	<!-- Definition of EntityManagerFactoryBeans which consumes one of the datasource beans -->
-	<beans profile="test,local,default">
-		<bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate" depends-on="dataSource">
-			<property name="dataSource" ref="dataSource" />
-			<property name="locations">
-				<array>
-					<value>classpath:/db/migration</value>
-					<!-- <value>filesystem:target/flyway/db/migraton</value> -->
-				</array>
+	<beans profile="test">
+		<!-- information can be found here: https://github.com/brettwooldridge/HikariCP -->
+		<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+			<property name="poolName" value="test-springHikariCP" />
+			<property name="dataSourceClassName" value="${db.dataSourceClassName}" />
+			<property name="maximumPoolSize" value="20" />
+			<property name="idleTimeout" value="600000" />
+
+			<property name="dataSourceProperties">
+				<props>
+					<prop key="url">${db.url}</prop>
+					<prop key="user">${db.user}</prop>
+					<prop key="password">${db.password}</prop>
+				</props>
 			</property>
-			<property name="initOnMigrate" value="true" />
-			<property name="schemas" value="mediamagpie" />
-		</bean>
-		<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-			<property name="persistenceUnitName" value="${persistent.unit}" />
-			<property name="dataSource" ref="dataSource" />
 		</bean>
 	</beans>
+
+    <beans profile="default">
+        <!-- information can be found here: https://github.com/brettwooldridge/HikariCP -->
+        <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+            <property name="poolName" value="springHikariCP" />
+            <property name="connectionTestQuery" value="SELECT 1" />
+            <property name="dataSourceClassName" value="${db.dataSourceClassName}" />
+            <property name="maximumPoolSize" value="20" />
+            <property name="idleTimeout" value="600000" />
+            <property name="autoCommit" value="false" />
+
+            <property name="dataSourceProperties">
+                <props>
+                    <prop key="url">${db.url}</prop>
+                    <prop key="user">${db.user}</prop>
+                    <prop key="password">${db.password}</prop>
+                </props>
+            </property>
+        </bean>
+    </beans>
 
 	<beans profile="cloud">
 		<!-- see: http://blog.springsource.org/2011/11/09/using-cloud-foundry-services-with-spring-applications-part-3-the-cloud-namespace/ -->

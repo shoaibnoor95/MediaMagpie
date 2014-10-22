@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.Callable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,16 +107,29 @@ public class SetupPropertiesInjector implements DataInjector {
                     SystemConfiguration systemConfiguration = new SystemConfiguration(true);
                     _configurationDao.saveConfiguration(systemConfiguration);
                 }
+            }
+        });
 
-                // Analyze each UserConfiguration
-                List<User> allUser = _userDao.getAll();
-                for (User user : allUser) {
+        List<User> allUsers = _transactionHandler.executeInTransaction(new Callable<List<User>>() {
+
+            @Override
+            public List<User> call() throws Exception {
+                return _userDao.getAll();
+            }
+        });
+
+        for (final User userDetatched : allUsers) {
+            _transactionHandler.executeInTransaction(new Runnable() {
+                // Set non-user configurations if not initialized once before
+                @SuppressWarnings("rawtypes")
+                @Override
+                public void run() {
+                    User user = _userDao.getById(userDetatched.getId());
                     if (user.getSettings().isEmpty()) {
                         LOG.info("Initialize User Properties for user '" + user.getUsername() + "'.");
                         try {
                             Class clazz = UserConfiguration.class;
                             // FIXME rwe: In case we still want to use the spring's Validator to validate classes here, we have to create
-                            // our
                             // own Annotation class, because the <code>Validatabe</code> class comes from hibernate and isn't available in
                             // version 4.0.
                             // Annotation validatable = clazz.getAnnotation(Validatable.class);
@@ -129,15 +143,22 @@ public class SetupPropertiesInjector implements DataInjector {
                                 throw new IllegalStateException("following errors on " + setupEntity + ": " + bindingResult.getAllErrors());
                             }
                             // }
-                            LOG.info("Save UserConfiguration with default values for user '" + user.getName() + "'.");
+                            LOG.info("Save UserConfiguration with default values for user '{}': {}", user.getName(), setupEntity.toString());
                             _userConfigurationDao.saveOrUpdateConfiguration(user, (UserConfiguration) setupEntity);
+                            _transactionHandler.getPersistenceService().flipTransaction();
                         } catch (Exception e) {
                             LOG.warn("could not initialize setup properties - will go in setup mode: " + e.getMessage(), e);
                             return;
                         }
                     }
                 }
+            });
+        }
 
+        _transactionHandler.executeInTransaction(new Runnable() {
+            // Set non-user configurations if not initialized once before
+            @Override
+            public void run() {
                 _setupVerificationService.checkSetupStatus();
             }
         });

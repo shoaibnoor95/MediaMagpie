@@ -32,7 +32,6 @@
 		<!-- Hibernate / JPA -->
 		<hibernate.version>4.3.6.Final</hibernate.version>
 		<hibernate.search.version>4.5.1.Final</hibernate.search.version>
-		<hibernate-jpa.version>1.0.1.Final</hibernate-jpa.version>
 
 		<!-- Bean validation -->
 		<validation.version>1.0.0.GA</validation.version>
@@ -376,11 +375,6 @@
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-entitymanager</artifactId>
 				<version>${hibernate.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.hibernate.javax.persistence</groupId>
-				<artifactId>hibernate-jpa-2.0-api</artifactId>
-				<version>${hibernate-jpa.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.hibernate</groupId>

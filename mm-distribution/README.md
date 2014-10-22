@@ -14,7 +14,8 @@ export MAVEN_OPTS="-Xmx200m -XX:MaxPermSize=120m"
 mvn clean
 mvn compile
 mvn test
-mvn package -DskipTests [-P warFile]
+#mvn package -DskipTests [-P warFile]
+mvn clean package -Prelease
 ```
 
 
@@ -89,41 +90,52 @@ or with non-default data directory:
 
 Hint for md-formatting: See https://github.com/SpringSource/cloudfoundry-samples/blob/master/stocks/README.md
 
+## Vagrant
+### prepare the puppet/target/mm-dist dir (outside the puppet box)
+  $ mvn clean package -Prelease
+  $ bash puppet/src/main/scripts/sync-dist-and-run-puppet-apply.sh 54.171.82.164
 
-## EC2 Instances
-### Update the standard open-jdk version with oracles java 1.6: (TODO rwe: obsolete)
-The open-jdk installation on the ec2 instances seems to have many issues, so i've got the effect that mediamagpie crashes after a while (e.g. less than one minute of usage). By this experience i decided to install the oracle java implementation.
-I've found a very good installation guide here: http://livingtao.blogspot.de/2012/01/few-easy-steps-to-install-sunoracle-jdk.html
+### startup vagrant box and login
+  $ vagrant up
+  $ vagrant ssh
+  
+### Run puppet inside vagrant box:
+  $ vagrant ssh
+  $ sudo puppet apply --debug --modulepath=/tmp/mm-puppet/etc/puppet/modules/:/etc/puppet/modules --hiera_config=/tmp/mm-puppet/etc/puppet/hiera.yaml /tmp/mm-puppet/etc/puppet/manifests/site.pp
+  
+Now, open your browser: http://localhost:8081/welcome
+  
+### New: update vagrant to new puppet3 (do only once when starting vagrant box the first time!)
+  $ vagrand ssh
+  $ # centos os: sudo /bin/bash /vagrant/mm-distribution/src/main/scripts/update_to_puppet3_yum_installer.sh
+  $ # ubuntu: sudo apt-get install puppet 
+  
+### update ubuntu's packages
+  $ sudo apt-get update && sudo apt-get upgrade
+  
+### list installed packages
+  $ dpkg --get-selections | grep -v deinstall
+  
+### run your application
+  $ sudo /opt/mediamagpie/bin/mediamagpie.sh start  
+  
+### export your provisioned box
+Before we create the new image from current box, we have to delte /etc/udev/rules.d/70-persistent-net.rules. (see: https://github.com/mitchellh/vagrant/issues/997)
+  $ vagrant ssh
+  $ [sudo] rm -f /etc/udev/rules.d/70-persistent-net.rules
 
-  $ wget --no-cookies --header "Cookie: gpw_e24=xxx;" http://download.oracle.com/otn-pub/java/jdk/6u34-b04/jdk-6u34-linux-i586-rpm.bin
-  $ sudo bash
-  $ chmod +x jdk-6u34-linux-i586-rpm.bin
-  $ ./jdk-6u34-linux-i586-rpm.bin
-  $ alternatives --install /usr/bin/java java /usr/java/default/bin/java 20000
-  $ update-alternatives --config java
-  $ ln -s /usr/java/default/jre /usr/lib/jvm/jre
-  $ ln -s /usr/share/java /usr/lib/jvm-exports/jre
+This will create a new package.box file containing the actual state of your box.
+  $ vagrant package
 
-### Install openjdk 7 (centos):
-```bash
-  $ sudo yum update
-  $ yum --enablerepo="*" list available | grep openjdk
-  $ sudo yum install java-1.7.0-openjdk-devel
-  $ sudo alternatives --config java
-  $ sudo yum clean all
-´´´
-
-### Create swap partition to avoid 'java invoked oom-killer':
-See also article http://serverfault.com/questions/268288/most-long-running-commands-instantly-killed-on-amazon-ec2-ubuntu-10-04.
-```bash
-  $ sudo dd if=/dev/zero of=/swap bs=1M count=500
-  $ sudo mkswap /swap
-  $ sudo swapon /swap
-´´´
-
+### If /vagrant folder is empty within vagrant
+  $ [sudo] rm -f /etc/udev/rules.d/70-persistent-net.rules
+  $ exit
+  $ vagrant reload
+  $ vagrant ssh
+  
 
 ### Reduce memory usage of mysql DB
-Add some settings in /etc/my.cnf
+Currently not needed, by maybe useful for some smaller machines. Add some settings in /etc/my.cnf
 ```bash
   ...
   max_connections=10
@@ -161,46 +173,4 @@ Add some settings in /etc/my.cnf
   $ mv keystore.jks modules/mm-conductor/src/main/resources/ssl/keystore.jks
   
   --> Create a shell script ?
-  
-## Vagrant
-### prepare the puppet/target/mm-dist dir (outside the puppet box)
-  $ mvn clean package -Prelease
-  $ bash puppet/src/main/scripts/sync-dist-and-run-puppet-apply.sh 54.171.82.164
-
-### startup vagrant box
-  $ cd mediamapgie
-  $ vagrant up
-  
-### Run puppet inside vagrant box:
-  $ vagrant ssh
-  $ # old: puppet apply /vagrant/mm-distribution/src/main/puppet/manifests/base.pp
-  $ # sudo puppet apply --debug --modulepath=/tmp/mm-puppet/etc/puppet/modules/:/etc/puppet/modules --hiera_config=/tmp/mm-puppet/etc/puppet/hiera.yaml /tmp/mm-puppet/etc/puppet/manifests/site.pp
-  
-### New: update vagrant to new puppet3 (do only once when starting vagrant box the first time!)
-  $ vagrand ssh
-  $ # centos os: sudo /bin/bash /vagrant/mm-distribution/src/main/scripts/update_to_puppet3_yum_installer.sh
-  $ # ubuntu: sudo apt-get install puppet 
-  
-### update ubuntu's packages
-  $ sudo apt-get update && sudo apt-get upgrade
-  
-### list installed packages
-  $ dpkg --get-selections | grep -v deinstall
-  
-### run your application
-  $ sudo /opt/mediamagpie/bin/mediamagpie.sh start  
-  
-### export your provisioned box
-Before we create the new image from current box, we have to delte /etc/udev/rules.d/70-persistent-net.rules. (see: https://github.com/mitchellh/vagrant/issues/997)
-  $ vagrant ssh
-  $ [sudo] rm -f /etc/udev/rules.d/70-persistent-net.rules
-
-This will create a new package.box file containing the actual state of your box.
-  $ vagrant package
-
-### If /vagrant folder is empty within vagrant
-  $ [sudo] rm -f /etc/udev/rules.d/70-persistent-net.rules
-  $ exit
-  $ vagrant reload
-  $ vagrant ssh
   
