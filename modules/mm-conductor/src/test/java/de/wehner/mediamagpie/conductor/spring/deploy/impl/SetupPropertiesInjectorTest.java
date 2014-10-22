@@ -5,21 +5,20 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Properties;
-import java.util.concurrent.Callable;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.Validator;
 
 import de.wehner.mediamagpie.conductor.webapp.services.SetupVerificationService;
 import de.wehner.mediamagpie.core.util.SearchPathUtil;
 import de.wehner.mediamagpie.core.util.properties.PropertiesUtil;
+import de.wehner.mediamagpie.persistence.TransactionHandlerMock;
 import de.wehner.mediamagpie.persistence.dao.ConfigurationDao;
 import de.wehner.mediamagpie.persistence.dao.TransactionHandler;
 import de.wehner.mediamagpie.persistence.dao.UserConfigurationDao;
@@ -28,7 +27,6 @@ import de.wehner.mediamagpie.persistence.entity.properties.AdminConfiguration;
 import de.wehner.mediamagpie.persistence.entity.properties.PropertyBackedConfiguration;
 import de.wehner.mediamagpie.persistence.util.CipherServiceImpl;
 
-@Ignore
 public class SetupPropertiesInjectorTest {
 
     @Mock
@@ -39,10 +37,9 @@ public class SetupPropertiesInjectorTest {
     private UserConfigurationDao _userConfigurationDao;
     @Mock
     private UserDao _userDao;
-    @Mock
-    private TransactionHandler _transactionHandler;
+    @Spy
+    private TransactionHandler _transactionHandler = new TransactionHandlerMock();
     private Properties _props = new Properties();
-    private ArgumentCaptor<Runnable> _captor = ArgumentCaptor.forClass(Runnable.class);
     @Mock
     private Validator _beanValidator;
     @Mock
@@ -52,19 +49,16 @@ public class SetupPropertiesInjectorTest {
     @InjectMocks
     private SetupPropertiesInjector _setupPropertiesInjector;
 
-    @SuppressWarnings("unchecked")
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        when(_transactionHandler.executeInTransaction(any(Callable.class))).thenReturn(Boolean.FALSE);
     }
 
     @Test
     public void testNoConfStoringWhenNoProperties() throws Exception {
         when(_dynamicPropertiesConfigurer.getProperties()).thenReturn(_props);
-        doNothing().when(_transactionHandler).executeInTransaction(_captor.capture());
-
-        execute(_setupPropertiesInjector);
+        //
+        _setupPropertiesInjector.injectData();
 
         verify(_confDao).countAll();
         verifyNoMoreInteractions(_confDao);
@@ -77,9 +71,8 @@ public class SetupPropertiesInjectorTest {
         conf.setPassword("***");
         _props = PropertiesUtil.transformToProperties(_cipherService, conf);
         when(_dynamicPropertiesConfigurer.getProperties()).thenReturn(_props);
-        doNothing().when(_transactionHandler).executeInTransaction(_captor.capture());
 
-        execute(_setupPropertiesInjector);
+        _setupPropertiesInjector.injectData();
 
         verify(_confDao).countAll();
         verifyNoMoreInteractions(_confDao);
@@ -90,9 +83,8 @@ public class SetupPropertiesInjectorTest {
         _props.load(SetupPropertiesInjector.class.getResourceAsStream("/properties/deploy/default.properties"));
         when(_dynamicPropertiesConfigurer.getProperties()).thenReturn(_props);
         when(_confDao.countAll()).thenReturn(23L);
-        doNothing().when(_transactionHandler).executeInTransaction(_captor.capture());
 
-        execute(_setupPropertiesInjector);
+        _setupPropertiesInjector.injectData();
 
         verify(_confDao).countAll();
         verifyNoMoreInteractions(_confDao);
@@ -105,19 +97,11 @@ public class SetupPropertiesInjectorTest {
         CollectionUtils.mergePropertiesIntoMap(defaultProps, _props);
         CollectionUtils.mergePropertiesIntoMap(testProps, _props);
         when(_dynamicPropertiesConfigurer.getProperties()).thenReturn(_props);
-        SetupPropertiesInjector injector = new SetupPropertiesInjector(_dynamicPropertiesConfigurer, _userDao, _confDao, _userConfigurationDao,
-                _transactionHandler, _beanValidator, _cipherService, _setupVerificationService);
-        doNothing().when(_transactionHandler).executeInTransaction(_captor.capture());
 
-        execute(injector);
+        _setupPropertiesInjector.injectData();
 
         verify(_confDao).countAll();
         verify(_confDao, times(_setupPropertiesInjector.getSetupEntityClasses().size() + 1)).saveConfiguration(any(PropertyBackedConfiguration.class));
         verifyNoMoreInteractions(_confDao);
-    }
-
-    private void execute(SetupPropertiesInjector injector) throws Exception {
-        injector.injectData();
-        _captor.getValue().run();
     }
 }
