@@ -48,7 +48,7 @@ If you install mediamagpie using puppet, puppet will install the application as 
 
 ### Links
 
-* Bug Tracking System: https://github.com/rwe17/MediaMagpie/issues?state=open (former: [JIRA] http://ralfwehner.dyndns.org:8082/secure/Dashboard.jspa).
+* Continuous Integration and Delivery is realized with jenkins and running on: http://54.77.209.26/view/MediaMapgie/
 
 ### Licenses from 3rd Party libs
 
