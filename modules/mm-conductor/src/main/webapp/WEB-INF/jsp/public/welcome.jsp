@@ -31,21 +31,21 @@
 		<fmt:message key="main.name" />
 		?
 	</h2>
-	MediaMagpie is a web application used to share photos with friends and other registered users. You can easily upload your media files on
-	upload web pages, set titles, tags and description to photos, search photos and place them into photo albums. Each photo album can be
-	configured to be viewable for public users, only for registered users or only for you. In case of a public albums you can simple send a
-	special link (url) to your album to your friends.
+	<fmt:message key="main.name" /> is a web application used to share photos and videos with friends and other registered users.
+	You can upload your media files in an easy way from an upload web pages, set titles, tags and description to each photos or video, search medias and place them into a photo albums. 
+	Each photo album can be	configured to be viewable for public users, only for registered users or only for you. 
+	In case of a public album <fmt:message key="main.name" /> creates a unique link to your album page you can send your friends and share your photos.
 	<h3>Features</h3>
 	<ul>
-		<li>Upload Photos and Videos easily to the server via Drag&Drop from your desktop</li>
+		<li>Upload Photos and Videos easy via Drag&Drop from your desktop</li>
 		<li>Optionally, add titles, descriptions or tags to each media</li>
 		<li>Search medias by full text search or by a time span</li>
-		<li>Arrange medias in 'albums' and share them <i>public</i> (to all users), <i>to registered users</i> or only to <i>yourself</i>.
-			<li>All shared photos can be downloaded as original file, so the user gets the original file including all camera's meta information</li>
-			<li>Configure the picture size which uses MediaMagpie to present your photos</li>
-			<li>MediaMagpie will automatically detect the pictures orientation from meta data and presents the photo in propper rotation</li>
-			<li><fmt:message key="main.name" /> uses some awesome javasript plugins to present your photos as a slide show in a window or full
-				screen</li>
+		<li>Arrange medias in 'albums' and share them <i>public</i> (to all users), <i>to registered users</i> or only to <i>yourself</i>.</li>
+		<li>All shared photos can be downloaded, so the user gets the original file including all camera's meta information</li>
+		<li>Configure the picture size which uses MediaMagpie to present your photos</li>
+		<li>Photos will automatically rotated to be show in right orientation</li>
+		<li><fmt:message key="main.name" /> uses some awesome javasript plugins to present your photos as a slide show in a window or full
+			screen mode</li>
 	</ul>
 
 	<!-- Start Advanced Gallery Html Containers -->
