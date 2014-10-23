@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 class sayHello {
-  exec { 'blah':
+  exec { 'hello':
     path    => '/bin:/usr/bin',
     command => 'echo starting puppet setup of vagrant $::fqdn box...'
   }

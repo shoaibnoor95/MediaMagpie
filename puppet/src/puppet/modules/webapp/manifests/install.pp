@@ -25,6 +25,7 @@ class webapp::install {
     source  => '/tmp/mm-dist',
     owner   => 'mediamagpie',
     recurse => true,
+    purge   => true,
     notify  => Service["mediamagpie"],
     require => [User['mediamagpie'], Package['openjdk-7-jdk'], Exec['stop mediamagpie']]
   }

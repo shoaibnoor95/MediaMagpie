@@ -43,6 +43,11 @@ class webapp::config () {
     require => User['mediamagpie'],
   }
 
-  # TODO rwe: checkout if we should use the mysql module
-  # (http://puppetlabs.com/blog/manage-your-mysql-deployment-puppet-enterprise-supported-module-puppetlabs-mysql)
+  # remove old logging files
+  tidy { 'log-sanitize':
+    path    => '/var/log/',
+    matches => 'mm-*.log',
+    recurse => true,
+    require => File['application files']
+  }
 }
