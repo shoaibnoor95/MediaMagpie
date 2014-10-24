@@ -10,12 +10,17 @@
 
 <head>
     <title>${title}</title>
+    <script type="text/javascript" src="/static/js/jquery.pollingThumb.js"></script>
 	<script type="text/javascript">
 		function executeCommand(action, id) {
 			$("#input_action").attr("value", action);
 			$("#input_id").attr("value", id);
 			$("#mediaForm").submit();
 		}
+        'use strict';
+        $(function() {
+            $('img.thumb').pollingThumb();
+        });
 	</script>
 </head>
 <body>
@@ -39,8 +44,8 @@
 		<tbody>
 			<c:forEach items="${pictures}" var="picture">
 				<tr>
-					<td><a href="<%=request.getContextPath()+MediaDetailController.URL_BASE_DETAIL_PICTURE_EDIT%>${picture.media.id}"><img
-							src="<%=request.getContextPath()%>${picture.urlThumbImage}" /></a></td>
+					<td><a href="<%=request.getContextPath()+MediaDetailController.URL_BASE_DETAIL_PICTURE_EDIT%>${picture.media.id}">
+					   <img class="thumb" src="<%=request.getContextPath()%>${picture.urlThumbImage}" /></a></td>
 					<td>${picture.media.name}</td>
 					<td>${picture.media.creationDate}</td>
 					<td><img class="image-action" title="undo" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/arrow_undo.png"

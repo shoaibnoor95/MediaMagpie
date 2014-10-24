@@ -10,4 +10,4 @@ function toggleMetaInformation() {
 		linkToggle.text("Hide camera meta informations");
 	}
 	$("div.meta").fadeToggle("fast", "linear");
-}
+};

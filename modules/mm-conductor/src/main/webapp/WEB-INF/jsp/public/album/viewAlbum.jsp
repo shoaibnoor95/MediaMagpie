@@ -21,6 +21,13 @@
     <title>${title}</title>
     <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/ui-lightness/jquery-ui-1.8.13.custom.css"/>" />
     <!-- <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/cupertino/jquery-ui-1.10.4.custom.min.css"/>" />-->
+    <script type="text/javascript" src="/static/js/jquery.pollingThumb.js"></script>
+    <script type="text/javascript">
+        'use strict';
+        $(function() {
+            $('img.thumb').pollingThumb();
+        });
+    </script>
 </head>
 <body>
 
@@ -59,7 +66,7 @@
 									<p>
 										<c:url value="/public/album/${albumCommand.uid}/${status.count + start - 1}" var="url">
 										</c:url>
-										<a href="${url}"><img src="${mediaThumbCommand.urlThumbImage}" title="${mediaThumbCommand.title}" /></a>
+										<a href="${url}"><img class="thumb" src="${mediaThumbCommand.urlThumbImage}" title="${mediaThumbCommand.title}" /></a>
 									</p>
 									<p class="metadata">
 										<core:date date="${mediaThumbCommand.media.creationDate}" />

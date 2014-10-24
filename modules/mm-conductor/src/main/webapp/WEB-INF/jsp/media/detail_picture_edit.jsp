@@ -10,6 +10,7 @@
     <title>${title}</title>
     <link rel="stylesheet" type="text/css", href="/static/css/cupertino/jquery-ui-1.10.4.custom.min.css" />
     <script type="text/javascript" src="/static/js/jquery-ui-1.10.4.custom.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.pollingThumb.js"></script>
 
 	<script type="text/javascript">
 	    'use strict';
@@ -68,6 +69,8 @@
 					return false;
 				}
 			});
+
+	        $('img.thumb').pollingThumb({timoutNextPoll:500,maxPollCount:10});
 		});
 	</script>
 </head>

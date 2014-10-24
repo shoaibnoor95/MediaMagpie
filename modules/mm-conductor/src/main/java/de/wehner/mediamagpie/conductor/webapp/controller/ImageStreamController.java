@@ -1,12 +1,10 @@
 package de.wehner.mediamagpie.conductor.webapp.controller;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.concurrent.Callable;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
-import de.wehner.mediamagpie.core.util.TimeoutExecutor;
 import de.wehner.mediamagpie.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.persistence.dao.ThumbImageDao;
 import de.wehner.mediamagpie.persistence.entity.Media;
@@ -30,6 +27,7 @@ import de.wehner.mediamagpie.persistence.entity.ThumbImage;
 @Controller
 @RequestMapping({ "/content/images/{mediaId}" })
 public class ImageStreamController {
+
     // private static final String SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF =
     // "src/main/webapp/static/images/ui-anim_basic_16x16.gif";
 
@@ -75,42 +73,42 @@ public class ImageStreamController {
                 // first create a resize job with high priority
                 _imageService.addImageResizeJobExecutionIfNecessary(label, _mediaDao.getById(mediaId), Priority.valueOf(priority));
 
-                // try to pull the result
-                TimeoutExecutor jobFinishTester = new TimeoutExecutor(500, 250);
-                ByteArrayOutputStream osWithThumbImpage = jobFinishTester.callUntilReturnIsNotNull(new Callable<ByteArrayOutputStream>() {
-
-                    @Override
-                    public ByteArrayOutputStream call() throws Exception {
-                        ThumbImage thumbImage = _thumbImageDao.getByMediaIdAndLabel(mediaId, label);
-                        if (thumbImage != null) {
-                            ByteArrayOutputStream os = new ByteArrayOutputStream();
-                            try {
-                                readFileIntoOutputStream(thumbImage.getPathToImage(), os);
-                            } catch (IOException e) {
-                                IOUtils.closeQuietly(os);
-                                return null;
-                            }
-                            return os;
-                        }
-                        return null;
-                    }
-                });
-
-                if (osWithThumbImpage != null) {
-                    osWithThumbImpage.writeTo(outputStream);
-                    IOUtils.closeQuietly(osWithThumbImpage);
-                } else {
-                    // image is not available, maybe we have to wait a little bit longer until the resize job is finished
-                    // try {
-                    // readFileIntoOutputStream(SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF, outputStream);
-                    // } catch (IOException ex) {
-                    // throw new RuntimeException("Internal error: Can not find picture in path '"
-                    // + SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF + "'.", ex);
-                    // }
-                    // rwe: new java-script solution is available that will try to reload those thumbs again and again until they are
-                    // present
-                    response.setStatus(404);
-                }
+                // // try to pull the result
+                // TimeoutExecutor jobFinishTester = new TimeoutExecutor(500, 250);
+                // ByteArrayOutputStream osWithThumbImpage = jobFinishTester.callUntilReturnIsNotNull(new Callable<ByteArrayOutputStream>()
+                // {
+                //
+                // @Override
+                // public ByteArrayOutputStream call() throws Exception {
+                // ThumbImage thumbImage = _thumbImageDao.getByMediaIdAndLabel(mediaId, label);
+                // if (thumbImage != null) {
+                // ByteArrayOutputStream os = new ByteArrayOutputStream();
+                // try {
+                // readFileIntoOutputStream(thumbImage.getPathToImage(), os);
+                // } catch (IOException e) {
+                // IOUtils.closeQuietly(os);
+                // return null;
+                // }
+                // return os;
+                // }
+                // return null;
+                // }
+                // });
+                //
+                // if (osWithThumbImpage != null) {
+                // osWithThumbImpage.writeTo(outputStream);
+                // IOUtils.closeQuietly(osWithThumbImpage);
+                // } else {
+                // // image is not available, maybe we have to wait a little bit longer until the resize job is finished
+                // try {
+                // readFileIntoOutputStream(SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF, outputStream);
+                // } catch (IOException ex) {
+                // throw new RuntimeException("Internal error: Can not find picture in path '"
+                // + SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF + "'.", ex);
+                // }
+                // }
+                // rwe 24.10.2014: We use a java script solution which tries to reload each image again that fails with 404 error.
+                response.setStatus(404);
             }
         }
         LOG.trace("streaming image id: " + mediaId + " with label '" + label + "'...DONE");

@@ -14,14 +14,18 @@
 	
 	<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery.galleriffic.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery.opacityrollover.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/static/js/jquery.pollingThumb.js" ></script>
 	
 	<!-- We need to import the script directly into jsp because it contains some java code -->
 	<script type="text/javascript"><%@ include file="../../../static/js/mm-toggle.js" %></script>
 	
-	<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/pages/welcome.js" />
+	<script type="text/javascript" src="<%=request.getContextPath()%>/static/js/pages/welcome.js" ></script>
 	<!-- We only want the thunbnails to display when javascript is enabled -->
 	<script type="text/javascript">
 		document.write('<style>.noscript { display: none; }</style>');
+		$(function() {
+			$('a.thumb > img').pollingThumb();
+		});
 	</script>
 </head>
 <body>
@@ -55,8 +59,8 @@
 	<div id="thumbs" class="navigation col-md-4">
 		<ul class="thumbs noscript">
 			<c:forEach items="${mediaThumbCommandList}" var="mediaThumbCommand" varStatus="status">
-				<li><a class="thumb" href="${mediaThumbCommand.urlThumbDetail}" title="Title #0"> <img src="${mediaThumbCommand.urlThumbImage}"
-						alt="${mediaThumbCommand.title}" /></a>
+				<li><a class="thumb" href="${mediaThumbCommand.urlThumbDetail}" title="Title #0">
+				    <img src="${mediaThumbCommand.urlThumbImage}" alt="${mediaThumbCommand.title}" /></a>
 					<div class="caption">
 						<div class="panel panel-default">
 							<div class="panel-heading">
