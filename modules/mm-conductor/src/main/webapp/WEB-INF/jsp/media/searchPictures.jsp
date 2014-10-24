@@ -34,95 +34,79 @@
 				}
 			})(window.jQuery, window.PrefixFree);
 
-            (function($) {
-                // global array that stores all broken images
-                var brokenThumbs = [];
+			(function($) {
+				// global array that stores all broken images
+				var brokenThumbs = [];
+				var globalSettings = {};
 
-                $.pollingThumb = {
-                        version: '1.0',
-                        
-                        refreshThumbsFirst: function (val) {
-                            jQuery.each(brokenThumbs, function(index, thumb) {
-                                thumb.attr('src', function(i, old) {
-                                    var newSrc = old + "&i=" + (Math.random() * 1000);
-                                    //console.log("Changing thumb image url: " + old + " -> " + newSrc);
-                                    return newSrc;
-                                });
-                            });
-                            brokenThumbs = [];
-                            setTimeout($.pollingThumb.refreshThumbs, 1000);                        
-                        },
-                        refreshThumbs: function(val) {
-                        	jQuery.each(brokenThumbs, function(index, thumb) {
-                                thumb.attr('src', function(i, old) {
-                                    return old.replace(/\&i=.+/, "&i=" + (Math.random() * 1000));
-                                });
-                            });
-                            if (brokenThumbs.length > 0) {
-                                brokenThumbs = [];
-                                setTimeout($.pollingThumb.refreshThumbs, 1000);
-                            }
-                        }
-                };
-                
-                $.fn.pollingThumb = function() {
-                	this.error(function() {
-                        //console.log("404 error: " + $(this).attr('src'));
-                        brokenThumbs.push($(this));
-                        //$(this).attr("src", "/static/images/ui-anim_basic_16x16.gif")
-                    });
-                	
-                	setTimeout($.pollingThumb.refreshThumbsFirst, 1000);
-                	
-                	return this;
-/*                	 return this.each(function() {
-                		var thumb = $(this);
-                		thumb.error(function() {
-                            //console.log("404 error: " + $(this).attr('src'));
-                            brokenThumbs.push($(this));
-                            //$(this).attr("src", "/static/images/ui-anim_basic_16x16.gif")
-                        });
-                		});*/
-                };
-            }(jQuery));
-            
-		    // solution to reload thumbs that have to be resized in background
-			var brokenThumbs = [];
-			function addErrorHandlerForThumbs() {
-				var thumbs = $('img.thumb');
-				thumbs.error(function() {
-					//console.log("404 error: " + $(this).attr('src'));
-					brokenThumbs.push($(this));
-					//$(this).attr("src", "/static/images/ui-anim_basic_16x16.gif")
-				});
-			};
-			function refreshThumbs() {
-				jQuery.each(brokenThumbs, function(index, thumb) {
-					thumb.attr('src', function(i, old) {
-						return old.replace(/\&i=.+/, "&i=" + (Math.random() * 1000));
+				// pollingThumb static class
+				$.pollingThumb = {
+					pollCount : 0,
+					refreshThumbsFirst : function(val) {
+						jQuery.each(brokenThumbs, function(index, thumb) {
+							thumb.attr('src', function(i, old) {
+								var newSrc = old + "&i=" + (Math.random() * 1000);
+								//console.log("Changing thumb image url: " + old + " -> " + newSrc);
+								return newSrc;
+							});
+						});
+						$.pollingThumb.pollCount++;
+						if (brokenThumbs.length > 0) {
+							brokenThumbs = [];
+							setTimeout($.pollingThumb.refreshThumbs, globalSettings['timoutNextPoll']);
+						}
+					},
+					refreshThumbs : function(val) {
+						jQuery.each(brokenThumbs, function(index, thumb) {
+							thumb.attr('src', function(i, old) {
+								return old.replace(/\&i=.+/, "&i=" + (Math.random() * 1000));
+							});
+						});
+						$.pollingThumb.pollCount++;
+						if (brokenThumbs.length > 0 && $.pollingThumb.pollCount < globalSettings['maxPollCount']) {
+							brokenThumbs = [];
+							setTimeout($.pollingThumb.refreshThumbs, globalSettings['timoutNextPoll']);
+						}
+					}
+				};
+
+				$.fn.pollingThumb = function(options) {
+
+					// extend the pollingThumb object
+					$.extend(this, {
+
+						version : '1.0',
+
+						addErrorHandlerForThumbs : function() {
+							this.error(function() {
+								//console.log("404 error: " + $(this).attr('src'));
+								brokenThumbs.push($(this));
+								//$(this).attr("src", "/static/images/ui-anim_basic_16x16.gif")
+							});
+						},
 					});
-				});
-				if (brokenThumbs.length > 0) {
-					brokenThumbs = [];
-					setTimeout(refreshThumbs, 1000);
-				}
-			};
-			function refreshThumbsFirst() {
-				jQuery.each(brokenThumbs, function(index, thumb) {
-					thumb.attr('src', function(i, old) {
-						var newSrc = old + "&i=" + (Math.random() * 1000);
-						//console.log("Changing thumb image url: " + old + " -> " + newSrc);
-						return newSrc;
-					});
-				});
-				brokenThumbs = [];
-				setTimeout(refreshThumbs, 1000);
-			};
+
+					// set default settings
+					var settings = $.extend(this, {
+						// These are the defaults.
+						timeoutFirstPoll : 500,
+						timoutNextPoll : 1000,
+						maxPollCount : 20
+					}, options);
+
+					// initialize the plugin
+					globalSettings['timoutNextPoll'] = settings.timoutNextPoll;
+					globalSettings['maxPollCount'] = settings.maxPollCount;
+					this.addErrorHandlerForThumbs();
+					// set timer to reload all broken images
+					setTimeout($.pollingThumb.refreshThumbsFirst, settings.timeoutFirstPoll);
+
+					return this;
+				};
+			}(jQuery));
 
 			$(function() {
-//				addErrorHandlerForThumbs();
-//				setTimeout(refreshThumbsFirst, 1000);
-                $('img.thumb').pollingThumb();
+				$('img.thumb').pollingThumb();
 			});
 		</script>
     </head>
