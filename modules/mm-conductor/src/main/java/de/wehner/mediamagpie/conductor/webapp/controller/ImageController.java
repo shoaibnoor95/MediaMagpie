@@ -102,14 +102,14 @@ public class ImageController {
                     IOUtils.closeQuietly(osWithThumbImpage);
                 } else {
                     // image is not available, maybe we have to wait a little bit longer until the resize job is finished
-// rwe: testing new image loading support
 //                    try {
 //                        readFileIntoOutputStream(SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF, outputStream);
 //                    } catch (IOException ex) {
 //                        throw new RuntimeException("Internal error: Can not find picture in path '"
 //                                + SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF + "'.", ex);
 //                    }
-response.setStatus(404);
+                    // rwe: new java-script solution is available that will try to reload those thumbs again and again until they are present
+                    response.setStatus(404);
                 }
             }
         }

@@ -22,72 +22,56 @@
         <script type="text/javascript" src="/static/js/prefixfree.min.js"></script>
         <script type="text/javascript">
             // prefixfree plugin for jquery to enable prefixfree functionality for css changes by jquery
-                    (function($, self) {
-                        if (!$ || !self) {
-                            return;
-                        }
-                        for (var i = 0; i < self.properties.length; i++) {
-                            var property = self.properties[i], camelCased = StyleFix.camelCase(property), PrefixCamelCased = self
-                                    .prefixProperty(property, true);
+			(function($, self) {
+				if (!$ || !self) {
+					return;
+				}
+				for (var i = 0; i < self.properties.length; i++) {
+					var property = self.properties[i], camelCased = StyleFix.camelCase(property), PrefixCamelCased = self
+							.prefixProperty(property, true);
 
-                            $.cssProps[camelCased] = PrefixCamelCased;
-                        }
-                    })(window.jQuery, window.PrefixFree);
-                  
+					$.cssProps[camelCased] = PrefixCamelCased;
+				}
+			})(window.jQuery, window.PrefixFree);
             
-            // rwe: test , test, test
-/*                    jQuery(document).ready(function() {
-                        window.setInterval("updatelapse();", 1000);
-                     });*/
-	
+		    // solution to reload thumbs that have to be resized in background
+			var brokenThumbs = [];
+			function addErrorHandlerForThumbs() {
+				var thumbs = $('img.thumb');
+				thumbs.error(function() {
+					//console.log("404 error: " + $(this).attr('src'));
+					brokenThumbs.push($(this));
+					//$(this).attr("src", "/static/images/ui-anim_basic_16x16.gif")
+				});
+			};
+			function refreshThumbs() {
+				jQuery.each(brokenThumbs, function(index, thumb) {
+					thumb.attr('src', function(i, old) {
+						return old.replace(/\&i=.+/, "&i=" + (Math.random() * 1000));
+					});
+				});
+				if (brokenThumbs.length > 0) {
+					brokenThumbs = [];
+					setTimeout(refreshThumbs, 1000);
+				}
+			};
+			function refreshThumbsFirst() {
+				jQuery.each(brokenThumbs, function(index, thumb) {
+					thumb.attr('src', function(i, old) {
+						var newSrc = old + "&i=" + (Math.random() * 1000);
+						//console.log("Changing thumb image url: " + old + " -> " + newSrc);
+						return newSrc;
+					});
+				});
+				brokenThumbs = [];
+				setTimeout(refreshThumbs, 1000);
+			};
 
-                                    var brokenThumbs = [];
-									function addErrorHandlerForThumbs() {
-										var thumbs = $('img.thumb');
-										thumbs.error(function() {
-											console.log("404 error: " + $(this).attr('src'));
-											brokenThumbs.push($(this));
-											//$(this).attr("src", "/static/images/ui-anim_basic_16x16.gif")
-										});
-									};
-									function refreshCameras() {
-/*										$('img.thumb').attr('src', function(i, old) {
-											return old.replace(/\&i=.+/, "&i=" + (Math.random() * 1000));
-										});*/
-                                        jQuery.each(brokenThumbs, function(index, thumb) {
-                                        	thumb.attr('src', function(i, old) {
-                                                return old.replace(/\&i=.+/, "&i=" + (Math.random() * 1000));
-                                            });
-                                        });
-										if(brokenThumbs.length > 0) {
-										                       brokenThumbs = [];
-										    setTimeout(refreshCameras, 1000);
-										}
-									};
-									function refreshCamerasFirst() {
-										/*var thumbs = $('img.thumb');
-										thumbs.attr('src', function(i, old) {
-											var newSrc = old + "&i=" + (Math.random() * 1000);
-											//console.log("Changing thumb image url: "+old+" -> "+newSrc);
-											return newSrc;
-										});*/
-										//get404Images();
-										jQuery.each(brokenThumbs, function(index, thumb) {
-											thumb.attr('src', function(i, old) {
-												var newSrc = old + "&i=" + (Math.random() * 1000);
-												console.log("Changing thumb image url: " + old + " -> " + newSrc);
-												return newSrc;
-											});
-										});
-                                        brokenThumbs = [];
-										setTimeout(refreshCameras, 1000);
-									};
-
-									$(function() {
-										addErrorHandlerForThumbs();
-										setTimeout(refreshCamerasFirst, 1000);
-									});
-								</script>
+			$(function() {
+				addErrorHandlerForThumbs();
+				setTimeout(refreshThumbsFirst, 1000);
+			});
+		</script>
     </head>
     <body>
 <!--         <ol class="breadcrumb">
@@ -133,7 +117,6 @@
     <div class="panel panel-default">
     <div class="panel-heading"><strong>Result</strong></div>
     <div class="panel-body">
-<div id="imageContainer"></div>    
   	<core:pagination cssClass="" current="${start}" pageSize="${pageSize}" total="${totalHits}" path="" />
 	<div class="ui-widget ui-helper-clearfix">
 		<ul id="gallery" class="gallery ui-helper-reset ui-helper-clearfix">
