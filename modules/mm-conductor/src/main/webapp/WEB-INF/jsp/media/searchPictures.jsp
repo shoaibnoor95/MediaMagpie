@@ -33,6 +33,58 @@
 					$.cssProps[camelCased] = PrefixCamelCased;
 				}
 			})(window.jQuery, window.PrefixFree);
+
+            (function($) {
+                // global array that stores all broken images
+                var brokenThumbs = [];
+
+                $.pollingThumb = {
+                        version: '1.0',
+                        
+                        refreshThumbsFirst: function (val) {
+                            jQuery.each(brokenThumbs, function(index, thumb) {
+                                thumb.attr('src', function(i, old) {
+                                    var newSrc = old + "&i=" + (Math.random() * 1000);
+                                    //console.log("Changing thumb image url: " + old + " -> " + newSrc);
+                                    return newSrc;
+                                });
+                            });
+                            brokenThumbs = [];
+                            setTimeout($.pollingThumb.refreshThumbs, 1000);                        
+                        },
+                        refreshThumbs: function(val) {
+                        	jQuery.each(brokenThumbs, function(index, thumb) {
+                                thumb.attr('src', function(i, old) {
+                                    return old.replace(/\&i=.+/, "&i=" + (Math.random() * 1000));
+                                });
+                            });
+                            if (brokenThumbs.length > 0) {
+                                brokenThumbs = [];
+                                setTimeout($.pollingThumb.refreshThumbs, 1000);
+                            }
+                        }
+                };
+                
+                $.fn.pollingThumb = function() {
+                	this.error(function() {
+                        //console.log("404 error: " + $(this).attr('src'));
+                        brokenThumbs.push($(this));
+                        //$(this).attr("src", "/static/images/ui-anim_basic_16x16.gif")
+                    });
+                	
+                	setTimeout($.pollingThumb.refreshThumbsFirst, 1000);
+                	
+                	return this;
+/*                	 return this.each(function() {
+                		var thumb = $(this);
+                		thumb.error(function() {
+                            //console.log("404 error: " + $(this).attr('src'));
+                            brokenThumbs.push($(this));
+                            //$(this).attr("src", "/static/images/ui-anim_basic_16x16.gif")
+                        });
+                		});*/
+                };
+            }(jQuery));
             
 		    // solution to reload thumbs that have to be resized in background
 			var brokenThumbs = [];
@@ -68,8 +120,9 @@
 			};
 
 			$(function() {
-				addErrorHandlerForThumbs();
-				setTimeout(refreshThumbsFirst, 1000);
+//				addErrorHandlerForThumbs();
+//				setTimeout(refreshThumbsFirst, 1000);
+                $('img.thumb').pollingThumb();
 			});
 		</script>
     </head>
