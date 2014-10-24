@@ -33,7 +33,61 @@
                             $.cssProps[camelCased] = PrefixCamelCased;
                         }
                     })(window.jQuery, window.PrefixFree);
-        </script>
+                  
+            
+            // rwe: test , test, test
+/*                    jQuery(document).ready(function() {
+                        window.setInterval("updatelapse();", 1000);
+                     });*/
+	
+
+                                    var brokenThumbs = [];
+									function addErrorHandlerForThumbs() {
+										var thumbs = $('img.thumb');
+										thumbs.error(function() {
+											console.log("404 error: " + $(this).attr('src'));
+											brokenThumbs.push($(this));
+											//$(this).attr("src", "/static/images/ui-anim_basic_16x16.gif")
+										});
+									};
+									function refreshCameras() {
+/*										$('img.thumb').attr('src', function(i, old) {
+											return old.replace(/\&i=.+/, "&i=" + (Math.random() * 1000));
+										});*/
+                                        jQuery.each(brokenThumbs, function(index, thumb) {
+                                        	thumb.attr('src', function(i, old) {
+                                                return old.replace(/\&i=.+/, "&i=" + (Math.random() * 1000));
+                                            });
+                                        });
+										if(brokenThumbs.length > 0) {
+										                       brokenThumbs = [];
+										    setTimeout(refreshCameras, 1000);
+										}
+									};
+									function refreshCamerasFirst() {
+										/*var thumbs = $('img.thumb');
+										thumbs.attr('src', function(i, old) {
+											var newSrc = old + "&i=" + (Math.random() * 1000);
+											//console.log("Changing thumb image url: "+old+" -> "+newSrc);
+											return newSrc;
+										});*/
+										//get404Images();
+										jQuery.each(brokenThumbs, function(index, thumb) {
+											thumb.attr('src', function(i, old) {
+												var newSrc = old + "&i=" + (Math.random() * 1000);
+												console.log("Changing thumb image url: " + old + " -> " + newSrc);
+												return newSrc;
+											});
+										});
+                                        brokenThumbs = [];
+										setTimeout(refreshCameras, 1000);
+									};
+
+									$(function() {
+										addErrorHandlerForThumbs();
+										setTimeout(refreshCamerasFirst, 1000);
+									});
+								</script>
     </head>
     <body>
 <!--         <ol class="breadcrumb">
@@ -79,6 +133,7 @@
     <div class="panel panel-default">
     <div class="panel-heading"><strong>Result</strong></div>
     <div class="panel-body">
+<div id="imageContainer"></div>    
   	<core:pagination cssClass="" current="${start}" pageSize="${pageSize}" total="${totalHits}" path="" />
 	<div class="ui-widget ui-helper-clearfix">
 		<ul id="gallery" class="gallery ui-helper-reset ui-helper-clearfix">
@@ -90,8 +145,8 @@
 						</h5>
 						<p>
 							<!-- <a class="ui-icon ui-icon-trash" href="link/to/trash/script/when/we/have/js/off" title="Delete this image" >Delete image</a>-->
-							<a href="<%=request.getContextPath()+MediaDetailController.URL_BASE_DETAIL_PICTURE_EDIT%>${picture.id}"><img
-								src="${picture.urlThumbImage}" /></a>
+							<a href="<%=request.getContextPath()+MediaDetailController.URL_BASE_DETAIL_PICTURE_EDIT%>${picture.id}">
+						      <img class="thumb" src="${picture.urlThumbImage}" /></a>
 						</p>
 						<img class="image-action flipBack" title="get more information" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/information.png" />
 						<img class="image-action delete" title="move to trash" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/bin_closed.png" />

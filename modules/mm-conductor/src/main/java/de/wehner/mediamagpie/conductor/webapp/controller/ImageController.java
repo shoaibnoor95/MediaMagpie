@@ -70,12 +70,13 @@ public class ImageController {
                     thumbImage = null;
                 }
             }
+
             if (thumbImage == null) {
                 // first create a resize job with high priority
                 _imageService.addImageResizeJobExecutionIfNecessary(label, _mediaDao.getById(mediaId), Priority.valueOf(priority));
 
                 // try to pull the result
-                TimeoutExecutor jobFinishTester = new TimeoutExecutor(1000, 250);
+                TimeoutExecutor jobFinishTester = new TimeoutExecutor(500, 250);
                 ByteArrayOutputStream osWithThumbImpage = jobFinishTester.callUntilReturnIsNotNull(new Callable<ByteArrayOutputStream>() {
 
                     @Override
@@ -95,17 +96,20 @@ public class ImageController {
                     }
                 });
 
+
                 if (osWithThumbImpage != null) {
                     osWithThumbImpage.writeTo(outputStream);
                     IOUtils.closeQuietly(osWithThumbImpage);
                 } else {
                     // image is not available, maybe we have to wait a little bit longer until the resize job is finished
-                    try {
-                        readFileIntoOutputStream(SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF, outputStream);
-                    } catch (IOException ex) {
-                        throw new RuntimeException("Internal error: Can not find picture in path '"
-                                + SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF + "'.", ex);
-                    }
+// rwe: testing new image loading support
+//                    try {
+//                        readFileIntoOutputStream(SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF, outputStream);
+//                    } catch (IOException ex) {
+//                        throw new RuntimeException("Internal error: Can not find picture in path '"
+//                                + SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF + "'.", ex);
+//                    }
+response.setStatus(404);
                 }
             }
         }
