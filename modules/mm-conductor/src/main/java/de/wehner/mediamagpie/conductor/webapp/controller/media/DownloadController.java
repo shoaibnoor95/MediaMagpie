@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import de.wehner.mediamagpie.conductor.webapp.controller.AbstractConfigurationSupportController;
-import de.wehner.mediamagpie.conductor.webapp.controller.ImageController;
+import de.wehner.mediamagpie.conductor.webapp.controller.ImageStreamController;
 import de.wehner.mediamagpie.persistence.dao.AlbumDao;
 import de.wehner.mediamagpie.persistence.dao.MediaDao;
 import de.wehner.mediamagpie.persistence.entity.Album;
@@ -72,7 +72,7 @@ public class DownloadController extends AbstractConfigurationSupportController {
             response.addHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
         }
 
-        ImageController.readFileIntoOutputStream(media.getFileFromUri().getPath(), response.getOutputStream());
+        ImageStreamController.readFileIntoOutputStream(media.getFileFromUri().getPath(), response.getOutputStream());
     }
 
     public static String getBaseRequestMappingUrl() {

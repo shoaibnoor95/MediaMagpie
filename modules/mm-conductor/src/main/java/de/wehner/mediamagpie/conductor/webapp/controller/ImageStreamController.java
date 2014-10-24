@@ -27,13 +27,13 @@ import de.wehner.mediamagpie.persistence.entity.Media;
 import de.wehner.mediamagpie.persistence.entity.Priority;
 import de.wehner.mediamagpie.persistence.entity.ThumbImage;
 
-// TODO rwe: better rename to ImageStreamController or just StreamController
 @Controller
 @RequestMapping({ "/content/images/{mediaId}" })
-public class ImageController {
-    private static final String SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF = "src/main/webapp/static/images/ui-anim_basic_16x16.gif";
+public class ImageStreamController {
+    // private static final String SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF =
+    // "src/main/webapp/static/images/ui-anim_basic_16x16.gif";
 
-    public static final Logger LOG = LoggerFactory.getLogger(ImageController.class);
+    public static final Logger LOG = LoggerFactory.getLogger(ImageStreamController.class);
 
     @Autowired
     private ThumbImageDao _thumbImageDao;
@@ -96,19 +96,19 @@ public class ImageController {
                     }
                 });
 
-
                 if (osWithThumbImpage != null) {
                     osWithThumbImpage.writeTo(outputStream);
                     IOUtils.closeQuietly(osWithThumbImpage);
                 } else {
                     // image is not available, maybe we have to wait a little bit longer until the resize job is finished
-//                    try {
-//                        readFileIntoOutputStream(SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF, outputStream);
-//                    } catch (IOException ex) {
-//                        throw new RuntimeException("Internal error: Can not find picture in path '"
-//                                + SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF + "'.", ex);
-//                    }
-                    // rwe: new java-script solution is available that will try to reload those thumbs again and again until they are present
+                    // try {
+                    // readFileIntoOutputStream(SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF, outputStream);
+                    // } catch (IOException ex) {
+                    // throw new RuntimeException("Internal error: Can not find picture in path '"
+                    // + SRC_MAIN_WEBAPP_STATIC_IMAGES_UI_ANIM_BASIC_16X16_GIF + "'.", ex);
+                    // }
+                    // rwe: new java-script solution is available that will try to reload those thumbs again and again until they are
+                    // present
                     response.setStatus(404);
                 }
             }
@@ -138,7 +138,7 @@ public class ImageController {
     }
 
     public static String getBaseRequestMappingUrl() {
-        return ImageController.class.getAnnotation(RequestMapping.class).value()[0];
+        return ImageStreamController.class.getAnnotation(RequestMapping.class).value()[0];
     }
 
 }

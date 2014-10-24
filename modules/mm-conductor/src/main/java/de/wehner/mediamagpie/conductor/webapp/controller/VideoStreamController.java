@@ -55,7 +55,7 @@ public class VideoStreamController {
         if (convertedVideos != null && !convertedVideos.isEmpty()) {
             try {
                 convertedVideo = convertedVideos.get(0);
-                ImageController.readFileIntoOutputStream(convertedVideo.getPathToFile(), outputStream);
+                ImageStreamController.readFileIntoOutputStream(convertedVideo.getPathToFile(), outputStream);
             } catch (FileNotFoundException e) {
                 LOG.info("Remove {} '{}' from db.", ConvertedVideo.class.getSimpleName(), convertedVideo.getId());
                 _convertedVideoDao.makeTransient(convertedVideo);
@@ -78,7 +78,7 @@ public class VideoStreamController {
                     if (!availableVideos.isEmpty()) {
                         ByteArrayOutputStream os = new ByteArrayOutputStream();
                         try {
-                            ImageController.readFileIntoOutputStream(availableVideos.get(0).getPathToFile(), os);
+                            ImageStreamController.readFileIntoOutputStream(availableVideos.get(0).getPathToFile(), os);
                         } catch (IOException e) {
                             IOUtils.closeQuietly(os);
                             return null;
