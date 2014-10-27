@@ -10,17 +10,19 @@
 
 	<!-- The configuration is based on http://www.mkyong.com/spring-security/spring-security-remember-me-example/ -->
 
-
 	<global-method-security secured-annotations="enabled" />
 
+	<!-- for expression syntax see: http://docs.spring.io/spring-security/site/docs/3.0.x/reference/el-access.html -->
 	<http auto-config="true" use-expressions="true">
 		<!-- <intercept-url pattern="/static/**" filters="none" /> <intercept-url pattern="/public/**" filters="none" /> -->
 		<intercept-url pattern="/login*" access="isAnonymous()" requires-channel="https" />
 		<intercept-url pattern="/config/admin/**" access="hasRole('ROLE_ADMIN')" requires-channel="https" />
 		<intercept-url pattern="/config/**" access="hasAnyRole('ROLE_ADMIN','ROLE_USER')" requires-channel="https" />
 		<intercept-url pattern="/s3/**" access="hasAnyRole('ROLE_ADMIN','ROLE_USER')" requires-channel="https" />
-		<intercept-url pattern="/media/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN','ROLE_GUEST')" requires-channel="any" />
-		<intercept-url pattern="/upload/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN','ROLE_GUEST')" requires-channel="any" />
+		<intercept-url pattern="/media/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN','ROLE_GUEST')"
+			requires-channel="any" />
+		<intercept-url pattern="/upload/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN','ROLE_GUEST')"
+			requires-channel="any" />
 
 		<form-login login-page="/login" default-target-url="/welcome" authentication-failure-url="/login?login_error=1"
 			username-parameter="username" password-parameter="password" login-processing-url="/auth/login_check"
@@ -59,8 +61,9 @@
 
 	<!-- If request parameter "targetUrl" is existed, then forward to this url -->
 	<!-- For update login form -->
-	<beans:bean id="savedRequestAwareAuthenticationSuccessHandler" class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
+	<beans:bean id="savedRequestAwareAuthenticationSuccessHandler"
+		class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
 		<beans:property name="targetUrlParameter" value="targetUrl" />
 	</beans:bean>
-	
+
 </beans:beans>
