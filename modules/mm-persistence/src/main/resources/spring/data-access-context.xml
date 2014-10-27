@@ -43,6 +43,7 @@
 			<property name="dataSourceClassName" value="${db.dataSourceClassName}" />
 			<property name="maximumPoolSize" value="20" />
 			<property name="idleTimeout" value="600000" />
+            <property name="autoCommit" value="true" />
 
 			<property name="dataSourceProperties">
 				<props>
@@ -62,7 +63,7 @@
             <property name="dataSourceClassName" value="${db.dataSourceClassName}" />
             <property name="maximumPoolSize" value="20" />
             <property name="idleTimeout" value="600000" />
-            <property name="autoCommit" value="false" />
+            <property name="autoCommit" value="true" />
 
             <property name="dataSourceProperties">
                 <props>

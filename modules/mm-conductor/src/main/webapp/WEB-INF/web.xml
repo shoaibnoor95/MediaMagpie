@@ -10,14 +10,6 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>classpath:/spring/web-application.xml</param-value>
 	</context-param> 
-<!-- 	<context-param>
-		<param-name>org.mortbay.jetty.servlet.SessionCookie</param-name>
-		<param-value>WORKSHOPSESSIONID</param-value>
-	</context-param>
-	<context-param>
-		<param-name>org.mortbay.jetty.servlet.SessionURL</param-name>
-		<param-value>workshopsessionid</param-value>
-	</context-param>-->
 
 	<!-- Map static resources to the default servlet -->
 	<servlet-mapping>
@@ -38,20 +30,6 @@
 		<servlet-name>mvc-dispatcher</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
-
-	<!-- rwe: web-service is currently not supported<servlet>
-		<servlet-name>spring-ws</servlet-name>
-		<servlet-class>org.springframework.ws.transport.http.MessageDispatcherServlet</servlet-class>
-		<init-param>
-			<param-name>contextConfigLocation</param-name>
-			<param-value>classpath:/spring/ws-context.xml</param-value>
-		</init-param>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>spring-ws</servlet-name>
-		<url-pattern>/ws/*</url-pattern>
-	</servlet-mapping>-->
-
 
 	<!-- FILTER and it's mapping -->
     

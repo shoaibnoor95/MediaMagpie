@@ -1,10 +1,11 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://www.opensymphony.com/sitemesh/decorator" prefix="decorator"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ include file="/WEB-INF/jsp/general/taglibs.jsp"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-	<title>MediaMagpie - <decorator:title default="Welcome!"/></title> 
+	<title>MediaMagpie - <decorator:title default="Welcome!" /></title>
 	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	
@@ -36,17 +37,31 @@
 				</ul>
 				<!-- login/logout link -->
 				<ul class="nav navbar-right">
-					<li>
-						<%
-						    java.security.Principal p = request.getUserPrincipal();
-						    if (p == null) {
-						%> <a id="login" href="<%=request.getContextPath()%>/login">Login</a> <%
-     } else {
- %> <a id="logout" href="<%=request.getContextPath()%>/j_spring_security_logout">Logout (<%=p.getName()%>)
-					</a> <%
-     }
- %>
-					</li>
+					<li><sec:authorize access="isAnonymous()">
+							<a id="login" href="<%=request.getContextPath()%>/login">Login</a>
+						</sec:authorize> <sec:authorize access="isAuthenticated()">
+							<!-- For login user -->
+							<c:url value="/j_spring_security_logout" var="logoutUrl" />
+							<form action="${logoutUrl}" method="post" id="logoutForm">
+								<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+							</form>
+							<script>
+								function formSubmit() {
+									document.getElementById("logoutForm").submit();
+								}
+							</script>
+
+							<c:if test="${pageContext.request.userPrincipal.name != null}">
+								<a href="javascript:formSubmit()"> Logout (${pageContext.request.userPrincipal.name})</a>
+							</c:if>
+
+						</sec:authorize></li>
+					<sec:authorize access="isRememberMe()">
+						<!-- # This user is login by "Remember Me Cookies".-->
+					</sec:authorize>
+					<sec:authorize access="isFullyAuthenticated()">
+						<!-- # This user is login by username / password.-->
+					</sec:authorize>
 				</ul>
 			</div>
 			<!--/.nav-collapse -->

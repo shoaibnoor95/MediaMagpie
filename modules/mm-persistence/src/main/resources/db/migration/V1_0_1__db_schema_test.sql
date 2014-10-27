@@ -1,3 +1,7 @@
--- Currently, flyway is not used, because we have configured the mysql persistence unit with: "hibernate.hbm2ddl.auto=update"
---
--- But, add your update code here...
+CREATE TABLE persistent_logins (
+    username VARCHAR(64) NOT NULL,
+    series VARCHAR(64) NOT NULL,
+    token VARCHAR(64) NOT NULL,
+    last_used TIMESTAMP NOT NULL,
+    PRIMARY KEY (series)
+);

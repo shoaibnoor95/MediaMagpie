@@ -8,40 +8,47 @@
 		http://www.springframework.org/schema/context 
 		http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<global-method-security secured-annotations="enabled" />
-	
-	<!-- for more security topics, read: http://www.codercorp.com/blog/spring/security-spring/custom-authenticationprocessingfilter-for-spring-security-to-perform-actions-on-login.html -->
-	<http auto-config="true">
-		<!-- <intercept-url pattern="/static/**" filters="none" /> <intercept-url pattern="/public/**" filters="none" /> -->
-		<intercept-url pattern="/login*" access="IS_AUTHENTICATED_ANONYMOUSLY" requires-channel="https" />
-		<intercept-url pattern="/config/admin/**" access="ROLE_ADMIN" requires-channel="https" />
-		<intercept-url pattern="/config/**" access="ROLE_ADMIN,ROLE_USER" requires-channel="https" />
-		<intercept-url pattern="/s3/**" access="ROLE_ADMIN,ROLE_USER" requires-channel="https" />
-		<intercept-url pattern="/media/**" access="ROLE_USER,ROLE_ADMIN,ROLE_GUEST" requires-channel="any" />
-		<intercept-url pattern="/upload/**" access="ROLE_USER,ROLE_ADMIN,ROLE_GUEST" requires-channel="any" />
+	<!-- The configuration is based on http://www.mkyong.com/spring-security/spring-security-remember-me-example/ -->
 
-		<form-login login-page="/login" login-processing-url="/loginProcess" default-target-url="/welcome"
-			authentication-failure-url="/login?login_error=1" />
-		<logout />
-		<remember-me key="MediaMagpie-remember-me" token-validity-seconds="172800" user-service-ref="userSecurityService" />
-		<access-denied-handler ref="accessDeniedHandler" />
+
+	<global-method-security secured-annotations="enabled" />
+
+	<!-- enable use-expressions -->
+	<http auto-config="true" use-expressions="true">
+		<!-- <intercept-url pattern="/static/**" filters="none" /> <intercept-url pattern="/public/**" filters="none" /> -->
+		<intercept-url pattern="/login*" access="isAnonymous()" requires-channel="https" />
+		<intercept-url pattern="/config/admin/**" access="hasRole('ROLE_ADMIN')" requires-channel="https" />
+		<intercept-url pattern="/config/**" access="hasAnyRole('ROLE_ADMIN','ROLE_USER')" requires-channel="https" />
+		<intercept-url pattern="/s3/**" access="hasAnyRole('ROLE_ADMIN','ROLE_USER')" requires-channel="https" />
+		<intercept-url pattern="/media/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN','ROLE_GUEST')" requires-channel="any" />
+		<intercept-url pattern="/upload/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN','ROLE_GUEST')" requires-channel="any" />
+
+		<form-login login-page="/login" default-target-url="/welcome" authentication-failure-url="/login?login_error=1"
+			username-parameter="username" password-parameter="password" login-processing-url="/auth/login_check"
+			authentication-success-handler-ref="savedRequestAwareAuthenticationSuccessHandler" />
+		<logout logout-success-url="/login?logout" delete-cookies="JSESSIONID" />
+
+		<remember-me token-validity-seconds="1209600" remember-me-parameter="remember-MediaMagpie" data-source-ref="dataSource" />
+
 		<port-mappings>
- 			<!-- <port-mapping http="${webapp.port.http}" https="${webapp.port.https}" />-->
-	        <!-- Default ports -->
-	        <port-mapping http="80" https="443"/>
-            <!-- local (developing) port mapping -->
-            <port-mapping http="8088" https="8443"/>
-	        <!-- My Vagrant port mapping (direct to tomcat: 8090 -> 8080 and 8091 -> 8443) -->
-	        <port-mapping http="8090" https="8091"/>
-            <!-- My Vagrant port mapping (to apache2 and than to tomcat: 8081 -> 80 -> 8080 and 8082 ->8443 -> 8443) -->
-            <port-mapping http="8081" https="8082"/>
-	        <!-- Tomcat default ports -->
-	        <port-mapping http="8080" https="8443"/>
-	        <!-- Jetty custom ports -->
-	        <port-mapping http="7777" https="7443"/>
-        </port-mappings>
-		<!-- session-fixation-protext=none will result in a JSESSIONID cookie which has NO secure flag, so it can be used booth in https and http. -->
-		<session-management session-fixation-protection="none"/>
+			<!-- <port-mapping http="${webapp.port.http}" https="${webapp.port.https}" /> -->
+			<!-- Default ports -->
+			<port-mapping http="80" https="443" />
+			<!-- local (developing) port mapping -->
+			<port-mapping http="8088" https="8443" />
+			<!-- My Vagrant port mapping (direct to tomcat: 8090 -> 8080 and 8091 -> 8443) -->
+			<port-mapping http="8090" https="8091" />
+			<!-- My Vagrant port mapping (to apache2 and than to tomcat: 8081 -> 80 -> 8080 and 8082 ->8443 -> 8443) -->
+			<port-mapping http="8081" https="8082" />
+			<!-- Tomcat default ports -->
+			<port-mapping http="8080" https="8443" />
+			<!-- Jetty custom ports -->
+			<port-mapping http="7777" https="7443" />
+		</port-mappings>
+
+		<!-- session-fixation-protection will result in a JSESSIONID cookie which has NO secure flag, so it can be used booth in 
+			https and http. -->
+		<session-management session-fixation-protection="none" />
 	</http>
 
 	<authentication-manager>
@@ -51,5 +58,10 @@
 			/> </user-service> </authentication-provider> -->
 	</authentication-manager>
 
-
+	<!-- If request parameter "targetUrl" is existed, then forward to this url -->
+	<!-- For update login form -->
+	<beans:bean id="savedRequestAwareAuthenticationSuccessHandler" class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
+		<beans:property name="targetUrlParameter" value="targetUrl" />
+	</beans:bean>
+	
 </beans:beans>

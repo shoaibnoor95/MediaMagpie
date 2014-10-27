@@ -1,11 +1,15 @@
 package de.wehner.mediamagpie.conductor.webapp.controller.configuration;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.RememberMeAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.UserConfigurationCommand;
+import de.wehner.mediamagpie.conductor.webapp.controller.security.LoginController;
 import de.wehner.mediamagpie.conductor.webapp.services.ImageService;
 import de.wehner.mediamagpie.conductor.webapp.validator.PasswordConfirmValidator;
 import de.wehner.mediamagpie.persistence.dao.UserDao;
@@ -46,10 +51,19 @@ public class UserConfiguratonControllerS1 extends UserConfigurationController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = URL_USERCONFIG_EDIT_S1)
-    public String showEditUserConfiguration(Model model, @RequestParam(value = "userId", required = false) Long userId) {
-        UserConfigurationCommand command = retrieveUserConfigurationCommandFromUserId(model, userId);
-        model.addAttribute(command);
-        return VIEW_USERCONFIG_EDIT_S1;
+    public String showEditUserConfiguration(Model model, @RequestParam(value = "userId", required = false) Long userId, HttpServletRequest request) {
+
+        if (isRememberMeAuthenticated()) {
+            // send login for update
+            setRememberMeTargetUrlToSession(request);
+            model.addAttribute("loginUpdate", true);
+            return LoginController.LOGIN_VIEW;
+
+        } else {
+            UserConfigurationCommand command = retrieveUserConfigurationCommandFromUserId(model, userId);
+            model.addAttribute(command);
+            return VIEW_USERCONFIG_EDIT_S1;
+        }
     }
 
     @RequestMapping(method = RequestMethod.POST, value = URL_USERCONFIG_EDIT_S1)
@@ -69,4 +83,26 @@ public class UserConfiguratonControllerS1 extends UserConfigurationController {
         return "redirect:" + getBaseRequestMappingUrl() + UserConfiguratonControllerS1.URL_USERCONFIG;
     }
 
+    /**
+     * If the login in from remember me cookie, refer org.springframework.security.authentication.AuthenticationTrustResolverImpl
+     */
+    private boolean isRememberMeAuthenticated() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            return false;
+        }
+
+        return RememberMeAuthenticationToken.class.isAssignableFrom(authentication.getClass());
+    }
+
+    /**
+     * save targetURL in session
+     */
+    private void setRememberMeTargetUrlToSession(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.setAttribute("targetUrl", getBaseRequestMappingUrl() + URL_USERCONFIG_EDIT_S1);
+        }
+    }
 }
