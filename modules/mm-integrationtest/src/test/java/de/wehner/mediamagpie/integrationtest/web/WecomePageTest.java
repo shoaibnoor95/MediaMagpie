@@ -36,8 +36,8 @@ public class WecomePageTest {
         clickLink("login");
         assertTitleEquals("MediaMagpie - Login");
         // System.out.println(getPageSource());
-        setTextField("j_username", "rwe");
-        setTextField("j_password", "rwe");
+        setTextField("username", "rwe");
+        setTextField("password", "rwe");
         IElement elementByXPath = getTestingEngine().getElementByXPath("//button[@type='submit']");
         HtmlButton submitButton = (HtmlButton) ((HtmlUnitElementImpl) elementByXPath).getHtmlElement();
 

@@ -14,16 +14,11 @@
 	<packaging>jar</packaging>
 
 	<dependencies>
-		<!-- <dependency> <groupId>${project.groupId}</groupId> <artifactId>mm-api</artifactId> <version>${project.version}</version> 
-			</dependency> -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>mm-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<!-- <dependency> <groupId>${project.groupId}</groupId> <artifactId>mm-persistence</artifactId> <version>${project.version}</version> 
-			</dependency> <dependency> <groupId>${project.groupId}</groupId> <artifactId>mm-conductor</artifactId> <version>${project.version}</version> 
-			</dependency> -->
 
 		<!-- slf4j -->
 		<dependency>
@@ -33,10 +28,6 @@
 		</dependency>
 
 		<!-- test -->
-		<!-- <dependency> <groupId>${project.groupId}</groupId> <artifactId>mm-aws</artifactId> <version>${project.version}</version> 
-			<type>test-jar</type> <scope>test</scope> </dependency> <dependency> <groupId>${project.groupId}</groupId> <artifactId>mm-persistence</artifactId> 
-			<version>${project.version}</version> <type>test-jar</type> <scope>test</scope> </dependency> <dependency> <groupId>org.springframework</groupId> 
-			<artifactId>spring-test</artifactId> <scope>provided</scope> </dependency> -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -52,8 +43,6 @@
 			<artifactId>fest-assert</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<!-- <dependency> <groupId>org.subethamail</groupId> <artifactId>subethasmtp-wiser</artifactId> <scope>provided</scope> 
-			</dependency> -->
 		<dependency>
 			<groupId>net.sourceforge.jwebunit</groupId>
 			<artifactId>jwebunit-htmlunit-plugin</artifactId>

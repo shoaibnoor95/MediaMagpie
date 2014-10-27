@@ -68,6 +68,11 @@ Some useful command lines:
    $ mvn versions:set -DgenerateBackupPoms=false -DnewVersion=0.2-SNAPSHOT -Pall
    $ mvn build-helper:remove-project-artifact -> see http://mojo.codehaus.org/build-helper-maven-plugin/remove-project-artifact-mojo.html
 
+### Run integration tests
+   $ # start your local application on port 8088 first
+   $ export MAVEN_OPTS="-Xmx200m -XX:MaxPermSize=120m"
+   $ mvn test -Pintegration-test -pl modules/mm-integrationtest
+   
 
 ## MongoDB (currently no longer used)
 Download MongoDB to your computer
