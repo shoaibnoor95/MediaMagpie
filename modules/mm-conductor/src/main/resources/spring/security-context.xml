@@ -13,7 +13,6 @@
 
 	<global-method-security secured-annotations="enabled" />
 
-	<!-- enable use-expressions -->
 	<http auto-config="true" use-expressions="true">
 		<!-- <intercept-url pattern="/static/**" filters="none" /> <intercept-url pattern="/public/**" filters="none" /> -->
 		<intercept-url pattern="/login*" access="isAnonymous()" requires-channel="https" />
@@ -28,7 +27,7 @@
 			authentication-success-handler-ref="savedRequestAwareAuthenticationSuccessHandler" />
 		<logout logout-success-url="/login?logout" delete-cookies="JSESSIONID" />
 
-		<remember-me token-validity-seconds="1209600" remember-me-parameter="remember-MediaMagpie" data-source-ref="dataSource" />
+		<remember-me token-validity-seconds="5184000" remember-me-parameter="remember-me" data-source-ref="dataSource" />
 
 		<port-mappings>
 			<!-- <port-mapping http="${webapp.port.http}" https="${webapp.port.https}" /> -->
