@@ -16,47 +16,6 @@
 	<link rel="stylesheet" type="text/css" href="<c:url value="/static/css/ui-lightness/jquery-ui-1.8.13.custom.css"/>" />
 	<!-- <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/cupertino/jquery-ui-1.10.4.custom.min.css"/>" />-->
 	<style type="text/css">
-	div.thumb-meta {
-		position: absolute;
-		bottom: 0px;
-		left: 0px;
-		right: 0px;
-		padding: 10px;
-		background: none repeat scroll 0% 0% transparent;
-		opacity: 0.8;
-		color: #FFF;
-		font-size: 11px;
-		line-height: 1.3;
-		margin-top: 5px;
-		text-align: left;
-		text-shadow: 1px 1px 0px #000;
-		overflow: hidden;
-		transition: all 0.15s ease-in-out 0s;
-	}
-	
-	.photo-display-item {
-		float: none;
-		position: relative;
-		display: inline-block;
-		width: auto;
-		background: none repeat scroll 0% 0% #CCC;
-		z-index: inherit;
-	}
-	
-	.photo-display-item:hover .thumb-meta {
-		background: none repeat scroll 0% 0% rgba(0, 0, 0, 0.6);
-		opacity: 1;
-		display: block;
-		transition: all 0.15s ease-in-out 0s;
-	}
-	
-	.photo-display-item .thumb-meta .title, .photo-display-item .thumb-meta .desc {
-		opacity: 0;
-	}
-	
-	.photo-display-item:hover .thumb-meta .title, .photo-display-item:hover .thumb-meta .desc {
-		opacity: 1;
-	}
 	</style>
 	<!-- We need to import the script directly into jsp because it contains some java code -->
 	<script type="text/javascript"><%@ include file="../../../../static/js/mm-toggle.js" %></script>
@@ -122,9 +81,8 @@
 		</div>
 	</div>
 
-	<div class="well" >
 	<%@ include file="/WEB-INF/jsp/partitals/media_show.partitial.jsp"%>
-	</div>
+
 	<div style="margin: 5px 0 10px 0;">
 		<div>
 			<img class="toggle-img" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/bullet_arrow_down.png" alt="hide meta information"

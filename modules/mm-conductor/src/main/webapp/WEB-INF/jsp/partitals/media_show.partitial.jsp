@@ -1,7 +1,7 @@
 <c:choose>
 	<c:when test="${mediaDetailCommand.photo}">
 		<div class="photo-display-item">
-			<img class="center-block thumb" alt="${mediaDetailCommand.name}" src="<%=request.getContextPath()%>${mediaDetailCommand.imageLink}" />
+			<img class="thumb center-block" alt="${mediaDetailCommand.name}" src="<%=request.getContextPath()%>${mediaDetailCommand.imageLink}" />
 			<div class="thumb-meta" >
 				<div class="title"><span class="lead" >${mediaDetailCommand.name}</span>
 				<span class="pull-right"><core:date date="${mediaDetailCommand.creationDate}" /></span>
