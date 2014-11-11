@@ -1,9 +1,13 @@
 <c:choose>
 	<c:when test="${mediaDetailCommand.photo}">
-		<div class="imgHover">
+		<div class="photo-display-item">
 			<img class="center-block thumb" alt="${mediaDetailCommand.name}" src="<%=request.getContextPath()%>${mediaDetailCommand.imageLink}" />
-			<div class="hover title">${mediaDetailCommand.name}</div>
-			<div class="hover meta">meta rwe...</div>
+			<div class="thumb-meta" >
+				<div class="title"><span class="lead" >${mediaDetailCommand.name}</span>
+				<span class="pull-right"><core:date date="${mediaDetailCommand.creationDate}" /></span>
+				</div>
+				<div class="desc"><c:out value="${mediaDetailCommand.description}" /></div>
+			</div>
 		</div>
 	</c:when>
 	<c:otherwise>

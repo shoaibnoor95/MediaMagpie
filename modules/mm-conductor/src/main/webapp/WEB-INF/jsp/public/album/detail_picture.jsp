@@ -11,54 +11,62 @@
 <c:set var="activeSubMenu" value="listAlbums" scope="request" />
 <c:set var="urlSubMenu" value="/subNaviMedia" scope="request" />
 <head>
-<title>${title}</title>
-<!-- used for button icons -->
-<link rel="stylesheet" type="text/css" href="<c:url value="/static/css/ui-lightness/jquery-ui-1.8.13.custom.css"/>" />
-<!-- <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/cupertino/jquery-ui-1.10.4.custom.min.css"/>" />-->
-<style type="text/css">
-.imgHover .hover {
-	display: none;
-	position: absolute;
-	z-index: 2;
-}
-</style>
-<!-- We need to import the script directly into jsp because it contains some java code -->
-<script type="text/javascript"><%@ include file="../../../../static/js/mm-toggle.js" %></script>
-<script type="text/javascript" src="/static/js/jquery.pollingThumb.js"></script>
-<script type="text/javascript">
-	'use strict';
-	$(function() {
-		$('img.thumb').pollingThumb();
-
-/*		$(".imgHover").hover(function() {
-			$(this).children("img").fadeTo(200, 0.25).end().children(".hover").show();
-		}, function() {
-			$(this).children("img").fadeTo(200, 1).end().children(".hover").hide();
-		});*/
-        $("img.thumb").hover(function() {
-            var img = $(this);
-            // .position() uses position relative to the offset parent, 
-            var pos = img.position();
-            // .outerWidth() takes into account border and padding.
-            var width = img.outerWidth();
-            var widthMargin = img.outerWidth(true);
-            var margin = widthMargin-width;
-            var end = $(this).fadeTo(200, 0.5).end();
-            var divTitle = img.parent().children("div.title");
-            // show div with title information above the image
-            divTitle.css({
-                position: "absolute",
-                top: pos.top + "px",
-                left: (pos.left + margin / 2) + "px"
-            }).show();
-
-        }, function() {
-        	$(this).fadeTo(200, 1);
-            $(this).parent().children(".hover").hide();
-        });
-		
-	});
-</script>
+	<title>${title}</title>
+	<!-- used for button icons -->
+	<link rel="stylesheet" type="text/css" href="<c:url value="/static/css/ui-lightness/jquery-ui-1.8.13.custom.css"/>" />
+	<!-- <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/cupertino/jquery-ui-1.10.4.custom.min.css"/>" />-->
+	<style type="text/css">
+	div.thumb-meta {
+		position: absolute;
+		bottom: 0px;
+		left: 0px;
+		right: 0px;
+		padding: 10px;
+		background: none repeat scroll 0% 0% transparent;
+		opacity: 0.8;
+		color: #FFF;
+		font-size: 11px;
+		line-height: 1.3;
+		margin-top: 5px;
+		text-align: left;
+		text-shadow: 1px 1px 0px #000;
+		overflow: hidden;
+		transition: all 0.15s ease-in-out 0s;
+	}
+	
+	.photo-display-item {
+		float: none;
+		position: relative;
+		display: inline-block;
+		width: auto;
+		background: none repeat scroll 0% 0% #CCC;
+		z-index: inherit;
+	}
+	
+	.photo-display-item:hover .thumb-meta {
+		background: none repeat scroll 0% 0% rgba(0, 0, 0, 0.6);
+		opacity: 1;
+		display: block;
+		transition: all 0.15s ease-in-out 0s;
+	}
+	
+	.photo-display-item .thumb-meta .title, .photo-display-item .thumb-meta .desc {
+		opacity: 0;
+	}
+	
+	.photo-display-item:hover .thumb-meta .title, .photo-display-item:hover .thumb-meta .desc {
+		opacity: 1;
+	}
+	</style>
+	<!-- We need to import the script directly into jsp because it contains some java code -->
+	<script type="text/javascript"><%@ include file="../../../../static/js/mm-toggle.js" %></script>
+	<script type="text/javascript" src="/static/js/jquery.pollingThumb.js"></script>
+	<script type="text/javascript">
+		'use strict';
+		$(function() {
+			$('img.thumb').pollingThumb();
+		});
+	</script>
 </head>
 <body>
 
@@ -114,48 +122,29 @@
 		</div>
 	</div>
 
-	<h3>Title: ${mediaDetailCommand.name}</h3>
+	<div class="well" >
 	<%@ include file="/WEB-INF/jsp/partitals/media_show.partitial.jsp"%>
-	<br />
-
-	<h3>Details:</h3>
-	<dl>
-		<dt>Description:</dt>
-		<dd>
-			<c:out value="${mediaDetailCommand.description}" />
-		</dd>
-	</dl>
-	<dl>
-		<dt>Creation Date:</dt>
-		<dd>
-			<core:date date="${mediaDetailCommand.creationDate}" />
-		</dd>
-	</dl>
-	<dl>
-		<dt>Meta information:</dt>
-		<dd>
-			<div>
-				<img class="toggle-img" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/bullet_arrow_down.png"
-					alt="hide meta information" onclick="toggleMetaInformation();" /> <a class="toggle-link" onclick="toggleMetaInformation();">Show
-					camera meta informations</a>
-			</div>
-			<div class="meta" style="display: none;">
-				<c:if test="${mediaDetailCommand.cameraMetaDataObj != null && not empty mediaDetailCommand.cameraMetaDataObj.exifData}">
-                                       -- EXIF-Data --<br />
-					<ul>
-						<c:forEach items="${mediaDetailCommand.cameraMetaDataObj.exifData}" var="exifData">
-							<li>${exifData.key}:${exifData.value}</li>
-						</c:forEach>
-					</ul>
-                                        -- Camera-Data --<br />
-					<ul>
-						<c:forEach items="${mediaDetailCommand.cameraMetaDataObj.metaData}" var="metaData">
-							<li>${metaData.key}:${metaData.value}</li>
-						</c:forEach>
-					</ul>
-				</c:if>
-			</div>
-		</dd>
-	</dl>
-
+	</div>
+	<div style="margin: 5px 0 10px 0;">
+		<div>
+			<img class="toggle-img" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/bullet_arrow_down.png" alt="hide meta information"
+				onclick="toggleMetaInformation();" /> <a class="toggle-link" onclick="toggleMetaInformation();">Show camera meta informations</a>
+		</div>
+		<div class="meta" style="display: none;">
+			<c:if test="${mediaDetailCommand.cameraMetaDataObj != null && not empty mediaDetailCommand.cameraMetaDataObj.exifData}">
+	                                       -- EXIF-Data --<br />
+				<ul>
+					<c:forEach items="${mediaDetailCommand.cameraMetaDataObj.exifData}" var="exifData">
+						<li>${exifData.key}:${exifData.value}</li>
+					</c:forEach>
+				</ul>
+	                                        -- Camera-Data --<br />
+				<ul>
+					<c:forEach items="${mediaDetailCommand.cameraMetaDataObj.metaData}" var="metaData">
+						<li>${metaData.key}:${metaData.value}</li>
+					</c:forEach>
+				</ul>
+			</c:if>
+		</div>
+	</div>
 </body>
