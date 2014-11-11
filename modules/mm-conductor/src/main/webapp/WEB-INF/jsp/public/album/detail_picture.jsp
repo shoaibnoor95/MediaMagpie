@@ -11,20 +11,57 @@
 <c:set var="activeSubMenu" value="listAlbums" scope="request" />
 <c:set var="urlSubMenu" value="/subNaviMedia" scope="request" />
 <head>
-    <title>${title}</title>
-    <!-- used for button icons -->
-    <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/ui-lightness/jquery-ui-1.8.13.custom.css"/>" />
-    <!-- <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/cupertino/jquery-ui-1.10.4.custom.min.css"/>" />-->
-    <!-- We need to import the script directly into jsp because it contains some java code -->
-    <script type="text/javascript"><%@ include file="../../../../static/js/mm-toggle.js" %></script>
+<title>${title}</title>
+<!-- used for button icons -->
+<link rel="stylesheet" type="text/css" href="<c:url value="/static/css/ui-lightness/jquery-ui-1.8.13.custom.css"/>" />
+<!-- <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/cupertino/jquery-ui-1.10.4.custom.min.css"/>" />-->
+<style type="text/css">
+.imgHover .hover {
+	display: none;
+	position: absolute;
+	z-index: 2;
+}
+</style>
+<!-- We need to import the script directly into jsp because it contains some java code -->
+<script type="text/javascript"><%@ include file="../../../../static/js/mm-toggle.js" %></script>
+<script type="text/javascript" src="/static/js/jquery.pollingThumb.js"></script>
+<script type="text/javascript">
+	'use strict';
+	$(function() {
+		$('img.thumb').pollingThumb();
+
+/*		$(".imgHover").hover(function() {
+			$(this).children("img").fadeTo(200, 0.25).end().children(".hover").show();
+		}, function() {
+			$(this).children("img").fadeTo(200, 1).end().children(".hover").hide();
+		});*/
+        $("img.thumb").hover(function() {
+            var img = $(this);
+            // .position() uses position relative to the offset parent, 
+            var pos = img.position();
+            // .outerWidth() takes into account border and padding.
+            var width = img.outerWidth();
+            var widthMargin = img.outerWidth(true);
+            var margin = widthMargin-width;
+            var end = $(this).fadeTo(200, 0.5).end();
+            var divTitle = img.parent().children("div.title");
+            // show div with title information above the image
+            divTitle.css({
+                position: "absolute",
+                top: pos.top + "px",
+                left: (pos.left + margin / 2) + "px"
+            }).show();
+
+        }, function() {
+        	$(this).fadeTo(200, 1);
+            $(this).parent().children(".hover").hide();
+        });
+		
+	});
+</script>
 </head>
 <body>
 
-	<!-- <div class='navigation'>
-		<a href="<%=request.getContextPath() + AlbumController.getBaseRequestMappingUrl() + AlbumController.URL_LIST%>">Album</a> &raquo; <a
-			href="<%=request.getContextPath() + PublicAlbumController.getBaseRequestMappingUrl()%>/${mediaDetailCommand.album.uid}/view">${mediaDetailCommand.album.name}</a>
-		&raquo; Media-${mediaDetailCommand.id}
-	</div>-->
 	<ol class="breadcrumb">
 		<!-- <li><a href="<%=request.getContextPath()%>/welcome">Home</a></li>-->
 		<li><a href="<%=request.getContextPath() + AlbumController.getBaseRequestMappingUrl() + AlbumController.URL_LIST%>">Albums</a></li>
@@ -71,7 +108,8 @@
 			<a href="${coolirisUrl}" class="btn btn-default"> <span class="ui-icon ui-icon-newwin pull-left"></span> &nbsp; cooliris
 			</a>
 			<!-- download-button -->
-			<a href="<%=DownloadController.getBaseRequestMappingUrl()%>/album/${mediaDetailCommand.album.uid}/${mediaDetailCommand.id}" class="btn btn-default"> <span class="glyphicon glyphicon-download pull-left"></span> &nbsp; download
+			<a href="<%=DownloadController.getBaseRequestMappingUrl()%>/album/${mediaDetailCommand.album.uid}/${mediaDetailCommand.id}"
+				class="btn btn-default"> <span class="glyphicon glyphicon-download pull-left"></span> &nbsp; download
 			</a>
 		</div>
 	</div>
