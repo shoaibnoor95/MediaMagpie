@@ -11,21 +11,21 @@
 <c:set var="activeSubMenu" value="listAlbums" scope="request" />
 <c:set var="urlSubMenu" value="/subNaviMedia" scope="request" />
 <head>
-	<title>${title}</title>
-	<!-- used for button icons -->
-	<link rel="stylesheet" type="text/css" href="<c:url value="/static/css/ui-lightness/jquery-ui-1.8.13.custom.css"/>" />
-	<!-- <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/cupertino/jquery-ui-1.10.4.custom.min.css"/>" />-->
-	<style type="text/css">
-	</style>
-	<!-- We need to import the script directly into jsp because it contains some java code -->
-	<script type="text/javascript"><%@ include file="../../../../static/js/mm-toggle.js" %></script>
-	<script type="text/javascript" src="/static/js/jquery.pollingThumb.js"></script>
-	<script type="text/javascript">
-		'use strict';
-		$(function() {
-			$('img.thumb').pollingThumb();
-		});
-	</script>
+<title>${title}</title>
+<!-- used for button icons -->
+<link rel="stylesheet" type="text/css" href="<c:url value="/static/css/ui-lightness/jquery-ui-1.8.13.custom.css"/>" />
+<!-- <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/cupertino/jquery-ui-1.10.4.custom.min.css"/>" />-->
+<style type="text/css">
+</style>
+<!-- We need to import the script directly into jsp because it contains some java code -->
+<script type="text/javascript"><%@ include file="../../../../static/js/mm-toggle.js" %></script>
+<script type="text/javascript" src="/static/js/jquery.pollingThumb.js"></script>
+<script type="text/javascript">
+	'use strict';
+	$(function() {
+		$('img.thumb').pollingThumb();
+	});
+</script>
 </head>
 <body>
 
@@ -85,8 +85,9 @@
 
 	<div style="margin: 5px 0 10px 0;">
 		<div>
-			<img class="toggle-img" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/bullet_arrow_down.png" alt="hide meta information"
-				onclick="toggleMetaInformation();" /> <a class="toggle-link" onclick="toggleMetaInformation();">Show camera meta informations</a>
+			<img class="toggle-img" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/bullet_arrow_down.png"
+				alt="hide meta information" onclick="toggleMetaInformation();" /> <a class="toggle-link" onclick="toggleMetaInformation();">Show
+				camera meta informations</a>
 		</div>
 		<div class="meta" style="display: none;">
 			<c:if test="${mediaDetailCommand.cameraMetaDataObj != null && not empty mediaDetailCommand.cameraMetaDataObj.exifData}">
