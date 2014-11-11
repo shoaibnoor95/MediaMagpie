@@ -113,7 +113,7 @@
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
 				<button id="saveAndGoBack" type="button" class="btn btn-success"
-					onclick="$('form input[type=hidden][name=submitSelect]').val('goBack');document.forms[0].submit();">Save and go back</button>
+					onclick="$('form input[type=hidden][name=submitSelect]').val('goBack');document.forms[1].submit();">Save and go back</button>
 			</div>
 		</div>
 	</form:form>
