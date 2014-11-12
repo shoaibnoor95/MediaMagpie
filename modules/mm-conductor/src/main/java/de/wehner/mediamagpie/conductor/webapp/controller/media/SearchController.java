@@ -139,8 +139,7 @@ public class SearchController extends AbstractConfigurationSupportController {
             @RequestParam(value = "start", required = false) Integer startMedia, @RequestParam(value = "startAlbum", required = false) Integer start) {
         if (albumSelectionCommand.getAlbumId() != null) {
             Album album = _albumDao.getById(albumSelectionCommand.getAlbumId());
-            AlbumCommand albumCommand = new AlbumCommand();
-            albumCommand.init(album);
+            AlbumCommand albumCommand = AlbumCommand.createCommand(album);
             model.addAttribute(albumCommand);
             model.addAttribute("start", startMedia);
         }

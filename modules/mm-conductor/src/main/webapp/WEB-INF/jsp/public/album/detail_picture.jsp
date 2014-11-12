@@ -32,7 +32,7 @@
 	<ol class="breadcrumb">
 		<!-- <li><a href="<%=request.getContextPath()%>/welcome">Home</a></li>-->
 		<li><a href="<%=request.getContextPath() + AlbumController.getBaseRequestMappingUrl() + AlbumController.URL_LIST%>">Albums</a></li>
-		<li><a href="<%=PublicAlbumController.getBaseRequestMappingUrl()%>/${mediaDetailCommand.album.uid}/view">${mediaDetailCommand.album.name}</a></li>
+		<li><a href="<%=request.getContextPath()%>/${mediaDetailCommand.album.overviewUrl}">${mediaDetailCommand.album.name}</a></li>
 		<li class="active">Media-${mediaDetailCommand.id}</li>
 	</ol>
 

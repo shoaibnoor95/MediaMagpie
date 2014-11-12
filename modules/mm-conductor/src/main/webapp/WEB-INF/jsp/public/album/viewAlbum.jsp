@@ -31,10 +31,6 @@
 </head>
 <body>
 
-	<!-- <div class='navigation'>
-		<a href="<%=request.getContextPath() + AlbumController.getBaseRequestMappingUrl() + AlbumController.URL_LIST%>">Album</a> &raquo; <a
-			href="<%=request.getContextPath() + PublicAlbumController.getBaseRequestMappingUrl()%>/${albumCommand.uid}/view">${albumCommand.name}</a>
-	</div>-->
 	<ol class="breadcrumb">
 		<!-- <li><a href="<%=request.getContextPath()%>/welcome">Home</a></li>-->
 		<li><a href="<%=request.getContextPath() + AlbumController.getBaseRequestMappingUrl() + AlbumController.URL_LIST%>">Albums</a></li>
@@ -64,8 +60,7 @@
 										<c:out value="${mediaThumbCommand.title}" />
 									</h5>
 									<p>
-										<c:url value="/public/album/${albumCommand.uid}/${status.count + start - 1}" var="url">
-										</c:url>
+										<c:url value="/${albumCommand.baseUrl}/${status.count + start - 1}" var="url" />
 										<a href="${url}"><img class="thumb" src="${mediaThumbCommand.urlThumbImage}" title="${mediaThumbCommand.title}" /></a>
 									</p>
 									<p class="metadata">

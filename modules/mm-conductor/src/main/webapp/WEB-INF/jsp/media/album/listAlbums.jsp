@@ -37,13 +37,13 @@
 					<c:set var="tdClass" value="alt" />
 				</c:if>
 				<tr class="${tdClass}" id="${album.id}">
-					<td><a href="<%=request.getContextPath()+PublicAlbumController.getBaseRequestMappingUrl()%>/${album.uid}/view">${album.name}</a></td>
+					<td><a href="<%=request.getContextPath()%>/${album.overviewUrl}">${album.name}</a></td>
 					<td>${fn:length(album.medias)}</td>
 					<td>${album.visibility}</td>
 					<td><c:choose>
-							<c:when test="${album.visibility == 'PUBLIC'}">
+							<c:when test="${album.visibility != 'OWNER'}">
 								<img class="image-action copyLink"
-									alt="<%=WebAppUtils.buildHttpRequestBasedOnServletRequest(request, pageContext)+PublicAlbumController.getBaseRequestMappingUrl()%>/${album.uid}/view"
+									alt="<%=WebAppUtils.buildHttpRequestBasedOnServletRequest(request, pageContext)%>/${album.overviewUrl}"
 									title="copy the public album link into clipboard" src="<%=request.getContextPath()%>/static/images/famfamfam_silk/paste_plain.png" />
 							</c:when>
 							<c:otherwise>

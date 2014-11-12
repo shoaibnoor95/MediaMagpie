@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import de.wehner.mediamagpie.conductor.webapp.controller.AbstractConfigurationSupportController;
+import de.wehner.mediamagpie.conductor.webapp.controller.commands.AlbumCommand;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaDetailCommand;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaFeedCommand;
 import de.wehner.mediamagpie.conductor.webapp.controller.commands.MediaFeedCommand.Item;
@@ -42,7 +43,6 @@ import de.wehner.mediamagpie.persistence.entity.properties.UserConfiguration;
 import de.wehner.mediamagpie.persistence.service.ConfigurationProvider;
 
 @Controller
-@RequestMapping("/public/album")
 public class PublicAlbumController extends AbstractConfigurationSupportController {
 
     private static final String SORRY_YOU_ARE_NOT_AUTHORIZED_TO_VIEW_THIS_ALBUM = "Sorry, you are not authorized to view this album.";
@@ -50,14 +50,19 @@ public class PublicAlbumController extends AbstractConfigurationSupportControlle
     @SuppressWarnings("unused")
     private static final Logger LOG = LoggerFactory.getLogger(PublicAlbumController.class);
 
-    public static final String URL_VIEW = "/{uuid}/view";
+    public static final String URL_BASE_PUBLIC = "/public/album";
+    public static final String URL_BASE_PRIVATE = "/private/album";
+
+    public static final String URL_VIEW = URL_BASE_PUBLIC + "/{uuid}/view";
+    public static final String URL_VIEW2 = URL_BASE_PRIVATE + "/{uuid}/view";
     public static final String VIEW_VIEW = "public/album/viewAlbum";
 
-    public static final String URL_DETAIL_PICTURE = "/{uuid}/{pos}";
+    public static final String URL_DETAIL_PICTURE = URL_BASE_PUBLIC + "/{uuid}/{pos}";
+    public static final String URL_DETAIL_PICTURE2 = URL_BASE_PRIVATE + "/{uuid}/{pos}";
     public static final String VIEW_DETAIL_PICTURE = "public/album/detail_picture";
     public static final String VIEW_VIEW_COOLIRIS = "public/album/coolirisViewAlbum";
 
-    public static final String URL_RSS = "/{uuid}/rss";
+    public static final String URL_RSS = URL_BASE_PUBLIC + "/{uuid}/rss";
     public static final String VIEW_RSS = "rss/cooliris_rss";
 
     private final AlbumDao _albumDao;
@@ -72,7 +77,7 @@ public class PublicAlbumController extends AbstractConfigurationSupportControlle
         _videoService = videoService;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = URL_VIEW)
+    @RequestMapping(method = RequestMethod.GET, value = { URL_VIEW, URL_VIEW2 })
     public String view(Model model, @PathVariable String uuid, @RequestParam(value = "start", required = false) Integer start, HttpServletRequest request) {
         start = (start != null) ? start : 0;
         Album album = _albumDao.getByUuid(uuid);
@@ -92,11 +97,7 @@ public class PublicAlbumController extends AbstractConfigurationSupportControlle
                     Media media = mediasInAlbum.get(i);
                     mediaThumbCommands.add(_imageSerivce.createMediaThumbCommand(media, mainConfiguration, userConfiguration, request));
                 }
-                // for (Media media : mediasInAlbum) {
-                // mediaThumbCommands.add(_imageSerivce.createMediaThumbCommand(media, mainConfiguration, userConfiguration, request));
-                // }
-                // albumCommand.init(album, _imageSerivce, userConfiguration.getThumbImageSize());
-                model.addAttribute("albumCommand", album);
+                model.addAttribute("albumCommand", AlbumCommand.createCommand(album));
                 model.addAttribute(mediaThumbCommands);
                 model.addAttribute("totalHits", mediasInAlbum.size());
             } else {
@@ -154,11 +155,11 @@ public class PublicAlbumController extends AbstractConfigurationSupportControlle
         return null;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = URL_DETAIL_PICTURE)
+    @RequestMapping(method = RequestMethod.GET, value = { URL_DETAIL_PICTURE, URL_DETAIL_PICTURE2 })
     public String showDetailPicture(Model model, @PathVariable String uuid, @PathVariable Integer pos,
             @RequestParam(value = "renderer", required = false) String renderer, HttpServletRequest servletRequest, Device device) {
         MainConfiguration mainConfiguration = getMainConfiguration();
-        Album album = _albumDao.getByUuid(uuid);
+        AlbumCommand album = AlbumCommand.createCommand(_albumDao.getByUuid(uuid));
         pos = Math.max(0, pos);
         Media media = album.getMedias().get(pos);
         MediaDetailCommand mediaDetailCommand = MediaDetailCommand.createFromMedia(media);
@@ -183,19 +184,26 @@ public class PublicAlbumController extends AbstractConfigurationSupportControlle
         return VIEW_DETAIL_PICTURE;
     }
 
-    public static String getBaseRequestMappingUrl() {
-        return PublicAlbumController.class.getAnnotation(RequestMapping.class).value()[0];
+    /**
+     * Provides something like: https://54.171.82.164/public/album/df0bab47-adc2-4762-99ee-8024f43ff545/view
+     * 
+     * @param servletRequest
+     * @param album
+     * @return
+     */
+    public static String getAlbumOverviewUrl(HttpServletRequest servletRequest, Album album) {
+        if (album.getVisibility() == Visibility.PUBLIC) {
+            return String.format("%s/public/album/%s/view", servletRequest.getContextPath(), album.getUid());
+        } else {
+            return String.format("%s/private/album/%s/view", servletRequest.getContextPath(), album.getUid());
+        }
     }
 
-    public static String getPublicViewUrl(String uuid) {
-        return String.format("%s/%s/view", getBaseRequestMappingUrl(), uuid);
-    }
-
-    private String buildPrevNextUrl(HttpServletRequest servletRequest, Album album, int pos) {
-        if (pos < 0 || pos >= album.getMedias().size()) {
+    private String buildPrevNextUrl(HttpServletRequest servletRequest, AlbumCommand albumCommand, int pos) {
+        if (pos < 0 || pos >= albumCommand.getMedias().size()) {
             return null;
         }
-        return String.format("%s%s/%s/%s", servletRequest.getContextPath(), getBaseRequestMappingUrl(), album.getUid(), pos);
+        return String.format("%s/%s/%s", servletRequest.getContextPath(), albumCommand.getBaseUrl(), pos);
     }
 
     private String doVisibilityValidation(Album album) {

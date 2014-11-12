@@ -9,8 +9,9 @@
 <c:set var="activeMenu" value="media" scope="request" />
 <c:set var="activeSubMenu" value="listAlbums" scope="request" />
 <c:set var="urlSubMenu" value="/subNaviMedia" scope="request" />
-<c:set var="linkBase"
-	value="<%=WebAppUtils.buildHttpRequestBasedOnServletRequest(request, pageContext) + PublicAlbumController.getBaseRequestMappingUrl()%>" />
+
+
+<c:set var="linkBase" value="<%=WebAppUtils.buildHttpRequestBasedOnServletRequest(request, pageContext)%>" />
 <head>
     <title>Album details</title>
 </head>
@@ -40,7 +41,7 @@
 		<div class="form-group">
 			<label class="col-sm-2 control-label">Public Link</label>
 			<div class="col-sm-10">
-				<c:set var="link" value="${linkBase}/${albumCommand.uid}/view" />
+				<c:set var="link" value="${linkBase}/${albumCommand.overviewUrl}" />
 				<img src="<%=request.getContextPath()%>/static/images/famfamfam_silk/paste_plain.png"
 					onclick="window.prompt ('Copy to clipboard: Ctrl+C, Enter', '${link}');" /> <a href="${link}">${link}</a>
 			</div>

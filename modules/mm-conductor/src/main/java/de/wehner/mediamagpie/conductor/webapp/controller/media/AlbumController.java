@@ -1,5 +1,6 @@
 package de.wehner.mediamagpie.conductor.webapp.controller.media;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -119,22 +120,26 @@ public class AlbumController {
             if(currentUser != null){
                 allAlbums = _albumDao.getByOwner(currentUser);
             }
-            model.addAttribute("albums", allAlbums);
+            List<AlbumCommand> commands = new ArrayList<>();
+            for (Album album2 : allAlbums) {
+                commands.add(AlbumCommand.createCommand(album2));
+            }
+            model.addAttribute("albums", commands);
             return VIEW_LIST;
         case VIEW:
-            AlbumCommand albumCommand = new AlbumCommand();
-            albumCommand.init(album);
+            AlbumCommand albumCommand = AlbumCommand.createCommand(album);
             model.addAttribute("albumCommand", albumCommand);
             return VIEW_VIEW;
         case CREATE:
         case EDIT:
             if (commandObject == null) {
-                commandObject = new AlbumCommand(crudOperation == CrudOperation.CREATE);
+                commandObject = AlbumCommand.createCommand(album);
+                commandObject.setIsNew(crudOperation == CrudOperation.CREATE);
             }
-
-            if (album != null) {
-                commandObject.init(album);
-            }
+//???
+//            if (album != null) {
+//                commandObject.init(album);
+//            }
             model.addAttribute("albumCommand", commandObject);
             return VIEW_EDIT;
         default:

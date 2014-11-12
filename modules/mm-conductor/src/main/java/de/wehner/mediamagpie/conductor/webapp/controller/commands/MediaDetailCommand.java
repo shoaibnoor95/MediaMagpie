@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.net.URI;
 
 import ma.glasnost.orika.MapperFactory;
-import ma.glasnost.orika.MappingContext;
-import ma.glasnost.orika.impl.DefaultMapperFactory;
-import ma.glasnost.orika.metadata.ClassMapBuilder;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -18,10 +15,9 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.util.CollectionUtils;
 
 import de.wehner.mediamagpie.conductor.metadata.CameraMetaData;
+import de.wehner.mediamagpie.conductor.util.OrikaMapperFactoryUtil;
 import de.wehner.mediamagpie.persistence.entity.Album;
 import de.wehner.mediamagpie.persistence.entity.Media;
-import de.wehner.mediamagpie.persistence.entity.User;
-import de.wehner.mediamagpie.persistence.entity.User.UserGrantedAuthority;
 
 public class MediaDetailCommand extends Media {
 
@@ -33,10 +29,10 @@ public class MediaDetailCommand extends Media {
     private String _urlPrev;
     private Album _album;
     private CameraMetaData _cameraMetaDataObj;
-    
+
     private final ObjectMapper _mapper = new ObjectMapper();
 
-    private static MapperFactory mapperFactory = null;
+    private static final OrikaMapperFactoryUtil orikaMapperFactoryUtil = new OrikaMapperFactoryUtil();
 
     public MediaDetailCommand() {
         super();
@@ -44,7 +40,7 @@ public class MediaDetailCommand extends Media {
 
     public static MediaDetailCommand createFromMedia(Media media) {
 
-        MapperFactory mapperFactory = getOrikaMapperFactory();
+        MapperFactory mapperFactory = orikaMapperFactoryUtil.getOrikaMapperFactory();
 
         MediaDetailCommand mediaDetailCommand = mapperFactory.getMapperFacade().map(media, MediaDetailCommand.class);
         if (!CollectionUtils.isEmpty(mediaDetailCommand.getTags())) {
@@ -74,24 +70,6 @@ public class MediaDetailCommand extends Media {
         }
 
         return mediaDetailCommand;
-    }
-
-    public static MapperFactory getOrikaMapperFactory() {
-        if (mapperFactory == null) {
-            mapperFactory = new DefaultMapperFactory.Builder().build();
-            ClassMapBuilder<UserGrantedAuthority, UserGrantedAuthority> classMapBuilder = mapperFactory.classMap(User.UserGrantedAuthority.class,
-                    User.UserGrantedAuthority.class);
-            classMapBuilder.customize(new ma.glasnost.orika.CustomMapper<User.UserGrantedAuthority, User.UserGrantedAuthority>() {
-
-                @Override
-                public void mapAtoB(UserGrantedAuthority a, UserGrantedAuthority b, MappingContext context) {
-                    super.mapAtoB(a, b, context);
-                }
-
-            });
-            mapperFactory.registerClassMap(classMapBuilder.byDefault().toClassMap());
-        }
-        return mapperFactory;
     }
 
     public void setImageLink(String imageLink) {
